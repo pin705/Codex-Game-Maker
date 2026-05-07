@@ -31,5 +31,7 @@ generation_prompt_rules:
   - no visible grid lines, borders, labels, frame numbers, UI, or debug overlays
 qa:
   raw_file: ""
+  rectified_file: ""
+  rectifier_report: ""
   harness_report: ""
   expected_gate: "tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>"

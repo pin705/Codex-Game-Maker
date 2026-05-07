@@ -329,13 +329,16 @@ def build_spec(args: argparse.Namespace) -> dict[str, Any]:
     key_color = color_hex(parse_color(args.key_color))
     action = safe_id(args.action).lower() if args.action else ""
 
+    foot_line_actions = {"idle", "walk", "run", "hurt", "death"}
     foot_line = int(args.foot_line)
-    if foot_line <= 0 and args.kind == "sprite":
+    if foot_line <= 0 and args.kind == "sprite" and action in foot_line_actions:
         foot_line = max(1, cell_h - safe_margin)
 
     edge_guard = int(args.edge_guard) if int(args.edge_guard) > 0 else max(4, min(16, safe_margin // 3))
     min_component_area = int(args.min_component_area) if int(args.min_component_area) > 0 else max(32, int(cell_w * cell_h * 0.001))
     max_scale_drift = float(args.max_scale_drift)
+    if action in {"jump", "fall", "attack"}:
+        max_scale_drift = max(max_scale_drift, 0.50)
 
     safe_zone = {
         "left": safe_margin,
@@ -625,6 +628,219 @@ def validate_command(args: argparse.Namespace) -> dict[str, Any]:
     return result
 
 
+def crop_with_padding(image: Image.Image, bbox: BBox, padding: int) -> Image.Image:
+    left = max(0, bbox.left - padding)
+    top = max(0, bbox.top - padding)
+    right = min(image.width, bbox.right + padding)
+    bottom = min(image.height, bbox.bottom + padding)
+    return image.crop((left, top, right, bottom))
+
+
+def component_bbox(item: dict[str, Any]) -> BBox:
+    bbox = item["bbox"]
+    return BBox(int(bbox["left"]), int(bbox["top"]), int(bbox["right"]), int(bbox["bottom"]))
+
+
+def sort_components_for_grid(components: list[dict[str, Any]], rows: int, cols: int) -> list[dict[str, Any]]:
+    selected = components[:rows * cols]
+    selected.sort(key=lambda item: ((item["bbox"]["top"] + item["bbox"]["bottom"]) / 2, (item["bbox"]["left"] + item["bbox"]["right"]) / 2))
+    ordered: list[dict[str, Any]] = []
+    for row in range(rows):
+        start = row * cols
+        row_items = selected[start:start + cols]
+        row_items.sort(key=lambda item: (item["bbox"]["left"] + item["bbox"]["right"]) / 2)
+        ordered.extend(row_items)
+    return ordered
+
+
+def paste_crop_into_cell(
+    out: Image.Image,
+    crop: Image.Image,
+    cell_left: int,
+    cell_top: int,
+    cell_w: int,
+    cell_h: int,
+    safe: dict[str, Any],
+    anchor: str,
+    fit_scale: float,
+) -> dict[str, Any]:
+    target_left = int(safe["left"])
+    target_top = int(safe["top"])
+    target_right = int(safe["right"])
+    target_bottom = int(safe["bottom"])
+    target_w = max(1, target_right - target_left)
+    target_h = max(1, target_bottom - target_top)
+    scale = min(target_w / max(1, crop.width), target_h / max(1, crop.height)) * max(0.05, fit_scale)
+    new_w = max(1, min(cell_w, int(round(crop.width * scale))))
+    new_h = max(1, min(cell_h, int(round(crop.height * scale))))
+    resized = crop.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+    x = cell_left + target_left + (target_w - new_w) // 2
+    if anchor in ("bottom", "feet"):
+        y = cell_top + target_bottom - new_h
+    else:
+        y = cell_top + target_top + (target_h - new_h) // 2
+
+    x = max(cell_left, min(cell_left + cell_w - new_w, x))
+    y = max(cell_top, min(cell_top + cell_h - new_h, y))
+    out.alpha_composite(resized, (x, y))
+    return {
+        "paste": {"left": x - cell_left, "top": y - cell_top, "right": x - cell_left + new_w, "bottom": y - cell_top + new_h},
+        "scale": scale,
+        "output_size": {"width": new_w, "height": new_h},
+    }
+
+
+def cell_bbox_from_source_grid(
+    image: Image.Image,
+    source_rows: int,
+    source_cols: int,
+    index: int,
+    key_color: tuple[int, int, int],
+    tolerance: int,
+    alpha_threshold: int,
+) -> tuple[Image.Image | None, dict[str, Any]]:
+    source_cell_w = image.width // source_cols
+    source_cell_h = image.height // source_rows
+    row = index // source_cols
+    col = index % source_cols
+    left = col * source_cell_w
+    top = row * source_cell_h
+    cell = image.crop((left, top, left + source_cell_w, top + source_cell_h))
+    mask = mask_from_image(cell, key_color, tolerance, alpha_threshold)
+    bbox = bbox_from_mask(mask)
+    meta = {
+        "source_cell": {"row": row, "col": col, "left": left, "top": top, "width": source_cell_w, "height": source_cell_h},
+        "source_bbox": {"left": bbox.left, "top": bbox.top, "right": bbox.right, "bottom": bbox.bottom, "width": bbox.width, "height": bbox.height},
+    }
+    if bbox.empty:
+        return None, meta
+    return crop_with_padding(cell, bbox, 2), meta
+
+
+def rectify_command(args: argparse.Namespace) -> dict[str, Any]:
+    spec_path = Path(args.spec).resolve()
+    input_path = Path(args.input).resolve()
+    out_path = Path(args.output).resolve()
+    meta_path = Path(args.meta).resolve() if args.meta else out_path.with_suffix(".rectify-meta.json")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    if spec.get("schema") != SCHEMA:
+        raise ValueError(f"Unsupported harness schema: {spec.get('schema')}")
+    if args.key_color:
+        spec["key_color"] = color_hex(parse_color(args.key_color))
+
+    grid = spec["grid"]
+    rows = int(grid["rows"])
+    cols = int(grid["cols"])
+    cell_w = int(grid["cell_width"])
+    cell_h = int(grid["cell_height"])
+    frame_count = rows * cols
+    canvas_w = int(spec["canvas"]["width"])
+    canvas_h = int(spec["canvas"]["height"])
+    acceptance = spec.get("acceptance", {})
+    key_color = parse_color(str(spec.get("key_color", "#FF00FF")))
+    tolerance = int(args.tolerance if args.tolerance >= 0 else acceptance.get("key_tolerance", 24))
+    alpha_threshold = int(acceptance.get("alpha_threshold", 8))
+    min_component_area = int(acceptance.get("min_component_area", max(32, int(cell_w * cell_h * 0.001))))
+    safe = spec["safe_zone"]
+    anchor = args.anchor or str(spec.get("runtime_contract", {}).get("pivot", "center"))
+    if int(spec.get("foot_line_y", 0) or 0) > 0 and not args.anchor:
+        anchor = "bottom"
+
+    image = load_rgba(input_path)
+    method = args.method
+    if method == "auto":
+        if image.width == canvas_w and image.height == canvas_h:
+            method = "grid"
+        elif frame_count == 1:
+            method = "largest"
+        else:
+            sheet_mask = mask_from_image(image, key_color, tolerance, alpha_threshold)
+            components = connected_components(sheet_mask, min_component_area)
+            method = "components" if len(components) >= frame_count else "grid"
+
+    out = Image.new("RGBA", (canvas_w, canvas_h), (*key_color, 255))
+    frames: list[dict[str, Any]] = []
+
+    if method == "components":
+        sheet_mask = mask_from_image(image, key_color, tolerance, alpha_threshold)
+        components = connected_components(sheet_mask, min_component_area)
+        if len(components) < frame_count:
+            raise ValueError(f"Only found {len(components)} component(s), expected at least {frame_count}.")
+        ordered = sort_components_for_grid(components, rows, cols)
+        for index, component in enumerate(ordered[:frame_count]):
+            row = index // cols
+            col = index % cols
+            bbox = component_bbox(component)
+            crop = crop_with_padding(image, bbox, int(args.padding))
+            paste_meta = paste_crop_into_cell(out, crop, col * cell_w, row * cell_h, cell_w, cell_h, safe, anchor, float(args.fit_scale))
+            frames.append({
+                "index": index,
+                "method": "components",
+                "source_bbox": {"left": bbox.left, "top": bbox.top, "right": bbox.right, "bottom": bbox.bottom, "width": bbox.width, "height": bbox.height},
+                "area": int(component["area"]),
+                **paste_meta,
+            })
+    elif method == "largest":
+        sheet_mask = mask_from_image(image, key_color, tolerance, alpha_threshold)
+        components = connected_components(sheet_mask, min_component_area)
+        if not components:
+            raise ValueError("No foreground component found.")
+        component = components[0]
+        bbox = component_bbox(component)
+        crop = crop_with_padding(image, bbox, int(args.padding))
+        paste_meta = paste_crop_into_cell(out, crop, 0, 0, cell_w, cell_h, safe, anchor, float(args.fit_scale))
+        frames.append({
+            "index": 0,
+            "method": "largest",
+            "source_bbox": {"left": bbox.left, "top": bbox.top, "right": bbox.right, "bottom": bbox.bottom, "width": bbox.width, "height": bbox.height},
+            "area": int(component["area"]),
+            **paste_meta,
+        })
+    elif method == "grid":
+        if image.width % cols == 0 and image.height % rows == 0:
+            source_rows = rows
+            source_cols = cols
+        elif args.source_rows > 0 and args.source_cols > 0 and image.width % args.source_cols == 0 and image.height % args.source_rows == 0:
+            source_rows = int(args.source_rows)
+            source_cols = int(args.source_cols)
+        else:
+            source_rows = rows
+            source_cols = cols
+        for index in range(frame_count):
+            row = index // cols
+            col = index % cols
+            crop, source_meta = cell_bbox_from_source_grid(image, source_rows, source_cols, index, key_color, tolerance, alpha_threshold)
+            if crop is None:
+                frames.append({"index": index, "method": "grid", "empty": True, **source_meta})
+                continue
+            paste_meta = paste_crop_into_cell(out, crop, col * cell_w, row * cell_h, cell_w, cell_h, safe, anchor, float(args.fit_scale))
+            frames.append({"index": index, "method": "grid", **source_meta, **paste_meta})
+    else:
+        raise ValueError(f"Unsupported rectify method: {method}")
+
+    ensure_dir(out_path.parent)
+    out.save(out_path)
+    result = {
+        "schema": SCHEMA,
+        "asset_id": spec["asset_id"],
+        "kind": spec["kind"],
+        "action": spec.get("action", ""),
+        "method": method,
+        "input": as_posix(input_path),
+        "output": as_posix(out_path),
+        "harness_spec": as_posix(spec_path),
+        "key_color": color_hex(key_color),
+        "tolerance": tolerance,
+        "fit_scale": float(args.fit_scale),
+        "frames": frames,
+    }
+    ensure_dir(meta_path.parent)
+    meta_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    result["meta"] = as_posix(meta_path)
+    return result
+
+
 def write_result(result: dict[str, Any]) -> None:
     print(json.dumps(result, indent=2))
 
@@ -664,6 +880,21 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("--report", default="")
     validate.add_argument("--key-color", default="")
     validate.set_defaults(func=validate_command)
+
+    rectify = sub.add_parser("rectify", help="fit a raw generated image back into a harness canvas")
+    rectify.add_argument("--spec", required=True)
+    rectify.add_argument("--input", required=True)
+    rectify.add_argument("--output", required=True)
+    rectify.add_argument("--meta", default="")
+    rectify.add_argument("--method", choices=["auto", "grid", "components", "largest"], default="auto")
+    rectify.add_argument("--source-rows", type=int, default=0)
+    rectify.add_argument("--source-cols", type=int, default=0)
+    rectify.add_argument("--key-color", default="")
+    rectify.add_argument("--tolerance", type=int, default=-1)
+    rectify.add_argument("--fit-scale", type=float, default=1.0)
+    rectify.add_argument("--padding", type=int, default=2)
+    rectify.add_argument("--anchor", choices=["", "center", "bottom", "feet"], default="")
+    rectify.set_defaults(func=rectify_command)
 
     return parser
 

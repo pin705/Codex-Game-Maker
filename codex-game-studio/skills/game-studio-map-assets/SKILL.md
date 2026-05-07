@@ -61,7 +61,14 @@ Run the harness gate on the raw platform image before adding it to a scene:
 tools/check-asset-harness.ps1 -Spec design/assets/harnesses/grass-platform-wide.harness.json -Input assets/raw/grass-platform-wide.png
 ```
 
-If the platform touches disallowed edges, has cropped grass/rocks/underside details, or has a mismatched runtime size, regenerate with a larger exact canvas or split the platform into left/middle/right pieces.
+If the platform art is visually correct but the generator returned the wrong canvas size or left unsafe padding, rectify it into the platform harness before extraction:
+
+```powershell
+tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/grass-platform-wide.harness.json -Input assets/raw/grass-platform-wide.png -Output assets/raw/grass-platform-wide-rectified.png -Method auto
+tools/check-asset-harness.ps1 -Spec design/assets/harnesses/grass-platform-wide.harness.json -Input assets/raw/grass-platform-wide-rectified.png
+```
+
+If the platform touches disallowed edges, has cropped grass/rocks/underside details, has the wrong silhouette for collision, or cannot match the intended runtime size after rectification, regenerate with a larger exact canvas or split the platform into left/middle/right pieces.
 
 For RPG/tower defense:
 - Generate ground-only base first.

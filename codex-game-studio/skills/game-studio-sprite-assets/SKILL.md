@@ -63,7 +63,14 @@ After saving a raw sheet, run the harness gate before processing:
 tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png
 ```
 
-If the harness gate blocks, regenerate the raw image. Do not try to fix identity drift, cropped limbs, neighboring-frame fragments, or broken run cycles with post-processing.
+If the raw image has the right subject and motion but the generator missed exact canvas size, row/column layout, or safe-zone placement, run deterministic rectification before processing:
+
+```powershell
+tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png -Output assets/raw/hero-cat-run-rectified.png
+tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-rectified.png
+```
+
+Rectification is only for geometry: exact canvas, grid normalization, safe padding, pivot/bottom alignment, and component isolation. Regenerate instead of rectifying when identity drifts, the action is not a real loop, a run/walk does not alternate feet, a jump pose sequence is wrong, limbs are missing, or neighboring-frame fragments are baked into the subject.
 
 ## Generation Rules
 
@@ -109,6 +116,7 @@ For controllable heroes with multiple actions:
 - A jump action should usually be split into pose phases: anticipation/takeoff, rise, apex, fall, and land. If only one `jump` sheet exists, the runtime state machine must select or hold phase frames instead of blindly looping the sheet.
 - If generated run/jump frames are cropped, have tail/feet crossing cell edges, or do not loop, regenerate with stricter safe-padding and pose instructions before using them in a showcase.
 - If a jump frame shows a tail, limb, weapon, or effect from a neighboring frame, treat it as a harness failure and regenerate with larger cell size or safe margin.
+- If the generator returns a portrait sheet, wrong pixel dimensions, or a contact-sheet layout that still contains all expected frames, use `tools/rectify-asset-to-harness.ps1` to isolate components into the harness canvas, then rerun the harness gate.
 
 ## Runtime Integration Rules
 
@@ -136,11 +144,11 @@ This writes:
 - manifest entries for each action
 - an action bundle report under `production/reviews/`
 
-After raw sheets are saved under `assets/raw/<asset-id>-<action>-sheet.png`, rerun with `-ProcessExistingRaw` to run the harness gate and process every passing action in one pass. Harness-blocked actions must be regenerated before processing.
+After raw sheets are saved under `assets/raw/<asset-id>-<action>-sheet.png`, rerun with `-ProcessExistingRaw` to run the harness gate and process every passing action in one pass. Harness-blocked actions may be rectified only when the issue is geometry; motion, identity, and loop failures must be regenerated before processing.
 
 ## Processing
 
-After the raw sheet passes `tools/check-asset-harness.ps1`, run:
+After the raw or rectified sheet passes `tools/check-asset-harness.ps1`, run:
 
 ```powershell
 tools/process-sprite-sheet.ps1 -Input <raw.png> -OutDir assets/generated/<category>/<asset-id> -Rows <rows> -Cols <cols> -AssetId <asset-id> -KeyColor "<selected-key-color>"

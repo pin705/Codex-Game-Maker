@@ -42,6 +42,7 @@ $previewTools = @(
   "tools/process-prop-pack.ps1",
   "tools/create-asset-harness.ps1",
   "tools/check-asset-harness.ps1",
+  "tools/rectify-asset-to-harness.ps1",
   "tools/suggest-key-color.ps1",
   "tools/compose-layered-map-preview.ps1",
   "tools/create-action-bundle.ps1",
