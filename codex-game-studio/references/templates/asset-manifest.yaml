@@ -1,0 +1,25 @@
+assets:
+  - asset_id: ASSET-000
+    name: ""
+    category: ""
+    asset_kind: sprite
+    status: needed
+    spec: ""
+    raw_file: ""
+    selected_file: ""
+    processed_file: ""
+    frames_dir: ""
+    gif_preview: ""
+    preview_file: ""
+    pipeline_meta: ""
+    source_prompt: ""
+    expected_frames: 0
+    frame_size: ""
+    anchor: center
+    key_color: "#FF00FF"
+    godot_import: ""
+    collision_role: none
+    props_metadata: ""
+    collision_metadata: ""
+    zones_metadata: ""
+    notes: ""

@@ -1,0 +1,59 @@
+asset_id: SPRITE-000
+name: ""
+asset_kind: sprite
+category: player
+target_engine: "Godot 4.4"
+intended_use: ""
+art_style: "project-native"
+view: "side"
+action: "idle"
+bundle: "single_asset"
+sheet:
+  rows: 2
+  cols: 3
+  expected_frames: 6
+  frame_order: "left-to-right, top-to-bottom"
+  raw_generation_shape: "multi-row grid"
+  delivery_shape: "transparent sheet plus frames"
+layout:
+  anchor: "bottom"
+  safe_padding: "normal"
+  shared_scale: true
+  direction_strips: false
+transparency:
+  background: "solid selected chroma-key color"
+  key_color: "auto-select with tools/suggest-key-color.ps1"
+  key_color_rule: "Use a flat color absent from the subject. Green-heavy assets usually use #FF00FF; magenta/pink/purple assets usually use #00FF00."
+  postprocess: "chroma-key to alpha"
+action_frame_defaults:
+  idle: "6-8"
+  walk: "8"
+  run: "8-12"
+  jump: "6-8"
+  attack: "8-12"
+  hurt: "3-5"
+  death: "8-12"
+  fx: "8-16"
+godot_import:
+  target_node: "AnimatedSprite2D"
+  pivot: "bottom"
+  frame_size: ""
+  collision_role: "none"
+generation_prompt: |
+  [Write the final GPT Image prompt here.]
+negative_constraints:
+  - no text
+  - no labels
+  - no watermark
+  - no visible grid lines
+  - no frame borders
+  - no cropped body parts or FX
+outputs:
+  raw_file: ""
+  processed_file: ""
+  frames_dir: ""
+  gif_preview: ""
+  pipeline_meta: ""
+qa:
+  expected_gate: "tools/check-asset-qa.ps1 -Root ."
+  notes: ""

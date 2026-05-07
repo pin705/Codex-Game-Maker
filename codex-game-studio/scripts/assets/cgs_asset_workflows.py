@@ -1,0 +1,1108 @@
+﻿#!/usr/bin/env python3
+"""Higher-level Codex Game Maker asset workflows.
+
+This file coordinates deterministic asset steps around the lower-level
+cgs_asset_processor.py. It does not generate images. It writes specs, repairs
+processed image outputs, and creates Godot-ready resources/scenes.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+try:
+    import cgs_asset_processor as processor
+except ImportError:  # pragma: no cover - only used when launched oddly.
+    processor = None  # type: ignore[assignment]
+
+
+ACTION_DEFAULTS: dict[str, dict[str, Any]] = {
+    "idle": {"rows": 2, "cols": 3, "frames": 6, "fps": 6, "anchor": "feet", "loop": True},
+    "walk": {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "feet", "loop": True},
+    "run": {"rows": 3, "cols": 4, "frames": 12, "fps": 12, "anchor": "feet", "loop": True},
+    "jump": {"rows": 2, "cols": 4, "frames": 8, "fps": 10, "anchor": "center", "loop": False},
+    "attack": {"rows": 3, "cols": 4, "frames": 12, "fps": 12, "anchor": "feet", "loop": False},
+    "hurt": {"rows": 2, "cols": 3, "frames": 6, "fps": 8, "anchor": "feet", "loop": False},
+    "death": {"rows": 3, "cols": 4, "frames": 12, "fps": 10, "anchor": "feet", "loop": False},
+    "fx": {"rows": 2, "cols": 4, "frames": 8, "fps": 12, "anchor": "center", "loop": False},
+}
+
+
+@dataclass
+class ActionSpec:
+    name: str
+    rows: int
+    cols: int
+    expected_frames: int
+    fps: float
+    anchor: str
+    loop: bool
+
+    @property
+    def duration_ms(self) -> int:
+        return max(1, int(round(1000 / max(1.0, self.fps))))
+
+
+def ensure_dir(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+
+
+def write_text(path: Path, content: str) -> None:
+    ensure_dir(path.parent)
+    path.write_text(content, encoding="utf-8")
+
+
+def as_posix(path: Path) -> str:
+    return path.as_posix()
+
+
+def safe_id(value: str) -> str:
+    clean = re.sub(r"[^A-Za-z0-9_.-]+", "-", value.strip())
+    clean = re.sub(r"-+", "-", clean).strip("-")
+    return clean or "asset"
+
+
+def pascal_name(value: str) -> str:
+    parts = re.split(r"[^A-Za-z0-9]+", value)
+    name = "".join(part[:1].upper() + part[1:] for part in parts if part)
+    return name or "Asset"
+
+
+def clean_yaml_value(value: str) -> str:
+    clean = value.strip()
+    if clean == "":
+        return ""
+    if clean.startswith('"') and clean.endswith('"') and len(clean) >= 2:
+        return clean[1:-1]
+    if clean.startswith("'") and clean.endswith("'") and len(clean) >= 2:
+        return clean[1:-1]
+    return clean
+
+
+def yaml_quote(value: Any) -> str:
+    if value is None:
+        return '""'
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return str(value)
+    text = str(value).replace("\\", "/")
+    escaped = text.replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def parse_asset_manifest(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+
+    entries: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if stripped.startswith("- asset_id:"):
+            if current:
+                entries.append(current)
+            current = {"asset_id": clean_yaml_value(stripped.split(":", 1)[1])}
+            continue
+        if current and line.startswith("    ") and ":" in stripped:
+            key, value = stripped.split(":", 1)
+            current[key.strip()] = clean_yaml_value(value)
+    if current:
+        entries.append(current)
+    return entries
+
+
+def manifest_path(root: Path) -> Path:
+    return root / "design" / "assets" / "asset-manifest.yaml"
+
+
+def import_manifest_path(root: Path) -> Path:
+    return root / "design" / "assets" / "godot-import-manifest.yaml"
+
+
+def append_asset_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
+    path = manifest_path(root)
+    ensure_dir(path.parent)
+    existing = parse_asset_manifest(path)
+    existing_ids = {entry.get("asset_id", "") for entry in existing}
+    if not path.exists():
+        path.write_text("assets:\n", encoding="utf-8")
+
+    blocks: list[str] = []
+    for entry in entries:
+        asset_id = str(entry.get("asset_id", "")).strip()
+        if not asset_id or asset_id in existing_ids:
+            continue
+        lines = [f"  - asset_id: {asset_id}"]
+        for key, value in entry.items():
+            if key == "asset_id":
+                continue
+            lines.append(f"    {key}: {yaml_quote(value)}")
+        blocks.append("\n".join(lines))
+    if blocks:
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n" + "\n".join(blocks) + "\n")
+    return path
+
+
+def append_import_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
+    path = import_manifest_path(root)
+    ensure_dir(path.parent)
+    if not path.exists():
+        path.write_text('godot_version: "4.4"\nimports:\n', encoding="utf-8")
+
+    existing_ids: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("- asset_id:"):
+            existing_ids.add(clean_yaml_value(stripped.split(":", 1)[1]))
+
+    blocks: list[str] = []
+    for entry in entries:
+        asset_id = str(entry.get("asset_id", "")).strip()
+        if not asset_id or asset_id in existing_ids:
+            continue
+        lines = [f"  - asset_id: {asset_id}"]
+        for key, value in entry.items():
+            if key == "asset_id":
+                continue
+            lines.append(f"    {key}: {yaml_quote(value)}")
+        blocks.append("\n".join(lines))
+    if blocks:
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write("\n" + "\n".join(blocks) + "\n")
+    return path
+
+
+def root_relative(root: Path, path: Path) -> str:
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.resolve().as_posix()
+
+
+def res_path(root: Path, path: Path) -> str:
+    return "res://" + root_relative(root, path).replace("\\", "/")
+
+
+def resolve_project_path(root: Path, value: str | None) -> Path | None:
+    if not value:
+        return None
+    clean = clean_yaml_value(value)
+    if not clean:
+        return None
+    if clean.startswith("res://"):
+        return root / clean[len("res://"):]
+    path = Path(clean)
+    if path.is_absolute():
+        return path
+    return root / path
+
+
+def suggest_key(description: str) -> str:
+    if processor is None:
+        return "#FF00FF"
+    return str(processor.suggest_key_color(description).get("key_color", "#FF00FF"))
+
+
+def parse_actions(actions: str) -> list[ActionSpec]:
+    specs: list[ActionSpec] = []
+    for item in [part.strip() for part in actions.split(",") if part.strip()]:
+        parts = [part.strip() for part in item.split(":")]
+        name = safe_id(parts[0]).lower()
+        defaults = ACTION_DEFAULTS.get(name, {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "center", "loop": True})
+        rows = int(parts[1]) if len(parts) > 1 and parts[1] else int(defaults["rows"])
+        cols = int(parts[2]) if len(parts) > 2 and parts[2] else int(defaults["cols"])
+        frames = int(parts[3]) if len(parts) > 3 and parts[3] else int(defaults["frames"])
+        fps = float(parts[4]) if len(parts) > 4 and parts[4] else float(defaults["fps"])
+        anchor = parts[5] if len(parts) > 5 and parts[5] else str(defaults["anchor"])
+        loop = str(defaults.get("loop", True)).lower() == "true"
+        specs.append(ActionSpec(name, rows, cols, frames, fps, anchor, loop))
+    return specs
+
+
+def processor_script_path() -> Path:
+    return Path(__file__).with_name("cgs_asset_processor.py")
+
+
+def run_processor(args: list[str]) -> dict[str, Any]:
+    cmd = [sys.executable, as_posix(processor_script_path()), *args]
+    completed = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip()
+        raise RuntimeError(f"asset processor failed: {detail}")
+    return json.loads(completed.stdout)
+
+
+def source_prompt_text(
+    *,
+    asset_id: str,
+    description: str,
+    action: ActionSpec,
+    key_color: str,
+    view: str,
+    category: str,
+    reference_file: str = "",
+) -> str:
+    return "\n".join([
+        f"asset_id: {asset_id}",
+        f"category: {category}",
+        "asset_kind: sprite",
+        f"action: {action.name}",
+        f"view: {view}",
+        f"rows: {action.rows}",
+        f"cols: {action.cols}",
+        f"expected_frames: {action.expected_frames}",
+        f"fps: {action.fps:g}",
+        f"anchor: {action.anchor}",
+        f"key_color: {key_color}",
+        f"reference_file: {reference_file}",
+        "generation_prompt: >",
+        f"  {description}. Create a {action.rows}x{action.cols} sprite-sheet grid for the {action.name} action.",
+        f"  Use a flat solid chroma-key background of {key_color}. Keep identity, scale, pose readability, and padding consistent across all frames.",
+        "  No text, no labels, no watermark, no borders, no grid lines.",
+        "",
+    ])
+
+
+def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.root).resolve()
+    bundle_id = safe_id(args.asset_id)
+    category = safe_id(args.category)
+    actions = parse_actions(args.actions)
+    bundle_dir = root / "design" / "assets" / "action-bundles"
+    prompt_dir = root / "assets" / "source-prompts"
+    raw_dir = root / "assets" / "raw"
+    generated_dir = root / "assets" / "generated" / category
+    review_dir = root / "production" / "reviews"
+
+    ensure_dir(bundle_dir)
+    ensure_dir(prompt_dir)
+    ensure_dir(raw_dir)
+    ensure_dir(generated_dir)
+    ensure_dir(review_dir)
+
+    bundle_lines = [
+        f"bundle_id: {bundle_id}",
+        f"description: {yaml_quote(args.description)}",
+        f"category: {category}",
+        f"view: {args.view}",
+        "godot_version: \"4.4\"",
+        "actions:",
+    ]
+
+    manifest_entries: list[dict[str, Any]] = []
+    processed: list[dict[str, Any]] = []
+    planned: list[str] = []
+
+    for action in actions:
+        action_asset_id = f"{bundle_id}-{action.name}"
+        key_color = args.key_color if args.key_color not in ("suggest", "auto-suggest") else suggest_key(f"{args.description} {action.name}")
+        prompt_path = prompt_dir / f"{action_asset_id}.yaml"
+        write_text(prompt_path, source_prompt_text(
+            asset_id=action_asset_id,
+            description=args.description,
+            action=action,
+            key_color=key_color,
+            view=args.view,
+            category=category,
+            reference_file=args.reference_file,
+        ))
+
+        bundle_lines.extend([
+            f"  - action: {action.name}",
+            f"    asset_id: {action_asset_id}",
+            f"    rows: {action.rows}",
+            f"    cols: {action.cols}",
+            f"    expected_frames: {action.expected_frames}",
+            f"    fps: {action.fps:g}",
+            f"    anchor: {action.anchor}",
+            f"    loop: {'true' if action.loop else 'false'}",
+            f"    key_color: {yaml_quote(key_color)}",
+            f"    source_prompt: {root_relative(root, prompt_path)}",
+            f"    raw_target: assets/raw/{action_asset_id}-sheet.png",
+        ])
+
+        raw_path = raw_dir / f"{action_asset_id}-sheet.png"
+        out_dir = generated_dir / action_asset_id
+        entry: dict[str, Any] = {
+            "name": f"{bundle_id} {action.name}",
+            "category": category,
+            "asset_kind": "sprite",
+            "status": "needed",
+            "raw_file": root_relative(root, raw_path),
+            "selected_file": "",
+            "processed_file": "",
+            "frames_dir": "",
+            "gif_preview": "",
+            "pipeline_meta": "",
+            "source_prompt": root_relative(root, prompt_path),
+            "expected_frames": action.expected_frames,
+            "frame_size": "",
+            "anchor": action.anchor,
+            "key_color": key_color,
+            "godot_import": "",
+            "collision_role": "none",
+            "notes": "Generated by action bundle planning.",
+        }
+
+        if args.process_existing_raw and raw_path.exists():
+            meta = run_processor([
+                "sprite",
+                "--input", as_posix(raw_path),
+                "--out-dir", as_posix(out_dir),
+                "--asset-id", action_asset_id,
+                "--rows", str(action.rows),
+                "--cols", str(action.cols),
+                "--expected-frames", str(action.expected_frames),
+                "--anchor", action.anchor,
+                "--fit-scale", str(args.fit_scale),
+                "--key-color", key_color,
+                "--tolerance", str(args.tolerance),
+                "--softness", str(args.softness),
+                "--duration-ms", str(action.duration_ms),
+            ])
+            outputs = meta.get("outputs", {})
+            frame_size = meta.get("frame_size", {})
+            entry.update({
+                "status": "accepted",
+                "selected_file": root_relative(root, Path(outputs.get("transparent_sheet", ""))),
+                "processed_file": root_relative(root, Path(outputs.get("transparent_sheet", ""))),
+                "frames_dir": root_relative(root, Path(outputs.get("frames_dir", ""))),
+                "gif_preview": root_relative(root, Path(outputs.get("gif_preview", ""))),
+                "pipeline_meta": root_relative(root, Path(outputs.get("pipeline_meta", ""))),
+                "frame_size": f"{frame_size.get('width', 0)}x{frame_size.get('height', 0)}",
+                "notes": "Processed from existing raw sheet.",
+            })
+            processed.append({"asset_id": action_asset_id, "pipeline_meta": entry["pipeline_meta"]})
+        else:
+            planned.append(action_asset_id)
+
+        manifest_entries.append({"asset_id": action_asset_id, **entry})
+
+    bundle_path = bundle_dir / f"{bundle_id}.yaml"
+    write_text(bundle_path, "\n".join(bundle_lines) + "\n")
+    manifest_file = append_asset_manifest(root, manifest_entries)
+
+    report_path = review_dir / f"action-bundle-{bundle_id}.md"
+    report_lines = [
+        f"# Action Bundle: {bundle_id}",
+        "",
+        f"- description: {args.description}",
+        f"- actions: {', '.join(action.name for action in actions)}",
+        f"- planned raw sheets: {len(planned)}",
+        f"- processed sheets: {len(processed)}",
+        "",
+        "## Next Steps",
+        "",
+        "- Generate raw sheets listed in the bundle spec.",
+        "- Re-run with `-ProcessExistingRaw` after raw sheets are saved.",
+        "- Run asset QA before Godot import.",
+        "",
+    ]
+    write_text(report_path, "\n".join(report_lines))
+
+    return {
+        "status": "ok",
+        "bundle_id": bundle_id,
+        "bundle_spec": root_relative(root, bundle_path),
+        "manifest": root_relative(root, manifest_file),
+        "report": root_relative(root, report_path),
+        "planned": planned,
+        "processed": processed,
+    }
+
+
+def load_json_if_exists(path: Path | None) -> Any:
+    if not path or not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def repair_assets_command(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.root).resolve()
+    entries = parse_asset_manifest(manifest_path(root))
+    if args.asset_id:
+        entries = [entry for entry in entries if entry.get("asset_id") == args.asset_id]
+
+    proposals: list[dict[str, Any]] = []
+    applied: list[dict[str, Any]] = []
+    for entry in entries:
+        status = entry.get("status", "")
+        if status not in ("accepted", "reviewed", "ready"):
+            continue
+        meta_path = resolve_project_path(root, entry.get("pipeline_meta"))
+        meta = load_json_if_exists(meta_path)
+        if not isinstance(meta, dict):
+            continue
+
+        qa = meta.get("qa", {})
+        kind = str(meta.get("kind", entry.get("asset_kind", "")))
+        residue = int(qa.get("opaque_key_pixels", qa.get("opaque_magenta_pixels", 0)) or 0)
+        edge_touch = list(qa.get("edge_touch_frames", []) or [])
+        frame_ok = qa.get("frame_count_ok", qa.get("prop_count_ok", True))
+        if residue == 0 and not edge_touch and frame_ok:
+            continue
+
+        chroma = meta.get("chroma_key", {})
+        tolerance = int(chroma.get("tolerance", 24))
+        softness = int(chroma.get("softness", 16))
+        key_color = str(chroma.get("key_color", chroma.get("background", entry.get("key_color", "#FF00FF"))))
+        new_tolerance = min(120, tolerance + (20 if residue > 0 else 0))
+        new_softness = min(48, softness + (8 if residue > 0 else 0))
+        fit_scale = 0.78 if kind == "sprite" and edge_touch else 0.9 if edge_touch else 0.92
+        raw_file = resolve_project_path(root, entry.get("raw_file") or str(meta.get("input", "")))
+        if not raw_file or not raw_file.exists():
+            proposals.append({
+                "asset_id": entry.get("asset_id"),
+                "action": "needs_regeneration",
+                "reason": "raw source missing, cannot repair deterministically",
+            })
+            continue
+
+        proposal = {
+            "asset_id": entry.get("asset_id"),
+            "kind": kind,
+            "reason": {"opaque_key_pixels": residue, "edge_touch_frames": edge_touch, "frame_count_ok": frame_ok},
+            "repair": {"tolerance": new_tolerance, "softness": new_softness, "fit_scale": fit_scale, "key_color": key_color},
+        }
+        proposals.append(proposal)
+
+        if not args.apply:
+            continue
+
+        output_dir = meta_path.parent if meta_path else resolve_project_path(root, entry.get("processed_file"))
+        if not output_dir:
+            continue
+        grid = meta.get("grid", {})
+        current_tolerance = new_tolerance
+        current_softness = new_softness
+        current_fit_scale = fit_scale
+        attempt_records: list[dict[str, Any]] = []
+        repaired: dict[str, Any] | None = None
+
+        for attempt in range(1, max(1, int(args.max_attempts)) + 1):
+            if kind == "sprite":
+                repaired = run_processor([
+                    "sprite",
+                    "--input", as_posix(raw_file),
+                    "--out-dir", as_posix(output_dir),
+                    "--asset-id", str(entry.get("asset_id", meta.get("asset_id", "sprite"))),
+                    "--rows", str(grid.get("rows", 1)),
+                    "--cols", str(grid.get("cols", 1)),
+                    "--expected-frames", str(grid.get("expected_frames", grid.get("actual_frames", 0))),
+                    "--anchor", str(meta.get("anchor", entry.get("anchor", "center"))),
+                    "--fit-scale", str(current_fit_scale),
+                    "--key-color", key_color,
+                    "--tolerance", str(current_tolerance),
+                    "--softness", str(current_softness),
+                ])
+            elif kind == "prop_pack":
+                repaired = run_processor([
+                    "prop-pack",
+                    "--input", as_posix(raw_file),
+                    "--out-dir", as_posix(output_dir),
+                    "--asset-id", str(entry.get("asset_id", meta.get("asset_id", "props"))),
+                    "--rows", str(grid.get("rows", 1)),
+                    "--cols", str(grid.get("cols", 1)),
+                    "--expected-props", str(grid.get("expected_props", grid.get("actual_props", 0))),
+                    "--fit-scale", str(current_fit_scale),
+                    "--key-color", key_color,
+                    "--tolerance", str(current_tolerance),
+                    "--softness", str(current_softness),
+                ])
+            else:
+                break
+
+            repaired_qa = repaired.get("qa", {})
+            repaired_residue = int(repaired_qa.get("opaque_key_pixels", repaired_qa.get("opaque_magenta_pixels", 0)) or 0)
+            repaired_edges = list(repaired_qa.get("edge_touch_frames", []) or [])
+            repaired_count_ok = repaired_qa.get("frame_count_ok", repaired_qa.get("prop_count_ok", True))
+            attempt_records.append({
+                "attempt": attempt,
+                "tolerance": current_tolerance,
+                "softness": current_softness,
+                "fit_scale": current_fit_scale,
+                "opaque_key_pixels": repaired_residue,
+                "edge_touch_frames": repaired_edges,
+                "count_ok": repaired_count_ok,
+            })
+
+            if repaired_residue == 0 and not repaired_edges and repaired_count_ok:
+                break
+
+            if repaired_residue > 0:
+                current_tolerance = min(120, current_tolerance + 20)
+                current_softness = min(48, current_softness + 8)
+            if repaired_edges:
+                current_fit_scale = max(0.65, current_fit_scale - 0.06)
+
+        if repaired:
+            applied.append({
+                "asset_id": entry.get("asset_id"),
+                "pipeline_meta": root_relative(root, Path(repaired["outputs"]["pipeline_meta"])),
+                "attempts": attempt_records,
+            })
+
+    report_path = root / "production" / "reviews" / f"asset-repair-{time.strftime('%Y%m%d-%H%M%S')}.md"
+    report = [
+        "# Asset Repair Report",
+        "",
+        f"- mode: {'apply' if args.apply else 'dry-run'}",
+        f"- proposals: {len(proposals)}",
+        f"- applied: {len(applied)}",
+        "",
+        "```json",
+        json.dumps({"proposals": proposals, "applied": applied}, indent=2),
+        "```",
+        "",
+    ]
+    write_text(report_path, "\n".join(report))
+    return {"status": "ok", "report": root_relative(root, report_path), "proposals": proposals, "applied": applied}
+
+
+def selected_sprite_entries(root: Path, bundle_id: str, asset_ids: str) -> list[dict[str, str]]:
+    entries = parse_asset_manifest(manifest_path(root))
+    if asset_ids:
+        wanted = {safe_id(item.strip()) for item in asset_ids.split(",") if item.strip()}
+        return [entry for entry in entries if safe_id(entry.get("asset_id", "")) in wanted]
+    prefix_dash = f"{bundle_id}-"
+    prefix_underscore = f"{bundle_id}_"
+    return [
+        entry for entry in entries
+        if entry.get("asset_kind", "") == "sprite"
+        and entry.get("status", "") in ("accepted", "reviewed", "ready")
+        and (entry.get("asset_id", "") == bundle_id or entry.get("asset_id", "").startswith(prefix_dash) or entry.get("asset_id", "").startswith(prefix_underscore))
+    ]
+
+
+def action_name_from_asset(asset_id: str, bundle_id: str) -> str:
+    for prefix in (f"{bundle_id}-", f"{bundle_id}_"):
+        if asset_id.startswith(prefix):
+            return safe_id(asset_id[len(prefix):]).lower()
+    return safe_id(asset_id).lower()
+
+
+def godot_bool(value: bool) -> str:
+    return "true" if value else "false"
+
+
+def godot_sprite_command(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.project).resolve()
+    bundle_id = safe_id(args.bundle_id)
+    entries = selected_sprite_entries(root, bundle_id, args.asset_ids)
+    if not entries:
+        raise ValueError(f"No accepted sprite entries found for bundle '{bundle_id}'.")
+
+    resource_dir = root / "resources" / "animations"
+    scene_dir = root / "scenes" / "characters"
+    ensure_dir(resource_dir)
+    ensure_dir(scene_dir)
+
+    ext_lines: list[str] = []
+    animations: list[str] = []
+    import_entries: list[dict[str, Any]] = []
+    ext_index = 1
+
+    for entry in sorted(entries, key=lambda item: item.get("asset_id", "")):
+        asset_id = entry.get("asset_id", "")
+        action = action_name_from_asset(asset_id, bundle_id)
+        frames_dir = resolve_project_path(root, entry.get("frames_dir"))
+        if not frames_dir or not frames_dir.exists():
+            continue
+        frame_paths = sorted(frames_dir.glob("*.png"))
+        if not frame_paths:
+            continue
+
+        frame_refs: list[str] = []
+        for frame in frame_paths:
+            ref_id = f"{ext_index}_{action}_{frame.stem.replace('-', '_')}"
+            ext_lines.append(f'[ext_resource type="Texture2D" path="{res_path(root, frame)}" id="{ref_id}"]')
+            frame_refs.append(ref_id)
+            ext_index += 1
+
+        speed = float(entry.get("fps", 0) or 0)
+        if speed <= 0:
+            try:
+                expected = int(entry.get("expected_frames", 0) or 0)
+                speed = 12.0 if expected >= 12 else 8.0 if expected >= 8 else 6.0
+            except ValueError:
+                speed = 8.0
+        loop = action in ("idle", "walk", "run")
+        frame_blocks = ", ".join([f'{{"duration": 1.0, "texture": ExtResource("{ref_id}")}}' for ref_id in frame_refs])
+        animations.append(
+            "{"
+            f'"frames": [{frame_blocks}], '
+            f'"loop": {godot_bool(loop)}, '
+            f'"name": &"{action}", '
+            f'"speed": {speed:.1f}'
+            "}"
+        )
+        import_entries.append({
+            "asset_id": asset_id,
+            "source_file": entry.get("processed_file", ""),
+            "res_path": res_path(root, resolve_project_path(root, entry.get("processed_file")) or frames_dir),
+            "target_node": "AnimatedSprite2D",
+            "import_preset": "2d_sprite_frames",
+            "frame_size": entry.get("frame_size", ""),
+            "pivot": entry.get("anchor", "center"),
+            "anchor": entry.get("anchor", "center"),
+            "collision_role": entry.get("collision_role", "none"),
+            "spriteframes": f"res://resources/animations/{bundle_id}_spriteframes.tres",
+        })
+
+    if not animations:
+        raise ValueError(f"No frame PNG files found for bundle '{bundle_id}'.")
+
+    spriteframes_path = resource_dir / f"{bundle_id}_spriteframes.tres"
+    spriteframes_text = "\n".join([
+        f"[gd_resource type=\"SpriteFrames\" load_steps={len(ext_lines) + 1} format=3]",
+        "",
+        *ext_lines,
+        "",
+        "[resource]",
+        "animations = [" + ", ".join(animations) + "]",
+        "",
+    ])
+    write_text(spriteframes_path, spriteframes_text)
+
+    default_animation = "idle" if any("name\": &\"idle" in animation for animation in animations) else action_name_from_asset(entries[0].get("asset_id", ""), bundle_id)
+    scene_name = args.scene_name or pascal_name(bundle_id)
+    scene_path = scene_dir / f"{bundle_id}.tscn"
+    scene_text = "\n".join([
+        "[gd_scene load_steps=2 format=3]",
+        "",
+        f'[ext_resource type="SpriteFrames" path="{res_path(root, spriteframes_path)}" id="1_spriteframes"]',
+        "",
+        f'[node name="{scene_name}" type="AnimatedSprite2D"]',
+        'sprite_frames = ExtResource("1_spriteframes")',
+        f'animation = &"{default_animation}"',
+        "playing = true",
+        "",
+    ])
+    write_text(scene_path, scene_text)
+    append_import_manifest(root, import_entries + [{
+        "asset_id": bundle_id,
+        "source_file": root_relative(root, spriteframes_path),
+        "res_path": res_path(root, scene_path),
+        "target_node": "AnimatedSprite2D",
+        "import_preset": "sprite_bundle_scene",
+        "notes": "Generated SpriteFrames and AnimatedSprite2D scene.",
+    }])
+
+    return {
+        "status": "ok",
+        "bundle_id": bundle_id,
+        "spriteframes": root_relative(root, spriteframes_path),
+        "scene": root_relative(root, scene_path),
+        "actions": [action_name_from_asset(entry.get("asset_id", ""), bundle_id) for entry in entries],
+    }
+
+
+def parse_json_list(root: Path, value: str | None, keys: tuple[str, ...]) -> list[dict[str, Any]]:
+    path = resolve_project_path(root, value)
+    data = load_json_if_exists(path)
+    if isinstance(data, list):
+        return [item for item in data if isinstance(item, dict)]
+    if isinstance(data, dict):
+        for key in keys:
+            if isinstance(data.get(key), list):
+                return [item for item in data[key] if isinstance(item, dict)]
+    return []
+
+
+def rect_values(item: dict[str, Any]) -> tuple[float, float, float, float]:
+    rect = item.get("rect")
+    if isinstance(rect, list) and len(rect) >= 4:
+        return float(rect[0]), float(rect[1]), float(rect[2]), float(rect[3])
+    if isinstance(rect, dict):
+        return float(rect.get("x", 0)), float(rect.get("y", 0)), float(rect.get("w", rect.get("width", 32))), float(rect.get("h", rect.get("height", 32)))
+    return (
+        float(item.get("x", 0)),
+        float(item.get("y", 0)),
+        float(item.get("w", item.get("width", 32))),
+        float(item.get("h", item.get("height", 32))),
+    )
+
+
+def map_entries(root: Path, asset_id: str) -> list[dict[str, str]]:
+    entries = parse_asset_manifest(manifest_path(root))
+    allowed = ("map", "level", "stage", "tilemap", "parallax")
+    selected = []
+    for entry in entries:
+        if asset_id and entry.get("asset_id") != asset_id:
+            continue
+        kind = entry.get("asset_kind", "").lower()
+        category = entry.get("category", "").lower()
+        if any(token in kind or token in category for token in allowed):
+            selected.append(entry)
+    return selected
+
+
+def node_name(value: str, fallback: str) -> str:
+    return pascal_name(str(value or fallback))
+
+
+def godot_map_command(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.project).resolve()
+    entries = map_entries(root, args.asset_id)
+    if not entries:
+        raise ValueError("No map-like asset entries found.")
+
+    scene_dir = root / "scenes" / "levels"
+    ensure_dir(scene_dir)
+    outputs: list[dict[str, str]] = []
+
+    for entry in entries:
+        asset_id = safe_id(entry.get("asset_id", "level"))
+        ext_lines: list[str] = []
+        sub_lines: list[str] = []
+        node_lines: list[str] = [
+            "[node name=\"Level\" type=\"Node2D\"]",
+            "",
+        ]
+        load_steps = 1
+
+        preview = resolve_project_path(root, entry.get("preview_file") or entry.get("processed_file") or entry.get("selected_file"))
+        if preview and preview.exists():
+            load_steps += 1
+            ext_lines.append(f'[ext_resource type="Texture2D" path="{res_path(root, preview)}" id="1_preview"]')
+            node_lines.extend([
+                "[node name=\"VisualPreview\" type=\"Sprite2D\" parent=\".\"]",
+                'texture = ExtResource("1_preview")',
+                "centered = false",
+                "",
+            ])
+
+        props = parse_json_list(root, entry.get("props_metadata"), ("props", "objects", "placements", "items"))
+        ext_index = 2
+        for index, prop in enumerate(props):
+            file_value = prop.get("file") or prop.get("source") or prop.get("path") or prop.get("image")
+            prop_path = resolve_project_path(root, str(file_value)) if file_value else None
+            if not prop_path or not prop_path.exists():
+                continue
+            ref_id = f"{ext_index}_prop_{index}"
+            ext_index += 1
+            load_steps += 1
+            ext_lines.append(f'[ext_resource type="Texture2D" path="{res_path(root, prop_path)}" id="{ref_id}"]')
+            x = float(prop.get("x", 0))
+            y = float(prop.get("y", 0))
+            node_lines.extend([
+                f'[node name="{node_name(prop.get("name", ""), f"Prop{index}")}" type="Sprite2D" parent="."]',
+                f'position = Vector2({x:g}, {y:g})',
+                f'texture = ExtResource("{ref_id}")',
+                "",
+            ])
+
+        collision = parse_json_list(root, entry.get("collision_metadata"), ("collision", "collisions", "solids", "blockers"))
+        for index, item in enumerate(collision):
+            x, y, w, h = rect_values(item)
+            sub_name = f"{index + 1}_collision_shape"
+            load_steps += 1
+            sub_lines.extend([
+                f'[sub_resource type="RectangleShape2D" id="{sub_name}"]',
+                f"size = Vector2({w:g}, {h:g})",
+                "",
+            ])
+            body_name = node_name(item.get("name", ""), f"Collision{index}")
+            node_lines.extend([
+                f'[node name="{body_name}" type="StaticBody2D" parent="."]',
+                f'position = Vector2({x + w / 2:g}, {y + h / 2:g})',
+                "",
+                f'[node name="CollisionShape2D" type="CollisionShape2D" parent="{body_name}"]',
+                f'shape = SubResource("{sub_name}")',
+                "",
+            ])
+
+        zones = parse_json_list(root, entry.get("zones_metadata"), ("zones", "areas", "triggers", "exits"))
+        for index, item in enumerate(zones):
+            x, y, w, h = rect_values(item)
+            sub_name = f"{index + 1}_zone_shape"
+            load_steps += 1
+            sub_lines.extend([
+                f'[sub_resource type="RectangleShape2D" id="{sub_name}"]',
+                f"size = Vector2({w:g}, {h:g})",
+                "",
+            ])
+            zone_name = node_name(item.get("name", ""), f"Zone{index}")
+            node_lines.extend([
+                f'[node name="{zone_name}" type="Area2D" parent="."]',
+                f'position = Vector2({x + w / 2:g}, {y + h / 2:g})',
+                "",
+                f'[node name="CollisionShape2D" type="CollisionShape2D" parent="{zone_name}"]',
+                f'shape = SubResource("{sub_name}")',
+                "",
+            ])
+
+        if entry.get("tiles_metadata", ""):
+            node_lines.extend([
+                "[node name=\"EditableTileMap\" type=\"TileMapLayer\" parent=\".\"]",
+                "",
+            ])
+
+        scene_path = scene_dir / f"{asset_id}.tscn"
+        scene_text = "\n".join([
+            f"[gd_scene load_steps={load_steps} format=3]",
+            "",
+            *ext_lines,
+            "",
+            *sub_lines,
+            *node_lines,
+        ])
+        write_text(scene_path, scene_text)
+        append_import_manifest(root, [{
+            "asset_id": asset_id,
+            "source_file": entry.get("preview_file") or entry.get("processed_file") or entry.get("selected_file", ""),
+            "res_path": res_path(root, scene_path),
+            "target_node": "Node2D",
+            "import_preset": "editable_map_scene",
+            "notes": "Generated level scene with Sprite2D, StaticBody2D, Area2D, and optional TileMapLayer placeholders.",
+        }])
+        outputs.append({"asset_id": asset_id, "scene": root_relative(root, scene_path)})
+
+    return {"status": "ok", "levels": outputs}
+
+
+def reference_variant_command(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.root).resolve()
+    asset_id = safe_id(args.asset_id)
+    actions = parse_actions(args.actions)
+    variant_dir = root / "design" / "assets" / "reference-variants"
+    ensure_dir(variant_dir)
+    key_color = args.key_color if args.key_color != "suggest" else suggest_key(args.description)
+
+    lines = [
+        f"asset_id: {asset_id}",
+        f"reference_file: {args.reference_file}",
+        f"description: {yaml_quote(args.description)}",
+        f"key_color: {yaml_quote(key_color)}",
+        "identity_lock:",
+        "  preserve: silhouette, face shape, costume motifs, color palette, readable proportions",
+        "  allowed_variation: pose, limb placement, expression, squash/stretch, motion smear",
+        "  forbidden_variation: outfit redesign, species change, palette drift, extra limbs, text labels",
+        "actions:",
+    ]
+    for action in actions:
+        lines.extend([
+            f"  - action: {action.name}",
+            f"    rows: {action.rows}",
+            f"    cols: {action.cols}",
+            f"    expected_frames: {action.expected_frames}",
+            f"    fps: {action.fps:g}",
+            f"    anchor: {action.anchor}",
+        ])
+    lines.extend([
+        "prompt_notes:",
+        "  - Use the reference image as identity guidance, not as a background.",
+        "  - Generate one action per raw sheet.",
+        "  - Keep every frame isolated on the selected flat chroma-key background.",
+        "",
+    ])
+    path = variant_dir / f"{asset_id}.yaml"
+    write_text(path, "\n".join(lines))
+    return {"status": "ok", "variant_spec": root_relative(root, path), "key_color": key_color}
+
+
+def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
+    root = Path(args.root).resolve()
+    name = safe_id(args.name)
+    project = root / "examples" / name
+    write_text(project / "project.godot", "\n".join([
+        "; Engine configuration file.",
+        "; Generated by Codex Game Maker asset workflow.",
+        "config_version=5",
+        "",
+        "[application]",
+        f'config/name="{args.title}"',
+        'run/main_scene="res://scenes/main/Main.tscn"',
+        'config/features=PackedStringArray("4.4", "Forward Plus")',
+        "",
+        "[display]",
+        "window/size/viewport_width=960",
+        "window/size/viewport_height=540",
+        "",
+    ]))
+    write_text(project / "export_presets.cfg", "\n".join([
+        "[preset.0]",
+        "",
+        'name="Web"',
+        'platform="Web"',
+        "runnable=true",
+        "dedicated_server=false",
+        'custom_features=""',
+        'export_filter="all_resources"',
+        'include_filter=""',
+        'exclude_filter=""',
+        'export_path="build/web/index.html"',
+        'encryption_include_filters=""',
+        'encryption_exclude_filters=""',
+        "encrypt_pck=false",
+        "encrypt_directory=false",
+        "",
+        "[preset.0.options]",
+        "",
+        'custom_template/debug=""',
+        'custom_template/release=""',
+        "variant/extensions_support=false",
+        "vram_texture_compression/for_desktop=true",
+        "vram_texture_compression/for_mobile=false",
+        "html/export_icon=true",
+        'html/custom_html_shell=""',
+        'html/head_include=""',
+        "html/canvas_resize_policy=2",
+        "html/focus_canvas_on_start=true",
+        "html/experimental_virtual_keyboard=false",
+        "progressive_web_app/enabled=false",
+        'progressive_web_app/offline_page=""',
+        "progressive_web_app/display=1",
+        "progressive_web_app/orientation=0",
+        'progressive_web_app/icon_144x144=""',
+        'progressive_web_app/icon_180x180=""',
+        'progressive_web_app/icon_512x512=""',
+        "progressive_web_app/background_color=Color(0, 0, 0, 1)",
+        "",
+    ]))
+    write_text(project / "README.md", "\n".join([
+        f"# {args.title}",
+        "",
+        "A Godot 4.4 showcase skeleton for validating Codex Game Maker generated assets.",
+        "",
+        "Expected flow:",
+        "",
+        "1. Create an action bundle.",
+        "2. Generate raw image sheets with the recorded prompts.",
+        "3. Process sheets into transparent frames and GIF previews.",
+        "4. Import accepted sprite bundles into Godot.",
+        "5. Run the main scene and verify the generated character or map in-engine.",
+        "",
+    ]))
+    write_text(project / "design" / "gdd" / "game-concept.md", "\n".join([
+        "# Asset Pipeline Showcase Concept",
+        "",
+        "Goal: prove that generated 2D assets can move from image output to Godot runtime scenes with clear QA evidence.",
+        "",
+    ]))
+    write_text(project / "design" / "art" / "art-bible.md", "\n".join([
+        "# Art Bible",
+        "",
+        "- style: readable 2D game-ready assets",
+        "- background handling: smart chroma key with transparent processed outputs",
+        "- runtime target: Godot 4.4",
+        "",
+    ]))
+    write_text(project / "scripts" / "main.gd", "\n".join([
+        "extends Node2D",
+        "",
+        "@onready var status_label: Label = $CanvasLayer/StatusLabel",
+        "",
+        "func _ready() -> void:",
+        "    status_label.text = \"Import a generated sprite scene, then instance it under ShowcaseRoot.\"",
+        "",
+    ]))
+    write_text(project / "scenes" / "main" / "Main.tscn", "\n".join([
+        "[gd_scene load_steps=2 format=3]",
+        "",
+        '[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]',
+        "",
+        "[node name=\"Main\" type=\"Node2D\"]",
+        "script = ExtResource(\"1_main\")",
+        "",
+        "[node name=\"ShowcaseRoot\" type=\"Node2D\" parent=\".\"]",
+        "position = Vector2(480, 340)",
+        "",
+        "[node name=\"CanvasLayer\" type=\"CanvasLayer\" parent=\".\"]",
+        "",
+        "[node name=\"StatusLabel\" type=\"Label\" parent=\"CanvasLayer\"]",
+        "offset_left = 24.0",
+        "offset_top = 24.0",
+        "offset_right = 936.0",
+        "offset_bottom = 68.0",
+        "",
+    ]))
+    return {"status": "ok", "project": root_relative(root, project)}
+
+
+def write_result(result: dict[str, Any]) -> None:
+    print(json.dumps(result, indent=2))
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Codex Game Maker asset workflow tools")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    action = sub.add_parser("action-bundle", help="plan and optionally process a multi-action sprite bundle")
+    action.add_argument("--root", default=".")
+    action.add_argument("--asset-id", required=True)
+    action.add_argument("--description", required=True)
+    action.add_argument("--category", default="characters")
+    action.add_argument("--view", default="side")
+    action.add_argument("--actions", default="idle,run,jump,attack,hurt")
+    action.add_argument("--key-color", default="suggest")
+    action.add_argument("--reference-file", default="")
+    action.add_argument("--fit-scale", type=float, default=0.92)
+    action.add_argument("--tolerance", type=int, default=70)
+    action.add_argument("--softness", type=int, default=32)
+    action.add_argument("--process-existing-raw", action="store_true")
+    action.set_defaults(func=action_bundle_command)
+
+    repair = sub.add_parser("repair-assets", help="propose or apply deterministic asset processing repairs")
+    repair.add_argument("--root", default=".")
+    repair.add_argument("--asset-id", default="")
+    repair.add_argument("--apply", action="store_true")
+    repair.add_argument("--max-attempts", type=int, default=4)
+    repair.set_defaults(func=repair_assets_command)
+
+    sprite = sub.add_parser("godot-sprite", help="generate SpriteFrames and AnimatedSprite2D scene from accepted sprites")
+    sprite.add_argument("--project", default=".")
+    sprite.add_argument("--bundle-id", required=True)
+    sprite.add_argument("--asset-ids", default="")
+    sprite.add_argument("--scene-name", default="")
+    sprite.set_defaults(func=godot_sprite_command)
+
+    level = sub.add_parser("godot-map", help="generate editable Godot level scenes from map metadata")
+    level.add_argument("--project", default=".")
+    level.add_argument("--asset-id", default="")
+    level.set_defaults(func=godot_map_command)
+
+    variant = sub.add_parser("reference-variant", help="write reference-guided variant generation spec")
+    variant.add_argument("--root", default=".")
+    variant.add_argument("--asset-id", required=True)
+    variant.add_argument("--reference-file", required=True)
+    variant.add_argument("--description", required=True)
+    variant.add_argument("--actions", default="idle,run,jump")
+    variant.add_argument("--key-color", default="suggest")
+    variant.set_defaults(func=reference_variant_command)
+
+    showcase = sub.add_parser("showcase", help="create a Godot 4.4 asset pipeline showcase skeleton")
+    showcase.add_argument("--root", default=".")
+    showcase.add_argument("--name", default="asset-pipeline-showcase")
+    showcase.add_argument("--title", default="Asset Pipeline Showcase")
+    showcase.set_defaults(func=showcase_command)
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    try:
+        write_result(args.func(args))
+        return 0
+    except Exception as exc:
+        print(json.dumps({"error": str(exc)}, indent=2), file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+

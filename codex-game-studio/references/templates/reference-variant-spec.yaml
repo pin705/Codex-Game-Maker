@@ -1,0 +1,19 @@
+asset_id: HERO-000
+reference_file: assets/references/HERO-000.png
+description: ""
+key_color: "#FF00FF"
+identity_lock:
+  preserve: silhouette, face shape, costume motifs, color palette, readable proportions
+  allowed_variation: pose, limb placement, expression, squash/stretch, motion smear
+  forbidden_variation: outfit redesign, species change, palette drift, extra limbs, text labels
+actions:
+  - action: idle
+    rows: 2
+    cols: 3
+    expected_frames: 6
+    fps: 6
+    anchor: feet
+prompt_notes:
+  - Use the reference image as identity guidance, not as a background.
+  - Generate one action per raw sheet.
+  - Keep every frame isolated on the selected flat chroma-key background.

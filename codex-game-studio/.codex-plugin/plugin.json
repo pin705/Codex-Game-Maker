@@ -1,0 +1,47 @@
+﻿{
+  "name": "codex-game-maker",
+  "version": "0.1.0",
+  "description": "A lean Codex game-making workflow for Godot-first games, game-ready GPT Image 2D assets, production planning, and QA gates.",
+  "author": {
+    "name": "Codex Game Maker",
+    "email": "",
+    "url": ""
+  },
+  "homepage": "",
+  "repository": "",
+  "license": "MIT",
+  "keywords": [
+    "game-development",
+    "godot",
+    "ai-assets",
+    "sprites",
+    "2d-assets",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Game Maker",
+    "shortDescription": "Godot-first game-making workflows for Codex.",
+    "longDescription": "A lean game development operating system for Codex: guided concept design, Godot-first engine detection, art bible, game-ready GPT Image 2 sprite/map asset pipeline, architecture templates, and review/QA gates.",
+    "developerName": "Codex Game Maker",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Image Generation",
+      "Web Research"
+    ],
+    "websiteURL": "",
+    "privacyPolicyURL": "",
+    "termsOfServiceURL": "",
+    "defaultPrompt": [
+      "Start a new Godot-first game project with Codex Game Maker.",
+      "Turn this game idea into a concept doc, art bible, and first asset prompts.",
+      "Create game-ready 2D sprite assets with transparent frames, GIF preview, metadata, and Godot import notes.",
+      "Audit this existing project and tell me which engine and stage it appears to be.",
+      "Review this game project and run a QA gate before demo/export."
+    ],
+    "brandColor": "#3B82F6"
+  }
+}
+

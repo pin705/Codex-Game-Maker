@@ -1,0 +1,11 @@
+.tools/
+tmp/
+.research/
+production/session-state/
+
+**/.godot/
+**/build/
+**/.import/
+**/__pycache__/
+
+*.tmp

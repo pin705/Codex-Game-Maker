@@ -1,0 +1,78 @@
+﻿phases:
+  blank:
+    next: concept
+    recommended_skill: game-studio-start
+  concept:
+    required:
+      - design/gdd/game-concept.md
+      - design/art/art-bible.md
+    recommended_skill: game-studio-design
+  systems-design:
+    required:
+      - design/gdd/systems-index.md
+      - design/gdd/*-system.md
+    recommended_skill: game-studio-design
+  art-assets:
+    required:
+      - design/art/art-bible.md
+      - design/assets/asset-manifest.yaml
+      - design/assets/godot-import-manifest.yaml
+      - assets/source-prompts/*
+      - assets/generated/**/pipeline-meta.json
+    recommended_skill: game-studio-art-assets
+    detail_skills:
+      - game-studio-sprite-assets
+      - game-studio-map-assets
+      - game-studio-asset-qa
+  technical-setup:
+    required:
+      - project.godot
+      - docs/architecture/adr-*.md
+    recommended_skill: game-studio-architecture
+  architecture:
+    required:
+      - docs/architecture/architecture.md
+      - docs/architecture/control-manifest.md
+    recommended_skill: game-studio-architecture
+  implementation-story:
+    required:
+      - production/stories/STORY-*.md
+    recommended_skill: game-studio-review
+  production:
+    required:
+      - production/epics/EPIC-*.md
+      - production/sprints/*.md
+      - production/stories/STORY-*.md
+    recommended_skill: game-studio-review
+  smoke-qa:
+    required:
+      - production/smoke-tests/*.md
+      - production/regression/*.md
+    recommended_skill: game-studio-review
+  release:
+    required:
+      - production/releases/*release*.md
+      - CHANGELOG.md
+    recommended_skill: game-studio-review
+  review:
+    required:
+      - production/reviews/review-*.md
+      - production/playtests/*.md
+    recommended_skill: game-studio-review
+defaults:
+  engine: godot
+  blank_project_recommendation: "Godot 4.4 + Web export"
+  review_mode: lean
+  story_mode: small-slice
+  asset_mode: processed-runtime-assets-and-qa
+  qa_mode: smoke-and-regression-light
+  professional_mode: explicit-alias-only
+  release_mode: professional-only
+  core_roles:
+    - creative
+    - game-design
+    - art
+    - technical
+    - production
+    - qa
+

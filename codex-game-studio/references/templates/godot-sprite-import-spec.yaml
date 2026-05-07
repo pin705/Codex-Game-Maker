@@ -1,0 +1,18 @@
+bundle_id: HERO-000
+godot_version: "4.4"
+target:
+  spriteframes: resources/animations/HERO-000_spriteframes.tres
+  scene: scenes/characters/HERO-000.tscn
+  node_type: AnimatedSprite2D
+actions:
+  - asset_id: HERO-000-idle
+    action: idle
+    frames_dir: assets/generated/characters/HERO-000-idle/frames
+    fps: 6
+    loop: true
+  - asset_id: HERO-000-run
+    action: run
+    frames_dir: assets/generated/characters/HERO-000-run/frames
+    fps: 12
+    loop: true
+notes: ""

@@ -1,0 +1,28 @@
+bundle_id: HERO-000
+description: ""
+category: characters
+view: side
+godot_version: "4.4"
+actions:
+  - action: idle
+    asset_id: HERO-000-idle
+    rows: 2
+    cols: 3
+    expected_frames: 6
+    fps: 6
+    anchor: feet
+    loop: true
+    key_color: "#FF00FF"
+    source_prompt: assets/source-prompts/HERO-000-idle.yaml
+    raw_target: assets/raw/HERO-000-idle-sheet.png
+  - action: run
+    asset_id: HERO-000-run
+    rows: 3
+    cols: 4
+    expected_frames: 12
+    fps: 12
+    anchor: feet
+    loop: true
+    key_color: "#FF00FF"
+    source_prompt: assets/source-prompts/HERO-000-run.yaml
+    raw_target: assets/raw/HERO-000-run-sheet.png

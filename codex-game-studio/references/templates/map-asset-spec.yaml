@@ -1,0 +1,39 @@
+asset_id: MAP-000
+name: ""
+asset_kind: map
+target_engine: "Godot 4.4"
+map_mode: "side_scroll_mode"
+visual_model: "parallax_layers"
+runtime_object_model: "platform_objects"
+collision_model: "precise_shapes"
+art_style: "project-native"
+stage_canvas: "1536x864"
+generation_plan:
+  base_or_background: "scenery-only foundation"
+  reference_mockup: "in-world stage/reference mockup"
+  prop_strategy: "one_by_one"
+  max_distinct_runtime_objects_first_pass: 9
+layers:
+  sky: ""
+  far_bg: ""
+  mid_bg: ""
+  near_bg: ""
+  foreground_overlay: ""
+runtime_objects:
+  props_metadata: ""
+  collision_metadata: ""
+  zones_metadata: ""
+  camera_bounds_metadata: ""
+godot_import:
+  scene_target: ""
+  import_manifest: "design/assets/godot-import-manifest.yaml"
+  nodes:
+    - Sprite2D
+    - StaticBody2D
+    - Area2D
+outputs:
+  preview_file: ""
+  pipeline_meta: ""
+qa:
+  expected_gate: "tools/check-asset-qa.ps1 -Root ."
+  notes: ""

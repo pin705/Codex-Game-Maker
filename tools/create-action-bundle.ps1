@@ -1,0 +1,45 @@
+param(
+  [string]$Root = ".",
+  [Parameter(Mandatory = $true)]
+  [string]$AssetId,
+  [Parameter(Mandatory = $true)]
+  [string]$Description,
+  [string]$Category = "characters",
+  [string]$View = "side",
+  [string]$Actions = "idle,run,jump,attack,hurt",
+  [string]$KeyColor = "suggest",
+  [string]$ReferenceFile = "",
+  [double]$FitScale = 0.92,
+  [int]$Tolerance = 70,
+  [int]$Softness = 32,
+  [switch]$ProcessExistingRaw
+)
+
+$ErrorActionPreference = "Stop"
+
+$repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
+$pythonHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_python.ps1"
+$workflow = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_workflows.py"
+
+. $pythonHelper
+
+$argsList = @(
+  $workflow,
+  "action-bundle",
+  "--root", $Root,
+  "--asset-id", $AssetId,
+  "--description", $Description,
+  "--category", $Category,
+  "--view", $View,
+  "--actions", $Actions,
+  "--key-color", $KeyColor,
+  "--fit-scale", "$FitScale",
+  "--tolerance", "$Tolerance",
+  "--softness", "$Softness"
+)
+
+if (![string]::IsNullOrWhiteSpace($ReferenceFile)) { $argsList += @("--reference-file", $ReferenceFile) }
+if ($ProcessExistingRaw) { $argsList += "--process-existing-raw" }
+
+Invoke-CgsPython -Arguments $argsList
+exit $LASTEXITCODE
