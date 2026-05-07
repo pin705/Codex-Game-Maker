@@ -6,7 +6,7 @@
 
 **Codex skills for Godot-first game projects, game-ready 2D assets, and engine-ready prototypes.**
 
-**Quick links:** [Install](#quick-start) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Engine Support](#engine-support) · [Skills](#whats-included) · [Professional Features](#professional-features) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts) · [Roadmap](#roadmap)
+**Quick links:** [Install](#quick-start) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Engine Support](#engine-support) · [Skills](#whats-included) · [Professional Features](#professional-features) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Status](https://img.shields.io/badge/status-v0.1--alpha-orange)
@@ -40,7 +40,6 @@ Codex Game Maker turns a Codex session into a practical game-making workspace: g
 - [Safety And Gates](#safety-and-gates)
 - [Suggested Prompts](#suggested-prompts)
 - [Repository Layout](#repository-layout)
-- [Roadmap](#roadmap)
 
 ## What Makes It Different
 
@@ -372,23 +371,6 @@ README.zh-CN.md
 LICENSE
 ```
 
-## Roadmap
-
-Near-term:
-
-- Real asset-driven cat platformer showcase.
-- Demo GIF and workflow diagram.
-- macOS/Linux smoke tests.
-- Godot CLI validation that generated `.tres` and `.tscn` load cleanly.
-- Better reference-guided identity consistency review.
-
-Later:
-
-- True GPT Image job orchestration, retry, and cost tracking.
-- Deeper Phaser/Three.js/PixiJS examples.
-- Optional Unity/Unreal specialist workflows if users actually need them.
-- Marketplace packaging once Codex plugin distribution is stable.
-
 ## More Docs
 
 - [Chinese README](README.zh-CN.md)
@@ -398,7 +380,6 @@ Later:
 - [Project migration](docs/PROJECT_MIGRATION.md)
 - [Asset pipeline completion plan](docs/ASSET_PIPELINE_COMPLETION_PLAN.md)
 - [Release assets checklist](docs/RELEASE_ASSETS.md)
-- [Current gaps vs Claude Code Game Studios](docs/CURRENT_GAPS_VS_CLAUDE_GAME_STUDIOS.md)
 
 ## License
 

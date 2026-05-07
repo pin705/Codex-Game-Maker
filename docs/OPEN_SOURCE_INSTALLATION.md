@@ -227,6 +227,5 @@ pwsh -File tools/preview-godot-web.ps1 -Project .
 - Professional command aliases are tracked in `codex-game-studio/references/commands/catalog.yaml`.
 - README shows both template and global install paths.
 - `docs/CROSS_PLATFORM_PLAN.md` is updated when platform behavior changes.
-- `docs/CURRENT_GAPS_VS_CLAUDE_GAME_STUDIOS.md` is updated when major workflow coverage changes.
 
 
