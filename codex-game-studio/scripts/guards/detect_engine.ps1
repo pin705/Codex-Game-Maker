@@ -24,6 +24,16 @@ function Has-AnyAtRoot($patterns) {
   return $false
 }
 
+function Test-ExactRootChildName($name) {
+  $children = @(Get-ChildItem -LiteralPath $rootPath -Force -ErrorAction SilentlyContinue)
+  foreach ($child in $children) {
+    if ([string]::Equals($child.Name, $name, [System.StringComparison]::Ordinal)) {
+      return $true
+    }
+  }
+  return $false
+}
+
 function Find-NestedProjects($fileName) {
   $matches = Get-ChildItem -LiteralPath $rootPath -Recurse -Force -ErrorAction SilentlyContinue -Filter $fileName |
     Where-Object {
@@ -54,9 +64,9 @@ if (Test-Path -LiteralPath (Join-Path $rootPath "project.godot")) { $signals.God
 if (Test-Path -LiteralPath (Join-Path $rootPath ".godot")) { $signals.Godot += ".godot/" }
 if ($signals.Godot.Count -gt 0 -and (Has-AnyAtRoot @("*.tscn", "*.tres", "*.gd"))) { $signals.Godot += "Godot root scene/resource/script files" }
 
-if (Test-Path -LiteralPath (Join-Path $rootPath "Assets")) { $signals.Unity += "Assets/" }
-if (Test-Path -LiteralPath (Join-Path $rootPath "ProjectSettings/ProjectVersion.txt")) { $signals.Unity += "ProjectSettings/ProjectVersion.txt" }
-if (Test-Path -LiteralPath (Join-Path $rootPath "Packages/manifest.json")) { $signals.Unity += "Packages/manifest.json" }
+if (Test-ExactRootChildName "Assets") { $signals.Unity += "Assets/" }
+if ((Test-ExactRootChildName "ProjectSettings") -and (Test-Path -LiteralPath (Join-Path $rootPath "ProjectSettings/ProjectVersion.txt"))) { $signals.Unity += "ProjectSettings/ProjectVersion.txt" }
+if ((Test-ExactRootChildName "Packages") -and (Test-Path -LiteralPath (Join-Path $rootPath "Packages/manifest.json"))) { $signals.Unity += "Packages/manifest.json" }
 
 if (Has-AnyAtRoot @("*.uproject")) { $signals.Unreal += "*.uproject" }
 if (Test-Path -LiteralPath (Join-Path $rootPath "Config/DefaultEngine.ini")) { $signals.Unreal += "Config/DefaultEngine.ini" }

@@ -133,24 +133,35 @@ def append_asset_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
     path = manifest_path(root)
     ensure_dir(path.parent)
     existing = parse_asset_manifest(path)
-    existing_ids = {entry.get("asset_id", "") for entry in existing}
-    if not path.exists():
-        path.write_text("assets:\n", encoding="utf-8")
 
-    blocks: list[str] = []
+    by_id: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+    for entry in existing:
+        asset_id = str(entry.get("asset_id", "")).strip()
+        if not asset_id:
+            continue
+        by_id[asset_id] = dict(entry)
+        order.append(asset_id)
+
     for entry in entries:
         asset_id = str(entry.get("asset_id", "")).strip()
-        if not asset_id or asset_id in existing_ids:
+        if not asset_id:
             continue
-        lines = [f"  - asset_id: {asset_id}"]
+        if asset_id not in by_id:
+            order.append(asset_id)
+            by_id[asset_id] = {"asset_id": asset_id}
+        by_id[asset_id].update(entry)
+
+    lines = ["assets:"]
+    for asset_id in order:
+        entry = by_id[asset_id]
+        lines.append("")
+        lines.append(f"  - asset_id: {asset_id}")
         for key, value in entry.items():
             if key == "asset_id":
                 continue
             lines.append(f"    {key}: {yaml_quote(value)}")
-        blocks.append("\n".join(lines))
-    if blocks:
-        with path.open("a", encoding="utf-8") as handle:
-            handle.write("\n" + "\n".join(blocks) + "\n")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
