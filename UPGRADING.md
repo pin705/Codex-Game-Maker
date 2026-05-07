@@ -40,7 +40,6 @@ Do not replace project-specific game folders unless you intend to:
 assets/
 design/
 docs/architecture/
-examples/
 production/
 project.godot
 scenes/

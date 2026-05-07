@@ -22,7 +22,7 @@ Codex Game Maker turns a Codex session into a practical game-making workspace: g
 ## Table Of Contents
 
 - [What Makes It Different](#what-makes-it-different)
-- [Showcase Status](#showcase-status)
+- [Showcase Plans](#showcase-plans)
 - [What's Included](#whats-included)
 - [Engine Support](#engine-support)
 - [Quick Start](#quick-start)
@@ -48,16 +48,9 @@ Codex Game Maker is not just a prompt pack. It is a Codex-first game workflow wh
 | Explicit professional mode | Release, hooks, team passes, accessibility, localization, and audio workflows are opt-in. |
 | Web-aware troubleshooting | Use web search for official docs when engine versions, APIs, export errors, or resource issues matter. |
 
-## Showcase Status
+## Showcase Plans
 
-Current examples:
-
-| Example | Status | Purpose |
-|---|---:|---|
-| `examples/platform-jumper-godot` | MVP sample | Small Godot 4 platformer project generated through the workflow. |
-| `examples/asset-pipeline-showcase` | Skeleton | Godot 4.4 showcase shell for testing imported generated assets. |
-
-Planned before a polished public release:
+Generated showcase projects are treated as local output and are not committed to the repository by default. Planned before a polished public release:
 
 - Cat platformer asset showcase with generated action bundle.
 - Real Godot Web export evidence.
@@ -366,7 +359,6 @@ tools/
 docs/
 assets/
   brand/
-examples/
 production/
 requirements-asset-tools.txt
 README.md

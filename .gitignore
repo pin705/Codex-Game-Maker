@@ -1,6 +1,7 @@
 .tools/
 tmp/
 .research/
+examples/
 production/session-state/
 
 **/.godot/
