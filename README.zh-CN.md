@@ -1,10 +1,12 @@
 ﻿# Codex Game Maker
 
+**Languages:** [English](README.md) | [简体中文](README.zh-CN.md)
+
 ![Codex Game Maker banner](assets/brand/banner.png)
 
-面向 Codex 的 Godot 优先游戏制作工作流，重点支持 GPT Image 生成的 2D 游戏资产。
+**面向 Codex 的 Godot 优先游戏制作工作流，重点支持可进游戏的 2D 资产和可验证原型。**
 
-一句话定位：把一个 Codex 会话变成 Godot 优先的游戏制作工作区。
+**快速跳转：** [安装](#快速开始) · [资产流程](#gpt-image-资产流程) · [引擎支持](#引擎支持) · [Skills](#当前包含) · [专业功能](#专业功能) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词) · [路线图](#路线图)
 
 > 当前状态：`v0.1-alpha`。核心工具已经能跑，但仍是早期预览版。
 
@@ -43,7 +45,7 @@ Codex Game Maker 会把一个 Codex 会话变成轻量游戏制作空间：项�
 ## 快速开始
 
 ```powershell
-git clone https://github.com/<owner>/codex-game-maker.git my-game
+git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
 cd my-game
 powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
 ```
@@ -165,7 +167,7 @@ design/assets/godot-import-manifest.yaml
 ## 示例提示词
 
 ```text
-Use Codex Game Maker to start a small cozy platformer. Guide me step by step and go with defaults if I do not know.
+Use Codex Game Maker to start a small cozy platformer. Ask at most three important questions, then proceed with reasonable defaults.
 ```
 
 ```text
@@ -175,6 +177,29 @@ Use Codex Game Maker to create a cute cat platformer hero with idle, run, jump, 
 ```text
 /release Prepare this Godot Web demo for a public alpha release.
 ```
+
+## 安全与门禁
+
+常用检查：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
+powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
+```
+
+这些 gate 用来检查工具完整性、资产可用性、Godot 脚本风险、story/smoke evidence 和发布前基本质量。
+
+## 路线图
+
+近期重点：
+
+- 真实资产驱动的猫猫平台跳跃 showcase。
+- Demo GIF 和流程图。
+- macOS/Linux smoke tests。
+- Godot CLI 验证生成的 `.tres` 和 `.tscn` 可加载。
+- 更稳定的 reference-guided identity consistency review。
 
 ## License
 

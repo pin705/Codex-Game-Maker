@@ -22,7 +22,7 @@ Best for most users.
 User flow:
 
 ```powershell
-git clone https://github.com/<owner>/Codex-Game-Studio my-game
+git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
 cd my-game
 ```
 
@@ -97,8 +97,8 @@ Best for users who want Codex Game Maker available in every project.
 User flow:
 
 ```powershell
-git clone https://github.com/<owner>/Codex-Game-Studio
-cd Codex-Game-Studio
+git clone https://github.com/0xnickmortal/Codex-Game-Maker.git
+cd Codex-Game-Maker
 powershell -ExecutionPolicy Bypass -File tools\install-codex-skills.ps1
 ```
 

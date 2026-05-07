@@ -1,6 +1,12 @@
 ﻿# Codex Game Maker
 
+**Languages:** [English](README.md) | [简体中文](README.zh-CN.md)
+
 ![Codex Game Maker banner](assets/brand/banner.png)
+
+**Codex skills for Godot-first game projects, game-ready 2D assets, and engine-ready prototypes.**
+
+**Quick links:** [Install](#quick-start) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Engine Support](#engine-support) · [Skills](#whats-included) · [Professional Features](#professional-features) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts) · [Roadmap](#roadmap)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Status](https://img.shields.io/badge/status-v0.1--alpha-orange)
@@ -84,7 +90,7 @@ Blank folders default to Godot 4.4 + Web export. Existing projects keep their cu
 ### Option 1: Use As A Game Template
 
 ```powershell
-git clone https://github.com/<owner>/codex-game-maker.git my-game
+git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
 cd my-game
 powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
 ```
