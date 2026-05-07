@@ -129,6 +129,8 @@ For a generated player/enemy that enters Godot gameplay:
 - Record pivot, foot line, frame size, action FPS, loop/non-loop, and state-machine mapping.
 - Use `AnimatedSprite2D` or `SpriteFrames` only after the normalized frames pass QA.
 - Add a small motion state machine for controllable characters. Minimum states: idle, run, jump-rise, jump-fall, land, hurt/dead when relevant.
+- Use explicit project gameplay actions such as `move_left`, `move_right`, `jump`, and `restart`; do not drive shipped gameplay from Godot default `ui_*` actions.
+- Bind every key shown in HUD/control text, including WASD and arrow keys when both are advertised.
 - Use coyote time and jump buffering for platformers unless the user explicitly wants strict arcade input.
 - Do not draw collision rectangles as visual art. Collision and generated visual props must be separate nodes/layers.
 - Do not stretch props into arbitrary aspect ratios. Use aspect-preserving draw, nine-slice/tileable pieces, or generate the exact platform/prop size needed.

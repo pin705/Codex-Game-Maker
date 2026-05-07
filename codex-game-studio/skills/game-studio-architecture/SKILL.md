@@ -74,12 +74,15 @@ Use templates:
    - Web export constraints
    - save/load
    - input remapping
+   - explicit gameplay input actions and Web canvas focus
    - asset import settings
    - renderer/shader assumptions
    - performance budget
 5. Create or update `docs/architecture/architecture.md`.
 6. Create ADRs only for decisions that matter.
 7. Create `control-manifest.md` with concrete implementation rules.
+   - Gameplay code must use project-specific actions like `move_left`, `move_right`, `jump`, and `restart`; do not rely on Godot default `ui_*` actions.
+   - If visible control text mentions WASD, arrows, Space, R, Esc, gamepad, or touch controls, those inputs must be explicitly bound and browser-verified.
 8. Before implementing gameplay code, create one small story from `references/templates/implementation-story.md`.
 9. Run `tools/check-story-gate.ps1 -Mode Ready` for the story.
 10. Run `tools/check-godot-lint.ps1 -Root .` after Godot code changes.
