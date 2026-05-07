@@ -13,6 +13,10 @@ actions:
     anchor: feet
     loop: true
     key_color: "#FF00FF"
+    harness_spec: design/assets/harnesses/HERO-000-idle.harness.json
+    harness_prompt: design/assets/harnesses/HERO-000-idle.prompt.md
+    canvas: 1152x768
+    cell_size: 384x384
     source_prompt: assets/source-prompts/HERO-000-idle.yaml
     raw_target: assets/raw/HERO-000-idle-sheet.png
   - action: run
@@ -24,5 +28,9 @@ actions:
     anchor: feet
     loop: true
     key_color: "#FF00FF"
+    harness_spec: design/assets/harnesses/HERO-000-run.harness.json
+    harness_prompt: design/assets/harnesses/HERO-000-run.prompt.md
+    canvas: 1536x1152
+    cell_size: 384x384
     source_prompt: assets/source-prompts/HERO-000-run.yaml
     raw_target: assets/raw/HERO-000-run-sheet.png

@@ -17,6 +17,7 @@ Read if present:
 - `docs/architecture/control-manifest.md`
 - `design/assets/asset-manifest.yaml`
 - `codex-game-studio/references/templates/map-asset-spec.yaml`
+- `codex-game-studio/references/templates/asset-harness-spec.yaml`
 - `codex-game-studio/references/templates/godot-import-manifest.yaml`
 
 ## Map Is Runtime Data
@@ -48,6 +49,19 @@ For platformers:
 - Do not stretch a decorative platform prop into arbitrary widths. Use a tileable platform strip, left/middle/right platform pieces, nine-slice art, or generate the exact platform sizes needed.
 - Keep collision rectangles invisible in runtime builds. Collision debug outlines belong only in review screenshots or editor tools.
 - Large platform pieces must have safe padding and should not be extracted from a square prop-pack cell if their edges are cropped.
+- Collision-bearing platform art must use a platform harness before generation:
+
+```powershell
+tools/create-asset-harness.ps1 -Root . -AssetId grass-platform-wide -Kind platform -Rows 1 -Cols 1 -CellWidth 768 -CellHeight 384 -SafeMargin 32 -KeyColor "#FF00FF"
+```
+
+Run the harness gate on the raw platform image before adding it to a scene:
+
+```powershell
+tools/check-asset-harness.ps1 -Spec design/assets/harnesses/grass-platform-wide.harness.json -Input assets/raw/grass-platform-wide.png
+```
+
+If the platform touches disallowed edges, has cropped grass/rocks/underside details, or has a mismatched runtime size, regenerate with a larger exact canvas or split the platform into left/middle/right pieces.
 
 For RPG/tower defense:
 - Generate ground-only base first.
@@ -55,6 +69,7 @@ For RPG/tower defense:
 - Classify visible objects before generating final props.
 - Use square prop packs only for compact props like rocks, barrels, crates, shrubs, lamps, and small signs.
 - Generate large, tall, wide, collision-bearing, repeatable, or identity-critical objects one-by-one or as strips/custom atlases.
+- Use prop packs only for compact non-critical objects. Use one harness per large prop, collision object, door, bridge, platform, or gate.
 
 ## Processing
 
@@ -79,6 +94,7 @@ tools/import-map-to-godot.ps1 -Project . -AssetId <level-id>
 Expected map deliverables:
 - base/background images
 - separated props or prop-pack extraction output
+- harness specs and harness reports for collision-critical objects
 - placement metadata
 - collision metadata
 - zones/exits metadata

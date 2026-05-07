@@ -1,0 +1,35 @@
+asset_id: ASSET-000
+name: ""
+asset_kind: "sprite"
+target_engine: "Godot 4.4"
+harness:
+  spec_file: "design/assets/harnesses/ASSET-000.harness.json"
+  guide_file: "design/assets/harnesses/ASSET-000.harness.png"
+  prompt_contract: "design/assets/harnesses/ASSET-000.prompt.md"
+  expected_canvas: "1536x1152"
+  grid: "3x4"
+  cell_size: "384x384"
+  safe_margin: 48
+  edge_guard_px: 16
+  key_color: "#FF00FF"
+  foot_line_y: 336
+  max_foot_drift_px: 18
+  max_scale_drift_ratio: 0.16
+  allow_empty_cells: false
+  allow_horizontal_edge_touch: false
+  allow_vertical_edge_touch: false
+runtime_contract:
+  pivot: "bottom"
+  frame_order: "left-to-right, top-to-bottom"
+  motion_phases: []
+  loop: true
+generation_prompt_rules:
+  - exact canvas, exact grid, exact cell size
+  - flat chroma-key background absent from the subject
+  - subject stays fully inside every cell safe zone
+  - no limb, tail, weapon, platform, or FX trail crosses a cell edge
+  - no visible grid lines, borders, labels, frame numbers, UI, or debug overlays
+qa:
+  raw_file: ""
+  harness_report: ""
+  expected_gate: "tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>"

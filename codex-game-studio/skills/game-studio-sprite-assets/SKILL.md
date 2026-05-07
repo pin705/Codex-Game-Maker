@@ -13,9 +13,11 @@ Read if present:
 - `design/art/art-bible.md`
 - `design/assets/asset-manifest.yaml`
 - `codex-game-studio/references/templates/sprite-asset-spec.yaml`
+- `codex-game-studio/references/templates/asset-harness-spec.yaml`
 - `codex-game-studio/references/templates/asset-prompt-spec.yaml`
 - `codex-game-studio/references/rules/generated-assets.md`
 - `codex-game-studio/scripts/assets/cgs_asset_processor.py`
+- `codex-game-studio/scripts/assets/cgs_asset_harness.py`
 
 If no art bible exists, use `game-studio-art-assets` first.
 
@@ -32,6 +34,37 @@ Infer the smallest useful asset plan from the user's request:
 
 Do not force the user to choose rows, columns, or frame counts when the request implies them.
 
+## Harness First
+
+Before generating any sprite that may enter gameplay, create an asset harness:
+
+```powershell
+tools/create-asset-harness.ps1 -Root . -AssetId hero-cat-run -Kind sprite -Action run -Rows 3 -Cols 4 -CellWidth 384 -CellHeight 384 -SafeMargin 48 -KeyColor "#FF00FF" -Loop
+```
+
+Use the generated files as the source of truth:
+- `design/assets/harnesses/<asset-id>.harness.json`
+- `design/assets/harnesses/<asset-id>.harness.png`
+- `design/assets/harnesses/<asset-id>.prompt.md`
+
+The final image prompt must include the harness contract:
+- exact total canvas size
+- exact row/column grid
+- exact cell size
+- safe zone and edge guard
+- selected chroma-key background
+- pivot/foot line
+- action phase plan
+- no crossing cell boundaries
+
+After saving a raw sheet, run the harness gate before processing:
+
+```powershell
+tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png
+```
+
+If the harness gate blocks, regenerate the raw image. Do not try to fix identity drift, cropped limbs, neighboring-frame fragments, or broken run cycles with post-processing.
+
 ## Generation Rules
 
 - Use built-in image generation for raw raster art.
@@ -46,6 +79,7 @@ Do not force the user to choose rows, columns, or frame counts when the request 
 - Runtime sprites must be generated with explicit pivot intent: feet/bottom for characters, center for projectiles/FX, and custom anchors for weapons or large props.
 - Character sheets must include enough empty margin for tails, ears, weapons, dust, and anticipation poses. Edge-touch warnings are not acceptable for playable characters.
 - Do not accept a sheet just because it looks good as a contact sheet. Check the GIF preview for loop cadence, foot sliding, pose popping, identity drift, and cropped silhouettes.
+- Do not generate free-form sprite sheets without a harness when the result will be used in a playable prototype or showcase.
 
 For characters, enemies, NPCs, summons, animated props, and body actions:
 - Prefer multi-row grids. Do not use raw `1xN` strips as the default.
@@ -74,6 +108,7 @@ For controllable heroes with multiple actions:
 - A run/walk action must be a real loop: first and last poses should connect cleanly, foot contact should alternate predictably, and the body should not scale or drift between frames.
 - A jump action should usually be split into pose phases: anticipation/takeoff, rise, apex, fall, and land. If only one `jump` sheet exists, the runtime state machine must select or hold phase frames instead of blindly looping the sheet.
 - If generated run/jump frames are cropped, have tail/feet crossing cell edges, or do not loop, regenerate with stricter safe-padding and pose instructions before using them in a showcase.
+- If a jump frame shows a tail, limb, weapon, or effect from a neighboring frame, treat it as a harness failure and regenerate with larger cell size or safe margin.
 
 ## Runtime Integration Rules
 
@@ -96,15 +131,16 @@ tools/create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute oran
 
 This writes:
 - `design/assets/action-bundles/<asset-id>.yaml`
+- one harness spec, guide, and prompt contract per action under `design/assets/harnesses/`
 - one prompt spec per action under `assets/source-prompts/`
 - manifest entries for each action
 - an action bundle report under `production/reviews/`
 
-After raw sheets are saved under `assets/raw/<asset-id>-<action>-sheet.png`, rerun with `-ProcessExistingRaw` to process every available action in one pass.
+After raw sheets are saved under `assets/raw/<asset-id>-<action>-sheet.png`, rerun with `-ProcessExistingRaw` to run the harness gate and process every passing action in one pass. Harness-blocked actions must be regenerated before processing.
 
 ## Processing
 
-After accepting a raw generated sprite sheet, run:
+After the raw sheet passes `tools/check-asset-harness.ps1`, run:
 
 ```powershell
 tools/process-sprite-sheet.ps1 -Input <raw.png> -OutDir assets/generated/<category>/<asset-id> -Rows <rows> -Cols <cols> -AssetId <asset-id> -KeyColor "<selected-key-color>"
@@ -143,6 +179,8 @@ Accepted sprite assets must record:
 - frames directory
 - GIF preview
 - pipeline metadata
+- harness spec
+- harness report
 - frame count and frame size
 - Godot import target when used in a Godot project
 
@@ -151,6 +189,7 @@ Accepted sprite assets must record:
 Before using the asset in-game, run:
 
 ```powershell
+tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>
 tools/check-asset-qa.ps1 -Root .
 ```
 
@@ -162,6 +201,7 @@ tools/repair-asset-processing.ps1 -Root . -Apply
 ```
 
 Block or regenerate when:
+- harness canvas, grid, cell size, safe zone, edge guard, or foot line checks fail
 - frame count is wrong
 - transparent output is missing
 - visible chroma-key residue remains on non-transparent pixels

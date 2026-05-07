@@ -26,6 +26,17 @@ generation_plan:
   key_color: "auto-select with tools/suggest-key-color.ps1"
   background_policy: "solid chroma-key color absent from the subject"
   postprocess_required: true
+harness:
+  spec_file: ""
+  guide_file: ""
+  prompt_contract: ""
+  exact_canvas: ""
+  exact_grid: ""
+  exact_cell_size: ""
+  safe_zone: ""
+  foot_line_y: ""
+  edge_guard_px: ""
+  acceptance: "raw generation must pass tools/check-asset-harness.ps1 before processing"
 godot_import:
   target_node: "Sprite2D"
   import_preset: "2d_pixel_or_sprite"
@@ -56,6 +67,7 @@ output:
   frames_dir: ""
   gif_preview: ""
   pipeline_meta: ""
+  harness_report: ""
   draft_files: []
   status: "draft"
 notes: ""

@@ -17,6 +17,7 @@ $godotLintGate = Join-Path $repoPath "codex-game-studio/scripts/guards/godot_lin
 $productionGate = Join-Path $repoPath "codex-game-studio/scripts/guards/production_gate.ps1"
 $releaseGate = Join-Path $repoPath "codex-game-studio/scripts/guards/release_gate.ps1"
 $assetProcessor = Join-Path $repoPath "codex-game-studio/scripts/assets/cgs_asset_processor.py"
+$assetHarness = Join-Path $repoPath "codex-game-studio/scripts/assets/cgs_asset_harness.py"
 $pythonHelper = Join-Path $repoPath "codex-game-studio/scripts/lib/cgs_python.ps1"
 $assetRequirements = Join-Path $repoPath "requirements-asset-tools.txt"
 $godotChecker = Join-Path $repoPath "tools/check-godot.ps1"
@@ -39,6 +40,8 @@ $previewTools = @(
   "tools/register-godot.ps1",
   "tools/process-sprite-sheet.ps1",
   "tools/process-prop-pack.ps1",
+  "tools/create-asset-harness.ps1",
+  "tools/check-asset-harness.ps1",
   "tools/suggest-key-color.ps1",
   "tools/compose-layered-map-preview.ps1",
   "tools/create-action-bundle.ps1",
@@ -53,6 +56,7 @@ $previewTools = @(
 
 $assetTemplates = @(
   "codex-game-studio/references/templates/sprite-asset-spec.yaml",
+  "codex-game-studio/references/templates/asset-harness-spec.yaml",
   "codex-game-studio/references/templates/map-asset-spec.yaml",
   "codex-game-studio/references/templates/asset-qa-report.md",
   "codex-game-studio/references/templates/godot-import-manifest.yaml",
@@ -196,6 +200,13 @@ if (Test-Path -LiteralPath $assetProcessor) {
   Report "OK" "asset processor exists"
 } else {
   Report "FAIL" "Missing asset processor at $assetProcessor"
+  $ok = $false
+}
+
+if (Test-Path -LiteralPath $assetHarness) {
+  Report "OK" "asset harness exists"
+} else {
+  Report "FAIL" "Missing asset harness at $assetHarness"
   $ok = $false
 }
 

@@ -245,6 +245,10 @@ def processor_script_path() -> Path:
     return Path(__file__).with_name("cgs_asset_processor.py")
 
 
+def harness_script_path() -> Path:
+    return Path(__file__).with_name("cgs_asset_harness.py")
+
+
 def run_processor(args: list[str]) -> dict[str, Any]:
     cmd = [sys.executable, as_posix(processor_script_path()), *args]
     completed = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
@@ -252,6 +256,19 @@ def run_processor(args: list[str]) -> dict[str, Any]:
         detail = completed.stderr.strip() or completed.stdout.strip()
         raise RuntimeError(f"asset processor failed: {detail}")
     return json.loads(completed.stdout)
+
+
+def run_harness(args: list[str], allow_blocked: bool = False) -> dict[str, Any]:
+    cmd = [sys.executable, as_posix(harness_script_path()), *args]
+    completed = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    if completed.returncode != 0 and not allow_blocked:
+        detail = completed.stderr.strip() or completed.stdout.strip()
+        raise RuntimeError(f"asset harness failed: {detail}")
+    output = completed.stdout.strip()
+    if not output:
+        detail = completed.stderr.strip() or "asset harness produced no output"
+        raise RuntimeError(detail)
+    return json.loads(output)
 
 
 def source_prompt_text(
@@ -262,6 +279,11 @@ def source_prompt_text(
     key_color: str,
     view: str,
     category: str,
+    harness_spec: str,
+    harness_prompt: str,
+    canvas_size: str,
+    cell_size: str,
+    safe_margin: int,
     reference_file: str = "",
 ) -> str:
     return "\n".join([
@@ -276,11 +298,18 @@ def source_prompt_text(
         f"fps: {action.fps:g}",
         f"anchor: {action.anchor}",
         f"key_color: {key_color}",
+        f"harness_spec: {harness_spec}",
+        f"harness_prompt: {harness_prompt}",
+        f"exact_canvas: {canvas_size}",
+        f"exact_cell_size: {cell_size}",
+        f"safe_margin: {safe_margin}",
         f"reference_file: {reference_file}",
         "generation_prompt: >",
         f"  {description}. Create a {action.rows}x{action.cols} sprite-sheet grid for the {action.name} action.",
-        f"  Use a flat solid chroma-key background of {key_color}. Keep identity, scale, pose readability, and padding consistent across all frames.",
-        "  No text, no labels, no watermark, no borders, no grid lines.",
+        f"  The final image must be exactly {canvas_size}; every cell must be exactly {cell_size}.",
+        f"  Use a flat solid chroma-key background of {key_color}. Keep every pose inside the harness safe zone with at least {safe_margin}px padding.",
+        "  Keep identity, scale, pose readability, foot baseline, and pivot consistent across all frames.",
+        "  No text, no labels, no watermark, no borders, no grid lines, and no pixels crossing into neighboring cells.",
         "",
     ])
 
@@ -291,12 +320,14 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
     category = safe_id(args.category)
     actions = parse_actions(args.actions)
     bundle_dir = root / "design" / "assets" / "action-bundles"
+    harness_dir = root / "design" / "assets" / "harnesses"
     prompt_dir = root / "assets" / "source-prompts"
     raw_dir = root / "assets" / "raw"
     generated_dir = root / "assets" / "generated" / category
     review_dir = root / "production" / "reviews"
 
     ensure_dir(bundle_dir)
+    ensure_dir(harness_dir)
     ensure_dir(prompt_dir)
     ensure_dir(raw_dir)
     ensure_dir(generated_dir)
@@ -313,11 +344,36 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
 
     manifest_entries: list[dict[str, Any]] = []
     processed: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
     planned: list[str] = []
 
     for action in actions:
         action_asset_id = f"{bundle_id}-{action.name}"
         key_color = args.key_color if args.key_color not in ("suggest", "auto-suggest") else suggest_key(f"{args.description} {action.name}")
+        cell_w = int(args.cell_width)
+        cell_h = int(args.jump_cell_height) if action.name == "jump" else int(args.cell_height)
+        safe_margin = int(args.safe_margin)
+        harness_args = [
+            "create",
+            "--out-dir", as_posix(harness_dir),
+            "--asset-id", action_asset_id,
+            "--kind", "sprite",
+            "--action", action.name,
+            "--rows", str(action.rows),
+            "--cols", str(action.cols),
+            "--cell-width", str(cell_w),
+            "--cell-height", str(cell_h),
+            "--safe-margin", str(safe_margin),
+            "--key-color", key_color,
+            "--pivot", action.anchor,
+            "--max-foot-drift", str(args.max_foot_drift),
+            "--max-scale-drift", str(args.max_scale_drift),
+        ]
+        if action.loop:
+            harness_args.append("--loop")
+        harness_meta = run_harness(harness_args)
+        harness_spec_path = Path(str(harness_meta["harness_spec"]))
+        harness_prompt_path = Path(str(harness_meta["prompt_contract"]))
         prompt_path = prompt_dir / f"{action_asset_id}.yaml"
         write_text(prompt_path, source_prompt_text(
             asset_id=action_asset_id,
@@ -326,6 +382,11 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             key_color=key_color,
             view=args.view,
             category=category,
+            harness_spec=root_relative(root, harness_spec_path),
+            harness_prompt=root_relative(root, harness_prompt_path),
+            canvas_size=f"{action.cols * cell_w}x{action.rows * cell_h}",
+            cell_size=f"{cell_w}x{cell_h}",
+            safe_margin=safe_margin,
             reference_file=args.reference_file,
         ))
 
@@ -339,6 +400,10 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             f"    anchor: {action.anchor}",
             f"    loop: {'true' if action.loop else 'false'}",
             f"    key_color: {yaml_quote(key_color)}",
+            f"    harness_spec: {root_relative(root, harness_spec_path)}",
+            f"    harness_prompt: {root_relative(root, harness_prompt_path)}",
+            f"    canvas: {action.cols * cell_w}x{action.rows * cell_h}",
+            f"    cell_size: {cell_w}x{cell_h}",
             f"    source_prompt: {root_relative(root, prompt_path)}",
             f"    raw_target: assets/raw/{action_asset_id}-sheet.png",
         ])
@@ -356,9 +421,11 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             "frames_dir": "",
             "gif_preview": "",
             "pipeline_meta": "",
+            "harness_spec": root_relative(root, harness_spec_path),
+            "harness_report": "",
             "source_prompt": root_relative(root, prompt_path),
             "expected_frames": action.expected_frames,
-            "frame_size": "",
+            "frame_size": f"{cell_w}x{cell_h}",
             "anchor": action.anchor,
             "key_color": key_color,
             "godot_import": "",
@@ -367,6 +434,24 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
         }
 
         if args.process_existing_raw and raw_path.exists():
+            ensure_dir(out_dir)
+            harness_report_path = out_dir / "harness-report.json"
+            harness_result = run_harness([
+                "validate",
+                "--spec", as_posix(harness_spec_path),
+                "--input", as_posix(raw_path),
+                "--report", as_posix(harness_report_path),
+            ], allow_blocked=True)
+            entry["harness_report"] = root_relative(root, harness_report_path)
+            if harness_result.get("gate") == "BLOCKED":
+                entry.update({
+                    "status": "blocked",
+                    "notes": "Harness blocked the raw sheet. Regenerate before processing.",
+                })
+                blocked.append({"asset_id": action_asset_id, "harness_report": entry["harness_report"]})
+                manifest_entries.append({"asset_id": action_asset_id, **entry})
+                continue
+
             meta = run_processor([
                 "sprite",
                 "--input", as_posix(raw_path),
@@ -392,7 +477,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
                 "gif_preview": root_relative(root, Path(outputs.get("gif_preview", ""))),
                 "pipeline_meta": root_relative(root, Path(outputs.get("pipeline_meta", ""))),
                 "frame_size": f"{frame_size.get('width', 0)}x{frame_size.get('height', 0)}",
-                "notes": "Processed from existing raw sheet.",
+                "notes": f"Processed from existing raw sheet after harness gate {harness_result.get('gate')}.",
             })
             processed.append({"asset_id": action_asset_id, "pipeline_meta": entry["pipeline_meta"]})
         else:
@@ -412,11 +497,12 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
         f"- actions: {', '.join(action.name for action in actions)}",
         f"- planned raw sheets: {len(planned)}",
         f"- processed sheets: {len(processed)}",
+        f"- harness-blocked sheets: {len(blocked)}",
         "",
         "## Next Steps",
         "",
-        "- Generate raw sheets listed in the bundle spec.",
-        "- Re-run with `-ProcessExistingRaw` after raw sheets are saved.",
+        "- Generate raw sheets listed in the bundle spec using each harness prompt contract.",
+        "- Re-run with `-ProcessExistingRaw` after raw sheets are saved. Harness-blocked sheets must be regenerated.",
         "- Run asset QA before Godot import.",
         "",
     ]
@@ -430,6 +516,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
         "report": root_relative(root, report_path),
         "planned": planned,
         "processed": processed,
+        "blocked": blocked,
     }
 
 
@@ -1059,6 +1146,12 @@ def build_parser() -> argparse.ArgumentParser:
     action.add_argument("--actions", default="idle,run,jump,attack,hurt")
     action.add_argument("--key-color", default="suggest")
     action.add_argument("--reference-file", default="")
+    action.add_argument("--cell-width", type=int, default=384)
+    action.add_argument("--cell-height", type=int, default=384)
+    action.add_argument("--jump-cell-height", type=int, default=512)
+    action.add_argument("--safe-margin", type=int, default=56)
+    action.add_argument("--max-foot-drift", type=int, default=18)
+    action.add_argument("--max-scale-drift", type=float, default=0.16)
     action.add_argument("--fit-scale", type=float, default=0.92)
     action.add_argument("--tolerance", type=int, default=70)
     action.add_argument("--softness", type=int, default=32)

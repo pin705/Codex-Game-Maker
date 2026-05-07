@@ -6,6 +6,7 @@ $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
 $pythonHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_python.ps1"
 $processor = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_processor.py"
 $workflow = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_workflows.py"
+$harness = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_harness.py"
 $requirements = Join-Path $repoRoot.Path "requirements-asset-tools.txt"
 
 if (!(Test-Path -LiteralPath $pythonHelper)) {
@@ -38,11 +39,11 @@ if (!$python) {
     Add-Item $evidence "python.asset_deps" "Pillow and numpy are importable."
   }
 
-  $compileOutput = & $python.command @($python.args + @("-m", "py_compile", $processor, $workflow)) 2>&1
+  $compileOutput = & $python.command @($python.args + @("-m", "py_compile", $processor, $workflow, $harness)) 2>&1
   if ($LASTEXITCODE -ne 0) {
-    Add-Item $blockers "python.asset_scripts.invalid" "Asset processor/workflow Python scripts failed py_compile." "$processor; $workflow"
+    Add-Item $blockers "python.asset_scripts.invalid" "Asset processor/workflow/harness Python scripts failed py_compile." "$processor; $workflow; $harness"
   } else {
-    Add-Item $evidence "python.asset_scripts" "Asset processor and workflow scripts compile."
+    Add-Item $evidence "python.asset_scripts" "Asset processor, workflow, and harness scripts compile."
   }
 }
 
@@ -56,6 +57,12 @@ if (Test-Path -LiteralPath $workflow) {
   Add-Item $evidence "workflow.exists" "Asset workflow coordinator exists." $workflow
 } else {
   Add-Item $blockers "workflow.missing" "Missing asset workflow coordinator script." $workflow
+}
+
+if (Test-Path -LiteralPath $harness) {
+  Add-Item $evidence "harness.exists" "Asset harness script exists." $harness
+} else {
+  Add-Item $blockers "harness.missing" "Missing asset harness script." $harness
 }
 
 if (Test-Path -LiteralPath $requirements) {

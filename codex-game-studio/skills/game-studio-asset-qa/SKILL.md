@@ -15,6 +15,12 @@ Run:
 tools/check-asset-qa.ps1 -Root .
 ```
 
+For any accepted runtime sprite, platform, large prop, map object, or collision-bearing asset, also run the harness gate against the raw image:
+
+```powershell
+tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>
+```
+
 Also run `tools/check-asset-tools.ps1` if Python processors or dependencies may be missing.
 
 When QA failures are processor-level issues such as chroma-key residue or safe-padding edge touch, run a dry repair pass before asking the user to regenerate:
@@ -35,6 +41,7 @@ Read if present:
 - `design/assets/asset-manifest.yaml`
 - `design/assets/godot-import-manifest.yaml`
 - `assets/source-prompts/**`
+- `design/assets/harnesses/**`
 - `assets/generated/**/pipeline-meta.json`
 - `production/reviews/*.md`
 - `codex-game-studio/references/templates/asset-qa-report.md`
@@ -50,6 +57,8 @@ For accepted assets:
 - no accepted file points to Codex temporary generated-image folders
 
 For sprite assets:
+- harness spec exists for runtime sprites
+- raw sheet passes exact canvas, grid, cell size, safe-zone, edge-guard, and foot-line checks
 - transparent output has alpha
 - expected frame count matches extracted frames
 - frames directory exists
@@ -63,6 +72,7 @@ For sprite assets:
 - normalized runtime frames exist when the same character uses multiple actions
 
 For map assets:
+- collision-critical platform/prop/object raw images pass their harness checks
 - QA preview exists
 - props/object metadata exists when the map is playable
 - collision/zones metadata exists when gameplay needs collision or triggers
@@ -78,6 +88,7 @@ For map assets:
 - `BLOCKED`: accepted runtime asset lacks prompt, processed output, metadata, frame outputs, or required map/collision deliverables.
 
 Use repair for cleanup parameters only. Regenerate instead when identity drifts, the raw sheet contains mixed actions, required frames are missing, the background is not flat, the raw art is severely cropped, or the GIF preview shows a broken gameplay loop.
+Regenerate instead of repairing when the harness report blocks on canvas size, cell size, safe-zone exits, neighbor-frame fragments, platform crop, foot-line drift, or scale drift.
 
 Write `production/reviews/asset-qa-[YYYYMMDD-HHMM].md` only when the user asks for a formal report or before release/demo handoff.
 

@@ -12,6 +12,8 @@ assets:
     gif_preview: ""
     preview_file: ""
     pipeline_meta: ""
+    harness_spec: ""
+    harness_report: ""
     source_prompt: ""
     expected_frames: 0
     frame_size: ""

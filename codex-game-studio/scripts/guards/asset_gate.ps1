@@ -235,6 +235,8 @@ foreach ($item in $manifestItems) {
   $propsMetadata = Get-ItemValue $item "props_metadata"
   $collisionMetadata = Get-ItemValue $item "collision_metadata"
   $zonesMetadata = Get-ItemValue $item "zones_metadata"
+  $harnessSpec = Get-ItemValue $item "harness_spec"
+  $harnessReport = Get-ItemValue $item "harness_report"
 
   if ([string]::IsNullOrWhiteSpace($assetId)) {
     Add-Item $blockers "manifest.asset_id.missing" "Manifest entry is missing asset_id." $manifestPath
@@ -290,6 +292,38 @@ foreach ($item in $manifestItems) {
     $isSpriteLike = $assetKind -match '^(sprite|player|enemy|npc|character|creature|projectile|impact|fx|ui_icon)$'
     $isPropPack = $assetKind -match '^(prop_pack|props|props_pack)$'
     $isMapLike = $assetKind -match '(map|level|stage|tilemap|parallax)'
+    $needsHarness = $isSpriteLike -or $isPropPack -or $isMapLike -or ($collisionRole -ne "none" -and $collisionRole -ne "")
+
+    if ($needsHarness) {
+      if ([string]::IsNullOrWhiteSpace($harnessSpec)) {
+        Add-Item $warnings "asset.harness_spec.missing" "Accepted runtime asset $assetId has no harness_spec. Future generated gameplay assets should record exact canvas/grid/safe-zone constraints."
+      } else {
+        $harnessSpecPath = Test-PathField $blockers $evidence $rootPath $assetId "harness_spec" $harnessSpec "asset.harness_spec.missing" "Accepted runtime asset $assetId has no harness_spec."
+        $harnessSpecJson = Read-JsonFile $harnessSpecPath
+        if ($harnessSpecPath -and (Test-Path -LiteralPath $harnessSpecPath) -and $null -eq $harnessSpecJson) {
+          Add-Item $blockers "asset.harness_spec.invalid_json" "harness_spec for $assetId is not valid JSON." $harnessSpecPath
+        }
+      }
+
+      if ([string]::IsNullOrWhiteSpace($harnessReport)) {
+        Add-Item $warnings "asset.harness_report.missing" "Accepted runtime asset $assetId has no harness_report. Run tools/check-asset-harness.ps1 before gameplay import."
+      } else {
+        $harnessReportPath = Test-PathField $blockers $evidence $rootPath $assetId "harness_report" $harnessReport "asset.harness_report.missing" "Accepted runtime asset $assetId has no harness_report."
+        $harnessJson = Read-JsonFile $harnessReportPath
+        if ($harnessReportPath -and (Test-Path -LiteralPath $harnessReportPath) -and $null -eq $harnessJson) {
+          Add-Item $blockers "asset.harness_report.invalid_json" "harness_report for $assetId is not valid JSON." $harnessReportPath
+        } elseif ($harnessJson) {
+          $harnessGate = Get-JsonValue $harnessJson @("gate") ""
+          if ($harnessGate -eq "BLOCKED") {
+            Add-Item $blockers "asset.harness_report.blocked" "harness_report for $assetId is BLOCKED." $harnessReportPath
+          } elseif ($harnessGate -eq "PASS_WITH_WARNINGS") {
+            Add-Item $warnings "asset.harness_report.warning" "harness_report for $assetId passed with warnings." $harnessReportPath
+          } elseif ($harnessGate -eq "PASS") {
+            Add-Item $evidence "asset.harness_report.pass" "harness_report passes for $assetId." $harnessReportPath
+          }
+        }
+      }
+    }
 
     if ($isSpriteLike) {
       $framesPath = Test-PathField $blockers $evidence $rootPath $assetId "frames_dir" $framesDir "asset.frames_dir.missing" "Accepted sprite asset $assetId has no frames_dir."

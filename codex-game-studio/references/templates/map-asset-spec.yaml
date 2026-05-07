@@ -13,6 +13,11 @@ generation_plan:
   reference_mockup: "in-world stage/reference mockup"
   prop_strategy: "one_by_one"
   max_distinct_runtime_objects_first_pass: 9
+harness:
+  platform_specs_dir: "design/assets/harnesses"
+  large_object_rule: "dedicated harness per collision-critical object"
+  platform_safe_margin: 32
+  allow_edge_touch_only_when_tileable: true
 layers:
   sky: ""
   far_bg: ""
@@ -34,6 +39,8 @@ godot_import:
 outputs:
   preview_file: ""
   pipeline_meta: ""
+  harness_report: ""
 qa:
+  expected_harness_gate: "tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw-platform.png>"
   expected_gate: "tools/check-asset-qa.ps1 -Root ."
   notes: ""
