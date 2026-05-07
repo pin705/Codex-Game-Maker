@@ -1,0 +1,45 @@
+schema: "codex-game-maker.scene-scale-plan.v1"
+viewport:
+  aspect_ratio: "16:9"
+  design_width: 1280
+  design_height: 720
+  stretch_mode: "canvas_items"
+  stretch_aspect: "keep"
+world:
+  width: 1600
+  camera_height: 720
+  camera_rule: "follow player with lead, clamp to world bounds"
+runtime_asset_scale:
+  player:
+    target_height_px: 96
+    max_height_percent_of_viewport: 0.18
+    pivot: "feet"
+    collision_height_px: 90
+    collision_width_px: 54
+  enemy:
+    target_height_px: 80
+    max_height_percent_of_viewport: 0.15
+    pivot: "feet"
+  collectible:
+    target_height_px: 48
+    max_height_percent_of_viewport: 0.08
+    pivot: "center"
+  platform:
+    target_height_px: 72
+    max_height_percent_of_viewport: 0.18
+    pivot: "top_center"
+    collision_height_px: 24
+rules:
+  - "Do not place generated sprites at raw pixel scale in gameplay."
+  - "Every gameplay asset must have a target in-game size before import."
+  - "Scale assets proportionally from their processed transparent bounds."
+  - "Use 16:9 design coordinates for showcase and web preview scenes."
+  - "Store platform collision as top_y plus collision width/height, not inferred from sprite center."
+  - "Keep collision/debug rectangles out of runtime visual layers."
+  - "Use generated image assets for pickups and gameplay props; placeholders are only allowed in greybox mode."
+qa:
+  - "Player height fits target range in the first viewport."
+  - "Platform art fits intended collision width without stretching."
+  - "Collectibles are visible but not larger than the player head/body."
+  - "Spawn point lands on a valid platform top on frame one."
+  - "Web preview preserves 16:9 composition without expanding the gameplay canvas."

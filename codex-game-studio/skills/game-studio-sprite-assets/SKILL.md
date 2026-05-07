@@ -14,6 +14,7 @@ Read if present:
 - `design/assets/asset-manifest.yaml`
 - `codex-game-studio/references/templates/sprite-asset-spec.yaml`
 - `codex-game-studio/references/templates/asset-harness-spec.yaml`
+- `codex-game-studio/references/templates/scene-scale-plan.yaml`
 - `codex-game-studio/references/templates/asset-prompt-spec.yaml`
 - `codex-game-studio/references/rules/generated-assets.md`
 - `codex-game-studio/scripts/assets/cgs_asset_processor.py`
@@ -121,6 +122,9 @@ For controllable heroes with multiple actions:
 ## Runtime Integration Rules
 
 For a generated player/enemy that enters Godot gameplay:
+- Create or update a 16:9 scene scale plan before placing the asset in a playable scene.
+- Define target in-game pixel height/width from the scene plan; do not render sprites at raw processed PNG scale.
+- Scale frames proportionally from their transparent bounds and preserve the runtime pivot.
 - Normalize frames to a fixed canvas before import.
 - Record pivot, foot line, frame size, action FPS, loop/non-loop, and state-machine mapping.
 - Use `AnimatedSprite2D` or `SpriteFrames` only after the normalized frames pass QA.

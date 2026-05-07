@@ -61,6 +61,7 @@ $assetTemplates = @(
   "codex-game-studio/references/templates/map-asset-spec.yaml",
   "codex-game-studio/references/templates/asset-qa-report.md",
   "codex-game-studio/references/templates/godot-import-manifest.yaml",
+  "codex-game-studio/references/templates/scene-scale-plan.yaml",
   "codex-game-studio/references/templates/action-bundle-spec.yaml",
   "codex-game-studio/references/templates/action-bundle-report.md",
   "codex-game-studio/references/templates/godot-sprite-import-spec.yaml",

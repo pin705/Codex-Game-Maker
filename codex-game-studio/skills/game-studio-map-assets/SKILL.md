@@ -18,6 +18,7 @@ Read if present:
 - `design/assets/asset-manifest.yaml`
 - `codex-game-studio/references/templates/map-asset-spec.yaml`
 - `codex-game-studio/references/templates/asset-harness-spec.yaml`
+- `codex-game-studio/references/templates/scene-scale-plan.yaml`
 - `codex-game-studio/references/templates/godot-import-manifest.yaml`
 
 ## Map Is Runtime Data
@@ -42,11 +43,14 @@ For playable maps:
 - Keep actors, enemies, projectiles, bosses, UI, pickups, hazards, gates, doors, ladders, and collision-critical objects out of the foundation layer.
 
 For platformers:
+- Create a 16:9 scene scale plan before placing generated platform art in a playable showcase.
 - Choose one stage canvas before generation.
 - Generate scenery-only layers: sky, far background, mid background, near background, optional foreground overlay.
 - Generate platforms, hazards, doors, checkpoints, pickups, and occluders as separate assets or strips.
 - Record collision, camera bounds, spawn points, exits, and trigger zones as metadata.
 - Do not stretch a decorative platform prop into arbitrary widths. Use a tileable platform strip, left/middle/right platform pieces, nine-slice art, or generate the exact platform sizes needed.
+- Do not place platform art at raw pixel scale. Assign target in-game width/height from the scene scale plan and scale proportionally.
+- Store collision-bearing platforms as top-y plus collision width/height. Do not infer platform top from a visual sprite center after scaling.
 - Keep collision rectangles invisible in runtime builds. Collision debug outlines belong only in review screenshots or editor tools.
 - Large platform pieces must have safe padding and should not be extracted from a square prop-pack cell if their edges are cropped.
 - Collision-bearing platform art must use a platform harness before generation:
