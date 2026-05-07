@@ -58,6 +58,7 @@ rules:
   - "Do not use run or jump frames as the default standing pose."
   - "Keep collision/debug rectangles out of runtime visual layers."
   - "Use generated image assets for pickups and gameplay props; placeholders are only allowed in greybox mode."
+  - "Repeated gameplay objects such as collectibles must be identified by group/metadata, not by duplicate node names."
 qa:
   - "Player height fits target range in the first viewport."
   - "Player is grounded on frame one and does not visually float above the start platform."
@@ -65,6 +66,7 @@ qa:
   - "Platform art fits intended collision width without stretching."
   - "Collectibles are visible but not larger than the player head/body."
   - "Every required collectible can be collected by walking or jumping through the planned route."
+  - "Every collectible instance animates and can be collected; do not only test the first instance."
   - "A visible finish/goal exists and can trigger a clear state."
   - "Spawn point lands on a valid platform top on frame one."
   - "Web preview preserves 16:9 composition without expanding the gameplay canvas."
