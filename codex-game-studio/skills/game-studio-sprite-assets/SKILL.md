@@ -43,6 +43,9 @@ Do not force the user to choose rows, columns, or frame counts when the request 
 - Require no text, no labels, no watermark, no visible grid lines, no borders, and no frame labels.
 - Require the same identity, scale, and bounding box across frames.
 - Require generous safe padding; no body parts, weapons, tails, wings, projectiles, trails, or FX may cross cell edges.
+- Runtime sprites must be generated with explicit pivot intent: feet/bottom for characters, center for projectiles/FX, and custom anchors for weapons or large props.
+- Character sheets must include enough empty margin for tails, ears, weapons, dust, and anticipation poses. Edge-touch warnings are not acceptable for playable characters.
+- Do not accept a sheet just because it looks good as a contact sheet. Check the GIF preview for loop cadence, foot sliding, pose popping, identity drift, and cropped silhouettes.
 
 For characters, enemies, NPCs, summons, animated props, and body actions:
 - Prefer multi-row grids. Do not use raw `1xN` strips as the default.
@@ -67,6 +70,21 @@ For controllable heroes with multiple actions:
 - Keep projectile, muzzle flash, impact, dust, and detached FX separate unless tightly attached.
 - Assemble a final Godot atlas only after per-action QC passes.
 - Use an action bundle for multi-action characters instead of one-off prompt drift.
+- Treat `idle`, `run`, `jump`, `fall`, `land`, `attack`, and `hurt` as state-machine inputs, not just art files. If an action does not have stable timing/pivot metadata, it is not runtime-ready.
+- A run/walk action must be a real loop: first and last poses should connect cleanly, foot contact should alternate predictably, and the body should not scale or drift between frames.
+- A jump action should usually be split into pose phases: anticipation/takeoff, rise, apex, fall, and land. If only one `jump` sheet exists, the runtime state machine must select or hold phase frames instead of blindly looping the sheet.
+- If generated run/jump frames are cropped, have tail/feet crossing cell edges, or do not loop, regenerate with stricter safe-padding and pose instructions before using them in a showcase.
+
+## Runtime Integration Rules
+
+For a generated player/enemy that enters Godot gameplay:
+- Normalize frames to a fixed canvas before import.
+- Record pivot, foot line, frame size, action FPS, loop/non-loop, and state-machine mapping.
+- Use `AnimatedSprite2D` or `SpriteFrames` only after the normalized frames pass QA.
+- Add a small motion state machine for controllable characters. Minimum states: idle, run, jump-rise, jump-fall, land, hurt/dead when relevant.
+- Use coyote time and jump buffering for platformers unless the user explicitly wants strict arcade input.
+- Do not draw collision rectangles as visual art. Collision and generated visual props must be separate nodes/layers.
+- Do not stretch props into arbitrary aspect ratios. Use aspect-preserving draw, nine-slice/tileable pieces, or generate the exact platform/prop size needed.
 
 ## Action Bundles
 

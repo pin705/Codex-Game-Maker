@@ -104,6 +104,9 @@ function Write-HttpResponse {
     "Content-Length: $($Body.Length)",
     "Cross-Origin-Opener-Policy: same-origin",
     "Cross-Origin-Embedder-Policy: require-corp",
+    "Cache-Control: no-store, no-cache, must-revalidate, max-age=0",
+    "Pragma: no-cache",
+    "Expires: 0",
     "Connection: close",
     "",
     ""
@@ -162,6 +165,13 @@ try {
 
       $bytes = [System.IO.File]::ReadAllBytes($targetPath)
       Write-HttpResponse -Stream $stream -StatusCode 200 -StatusText "OK" -ContentType (Get-ContentType $targetPath) -Body $bytes -SendBody ($method -eq "GET")
+    } catch [System.IO.IOException] {
+      # Browsers can close a connection early while probing/refreshing Godot's
+      # large WASM and PCK files. Keep the preview server alive for the next
+      # request instead of treating that as a fatal export problem.
+      continue
+    } catch [System.Net.Sockets.SocketException] {
+      continue
     } finally {
       $client.Close()
     }

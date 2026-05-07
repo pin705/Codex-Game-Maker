@@ -20,11 +20,28 @@ layout:
   safe_padding: "normal"
   shared_scale: true
   direction_strips: false
+  runtime_canvas: ""
+  foot_line: ""
 transparency:
   background: "solid selected chroma-key color"
   key_color: "auto-select with tools/suggest-key-color.ps1"
   key_color_rule: "Use a flat color absent from the subject. Green-heavy assets usually use #FF00FF; magenta/pink/purple assets usually use #00FF00."
   postprocess: "chroma-key to alpha"
+animation_runtime:
+  loop_type: "loop | one_shot | phase_hold"
+  fps: ""
+  phase_mapping:
+    idle: ""
+    run: ""
+    jump_rise: ""
+    jump_fall: ""
+    land: ""
+  acceptance:
+    loop_preview_reviewed: false
+    no_foot_sliding: false
+    no_body_scale_drift: false
+    no_edge_touch: false
+    normalized_frames: false
 action_frame_defaults:
   idle: "6-8"
   walk: "8"

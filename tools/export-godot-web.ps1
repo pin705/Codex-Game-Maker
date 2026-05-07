@@ -41,7 +41,7 @@ function Ensure-WebPreset {
   )
 
   $text = if (Test-Path -LiteralPath $PresetFile) { Get-Content -Raw -LiteralPath $PresetFile } else { "" }
-  if ($text -match ('(?m)^name="' + [regex]::Escape($PresetName) + '"$')) {
+  if ($text -match ('(?m)^name="' + [regex]::Escape($PresetName) + '"\r?$')) {
     return $false
   }
 

@@ -57,12 +57,19 @@ For sprite assets:
 - visible chroma-key residue is zero or explained
 - edge-touch warnings are reviewed
 - frame size, pivot/anchor, and Godot import target are recorded
+- playable character frames have no edge-touch warnings
+- run/walk GIF previews are reviewed for loop seams, foot sliding, body scale drift, and pose popping
+- jump/fall/land frames are mapped to runtime state phases instead of being blindly looped
+- normalized runtime frames exist when the same character uses multiple actions
 
 For map assets:
 - QA preview exists
 - props/object metadata exists when the map is playable
 - collision/zones metadata exists when gameplay needs collision or triggers
 - Godot import manifest exists for Godot projects
+- collision visuals are not rendered as debug rectangles in the playable scene
+- platforms and large props are not stretched into mismatched aspect ratios unless they are designed as nine-slice/tileable assets
+- large or collision-critical platforms are generated as dedicated pieces or tileable segments, not extracted from a cramped square prop pack
 
 ## Outcomes
 
@@ -70,7 +77,7 @@ For map assets:
 - `PASS_WITH_WARNINGS`: usable but missing non-critical previews, optional Godot import notes, or edge warnings.
 - `BLOCKED`: accepted runtime asset lacks prompt, processed output, metadata, frame outputs, or required map/collision deliverables.
 
-Use repair for cleanup parameters only. Regenerate instead when identity drifts, the raw sheet contains mixed actions, required frames are missing, the background is not flat, or the raw art is severely cropped.
+Use repair for cleanup parameters only. Regenerate instead when identity drifts, the raw sheet contains mixed actions, required frames are missing, the background is not flat, the raw art is severely cropped, or the GIF preview shows a broken gameplay loop.
 
 Write `production/reviews/asset-qa-[YYYYMMDD-HHMM].md` only when the user asks for a formal report or before release/demo handoff.
 
