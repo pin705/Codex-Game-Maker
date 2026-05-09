@@ -4,6 +4,8 @@ assets:
     category: ""
     asset_kind: sprite
     status: needed
+    generation_provider: "gpt_image"
+    release_ready: false
     spec: ""
     raw_file: ""
     selected_file: ""

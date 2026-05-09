@@ -24,9 +24,11 @@ Before engine recommendations, detect existing project files. Blank projects def
 
 ## Lean Kickoff Requirement
 
-If the user's input is only a genre or one-line idea, do not create documents or code immediately. First produce:
+If the user's input is only a genre, one-line idea, new project request, or broad multi-system request, do not create documents or code immediately. First produce:
 - one-sentence understanding
+- detected engine/stage when available
 - default assumptions
+- a short draft plan
 - at most 3 high-impact questions
 - "go with defaults" fast path
 

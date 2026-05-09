@@ -44,6 +44,8 @@ Read if present:
 - `assets/source-prompts/**`
 - `assets/generated/**/pipeline-meta.json`
 - `design/assets/godot-import-manifest.yaml`
+- `design/scene-scale-plan.yaml`
+- `design/assets/scene-scale-plan.yaml`
 - `README.md`
 - engine files detected by the guard scripts
 
@@ -55,11 +57,13 @@ Use templates:
 - `codex-game-studio/references/templates/sprint-plan.md` or installed `references/templates/sprint-plan.md`
 - `codex-game-studio/references/templates/smoke-test.md` or installed `references/templates/smoke-test.md`
 - `codex-game-studio/references/templates/regression-checklist.md` or installed `references/templates/regression-checklist.md`
+- `codex-game-studio/references/templates/playable-showcase-qa.md` or installed `references/templates/playable-showcase-qa.md`
 - `codex-game-studio/references/templates/release-checklist.md` or installed `references/templates/release-checklist.md`
 - `codex-game-studio/references/templates/changelog.md` or installed `references/templates/changelog.md`
 - `codex-game-studio/references/templates/patch-notes.md` or installed `references/templates/patch-notes.md`
 - `codex-game-studio/references/templates/hotfix-report.md` or installed `references/templates/hotfix-report.md`
 - `codex-game-studio/references/commands/catalog.yaml` for explicit professional-mode aliases.
+- `codex-game-studio/references/rules/playable-showcase-integration.md` for generated-asset playable demo checks.
 
 ## Review Workflow
 
@@ -69,10 +73,11 @@ Use templates:
 4. If generated assets exist or an art pass is being reviewed, run `tools/check-asset-gate.ps1 -Root .`.
 5. If accepted runtime assets exist, run `tools/check-asset-qa.ps1 -Root .`.
 6. Run `tools/check-godot-lint.ps1 -Root .` for Godot projects with code changes.
-7. Run `tools/check-production-gate.ps1 -Root .` when epics/sprints exist.
-8. Run `tools/check-release-gate.ps1 -Root .` only when `/release`, `/hotfix`, or release candidate review is explicitly requested.
-9. Summarize evidence first: what was read, what was run, what could not be verified.
-10. Apply the six useful role lenses plus asset-specific QA lenses when assets are in scope:
+7. For generated-asset playable showcases, check the scene scale plan and `playable-showcase-qa.md` evidence.
+8. Run `tools/check-production-gate.ps1 -Root .` when epics/sprints exist.
+9. Run `tools/check-release-gate.ps1 -Root .` only when `/release`, `/hotfix`, or release candidate review is explicitly requested.
+10. Summarize evidence first: what was read, what was run, what could not be verified.
+11. Apply the six useful role lenses plus asset-specific QA lenses when assets are in scope:
    - Creative: pillar/hook/fantasy coherence.
    - Game Design: rules, loop, tuning knobs, MVP boundaries, acceptance criteria.
    - Art: art bible alignment, readability, asset coverage, prompt/provenance gaps.
@@ -82,12 +87,13 @@ Use templates:
    - Sprite QA: frame count, alpha, chroma-key cleanup, edge touch, GIF preview, Godot pivot/frame metadata.
    - Map/Level Asset QA: preview, separated runtime objects, collision, zones, camera bounds, Godot scene/import readiness.
    - Godot Import QA: accepted assets resolve to project files, import intent is recorded, `res://` references are valid.
-11. Classify the gate:
+   - Playable Showcase QA: scene scale, grounding on large and small platforms, state machine, all pickup instances, finish trigger, web preview.
+12. Classify the gate:
    - `PASS`: no blockers, evidence covers core play path.
    - `PASS_WITH_WARNINGS`: no blockers, but missing non-critical evidence or docs.
    - `BLOCKED`: crash risk, missing playable root, missing main scene, broken required files, or unsupported claims.
-12. Write or update `production/reviews/review-[YYYYMMDD-HHMM].md` when the user asks for a formal review or when preparing a release/demo.
-13. Update `production/session-state/active.md` with gate result, blockers, and next step.
+13. Write or update `production/reviews/review-[YYYYMMDD-HHMM].md` when the user asks for a formal review or when preparing a release/demo.
+14. Update `production/session-state/active.md` with gate result, blockers, and next step.
 
 ## Smoke Check Evidence
 
@@ -106,6 +112,17 @@ Minimum Godot MVP smoke checklist:
 - Core input path is documented.
 - At least one core loop playthrough is recorded in `production/playtests/`.
 - Known blockers and warnings are listed.
+
+Generated-asset playable showcase checklist:
+- Scene scale plan exists and defines target runtime size for player, platforms, pickups, and finish.
+- Player starts grounded and does not visually float or sink on large and small platforms.
+- Idle is the default no-input state.
+- Run/walk alternates feet and does not scale-pop.
+- Jump uses phase frames for rise/apex/fall/land instead of a blind loop.
+- Every repeated pickup instance animates and can be collected.
+- Finish object is visibly anchored and triggers a clear state.
+- Collision/debug rectangles are not visible in runtime.
+- Web preview has been hard-refreshed after export so the current `.pck` is being tested.
 
 ## Story Gate
 

@@ -4,8 +4,11 @@ asset_kind: sprite
 category: player
 target_engine: "Godot 4.4"
 intended_use: ""
+generation_provider: "gpt_image"
 art_style: "project-native"
 view: "side"
+view_profile: "neutral | side_platformer | top_down_survivor"
+direction_model: "none | full_directional | side_only_last_horizontal"
 action: "idle"
 bundle: "single_asset"
 sheet:
@@ -53,8 +56,8 @@ animation_runtime:
     normalized_frames: false
 action_frame_defaults:
   idle: "6-8"
-  walk: "8"
-  run: "8-12"
+  walk: "12 for side-view playable heroes, 8 per direction for top-down survivor heroes, 8 for rough secondary characters"
+  run: "12 for side-view playable heroes, 8 per direction for top-down survivor heroes"
   jump: "6-8"
   attack: "8-12"
   hurt: "3-5"
@@ -74,6 +77,15 @@ negative_constraints:
   - no visible grid lines
   - no frame borders
   - no cropped body parts or FX
+  - no tail, weapon, cape, trail, dust, or body pixels crossing cell boundaries
+  - no long staff or oversized held prop in locomotion sheets
+  - no side-view platformer sprint when view_profile is top_down_survivor
+  - no stopped-character gameplay state that freezes on a walk/run contact pose
+  - no second full-body character copy, ghost limbs, or unmasked duplicated limb overlays in derived animation frames
+top_down_survivor_requirements:
+  - "Preferred polished setup: idle_down, idle_side, idle_up, move_down, move_side, and move_up, unless a single four-direction sheet covers them."
+  - "Allowed compact setup: direction_model side_only_last_horizontal, with idle_side and move_side only, runtime flip left/right, and no generated north/south runtime states."
+  - "Movement loops should be restrained shuffles with visible hand/foot changes plus small body bob, not large side-view lunges."
 outputs:
   raw_file: ""
   processed_file: ""

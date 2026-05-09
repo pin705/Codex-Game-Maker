@@ -26,13 +26,21 @@ except ImportError:  # pragma: no cover - only used when launched oddly.
 
 ACTION_DEFAULTS: dict[str, dict[str, Any]] = {
     "idle": {"rows": 2, "cols": 3, "frames": 6, "fps": 6, "anchor": "feet", "loop": True},
-    "walk": {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "feet", "loop": True},
+    "walk": {"rows": 3, "cols": 4, "frames": 12, "fps": 12, "anchor": "feet", "loop": True},
     "run": {"rows": 3, "cols": 4, "frames": 12, "fps": 12, "anchor": "feet", "loop": True},
     "jump": {"rows": 2, "cols": 4, "frames": 8, "fps": 10, "anchor": "center", "loop": False},
     "attack": {"rows": 3, "cols": 4, "frames": 12, "fps": 12, "anchor": "feet", "loop": False},
     "hurt": {"rows": 2, "cols": 3, "frames": 6, "fps": 8, "anchor": "feet", "loop": False},
     "death": {"rows": 3, "cols": 4, "frames": 12, "fps": 10, "anchor": "feet", "loop": False},
     "fx": {"rows": 2, "cols": 4, "frames": 8, "fps": 12, "anchor": "center", "loop": False},
+}
+
+TOP_DOWN_ACTION_DEFAULTS: dict[str, dict[str, Any]] = {
+    "idle": {"rows": 2, "cols": 3, "frames": 6, "fps": 6, "anchor": "feet", "loop": True},
+    "walk": {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "feet", "loop": True},
+    "run": {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "feet", "loop": True},
+    "move": {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "feet", "loop": True},
+    "cast": {"rows": 2, "cols": 4, "frames": 8, "fps": 10, "anchor": "feet", "loop": False},
 }
 
 
@@ -225,12 +233,23 @@ def suggest_key(description: str) -> str:
     return str(processor.suggest_key_color(description).get("key_color", "#FF00FF"))
 
 
-def parse_actions(actions: str) -> list[ActionSpec]:
+def action_defaults_for(name: str, view: str) -> dict[str, Any]:
+    base_name = name
+    for suffix in ("_down", "_side", "_up", "-down", "-side", "-up"):
+        if base_name.endswith(suffix):
+            base_name = base_name[: -len(suffix)]
+            break
+    if view in ("topdown", "top_down", "top_down_survivor", "survivor"):
+        return TOP_DOWN_ACTION_DEFAULTS.get(base_name, {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "feet", "loop": True})
+    return ACTION_DEFAULTS.get(base_name, {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "center", "loop": True})
+
+
+def parse_actions(actions: str, view: str = "side") -> list[ActionSpec]:
     specs: list[ActionSpec] = []
     for item in [part.strip() for part in actions.split(",") if part.strip()]:
         parts = [part.strip() for part in item.split(":")]
         name = safe_id(parts[0]).lower()
-        defaults = ACTION_DEFAULTS.get(name, {"rows": 2, "cols": 4, "frames": 8, "fps": 8, "anchor": "center", "loop": True})
+        defaults = action_defaults_for(name, view)
         rows = int(parts[1]) if len(parts) > 1 and parts[1] else int(defaults["rows"])
         cols = int(parts[2]) if len(parts) > 2 and parts[2] else int(defaults["cols"])
         frames = int(parts[3]) if len(parts) > 3 and parts[3] else int(defaults["frames"])
@@ -278,6 +297,8 @@ def source_prompt_text(
     action: ActionSpec,
     key_color: str,
     view: str,
+    view_profile: str,
+    direction_model: str,
     category: str,
     harness_spec: str,
     harness_prompt: str,
@@ -290,8 +311,11 @@ def source_prompt_text(
         f"asset_id: {asset_id}",
         f"category: {category}",
         "asset_kind: sprite",
+        "generation_provider: gpt_image",
         f"action: {action.name}",
         f"view: {view}",
+        f"view_profile: {view_profile}",
+        f"direction_model: {direction_model}",
         f"rows: {action.rows}",
         f"cols: {action.cols}",
         f"expected_frames: {action.expected_frames}",
@@ -310,6 +334,19 @@ def source_prompt_text(
         f"  Use a flat solid chroma-key background of {key_color}. Keep every pose inside the harness safe zone with at least {safe_margin}px padding.",
         "  Keep identity, scale, pose readability, foot baseline, and pivot consistent across all frames.",
         "  No text, no labels, no watermark, no borders, no grid lines, and no pixels crossing into neighboring cells.",
+        "  Do not create motion by stacking another full-body character or unmasked duplicate limbs over the base frame.",
+        "  If a foot, hand, limb, tail, or prop is moved in a local repair, remove or repaint the original pixels first so only one clean visible body remains.",
+        "  Do not put semi-transparent shadows, glows, dust, or motion trails into a chroma-key raw sheet; generate those as separate FX assets.",
+        "  The asset will be placed into a 16:9 playable scene, so preserve a stable runtime pivot and predictable bounding box.",
+        "  For side-view platformers, walk/run must alternate left-foot and right-foot contact poses and make the first and last frames loop cleanly.",
+        "  For top-down survivor games, do not use side-view platformer running. Use small shuffles with visible hand and foot changes plus a separate idle loop.",
+        "  Body shake, whole-sprite wobble, or camera/pivot jitter is not locomotion; feet and hands must carry the movement read.",
+        "  Do not create top-down movement by translating, scaling, or globally warping the whole character; keep head, torso, tail, equipment, pivot, and foot baseline stable.",
+        "  Prefer locomotion-friendly silhouettes with short clothing and separated visible feet; avoid long robes, staffs, capes, or props that hide the feet in idle/move sheets.",
+        "  If the character concept hides or crops the feet, regenerate a movement-friendly variant instead of repeatedly repairing bad foot masks.",
+        "  If direction_model is full_directional, create separate down/side/up states or a canonical four-direction sheet.",
+        "  If direction_model is side_only_last_horizontal, generate only side-facing states and rely on runtime flip plus last horizontal facing.",
+        "  For jump, create phase poses for takeoff, rise, apex, fall, and land; do not design it as a blind loop.",
         "",
     ])
 
@@ -318,7 +355,12 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
     root = Path(args.root).resolve()
     bundle_id = safe_id(args.asset_id)
     category = safe_id(args.category)
-    actions = parse_actions(args.actions)
+    view_profile = "top_down_survivor" if args.view in ("topdown", "top_down", "top_down_survivor", "survivor") else "side_platformer"
+    if args.direction_model == "auto":
+        direction_model = "full_directional" if view_profile == "top_down_survivor" else "none"
+    else:
+        direction_model = args.direction_model
+    actions = parse_actions(args.actions, args.view)
     bundle_dir = root / "design" / "assets" / "action-bundles"
     harness_dir = root / "design" / "assets" / "harnesses"
     prompt_dir = root / "assets" / "source-prompts"
@@ -338,6 +380,8 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
         f"description: {yaml_quote(args.description)}",
         f"category: {category}",
         f"view: {args.view}",
+        f"view_profile: {view_profile}",
+        f"direction_model: {direction_model}",
         "godot_version: \"4.4\"",
         "actions:",
     ]
@@ -359,6 +403,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             "--asset-id", action_asset_id,
             "--kind", "sprite",
             "--action", action.name,
+            "--view-profile", view_profile,
             "--rows", str(action.rows),
             "--cols", str(action.cols),
             "--cell-width", str(cell_w),
@@ -381,6 +426,8 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             action=action,
             key_color=key_color,
             view=args.view,
+            view_profile=view_profile,
+            direction_model=direction_model,
             category=category,
             harness_spec=root_relative(root, harness_spec_path),
             harness_prompt=root_relative(root, harness_prompt_path),
@@ -399,6 +446,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             f"    fps: {action.fps:g}",
             f"    anchor: {action.anchor}",
             f"    loop: {'true' if action.loop else 'false'}",
+            f"    direction_model: {direction_model}",
             f"    key_color: {yaml_quote(key_color)}",
             f"    harness_spec: {root_relative(root, harness_spec_path)}",
             f"    harness_prompt: {root_relative(root, harness_prompt_path)}",
@@ -415,6 +463,8 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             "category": category,
             "asset_kind": "sprite",
             "status": "needed",
+            "generation_provider": "gpt_image",
+            "release_ready": False,
             "raw_file": root_relative(root, raw_path),
             "selected_file": "",
             "processed_file": "",
@@ -428,6 +478,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             "frame_size": f"{cell_w}x{cell_h}",
             "anchor": action.anchor,
             "key_color": key_color,
+            "direction_model": direction_model,
             "godot_import": "",
             "collision_role": "none",
             "notes": "Generated by action bundle planning.",
@@ -1069,6 +1120,61 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
         "progressive_web_app/background_color=Color(0, 0, 0, 1)",
         "",
     ]))
+    write_text(project / "design" / "scene-scale-plan.yaml", "\n".join([
+        'schema: "codex-game-maker.scene-scale-plan.v1"',
+        "viewport:",
+        '  aspect_ratio: "16:9"',
+        "  design_width: 1280",
+        "  design_height: 720",
+        '  stretch_mode: "canvas_items"',
+        '  stretch_aspect: "keep"',
+        "world:",
+        "  width: 1600",
+        "  camera_height: 720",
+        '  camera_rule: "follow player with lead, clamp to world bounds"',
+        "grounding_contract:",
+        "  platform_collision:",
+        '    representation: "top_y + collision_width + collision_height"',
+        '    visual_overlap_rule: "scale from platform visual scale"',
+        "  player:",
+        '    grounded_pivot: "feet"',
+        '    visual_foot_sink_rule: "derive from current floor/platform visual scale"',
+        "runtime_asset_scale:",
+        "  player:",
+        "    target_height_px: 96",
+        '    pivot: "feet"',
+        "  platform:",
+        "    target_height_px: 72",
+        '    pivot: "top_center"',
+        "  collectible:",
+        "    target_height_px: 48",
+        '    pivot: "center"',
+        "  finish:",
+        "    target_height_px: 120",
+        '    pivot: "bottom"',
+        "",
+    ]))
+    write_text(project / "production" / "smoke-tests" / "playable-showcase-qa.md", "\n".join([
+        "# Playable Showcase QA",
+        "",
+        "- [ ] Player starts grounded on frame one.",
+        "- [ ] Player does not float above large platforms.",
+        "- [ ] Player does not sink into small platforms.",
+        "- [ ] Idle is the default no-input state.",
+        "- [ ] Run/walk alternates feet and loops cleanly.",
+        "- [ ] Jump uses phase frames instead of a blind loop.",
+        "- [ ] Every collectible instance animates and can be collected.",
+        "- [ ] Finish object triggers a clear state.",
+        "- [ ] No collision/debug rectangles render in runtime.",
+        "- [ ] Web preview was hard-refreshed after export.",
+        "",
+        "Evidence:",
+        "",
+        "```text",
+        "Not run yet.",
+        "```",
+        "",
+    ]))
     write_text(project / "README.md", "\n".join([
         f"# {args.title}",
         "",
@@ -1080,7 +1186,9 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
         "2. Generate raw image sheets with the recorded prompts.",
         "3. Process sheets into transparent frames and GIF previews.",
         "4. Import accepted sprite bundles into Godot.",
-        "5. Run the main scene and verify the generated character or map in-engine.",
+        "5. Use `design/scene-scale-plan.yaml` before placing assets in-engine.",
+        "6. Run the main scene and verify the generated character or map in-engine.",
+        "7. Fill `production/smoke-tests/playable-showcase-qa.md` before calling the showcase ready.",
         "",
     ]))
     write_text(project / "design" / "gdd" / "game-concept.md", "\n".join([
@@ -1143,6 +1251,7 @@ def build_parser() -> argparse.ArgumentParser:
     action.add_argument("--description", required=True)
     action.add_argument("--category", default="characters")
     action.add_argument("--view", default="side")
+    action.add_argument("--direction-model", default="auto", choices=["auto", "none", "full_directional", "side_only_last_horizontal"])
     action.add_argument("--actions", default="idle,run,jump,attack,hurt")
     action.add_argument("--key-color", default="suggest")
     action.add_argument("--reference-file", default="")

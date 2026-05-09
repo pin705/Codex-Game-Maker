@@ -1,8 +1,19 @@
 # Kickoff Brief: [Project]
 
+## Planning Mode Trigger
+
+[Why this request needs planning first: new project, broad scope, multi-system
+work, many assets, export/demo prep, or another material reason.]
+
 ## Understanding
 
 [One sentence: what the user wants to make.]
+
+## Detected Context
+
+- Engine:
+- Stage:
+- Existing files or constraints:
 
 ## Default Build Brief
 
@@ -13,6 +24,12 @@ If the user wants speed, Codex will assume:
 - Art:
 - Engine:
 - First playable target:
+
+## Draft Plan
+
+1. [Smallest useful first step]
+2. [Next step]
+3. [Validation/demo step]
 
 ## Three Decisions
 

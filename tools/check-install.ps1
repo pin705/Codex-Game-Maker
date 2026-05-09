@@ -32,6 +32,8 @@ $godotLintWrapper = Join-Path $repoPath "tools/check-godot-lint.ps1"
 $productionGateWrapper = Join-Path $repoPath "tools/check-production-gate.ps1"
 $releaseGateWrapper = Join-Path $repoPath "tools/check-release-gate.ps1"
 $commandsCatalog = Join-Path $repoPath "codex-game-studio/references/commands/catalog.yaml"
+$playableShowcaseRules = Join-Path $repoPath "codex-game-studio/references/rules/playable-showcase-integration.md"
+$topdownSurvivorRules = Join-Path $repoPath "codex-game-studio/references/rules/topdown-survivor-character-assets.md"
 $previewTools = @(
   "tools/install-godot-export-templates.ps1",
   "tools/export-godot-web.ps1",
@@ -66,7 +68,9 @@ $assetTemplates = @(
   "codex-game-studio/references/templates/action-bundle-report.md",
   "codex-game-studio/references/templates/godot-sprite-import-spec.yaml",
   "codex-game-studio/references/templates/map-scene-import-spec.yaml",
-  "codex-game-studio/references/templates/reference-variant-spec.yaml"
+  "codex-game-studio/references/templates/reference-variant-spec.yaml",
+  "codex-game-studio/references/templates/topdown-survivor-character-contract.yaml",
+  "codex-game-studio/references/templates/playable-showcase-qa.md"
 )
 
 $ok = $true
@@ -279,6 +283,20 @@ if (Test-Path -LiteralPath $commandsCatalog) {
   Report "OK" "professional command alias catalog exists"
 } else {
   Report "FAIL" "Missing command alias catalog at $commandsCatalog"
+  $ok = $false
+}
+
+if (Test-Path -LiteralPath $playableShowcaseRules) {
+  Report "OK" "playable showcase integration rules exist"
+} else {
+  Report "FAIL" "Missing playable showcase integration rules at $playableShowcaseRules"
+  $ok = $false
+}
+
+if (Test-Path -LiteralPath $topdownSurvivorRules) {
+  Report "OK" "top-down survivor character rules exist"
+} else {
+  Report "FAIL" "Missing top-down survivor character rules at $topdownSurvivorRules"
   $ok = $false
 }
 

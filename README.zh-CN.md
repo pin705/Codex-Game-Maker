@@ -29,7 +29,7 @@ Codex Game Maker 会把一个 Codex 会话变成轻量游戏制作空间：项�
 | 核心 skills | 8 | start、design、art、sprite、map、asset QA、architecture、review |
 | 工具脚本 | 29 | 安装、注册、导出、预览、资产处理、gate、hook、import |
 | gate 脚本 | 7 | engine、asset、story、production、release、Godot lint、review |
-| 模板 | 30 | GDD、art、asset、story、production、release、QA、import manifest |
+| 模板 | 31 | GDD、art、asset、story、production、release、QA、import manifest |
 | 资产处理脚本 | 2 | pixel processor + workflow coordinator |
 | Pro aliases | 10 | `/release`、`/team-*`、`/audio-pass`、`/localization-pass` 等 |
 
@@ -61,6 +61,10 @@ pwsh -File tools/check-install.ps1
 ```text
 Use Codex Game Maker to start this game project.
 ```
+
+对于空文件夹、新项目、或者涉及多个系统/资产/工作流的复杂需求，Codex Game Maker 会先进入 planning handshake：总结需求、检测当前项目上下文、给出默认方案、最多问 3 个关键问题，并允许用户回复 `go with defaults` 后再开始创建文件。
+
+如果 Codex 环境支持更大的上下文窗口，建议为长期游戏项目使用最大可用上下文，目标是 1M tokens。仓库文件本身不能强制修改真实会话 context，因此 Codex Game Maker 会通过 planning docs、asset manifests 和 `production/session-state/active.md` 保持连续性。
 
 ## Godot
 

@@ -3,6 +3,51 @@
 Codex Game Maker should not silently turn a vague idea into a full project.
 It should also avoid interrogating users with long questionnaires.
 
+## Context Window Preference
+
+When the host Codex environment supports session/model settings, prefer the
+largest available context window for game projects; a 1M-token context window is
+the recommended target for long-running projects.
+
+Codex Game Maker cannot force the host application to change the actual context
+window from repository files. When the large context window is unavailable,
+preserve continuity through:
+
+- `production/session-state/active.md`
+- current story/epic/status docs
+- asset manifests and pipeline metadata
+- short planning summaries before implementation resumes
+
+## Planning Handshake
+
+Treat the following as a plan-mode trigger before creating files, generating
+many assets, or implementing code:
+
+- starting a new game or new engine project
+- a blank folder with only a broad idea
+- a request that touches multiple systems, assets, scenes, or workflows
+- engine migration, export setup, architecture setup, or release/demo prep
+- the user says the result should be polished, complete, showcase-ready, or
+  production-like
+- the likely work requires more than one core skill or gate
+
+If the Codex UI has a true Plan mode, use it. If not, simulate Plan mode in the
+chat with a short planning handshake and do not edit files until the handshake
+is accepted.
+
+The planning handshake must include:
+
+1. Understanding: one sentence summarizing the request.
+2. Detected context: current engine/stage if available.
+3. Default plan: the smallest useful plan Codex will follow if the user wants
+   speed.
+4. Open decisions: at most 3 questions that materially change the result.
+5. Fast path: tell the user they can reply `go with defaults` to proceed.
+
+Proceed after the user answers, accepts defaults, or explicitly asks for
+autonomous execution. For a narrow bug fix or read-only review, proceed without
+the handshake and state assumptions briefly.
+
 ## Lean Kickoff
 
 When the user gives a broad request such as "make me a platformer" or "help me make a game", start with one short kickoff brief before creating files.

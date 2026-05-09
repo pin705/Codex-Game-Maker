@@ -184,9 +184,58 @@ def max_relative_drift(values: list[float]) -> float:
     return max(abs(value - base) / base for value in values)
 
 
-def phase_plan(action: str, frames: int) -> list[str]:
+def lower_body_transition_diffs(
+    image: Image.Image,
+    spec: dict[str, Any],
+    key_color: tuple[int, int, int],
+    tolerance: int,
+    alpha_threshold: int,
+) -> list[float]:
+    grid = spec["grid"]
+    rows = int(grid["rows"])
+    cols = int(grid["cols"])
+    cell_w = int(grid["cell_width"])
+    cell_h = int(grid["cell_height"])
+    cells: list[tuple[np.ndarray, np.ndarray]] = []
+
+    for index in range(rows * cols):
+        row = index // cols
+        col = index % cols
+        cell = image.crop((col * cell_w, row * cell_h, (col + 1) * cell_w, (row + 1) * cell_h)).convert("RGBA")
+        lower_top = int(cell_h * 0.56)
+        lower = cell.crop((0, lower_top, cell_w, cell_h))
+        lower_arr = np.array(lower, dtype=np.int16)
+        lower_mask = mask_from_image(lower, key_color, tolerance, alpha_threshold)
+        cells.append((lower_arr, lower_mask))
+
+    diffs: list[float] = []
+    for index, (current_arr, current_mask) in enumerate(cells):
+        next_arr, next_mask = cells[(index + 1) % len(cells)]
+        union = current_mask | next_mask
+        if not np.any(union):
+            diffs.append(0.0)
+            continue
+        rgb_delta = np.abs(current_arr[:, :, :3] - next_arr[:, :, :3])
+        diffs.append(float(np.mean(rgb_delta[union]) / 255.0))
+    return diffs
+
+
+def phase_plan(action: str, frames: int, view_profile: str = "neutral") -> list[str]:
     action = action.lower()
+    view_profile = view_profile.lower()
     if action in ("run", "walk"):
+        if view_profile == "top_down_survivor":
+            labels = [
+                "neutral contact",
+                "small left-foot shuffle",
+                "center settle",
+                "small right-foot shuffle",
+                "neutral return",
+                "small left-foot shuffle return",
+                "center settle return",
+                "loop bridge",
+            ]
+            return labels[:frames]
         labels = [
             "left-foot contact",
             "down recoil",
@@ -224,8 +273,9 @@ def prompt_contract(spec: dict[str, Any]) -> str:
     grid = spec["grid"]
     canvas = spec["canvas"]
     action = spec.get("action", "")
+    view_profile = str(spec.get("view_profile", "neutral")).lower()
     frames = int(grid["rows"]) * int(grid["cols"])
-    phases = phase_plan(action, frames)
+    phases = phase_plan(action, frames, view_profile)
     phase_text = "; ".join(f"{index + 1}: {label}" for index, label in enumerate(phases))
     safe = spec["safe_zone"]
     foot = spec.get("foot_line_y", 0)
@@ -245,21 +295,61 @@ def prompt_contract(spec: dict[str, Any]) -> str:
         "- Do not draw grid lines, borders, labels, frame numbers, watermarks, UI, or debug overlays.",
         "- Keep the same character identity, costume, scale, camera angle, and lighting across all frames.",
         "- Do not let any body part or prop cross into a neighboring cell.",
+        "- Do not fake animation by stacking a second full-body character, ghost limbs, or unmasked duplicated limb crops over the base pose.",
+        "- If a local repair shifts a foot, hand, limb, tail, or prop, remove or repaint the original pixels first so only one clean visible body remains.",
+        "- Do not use semi-transparent shadows, glows, dust, or motion trails in a chroma-key raw sheet; generate those as separate FX sheets or opaque runtime assets.",
+        "- Preserve a stable runtime pivot and visible bounding box so the asset can be scaled consistently in a 16:9 scene.",
+        "- If the subject has a long tail, weapon, staff, cape, trail, or backpack, it still must fit fully inside the safe zone in every frame.",
+        "- If the prop or tail cannot fit comfortably, generate a larger-cell harness or move that element to a separate attack/cast/FX sheet.",
     ]
+    if view_profile == "top_down_survivor":
+        lines.extend([
+            "- View profile: top-down survivor / arena action.",
+            "- Do not use a side-view platformer run silhouette for this asset.",
+            "- Movement is a restrained top-down shuffle: visible alternating feet and hands, no long stride, no airborne running pose.",
+            "- Body shake, whole-sprite wobble, or camera/pivot jitter is not locomotion and must not be used as the primary animation.",
+            "- Do not fake movement by translating, scaling, or globally warping the whole character; keep head, torso, tail, equipment, pivot, and foot baseline stable.",
+            "- Choose locomotion-friendly silhouettes: short jacket, separated visible feet, and no long robe, skirt, staff, cape, or prop blocking the feet in move/idle sheets.",
+            "- If the current character concept hides the feet, regenerate a locomotion-friendly variant before making the runtime walk cycle.",
+            "- Build idle as its own loop. A stopped character must never freeze on a walk/run contact pose.",
+            "- Direction matters for polished directional characters. Plan separate down, side, and up sheets, or use one canonical four-direction sheet.",
+            "- If the project chooses a side-only survivor model, record direction_model=side_only_last_horizontal and generate only approved idle_side/move_side sheets instead of weak north/south variants.",
+            "- Up/down movement should not look like the character is sliding sideways across the arena unless the side-only model is explicitly chosen for that prototype.",
+            "- Keep attack/cast props and weapon swings separate from locomotion unless the game design explicitly needs an always-held prop.",
+        ])
     if foot > 0:
         lines.append(f"- Character foot/bottom baseline: keep grounded frames near y={foot} inside each cell.")
     if action:
         lines.append(f"- Motion phases: {phase_text}.")
     if action in ("run", "walk"):
+        if view_profile == "top_down_survivor":
+            lines.extend([
+                "- This must be a restrained locomotion loop, not a platformer sprint.",
+                "- Use 8 frames for each top-down direction unless a higher-fidelity pass is explicitly requested.",
+                "- Feet and hands must alternate visibly under the body. Keep head, torso, and equipment from growing, shrinking, wobbling, or lunging forward.",
+                "- The first and last poses must connect cleanly without a pop.",
+                "- Contact feet should stay near the same baseline; avoid sliding, sinking, or floating feet between frames.",
+            ])
+        else:
+            lines.extend([
+                "- This must be a real loop: left-foot and right-foot contacts must alternate.",
+                "- The first and last poses must connect cleanly without a pop.",
+                "- Contact feet should land on the same baseline; avoid sliding, sinking, or floating feet between frames.",
+                "- For controllable heroes, prefer 12 frames in a 3x4 grid for run/walk unless the user explicitly asks for a lower-fidelity pass.",
+                "- Do not include held staffs, large weapons, dust clouds, or magic trails in the locomotion loop; generate those as separate actions or FX.",
+            ])
+    if action == "jump":
         lines.extend([
-            "- This must be a real loop: left-foot and right-foot contacts must alternate.",
-            "- The first and last poses must connect cleanly without a pop.",
+            "- This is a phased airborne action, not a looping animation.",
+            "- Include readable takeoff/rise/apex/fall/landing poses with stable identity and no adjacent-frame fragments.",
         ])
     if spec["kind"] == "platform":
         lines.extend([
             "- Platform art must not be cropped by the canvas edge unless it is explicitly marked tileable.",
             "- Include transparent/key-color padding around decorative grass, flowers, stones, roots, and underside details.",
             "- If the platform is meant to repeat horizontally, generate left, middle, and right pieces separately.",
+            "- Keep a clear flat collision top surface; decorative grass may overlap above it but must be accounted for in runtime visual_top_overlap.",
+            "- Generate the platform for a planned runtime size instead of relying on arbitrary stretching in the engine.",
         ])
     return "\n".join(lines) + "\n"
 
@@ -352,6 +442,7 @@ def build_spec(args: argparse.Namespace) -> dict[str, Any]:
         "asset_id": asset_id,
         "kind": args.kind,
         "action": action,
+        "view_profile": args.view_profile,
         "target_engine": "Godot 4.4",
         "canvas": {"width": canvas_w, "height": canvas_h},
         "grid": {"rows": rows, "cols": cols, "cell_width": cell_w, "cell_height": cell_h},
@@ -366,6 +457,8 @@ def build_spec(args: argparse.Namespace) -> dict[str, Any]:
             "min_component_area": min_component_area,
             "max_scale_drift_ratio": max_scale_drift,
             "max_foot_drift_px": int(args.max_foot_drift),
+            "min_lower_body_transition_diff": 0.13,
+            "max_weak_motion_transitions": 2,
             "allow_empty_cells": bool(args.allow_empty_cells),
             "allow_horizontal_edge_touch": bool(args.allow_horizontal_edge_touch),
             "allow_vertical_edge_touch": bool(args.allow_vertical_edge_touch),
@@ -376,7 +469,8 @@ def build_spec(args: argparse.Namespace) -> dict[str, Any]:
             "pivot": args.pivot,
             "frame_order": "left-to-right, top-to-bottom",
             "loop": bool(args.loop),
-            "motion_phases": phase_plan(action, rows * cols),
+            "view_profile": args.view_profile,
+            "motion_phases": phase_plan(action, rows * cols, args.view_profile),
         },
         "outputs": {},
     }
@@ -577,7 +671,8 @@ def validate_cells(image: Image.Image, spec: dict[str, Any], input_path: Path) -
             )
 
     action = str(spec.get("action", "")).lower()
-    if action in ("run", "walk") and len(centers) >= 6:
+    view_profile = str(spec.get("view_profile", "neutral")).lower()
+    if action in ("run", "walk") and view_profile != "top_down_survivor" and len(centers) >= 6:
         center_drift = max_relative_drift(centers)
         if center_drift < 0.012 and width_drift < 0.012 and height_drift < 0.012:
             add_item(
@@ -585,11 +680,336 @@ def validate_cells(image: Image.Image, spec: dict[str, Any], input_path: Path) -
                 "harness.low_motion_variation",
                 "Run/walk frames have very similar silhouettes. Review the GIF for missing foot alternation.",
             )
+    if action in ("run", "walk", "move") and view_profile == "top_down_survivor" and rows * cols >= 6:
+        min_transition_diff = float(acceptance.get("min_lower_body_transition_diff", 0.13))
+        max_weak_transitions = int(acceptance.get("max_weak_motion_transitions", 2))
+        transition_diffs = lower_body_transition_diffs(image, spec, key_color, key_tolerance, alpha_threshold)
+        weak = [index for index, value in enumerate(transition_diffs) if value < min_transition_diff]
+        if len(weak) > max_weak_transitions:
+            add_item(
+                blockers,
+                "harness.motion_phase.weak_lower_body",
+                (
+                    "Top-down walk/move loop has too many weak lower-body transitions. "
+                    "This usually means the sheet is visually aligned but the feet/hands are not actually alternating."
+                ),
+                weak_transitions=weak,
+                transition_diffs=[round(value, 4) for value in transition_diffs],
+                min_transition_diff=min_transition_diff,
+                max_weak_transitions=max_weak_transitions,
+            )
+        else:
+            add_item(
+                evidence,
+                "harness.motion_phase.lower_body_ok",
+                "Top-down lower-body transition variation is strong enough for a readable movement loop.",
+                transition_diffs=[round(value, 4) for value in transition_diffs],
+            )
 
     if not blockers:
         add_item(evidence, "harness.geometry.ok", "Canvas, grid, safe zones, edge guards, and drift checks passed.", as_posix(input_path))
 
     return {"blockers": blockers, "warnings": warnings, "evidence": evidence, "frames": frames}
+
+
+def resolve_spec_relative(path_value: str, spec_path: Path) -> Path:
+    candidate = Path(path_value)
+    if candidate.is_absolute():
+        return candidate
+    return (spec_path.parent / candidate).resolve()
+
+
+def resolve_manifest_relative(path_value: str, manifest_path: Path) -> Path:
+    candidate = Path(path_value)
+    if candidate.is_absolute():
+        return candidate
+    for parent in [manifest_path.parent, *manifest_path.parents]:
+        resolved = (parent / candidate).resolve()
+        if resolved.exists():
+            return resolved
+    return (manifest_path.parent / candidate).resolve()
+
+
+def mask_from_regions(size: tuple[int, int], regions: list[dict[str, Any]]) -> Image.Image:
+    mask = Image.new("L", size, 0)
+    draw = ImageDraw.Draw(mask)
+    for region in regions:
+        if "ellipse" in region:
+            draw.ellipse(tuple(int(v) for v in region["ellipse"]), fill=255)
+        if "rect" in region:
+            draw.rectangle(tuple(int(v) for v in region["rect"]), fill=255)
+        if "polygon" in region:
+            points = [(int(point[0]), int(point[1])) for point in region["polygon"]]
+            draw.polygon(points, fill=255)
+    return mask
+
+
+def check_paw_blob_scan(
+    image: Image.Image,
+    spec: dict[str, Any],
+    meta: dict[str, Any],
+    manifest_path: Path,
+    blockers: list[dict[str, Any]],
+    evidence: list[dict[str, Any]],
+) -> None:
+    scan = meta.get("paw_blob_scan", {})
+    if not isinstance(scan, dict) or not scan.get("enabled", False):
+        return
+
+    region = scan.get("region", [])
+    colors = scan.get("colors", [])
+    if not isinstance(region, list) or len(region) != 4:
+        return
+    if not isinstance(colors, list) or not colors:
+        return
+
+    grid = spec["grid"]
+    cell_w = int(grid["cell_width"])
+    cell_h = int(grid["cell_height"])
+    rows = int(grid["rows"])
+    cols = int(grid["cols"])
+    x0, y0, x1, y1 = [int(v) for v in region]
+    x0 = max(0, min(cell_w, x0))
+    x1 = max(0, min(cell_w, x1))
+    y0 = max(0, min(cell_h, y0))
+    y1 = max(0, min(cell_h, y1))
+    if x1 <= x0 or y1 <= y0:
+        return
+
+    max_components = int(scan.get("max_components", 2))
+    min_area = int(scan.get("min_area", 80))
+    max_area_drift = float(scan.get("max_area_drift_ratio", 0.60))
+    worst_components = 0
+    worst_frame = 0
+    areas: list[float] = []
+    sheet = image.convert("RGBA")
+    scan_blocked = False
+
+    for index in range(rows * cols):
+        row = index // cols
+        col = index % cols
+        left = col * cell_w
+        top = row * cell_h
+        cell = sheet.crop((left + x0, top + y0, left + x1, top + y1))
+        arr = np.array(cell.convert("RGBA"), dtype=np.int16)
+        alpha_mask = arr[:, :, 3] > 8
+        color_mask = np.zeros(alpha_mask.shape, dtype=bool)
+        for color_spec in colors:
+            if not isinstance(color_spec, dict):
+                continue
+            rgb = color_spec.get("rgb", [])
+            if not isinstance(rgb, list) or len(rgb) != 3:
+                continue
+            tolerance = int(color_spec.get("tolerance", 42))
+            target = np.array([int(rgb[0]), int(rgb[1]), int(rgb[2])], dtype=np.int16)
+            delta = np.abs(arr[:, :, :3] - target).max(axis=2)
+            color_mask |= delta <= tolerance
+        paw_mask = alpha_mask & color_mask
+        components = connected_components(paw_mask, min_area)
+        count = len(components)
+        if count > worst_components:
+            worst_components = count
+            worst_frame = index
+        areas.append(float(sum(int(component["area"]) for component in components)))
+        if count > max_components:
+            scan_blocked = True
+            add_item(
+                blockers,
+                "harness.local_repair.paw_blob_count",
+                f"Frame {index} has {count} visible paw/leg color blobs in the lower-body scan region; limit {max_components}.",
+                as_posix(manifest_path),
+                frame=index,
+                components=components[:6],
+            )
+
+    area_drift = max_relative_drift(areas)
+    if area_drift > max_area_drift:
+        scan_blocked = True
+        add_item(
+            blockers,
+            "harness.local_repair.paw_blob_area_drift",
+            f"Paw/leg visible area drifts {area_drift:.1%}; limit {max_area_drift:.1%}. This often indicates duplicated or disappearing feet.",
+            as_posix(manifest_path),
+            area_drift=area_drift,
+        )
+    if not scan_blocked and worst_components > 0:
+        add_item(
+            evidence,
+            "harness.local_repair.paw_blob_scan",
+            f"Lower-body paw scan passed; worst frame {worst_frame} had {worst_components} paw/leg blobs.",
+            as_posix(manifest_path),
+        )
+
+
+def check_reference_erasure(
+    image: Image.Image,
+    spec: dict[str, Any],
+    meta: dict[str, Any],
+    manifest_path: Path,
+    blockers: list[dict[str, Any]],
+    evidence: list[dict[str, Any]],
+) -> None:
+    source_value = str(meta.get("reference_source", "") or meta.get("source", "")).strip()
+    regions = meta.get("old_foot_erasure_regions", [])
+    if not source_value or not isinstance(regions, list) or not regions:
+        return
+
+    source_path = resolve_manifest_relative(source_value, manifest_path)
+    if not source_path.exists():
+        add_item(
+            blockers,
+            "harness.local_repair.reference_not_found",
+            f"Local repair reference source does not exist: {source_path}",
+            as_posix(source_path),
+        )
+        return
+
+    grid = spec["grid"]
+    cell_w = int(grid["cell_width"])
+    cell_h = int(grid["cell_height"])
+    rows = int(grid["rows"])
+    cols = int(grid["cols"])
+    reference_resize = meta.get("reference_resize", [cell_w, cell_h])
+    reference_paste = meta.get("reference_paste", [0, 0])
+    if not isinstance(reference_resize, list) or len(reference_resize) != 2:
+        return
+    if not isinstance(reference_paste, list) or len(reference_paste) != 2:
+        return
+
+    reference_cell = Image.new("RGBA", (cell_w, cell_h), (0, 0, 0, 0))
+    reference_image = load_rgba(source_path).resize((int(reference_resize[0]), int(reference_resize[1])), Image.Resampling.LANCZOS)
+    reference_cell.alpha_composite(reference_image, (int(reference_paste[0]), int(reference_paste[1])))
+    region_mask = np.array(mask_from_regions((cell_w, cell_h), regions), dtype=np.uint8) > 0
+    reference_arr = np.array(reference_cell.convert("RGBA"), dtype=np.int16)
+    reference_opaque = reference_arr[:, :, 3] > 8
+    check_mask = region_mask & reference_opaque
+    reference_count = int(np.count_nonzero(check_mask))
+    if reference_count == 0:
+        return
+
+    sheet = image.convert("RGBA")
+    max_match_ratio = float(meta.get("max_old_reference_match_ratio", 0.08))
+    worst_ratio = 0.0
+    worst_frame = 0
+    for index in range(rows * cols):
+        row = index // cols
+        col = index % cols
+        left = col * cell_w
+        top = row * cell_h
+        cell = sheet.crop((left, top, left + cell_w, top + cell_h))
+        cell_arr = np.array(cell.convert("RGBA"), dtype=np.int16)
+        color_delta = np.abs(cell_arr[:, :, :3] - reference_arr[:, :, :3]).max(axis=2)
+        alpha_delta = np.abs(cell_arr[:, :, 3] - reference_arr[:, :, 3])
+        unchanged = check_mask & (color_delta <= 8) & (alpha_delta <= 8)
+        ratio = float(np.count_nonzero(unchanged)) / float(reference_count)
+        if ratio > worst_ratio:
+            worst_ratio = ratio
+            worst_frame = index
+
+    if worst_ratio > max_match_ratio:
+        add_item(
+            blockers,
+            "harness.local_repair.old_pixels_remaining",
+            f"Local repair still matches {worst_ratio:.1%} of old reference pixels in the erased limb region; limit {max_match_ratio:.1%}.",
+            as_posix(manifest_path),
+            frame=worst_frame,
+            match_ratio=worst_ratio,
+        )
+    else:
+        add_item(
+            evidence,
+            "harness.local_repair.pixel_erasure",
+            f"Old reference pixels in repaired limb regions are below threshold; worst frame {worst_frame} matched {worst_ratio:.1%}.",
+            as_posix(manifest_path),
+        )
+
+
+def validate_local_repair_manifest(
+    spec: dict[str, Any],
+    spec_path: Path,
+    image: Image.Image,
+    blockers: list[dict[str, Any]],
+    warnings: list[dict[str, Any]],
+    evidence: list[dict[str, Any]],
+) -> None:
+    """Validate semantic evidence for local limb/foot repair passes.
+
+    The geometry harness can prove that a sheet has correct canvas, safe zone,
+    foot line, and slicing behavior. It cannot infer that a repaint removed
+    the old limb before drawing a replacement. This optional contract requires
+    explicit repair metadata for derived animation sheets.
+    """
+
+    repair = spec.get("local_repair")
+    if not isinstance(repair, dict) or not repair:
+        return
+
+    manifest_value = str(repair.get("manifest", "")).strip()
+    if not manifest_value:
+        add_item(blockers, "harness.local_repair.manifest_missing", "local_repair.manifest is required when local_repair is enabled.")
+        return
+
+    manifest_path = resolve_spec_relative(manifest_value, spec_path)
+    if not manifest_path.exists():
+        add_item(
+            blockers,
+            "harness.local_repair.manifest_not_found",
+            f"Local repair manifest does not exist: {manifest_path}",
+            as_posix(manifest_path),
+        )
+        return
+
+    try:
+        meta = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        add_item(
+            blockers,
+            "harness.local_repair.manifest_invalid_json",
+            f"Local repair manifest is not valid JSON: {exc}",
+            as_posix(manifest_path),
+        )
+        return
+
+    contract = meta.get("local_repair_contract", {})
+    if not isinstance(contract, dict):
+        add_item(
+            blockers,
+            "harness.local_repair.contract_missing",
+            "Local repair manifest must include a local_repair_contract object.",
+            as_posix(manifest_path),
+        )
+        return
+
+    for key in repair.get("required_true", []):
+        if contract.get(str(key)) is not True:
+            add_item(
+                blockers,
+                "harness.local_repair.required_true_failed",
+                f"Local repair contract must set {key}=true.",
+                as_posix(manifest_path),
+                field=str(key),
+            )
+
+    for key in repair.get("required_false", []):
+        if contract.get(str(key)) is not False:
+            add_item(
+                blockers,
+                "harness.local_repair.required_false_failed",
+                f"Local repair contract must set {key}=false.",
+                as_posix(manifest_path),
+                field=str(key),
+            )
+
+    check_reference_erasure(image, spec, meta, manifest_path, blockers, evidence)
+    check_paw_blob_scan(image, spec, meta, manifest_path, blockers, evidence)
+
+    if not blockers:
+        add_item(
+            evidence,
+            "harness.local_repair.evidence",
+            "Local repair manifest records single-silhouette limb cleanup evidence.",
+            as_posix(manifest_path),
+        )
 
 
 def validate_command(args: argparse.Namespace) -> dict[str, Any]:
@@ -606,6 +1026,7 @@ def validate_command(args: argparse.Namespace) -> dict[str, Any]:
     blockers = analysis["blockers"]
     warnings = analysis["warnings"]
     evidence = analysis["evidence"]
+    validate_local_repair_manifest(spec, spec_path, image, blockers, warnings, evidence)
     gate = "BLOCKED" if blockers else "PASS_WITH_WARNINGS" if warnings else "PASS"
     result = {
         "schema": SCHEMA,
@@ -634,6 +1055,21 @@ def crop_with_padding(image: Image.Image, bbox: BBox, padding: int) -> Image.Ima
     right = min(image.width, bbox.right + padding)
     bottom = min(image.height, bbox.bottom + padding)
     return image.crop((left, top, right, bottom))
+
+
+def crop_foreground_with_padding(
+    image: Image.Image,
+    bbox: BBox,
+    padding: int,
+    key_color: tuple[int, int, int],
+    tolerance: int,
+    alpha_threshold: int,
+) -> Image.Image:
+    crop = crop_with_padding(image, bbox, padding).convert("RGBA")
+    mask = mask_from_image(crop, key_color, tolerance, alpha_threshold)
+    arr = np.array(crop, dtype=np.uint8)
+    arr[:, :, 3] = np.where(mask, arr[:, :, 3], 0).astype(np.uint8)
+    return Image.fromarray(arr, "RGBA")
 
 
 def component_bbox(item: dict[str, Any]) -> BBox:
@@ -715,7 +1151,7 @@ def cell_bbox_from_source_grid(
     }
     if bbox.empty:
         return None, meta
-    return crop_with_padding(cell, bbox, 2), meta
+    return crop_foreground_with_padding(cell, bbox, 2, key_color, tolerance, alpha_threshold), meta
 
 
 def rectify_command(args: argparse.Namespace) -> dict[str, Any]:
@@ -772,7 +1208,7 @@ def rectify_command(args: argparse.Namespace) -> dict[str, Any]:
             row = index // cols
             col = index % cols
             bbox = component_bbox(component)
-            crop = crop_with_padding(image, bbox, int(args.padding))
+            crop = crop_foreground_with_padding(image, bbox, int(args.padding), key_color, tolerance, alpha_threshold)
             paste_meta = paste_crop_into_cell(out, crop, col * cell_w, row * cell_h, cell_w, cell_h, safe, anchor, float(args.fit_scale))
             frames.append({
                 "index": index,
@@ -788,7 +1224,7 @@ def rectify_command(args: argparse.Namespace) -> dict[str, Any]:
             raise ValueError("No foreground component found.")
         component = components[0]
         bbox = component_bbox(component)
-        crop = crop_with_padding(image, bbox, int(args.padding))
+        crop = crop_foreground_with_padding(image, bbox, int(args.padding), key_color, tolerance, alpha_threshold)
         paste_meta = paste_crop_into_cell(out, crop, 0, 0, cell_w, cell_h, safe, anchor, float(args.fit_scale))
         frames.append({
             "index": 0,
@@ -854,6 +1290,7 @@ def build_parser() -> argparse.ArgumentParser:
     create.add_argument("--asset-id", required=True)
     create.add_argument("--kind", choices=["sprite", "platform", "prop", "fx", "map-object"], default="sprite")
     create.add_argument("--action", default="")
+    create.add_argument("--view-profile", choices=["neutral", "side_platformer", "top_down_survivor"], default="neutral")
     create.add_argument("--rows", type=int, default=3)
     create.add_argument("--cols", type=int, default=4)
     create.add_argument("--cell-width", type=int, default=384)

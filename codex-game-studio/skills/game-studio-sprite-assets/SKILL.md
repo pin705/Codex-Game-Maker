@@ -16,7 +16,10 @@ Read if present:
 - `codex-game-studio/references/templates/asset-harness-spec.yaml`
 - `codex-game-studio/references/templates/scene-scale-plan.yaml`
 - `codex-game-studio/references/templates/asset-prompt-spec.yaml`
+- `codex-game-studio/references/templates/topdown-survivor-character-contract.yaml`
 - `codex-game-studio/references/rules/generated-assets.md`
+- `codex-game-studio/references/rules/playable-showcase-integration.md`
+- `codex-game-studio/references/rules/topdown-survivor-character-assets.md`
 - `codex-game-studio/scripts/assets/cgs_asset_processor.py`
 - `codex-game-studio/scripts/assets/cgs_asset_harness.py`
 
@@ -71,7 +74,7 @@ tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.ha
 tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-rectified.png
 ```
 
-Rectification is only for geometry: exact canvas, grid normalization, safe padding, pivot/bottom alignment, and component isolation. Regenerate instead of rectifying when identity drifts, the action is not a real loop, a run/walk does not alternate feet, a jump pose sequence is wrong, limbs are missing, or neighboring-frame fragments are baked into the subject.
+Rectification is only for geometry: exact canvas, grid normalization, safe padding, pivot/bottom alignment, foreground-mask isolation, and component placement. The rectified output must not preserve rectangular chroma-key gradient blocks around the subject; if it does, fix the rectifier or rerun with stricter key tolerance before processing. Regenerate instead of rectifying when identity drifts, the action is not a real loop, a run/walk does not alternate feet, a jump pose sequence is wrong, limbs are missing, or neighboring-frame fragments are baked into the subject.
 
 ## Generation Rules
 
@@ -92,13 +95,17 @@ Rectification is only for geometry: exact canvas, grid normalization, safe paddi
 For characters, enemies, NPCs, summons, animated props, and body actions:
 - Prefer multi-row grids. Do not use raw `1xN` strips as the default.
 - Use `2x3` for 6-frame idle, jump, hurt, compact attack, impact, or first-pass motion.
-- Use `2x4` for 8-frame walk, jump, attack, cast, death, or richer motion.
+- Use `2x4` only for compact first-pass jump, cast, death, or secondary motion.
 - Use `3x4` for 12-frame run, attack, death, hero signature actions, and polished core loops.
+- Use `3x4` for side-view playable hero walk/run by default. Do not ship a side-view 2x4 locomotion sheet for a showcase unless the user explicitly accepts rough animation.
+- For top-down survivor / arena games, do not use side-view platformer run sheets. Use `ViewProfile top_down_survivor`, separate idle loops, and either full directional states or an explicit side-only survivor model.
+- For polished directional top-down survivor heroes, use restrained `2x4` 8-frame shuffle loops per direction (`move_down`, `move_side`, `move_up`) or a canonical `4x4` four-direction sheet. Keep the head, torso, tail, equipment, pivot, and foot baseline stable; animate hand/foot alternation instead of translating, scaling, or globally warping the whole character.
+- If north/south variants are weak or not needed, choose `direction_model: side_only_last_horizontal`: generate only `idle_side` and `move_side`, flip left/right in runtime, and preserve the last horizontal facing during vertical movement. Do not force poor up/down art into the game.
 - Use `4x4` for canonical top-down four-direction walk sheets.
 
 Default action frame counts:
 - `idle`: 6-8 frames
-- `walk`: 8 frames
+- `walk`: 12 frames for playable heroes, 8 frames only for rough or secondary characters
 - `run`: 8-12 frames
 - `jump`: 6-8 frames
 - `attack`: 8-12 frames
@@ -113,7 +120,24 @@ For controllable heroes with multiple actions:
 - Assemble a final Godot atlas only after per-action QC passes.
 - Use an action bundle for multi-action characters instead of one-off prompt drift.
 - Treat `idle`, `run`, `jump`, `fall`, `land`, `attack`, and `hurt` as state-machine inputs, not just art files. If an action does not have stable timing/pivot metadata, it is not runtime-ready.
+- Idle is a real runtime state, not a fallback to frame 0 of walk/run. For playable characters, provide an accepted idle loop and add a smoke test that proves the state machine returns from movement to idle when input stops.
 - A run/walk action must be a real loop: first and last poses should connect cleanly, foot contact should alternate predictably, and the body should not scale or drift between frames.
+- Do not fake locomotion by stacking a second full-body character, duplicated limbs, or unmasked limb crops on top of the base frame. Reference-guided derived animation must either regenerate clean frames, repaint the old limb region, or use a local warp/deformation pass that moves one visible body.
+- When repairing animation locally, never keep both the old foot/hand/limb and the shifted replacement visible. Clear or repaint the original pixels before pasting the moved part, then review the GIF for a single clean character silhouette.
+- If the repair moves or repaints feet, hands, limbs, tails, weapons, or props, add `local_repair` to the harness spec and point it at a repair manifest. Rerun `tools/check-asset-harness.ps1` after that; the accepted report must include `harness.local_repair.pixel_erasure`, `harness.local_repair.paw_blob_scan` for foot/leg repairs, and `harness.local_repair.evidence`, not just geometry evidence.
+- For local foot repairs, never paste replacement feet under the old generated feet. Erase old paw/shin pixels back to the selected key color, repaint only the necessary seam, and keep one connected leg-and-paw setup per side in the original footprint. Large robe-colored rectangles or mask patches are blockers.
+- When removing old pixels from a chroma-key raw sheet, erase them to the selected key color, not transparent black. Transparent black becomes false opaque residue after RGB export.
+- Do not accept whole-body shake, sprite wobble, camera jitter, or pivot jitter as a walk/run loop. Top-down survivor movement still needs visible foot and/or hand alternation.
+- For top-down survivor movement, harness geometry PASS is not enough. Require lower-body motion-phase evidence; if several adjacent frames are visually near-neutral, curate the strongest generated poses into a readable loop or regenerate with stricter phase prompts.
+- Do not place semi-transparent shadows, glows, dust, or motion trails directly on a chroma-key raw locomotion sheet. They can become near-key residue after alpha cleanup; make them separate FX assets or opaque runtime elements.
+- Design locomotion characters so the feet can animate: short jacket or shorts, separated visible feet, and no robe, skirt, staff, cape, or prop that covers foot contact poses.
+- If the concept hides the feet or the foot masks are repeatedly dirty, regenerate a movement-friendly variant instead of continuing local repairs.
+- Actions in the same playable character bundle must share target height, foot baseline, pivot, and runtime scale. If `move` switches to `idle` and the character grows or shrinks, regenerate or normalize the sheets before import.
+- In top-down survivor games, stopped characters must use idle animation, not frame 0 of walk/run. Full-direction runtimes choose idle_down, idle_side, idle_up, move_down, move_side, or move_up from velocity direction.
+- For `side_only_last_horizontal`, the runtime state machine must choose only `idle_side` or `move_side`, flip left/right, and keep vertical movement from switching to unapproved north/south frames.
+- For `side_only_last_horizontal`, verify `idle_side -> move_side -> idle_side` in a runtime smoke test. Residual velocity, collision pushback, or dash cooldown must not keep the character visually stuck in move_side after input stops.
+- Do not include long staffs, large weapons, dust clouds, magic trails, or oversized tails in a locomotion sheet if they threaten the cell boundary. Put them in `attack`, `cast`, or `fx` sheets.
+- If any tail, weapon, cape, or effect appears inside a neighboring cell after slicing, the raw sheet is rejected even if the contact sheet looks visually attractive.
 - A jump action should usually be split into pose phases: anticipation/takeoff, rise, apex, fall, and land. If only one `jump` sheet exists, the runtime state machine must select or hold phase frames instead of blindly looping the sheet.
 - If generated run/jump frames are cropped, have tail/feet crossing cell edges, or do not loop, regenerate with stricter safe-padding and pose instructions before using them in a showcase.
 - If a jump frame shows a tail, limb, weapon, or effect from a neighboring frame, treat it as a harness failure and regenerate with larger cell size or safe margin.
@@ -128,12 +152,16 @@ For a generated player/enemy that enters Godot gameplay:
 - Normalize frames to a fixed canvas before import.
 - Record pivot, foot line, frame size, action FPS, loop/non-loop, and state-machine mapping.
 - Use `AnimatedSprite2D` or `SpriteFrames` only after the normalized frames pass QA.
+- For generated art used in a playable showcase, apply `references/rules/playable-showcase-integration.md` before declaring the scene ready.
 - Add a small motion state machine for controllable characters. Minimum states: idle, run, jump-rise, jump-fall, land, hurt/dead when relevant.
+- Do not treat one global foot offset as enough when platform sizes vary. Grounded visual foot sink must derive from the current floor/platform visual scale.
+- If a character looks correct on large platforms but sinks into small platforms, fix the runtime grounding contract instead of only tuning the sprite.
 - Use explicit project gameplay actions such as `move_left`, `move_right`, `jump`, and `restart`; do not drive shipped gameplay from Godot default `ui_*` actions.
 - Bind every key shown in HUD/control text, including WASD and arrow keys when both are advertised.
 - Use coyote time and jump buffering for platformers unless the user explicitly wants strict arcade input.
 - Do not draw collision rectangles as visual art. Collision and generated visual props must be separate nodes/layers.
 - Do not stretch props into arbitrary aspect ratios. Use aspect-preserving draw, nine-slice/tileable pieces, or generate the exact platform/prop size needed.
+- Runtime pickups, goals, and hazards must use generated assets unless the current pass is explicitly greybox. Every repeated instance must have stable group/metadata behavior and be tested individually.
 
 ## Action Bundles
 
@@ -222,5 +250,7 @@ Block or regenerate when:
 - frames touch cell edges
 - scale or anchor drifts across frames
 - metadata is missing
+- runtime scale, pivot, or state-machine mapping is missing for playable characters
+- the asset passes extraction but fails in-scene grounding, route readability, or collection/finish behavior
 
 

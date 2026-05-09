@@ -6,6 +6,8 @@ param(
   [ValidateSet("sprite", "platform", "prop", "fx", "map-object")]
   [string]$Kind = "sprite",
   [string]$Action = "",
+  [ValidateSet("neutral", "side_platformer", "top_down_survivor")]
+  [string]$ViewProfile = "neutral",
   [int]$Rows = 3,
   [int]$Cols = 4,
   [int]$CellWidth = 384,
@@ -42,6 +44,7 @@ $argsList = @(
   "--out-dir", $OutDir,
   "--asset-id", $AssetId,
   "--kind", $Kind,
+  "--view-profile", $ViewProfile,
   "--rows", "$Rows",
   "--cols", "$Cols",
   "--cell-width", "$CellWidth",

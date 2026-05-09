@@ -15,7 +15,9 @@ Before creating files or implementing a game from a broad request, follow the co
 - repo-local `codex-game-studio/references/templates/kickoff-brief.md`
 - installed-skill `references/templates/kickoff-brief.md`
 
-For a vague request like "make a platformer", produce a lean kickoff brief, ask at most 3 high-impact questions, and offer "go with defaults". Do not silently create a full project unless the user explicitly accepts defaults or asks for no questions.
+For a new project, blank folder, broad idea, or request that touches multiple systems/assets/workflows, enter a planning handshake before writing files. If the Codex host offers true Plan mode, use it; otherwise simulate it in chat with the kickoff brief. Ask at most 3 high-impact questions and offer `go with defaults`. Do not silently create a full project unless the user explicitly accepts defaults, answers the brief, or asks for autonomous execution.
+
+Codex Game Maker cannot force the host session context window from repo files. When the host supports it, prefer the largest available context window, with 1M tokens as the recommended target for long-running game projects. When it is unavailable, keep continuity through `production/session-state/active.md`, planning docs, manifests, and brief implementation summaries.
 
 ## Required First Step
 

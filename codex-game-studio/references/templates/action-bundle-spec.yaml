@@ -2,6 +2,8 @@ bundle_id: HERO-000
 description: ""
 category: characters
 view: side
+view_profile: side_platformer
+direction_model: none
 godot_version: "4.4"
 actions:
   - action: idle
@@ -12,6 +14,7 @@ actions:
     fps: 6
     anchor: feet
     loop: true
+    direction_model: none
     key_color: "#FF00FF"
     harness_spec: design/assets/harnesses/HERO-000-idle.harness.json
     harness_prompt: design/assets/harnesses/HERO-000-idle.prompt.md
@@ -27,6 +30,7 @@ actions:
     fps: 12
     anchor: feet
     loop: true
+    direction_model: none
     key_color: "#FF00FF"
     harness_spec: design/assets/harnesses/HERO-000-run.harness.json
     harness_prompt: design/assets/harnesses/HERO-000-run.prompt.md

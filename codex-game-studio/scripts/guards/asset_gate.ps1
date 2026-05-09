@@ -237,6 +237,7 @@ foreach ($item in $manifestItems) {
   $zonesMetadata = Get-ItemValue $item "zones_metadata"
   $harnessSpec = Get-ItemValue $item "harness_spec"
   $harnessReport = Get-ItemValue $item "harness_report"
+  $generationProvider = (Get-ItemValue $item "generation_provider").ToString().ToLowerInvariant()
 
   if ([string]::IsNullOrWhiteSpace($assetId)) {
     Add-Item $blockers "manifest.asset_id.missing" "Manifest entry is missing asset_id." $manifestPath
@@ -279,6 +280,14 @@ foreach ($item in $manifestItems) {
   }
 
   if ($isAccepted) {
+    if ([string]::IsNullOrWhiteSpace($generationProvider)) {
+      Add-Item $warnings "asset.generation_provider.missing" "Accepted asset $assetId has no generation_provider. Record gpt_image, web_sourced, user_supplied, or local_deterministic_placeholder."
+    } elseif ($generationProvider -eq "local_deterministic_placeholder") {
+      Add-Item $warnings "asset.placeholder.not_release_ready" "Accepted asset $assetId is marked local_deterministic_placeholder. It is valid for smoke tests but not a release-ready GPT Image showcase asset."
+    } else {
+      Add-Item $evidence "asset.generation_provider.exists" "generation_provider for $assetId is $generationProvider."
+    }
+
     $rawPath = Test-PathField $blockers $evidence $rootPath $assetId "raw_file" $rawFile "asset.raw_file.missing" "Accepted asset $assetId has no raw_file."
     $processedPath = Test-PathField $blockers $evidence $rootPath $assetId "processed_file" $processedFile "asset.processed_file.missing" "Accepted asset $assetId has no processed_file." -RequireGenerated
     $metaPath = Test-PathField $blockers $evidence $rootPath $assetId "pipeline_meta" $pipelineMeta "asset.pipeline_meta.missing" "Accepted asset $assetId has no pipeline_meta."
@@ -293,10 +302,15 @@ foreach ($item in $manifestItems) {
     $isPropPack = $assetKind -match '^(prop_pack|props|props_pack)$'
     $isMapLike = $assetKind -match '(map|level|stage|tilemap|parallax)'
     $needsHarness = $isSpriteLike -or $isPropPack -or $isMapLike -or ($collisionRole -ne "none" -and $collisionRole -ne "")
+    $requiresBlockingHarness = $isSpriteLike
 
     if ($needsHarness) {
       if ([string]::IsNullOrWhiteSpace($harnessSpec)) {
-        Add-Item $warnings "asset.harness_spec.missing" "Accepted runtime asset $assetId has no harness_spec. Future generated gameplay assets should record exact canvas/grid/safe-zone constraints."
+        if ($requiresBlockingHarness) {
+          Add-Item $blockers "asset.harness_spec.missing" "Accepted sprite asset $assetId has no harness_spec. Playable sprite sheets must record exact canvas/grid/safe-zone constraints."
+        } else {
+          Add-Item $warnings "asset.harness_spec.missing" "Accepted runtime asset $assetId has no harness_spec. Future generated gameplay assets should record exact canvas/grid/safe-zone constraints."
+        }
       } else {
         $harnessSpecPath = Test-PathField $blockers $evidence $rootPath $assetId "harness_spec" $harnessSpec "asset.harness_spec.missing" "Accepted runtime asset $assetId has no harness_spec."
         $harnessSpecJson = Read-JsonFile $harnessSpecPath
@@ -306,7 +320,11 @@ foreach ($item in $manifestItems) {
       }
 
       if ([string]::IsNullOrWhiteSpace($harnessReport)) {
-        Add-Item $warnings "asset.harness_report.missing" "Accepted runtime asset $assetId has no harness_report. Run tools/check-asset-harness.ps1 before gameplay import."
+        if ($requiresBlockingHarness) {
+          Add-Item $blockers "asset.harness_report.missing" "Accepted sprite asset $assetId has no harness_report. Run tools/check-asset-harness.ps1 before gameplay import."
+        } else {
+          Add-Item $warnings "asset.harness_report.missing" "Accepted runtime asset $assetId has no harness_report. Run tools/check-asset-harness.ps1 before gameplay import."
+        }
       } else {
         $harnessReportPath = Test-PathField $blockers $evidence $rootPath $assetId "harness_report" $harnessReport "asset.harness_report.missing" "Accepted runtime asset $assetId has no harness_report."
         $harnessJson = Read-JsonFile $harnessReportPath
@@ -367,7 +385,7 @@ foreach ($item in $manifestItems) {
 
         $edgeTouch = @(Get-JsonValue $meta @("qa", "edge_touch_frames") @())
         if ($edgeTouch.Count -gt 0) {
-          Add-Item $warnings "asset.edge_touch" "Sprite asset $assetId has frame(s) touching cell edges: $($edgeTouch -join ', ')." $metaPath
+          Add-Item $blockers "asset.edge_touch" "Sprite asset $assetId has frame(s) touching cell edges: $($edgeTouch -join ', '). Regenerate or rectify before runtime import." $metaPath
         }
 
         $frameCountOk = Get-JsonValue $meta @("qa", "frame_count_ok") $true

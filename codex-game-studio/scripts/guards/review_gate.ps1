@@ -223,6 +223,47 @@ if ($hasGodot) {
 
 $assetManifest = Join-Path $rootPath "design/assets/asset-manifest.yaml"
 $generatedAssets = Join-Path $rootPath "assets/generated"
+
+$sceneScaleCandidates = @(
+  "design/scene-scale-plan.yaml",
+  "design/scene-scale-plan.yml",
+  "design/assets/scene-scale-plan.yaml",
+  "design/assets/scene-scale-plan.yml"
+)
+$sceneScaleFiles = @()
+foreach ($relative in $sceneScaleCandidates) {
+  $candidate = Join-Path $rootPath $relative
+  if (Test-Path -LiteralPath $candidate -PathType Leaf) { $sceneScaleFiles += $candidate }
+}
+
+$hasGeneratedRuntimeAssets = Test-Path -LiteralPath $generatedAssets
+if ($hasGodot -and $hasGeneratedRuntimeAssets) {
+  if ($sceneScaleFiles.Count -gt 0) {
+    Add-Item $evidence "playable_showcase.scene_scale" "Scene scale plan exists for generated-asset runtime integration." $sceneScaleFiles[0]
+  } else {
+    Add-Item $warnings "playable_showcase.scene_scale.missing" "Generated runtime assets exist, but no scene-scale-plan.yaml was found under design/ or design/assets/."
+  }
+
+  $qaEvidence = @()
+  foreach ($relative in @("production/playtests", "production/reviews", "production/smoke-tests", "production/regression")) {
+    $dir = Join-Path $rootPath $relative
+    if (Test-Path -LiteralPath $dir) {
+      $candidateEvidence = @()
+      $candidateEvidence += Get-ChildItem -LiteralPath $dir -File -Filter "*showcase*.md" -ErrorAction SilentlyContinue
+      $candidateEvidence += Get-ChildItem -LiteralPath $dir -File -Filter "*playable*.md" -ErrorAction SilentlyContinue
+      foreach ($file in @($candidateEvidence | Sort-Object FullName -Unique)) {
+        $text = Get-Content -Raw -LiteralPath $file.FullName
+        if ($text -notmatch "Not run yet") { $qaEvidence += $file }
+      }
+    }
+  }
+  if ($qaEvidence.Count -gt 0) {
+    Add-Item $evidence "playable_showcase.qa" "Playable showcase QA evidence found: $($qaEvidence.Count)." $qaEvidence[0].FullName
+  } else {
+    Add-Item $warnings "playable_showcase.qa.missing" "Generated runtime assets exist, but no playable showcase QA evidence was found. Use references/templates/playable-showcase-qa.md."
+  }
+}
+
 if ((Test-Path -LiteralPath $assetManifest) -or (Test-Path -LiteralPath $generatedAssets)) {
   $assetResult = Invoke-GuardJson (Join-Path $guardRoot "asset_gate.ps1") $rootPath
   Merge-GuardResult "asset" $assetResult $blockers $warnings $evidence

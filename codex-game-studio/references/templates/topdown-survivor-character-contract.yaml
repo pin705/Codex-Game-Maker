@@ -1,0 +1,101 @@
+character_id: HERO-000
+description: ""
+target_engine: "Godot 4.4"
+view_profile: top_down_survivor
+direction_model: side_only_last_horizontal
+scene_scale:
+  viewport: "1920x1080"
+  target_in_game_height_px: 128
+  target_collision_radius_px: 28
+  target_visual_scale: ""
+runtime_state_machine:
+  visual_node_count: 1
+  default_state: idle_side
+  movement_state: move_side
+  horizontal_facing:
+    right: "flip_h=false"
+    left: "flip_h=true"
+  vertical_movement: preserve_last_horizontal_facing
+  moving_condition: movement_input_active_or_dash
+  stopped_condition: no_movement_input_and_not_dashing
+  required_smoke_sequence:
+    - instantiate_player
+    - assert_single_visual_node
+    - assert_idle_side_exists
+    - assert_move_side_exists
+    - assert_idle_and_move_same_canvas
+    - assert_initial_idle_side
+    - simulate_movement_input
+    - assert_move_side
+    - clear_movement_input
+    - assert_idle_side
+    - assert_visual_scale_stable
+actions:
+  - action: idle_side
+    asset_id: HERO-000-idle-side
+    rows: 2
+    cols: 3
+    expected_frames: 6
+    fps: 6
+    anchor: feet
+    loop: true
+    key_color: "#FF00FF"
+    canvas: "1536x1024"
+    cell_size: "512x512"
+    foot_line_y: 440
+    harness_spec: design/assets/harnesses/HERO-000-idle-side.harness.json
+    harness_report: assets/generated/characters/player/topdown/HERO-000-idle-side/harness-report.json
+    raw_target: assets/raw/topdown-survivor/HERO-000-idle-side.png
+    processed_dir: assets/generated/characters/player/topdown/HERO-000-idle-side
+    motion_requirements:
+      - restrained_breathing_or_blink
+      - feet_anchored
+      - no_whole_body_wobble
+      - no_scale_animation
+      - same_runtime_scale_as_move_side
+  - action: move_side
+    asset_id: HERO-000-move-side
+    rows: 2
+    cols: 4
+    expected_frames: 8
+    fps: 6.8
+    anchor: feet
+    loop: true
+    key_color: "#FF00FF"
+    canvas: "2048x1024"
+    cell_size: "512x512"
+    foot_line_y: 440
+    harness_spec: design/assets/harnesses/HERO-000-move-side.harness.json
+    harness_report: assets/generated/characters/player/topdown/HERO-000-move-side/harness-report.json
+    raw_target: assets/raw/topdown-survivor/HERO-000-move-side.png
+    processed_dir: assets/generated/characters/player/topdown/HERO-000-move-side
+    motion_requirements:
+      - visible_hand_or_foot_alternation
+      - lower_body_motion_phase_evidence
+      - stable_head_torso_tail_equipment
+      - stable_pivot_and_foot_baseline
+      - no_body_shake_as_locomotion
+      - no_duplicate_limb_overlay
+      - no_platformer_stride
+local_repair_policy:
+  prefer_regenerate_when_feet_are_hidden: true
+  allow_local_repair: only_after_good_identity_and_good_motion
+  required_when_repairing_feet_or_hands:
+    - erase_old_pixels_before_replacement
+    - use_key_color_for_erased_raw_pixels
+    - one_clean_silhouette_per_frame
+    - no_second_lower_foot_pair
+    - no_hard_occlusion_blocks
+    - rerun_harness_after_repair
+qa:
+  asset_harness_required: true
+  asset_qa_required: true
+  gif_preview_required: true
+  godot_smoke_test_required: true
+  web_export_required: true
+  blocker_examples:
+    - stopped_character_stays_on_move_side
+    - move_loop_only_body_wobbles
+    - idle_and_move_scale_pop
+    - duplicate_feet_or_second_character_overlay
+    - tail_or_staff_fragment_crosses_cell

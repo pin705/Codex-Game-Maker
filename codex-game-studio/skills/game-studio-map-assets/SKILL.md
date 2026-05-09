@@ -20,6 +20,7 @@ Read if present:
 - `codex-game-studio/references/templates/asset-harness-spec.yaml`
 - `codex-game-studio/references/templates/scene-scale-plan.yaml`
 - `codex-game-studio/references/templates/godot-import-manifest.yaml`
+- `codex-game-studio/references/rules/playable-showcase-integration.md`
 
 ## Map Is Runtime Data
 
@@ -51,6 +52,8 @@ For platformers:
 - Do not stretch a decorative platform prop into arbitrary widths. Use a tileable platform strip, left/middle/right platform pieces, nine-slice art, or generate the exact platform sizes needed.
 - Do not place platform art at raw pixel scale. Assign target in-game width/height from the scene scale plan and scale proportionally.
 - Store collision-bearing platforms as top-y plus collision width/height. Do not infer platform top from a visual sprite center after scaling.
+- Store platform visual scale and visual top overlap separately from collision. When platform sizes vary, visual overlap must scale with the platform art scale.
+- Player grounded visual sink must be validated on both large and small platforms. If one looks right and the other looks wrong, update the grounding contract.
 - Keep collision rectangles invisible in runtime builds. Collision debug outlines belong only in review screenshots or editor tools.
 - Large platform pieces must have safe padding and should not be extracted from a square prop-pack cell if their edges are cropped.
 - Collision-bearing platform art must use a platform harness before generation:
@@ -81,6 +84,9 @@ For RPG/tower defense:
 - Use square prop packs only for compact props like rocks, barrels, crates, shrubs, lamps, and small signs.
 - Generate large, tall, wide, collision-bearing, repeatable, or identity-critical objects one-by-one or as strips/custom atlases.
 - Use prop packs only for compact non-critical objects. Use one harness per large prop, collision object, door, bridge, platform, or gate.
+- In top-down/survivor showcases, tall solid-looking props such as trees, rocks, pillars, crates, walls, and ruins must be imported with collision blockers when they are meant to block movement. Use `StaticBody2D` on a dedicated props layer and a collision shape covering the walk-blocking base/trunk, not the full decorative canopy.
+- Update player/enemy collision masks to include the props layer. Do not leave generated blocker props as visual-only `Sprite2D` nodes.
+- Generated UI and FX assets used in a playable showcase must be tested at runtime scale: upgrade cards must be clipped to card controls, and gameplay FX must be readable for hits, upgrades, pulses, and kills.
 
 ## Processing
 
@@ -111,6 +117,7 @@ Expected map deliverables:
 - zones/exits metadata
 - flattened QA preview
 - Godot import manifest when used in a Godot project
+- scene scale plan and playable showcase QA evidence when the map is used in a playable demo
 
 ## Godot Handoff
 
@@ -124,5 +131,16 @@ Prefer Godot 4.4 structures:
 Record import and runtime metadata in `design/assets/godot-import-manifest.yaml`.
 
 The generated scene should remain editable: `Sprite2D` visual layers, `StaticBody2D` collision blockers, `Area2D` gameplay zones, and `TileMapLayer` placeholders when tile metadata exists.
+
+## Playable Showcase QA
+
+Before calling a generated map showcase playable, verify:
+- Spawn lands on a platform top on frame one.
+- The smallest and largest platforms both align visually with player feet.
+- Gaps and vertical steps match the player jump arc.
+- Every collectible instance animates and can be collected.
+- A visible finish object exists and triggers a clear state.
+- No collision rectangles, guide boxes, or harness marks render in the runtime layer.
+- Web preview preserves the intended 16:9 composition.
 
 

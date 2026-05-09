@@ -6,6 +6,8 @@ param(
   [string]$Description,
   [string]$Category = "characters",
   [string]$View = "side",
+  [ValidateSet("auto", "none", "full_directional", "side_only_last_horizontal")]
+  [string]$DirectionModel = "auto",
   [string]$Actions = "idle,run,jump,attack,hurt",
   [string]$KeyColor = "suggest",
   [string]$ReferenceFile = "",
@@ -37,6 +39,7 @@ $argsList = @(
   "--description", $Description,
   "--category", $Category,
   "--view", $View,
+  "--direction-model", $DirectionModel,
   "--actions", $Actions,
   "--key-color", $KeyColor,
   "--cell-width", "$CellWidth",

@@ -14,6 +14,7 @@ web_sources:
   - url: ""
     license_or_usage_note: ""
 generation_plan:
+  generation_provider: "gpt_image"
   visual_asset_source: "gpt-image"
   action: ""
   view: ""

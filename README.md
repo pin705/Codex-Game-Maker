@@ -69,7 +69,7 @@ Generated showcase projects are treated as local output and are not committed to
 | Core skills | 8 | Start, design, art, sprite assets, map assets, asset QA, architecture, review. |
 | Tool scripts | 29 | Install, register, export, preview, asset processing, gates, hooks, imports. |
 | Guard scripts | 7 | Engine, asset, story, production, release, Godot lint, review gates. |
-| Templates | 30 | GDDs, art briefs, asset specs, stories, production, release, QA, import manifests. |
+| Templates | 31 | GDDs, art briefs, asset specs, stories, production, release, QA, import manifests. |
 | Asset processors/workflows | 2 | Pixel processing plus higher-level bundle/import/repair orchestration. |
 | Professional aliases | 10 | `/release`, `/hotfix`, `/team-*`, `/audio-pass`, `/localization-pass`, and more. |
 
@@ -106,7 +106,9 @@ Open Codex in the folder and ask:
 Use Codex Game Maker to start this game project.
 ```
 
-For a blank folder, Codex Game Maker should summarize the idea, propose defaults, ask at most three important questions, and let the user say "go with defaults".
+For a blank folder, new project, or broad multi-system request, Codex Game Maker enters a planning handshake first: it summarizes the idea, detects project context, proposes defaults, asks at most three important questions, and lets the user say "go with defaults" before files are created.
+
+For long-running projects, use the largest context window your Codex environment supports. A 1M-token context window is recommended when available; the repository cannot force that setting, so Codex Game Maker also records continuity in planning docs, manifests, and `production/session-state/active.md`.
 
 ### Option 2: Install The Skills Globally
 
@@ -298,7 +300,7 @@ powershell -ExecutionPolicy Bypass -File tools\uninstall-professional-hooks.ps1
 ## How It Works
 
 1. Codex detects the current project stage and engine.
-2. The kickoff skill summarizes the request and asks only the highest-value questions.
+2. New projects and broad requests start with a planning handshake before implementation.
 3. Design and art skills create lightweight docs before broad implementation.
 4. Asset skills plan and process generated runtime assets.
 5. Architecture and story gates keep implementation small and reviewable.
@@ -378,6 +380,7 @@ LICENSE
 - [Contributing](CONTRIBUTING.md)
 - [Open source installation](docs/OPEN_SOURCE_INSTALLATION.md)
 - [Project migration](docs/PROJECT_MIGRATION.md)
+- [Playable asset integration playbook](docs/PLAYABLE_ASSET_INTEGRATION.md)
 - [Asset pipeline completion plan](docs/ASSET_PIPELINE_COMPLETION_PLAN.md)
 - [Release assets checklist](docs/RELEASE_ASSETS.md)
 
