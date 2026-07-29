@@ -1,0 +1,96 @@
+schema: "codex-game-maker.scene-scale-plan.v1"
+viewport:
+  aspect_ratio: "16:9"
+  design_width: 1280
+  design_height: 720
+  stretch_mode: "canvas_items"
+  stretch_aspect: "keep"
+world:
+  width: 1600
+  camera_height: 720
+  camera_rule: "follow player with lead, clamp to world bounds"
+playable_showcase:
+  spawn:
+    must_land_on_platform_top: true
+    first_platform_id: ""
+    foot_position: "player collision foot is exactly on platform top_y"
+  route:
+    required: true
+    minimum_platform_count: 4
+    max_gap_px: 260
+    max_up_step_px: 120
+    must_have_readable_challenge: true
+    has_safe_recovery_or_restart: true
+  collectibles:
+    required_when_demo_goal_mentions_collection: true
+    count: 3
+    placement_rule: "place on or above reachable platforms, inside player collection radius"
+  finish:
+    required: true
+    asset: "flag, door, portal, goal marker, or equivalent"
+    placement_rule: "bottom/pivot rests on finish platform top with intentional visual sink only"
+    completion_rule: "reach finish after required collectibles or objective steps"
+grounding_contract:
+  platform_collision:
+    representation: "top_y + collision_width + collision_height"
+    visual_anchor: "top_center"
+    visual_overlap_rule: "scale from platform visual scale; do not use one fixed overlap for all sizes"
+    debug_visibility: "never visible in runtime"
+  player:
+    grounded_pivot: "feet"
+    visual_foot_sink_rule: "derive from current floor/platform visual scale"
+    airborne_pivot_rule: "keep hitbox stable even when jump frames use different art bounds"
+  collectibles:
+    instance_rule: "all pickup nodes use group/metadata or explicit ids; do not depend on duplicate node names"
+    placement_rule: "place collection center within runtime collection radius"
+runtime_asset_scale:
+  player:
+    target_height_px: 96
+    max_height_percent_of_viewport: 0.18
+    pivot: "feet"
+    collision_height_px: 90
+    collision_width_px: 54
+  enemy:
+    target_height_px: 80
+    max_height_percent_of_viewport: 0.15
+    pivot: "feet"
+  collectible:
+    target_height_px: 48
+    max_height_percent_of_viewport: 0.08
+    pivot: "center"
+  platform:
+    target_height_px: 72
+    max_height_percent_of_viewport: 0.18
+    pivot: "top_center"
+    collision_height_px: 24
+rules:
+  - "Do not place generated sprites at raw pixel scale in gameplay."
+  - "Every gameplay asset must have a target in-game size before import."
+  - "Scale assets proportionally from their processed transparent bounds."
+  - "Use 16:9 design coordinates for showcase and web preview scenes."
+  - "Store platform collision as top_y plus collision width/height, not inferred from sprite center."
+  - "Platform visual overlap must be proportional to platform visual scale; fixed overlap causes small-platform foot sinking."
+  - "Player visual foot pivot must match collision foot position for idle and grounded movement frames."
+  - "Player visual foot sink must be computed from the current floor/platform scale when platforms vary in size."
+  - "Each playable character needs an idle state, movement state, airborne state, and restart-safe spawn."
+  - "Do not use run or jump frames as the default standing pose."
+  - "Jump animations are phase-selected state frames, not looping grounded animations."
+  - "Keep collision/debug rectangles out of runtime visual layers."
+  - "Use generated image assets for pickups and gameplay props; placeholders are only allowed in greybox mode."
+  - "Repeated gameplay objects such as collectibles must be identified by group/metadata, not by duplicate node names."
+  - "A showcase route must have a finish condition and at least one verified full playthrough."
+qa:
+  - "Player height fits target range in the first viewport."
+  - "Player is grounded on frame one and does not visually float above the start platform."
+  - "Player does not visually sink into small platforms when platform sizes vary."
+  - "Idle animation plays while no movement input is active."
+  - "Run/walk animation alternates foot contacts and loops without scale popping."
+  - "Jump animation uses rise/apex/fall/land phase selection instead of blindly looping."
+  - "Platform art fits intended collision width without stretching."
+  - "Collision/debug rectangles are not rendered as gameplay art."
+  - "Collectibles are visible but not larger than the player head/body."
+  - "Every required collectible can be collected by walking or jumping through the planned route."
+  - "Every collectible instance animates and can be collected; do not only test the first instance."
+  - "A visible finish/goal exists and can trigger a clear state."
+  - "Spawn point lands on a valid platform top on frame one."
+  - "Web preview preserves 16:9 composition without expanding the gameplay canvas."

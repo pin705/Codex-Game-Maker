@@ -1,0 +1,12 @@
+godot_version: "4.4"
+imports:
+  - asset_id: ASSET-000
+    source_file: "assets/generated/category/asset/sheet-transparent.png"
+    res_path: "res://assets/generated/category/asset/sheet-transparent.png"
+    target_node: "Sprite2D"
+    import_preset: "2d_sprite"
+    frame_size: ""
+    pivot: "center"
+    anchor: "center"
+    collision_role: "none"
+    notes: ""

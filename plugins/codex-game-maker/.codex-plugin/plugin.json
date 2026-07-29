@@ -1,0 +1,47 @@
+{
+  "name": "codex-game-maker",
+  "version": "0.1.0",
+  "description": "A Godot-first game-making workflow for design, production planning, GPT Image 2D assets, and QA gates.",
+  "author": {
+    "name": "Codex Game Maker",
+    "url": "https://github.com/pin705"
+  },
+  "homepage": "https://github.com/pin705/Codex-Game-Maker",
+  "repository": "https://github.com/pin705/Codex-Game-Maker",
+  "license": "MIT",
+  "keywords": [
+    "game-development",
+    "godot",
+    "ai-assets",
+    "sprites",
+    "2d-assets",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Game Maker",
+    "shortDescription": "Godot-first game-making workflows for Codex.",
+    "longDescription": "Design, plan, build, and review Godot-first games with an art bible, production-ready 2D asset workflows, architecture templates, and QA gates.",
+    "developerName": "Codex Game Maker",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Image Generation",
+      "Web Research"
+    ],
+    "websiteURL": "https://github.com/pin705/Codex-Game-Maker",
+    "defaultPrompt": [
+      "Start a new Godot-first game project.",
+      "Turn this game idea into a concept and art bible.",
+      "Review this game project and run its QA gates."
+    ],
+    "brandColor": "#3B82F6",
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png",
+    "screenshots": [
+      "./assets/banner.png",
+      "./assets/social-preview.png"
+    ]
+  }
+}

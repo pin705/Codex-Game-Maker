@@ -119,16 +119,26 @@ The installer copies each `codex-game-studio/skills/*` directory into:
 
 It also copies shared `references/` and `scripts/` into each installed skill folder so the skill works outside this repository.
 
-### 3. Future Plugin Marketplace Mode
+### 3. Plugin Marketplace Mode
 
-This can be added later after the repo has stable public releases.
+This repository is also a Codex marketplace. Add it once, then install the
+plugin from the discovered catalog:
 
-Expected flow:
-- Publish the plugin folder with `.codex-plugin/plugin.json`.
-- Add a marketplace entry pointing at the plugin.
-- Users install it through the Codex plugin UI or marketplace configuration.
+```bash
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
+codex plugin add codex-game-maker@codex-game-maker
+```
 
-Do not make this the only installation route until plugin marketplace distribution is stable for normal users.
+The catalog is stored in `.agents/plugins/marketplace.json`, and packaged
+plugins are stored under `plugins/`. After a new plugin or update is pushed,
+refresh the repository snapshot with:
+
+```bash
+codex plugin marketplace upgrade codex-game-maker
+```
+
+Keep the template and global-skill installation routes available for users who
+do not want to install through the plugin marketplace.
 
 ## README Quickstart Shape
 
@@ -227,5 +237,4 @@ pwsh -File tools/preview-godot-web.ps1 -Project .
 - Professional command aliases are tracked in `codex-game-studio/references/commands/catalog.yaml`.
 - README shows both template and global install paths.
 - `docs/CROSS_PLATFORM_PLAN.md` is updated when platform behavior changes.
-
 

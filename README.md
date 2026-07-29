@@ -86,7 +86,26 @@ Blank folders default to Godot 4.4 + Web export. Existing projects keep their cu
 
 ## Quick Start
 
-### Option 1: Use As A Game Template
+### Option 1: Install As A Codex Plugin
+
+Add this repository as a Codex marketplace:
+
+```bash
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
+codex plugin add codex-game-maker@codex-game-maker
+```
+
+Start a new Codex task after installation so the bundled skills are loaded.
+When this repository publishes an update or adds another plugin, refresh it with:
+
+```bash
+codex plugin marketplace upgrade codex-game-maker
+```
+
+The marketplace catalog lives at `.agents/plugins/marketplace.json`, and plugin
+packages live under `plugins/`.
+
+### Option 2: Use As A Game Template
 
 ```powershell
 git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
@@ -110,7 +129,7 @@ For a blank folder, new project, or broad multi-system request, Codex Game Maker
 
 For long-running projects, use the largest context window your Codex environment supports. A 1M-token context window is recommended when available; the repository cannot force that setting, so Codex Game Maker also records continuity in planning docs, manifests, and `production/session-state/active.md`.
 
-### Option 2: Install The Skills Globally
+### Option 3: Install The Skills Globally
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\install-codex-skills.ps1
@@ -387,4 +406,3 @@ LICENSE
 ## License
 
 MIT. See [LICENSE](LICENSE).
-

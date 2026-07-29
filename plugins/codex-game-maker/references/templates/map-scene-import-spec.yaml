@@ -1,0 +1,16 @@
+asset_id: LEVEL-000
+godot_version: "4.4"
+target_scene: scenes/levels/LEVEL-000.tscn
+nodes:
+  root: Node2D
+  preview: Sprite2D
+  props: Sprite2D
+  collision: StaticBody2D
+  zones: Area2D
+  tilemap: TileMapLayer
+source:
+  preview_file: assets/generated/maps/LEVEL-000/preview.png
+  props_metadata: design/assets/maps/LEVEL-000-props.json
+  collision_metadata: design/assets/maps/LEVEL-000-collision.json
+  zones_metadata: design/assets/maps/LEVEL-000-zones.json
+notes: ""

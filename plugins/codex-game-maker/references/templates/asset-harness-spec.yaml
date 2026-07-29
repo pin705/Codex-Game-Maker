@@ -1,0 +1,93 @@
+asset_id: ASSET-000
+name: ""
+asset_kind: "sprite"
+target_engine: "Godot 4.4"
+view_profile: "neutral | side_platformer | top_down_survivor"
+harness:
+  spec_file: "design/assets/harnesses/ASSET-000.harness.json"
+  guide_file: "design/assets/harnesses/ASSET-000.harness.png"
+  prompt_contract: "design/assets/harnesses/ASSET-000.prompt.md"
+  expected_canvas: "1536x1152"
+  grid: "3x4"
+  cell_size: "384x384"
+  safe_margin: 48
+  edge_guard_px: 16
+  key_color: "#FF00FF"
+  foot_line_y: 336
+  max_foot_drift_px: 18
+  max_scale_drift_ratio: 0.16
+  min_lower_body_transition_diff: 0.13
+  max_weak_motion_transitions: 2
+  allow_empty_cells: false
+  allow_horizontal_edge_touch: false
+  allow_vertical_edge_touch: false
+runtime_contract:
+  pivot: "bottom"
+  target_in_game_height_px: 96
+  target_in_game_width_px: ""
+  normalized_frame_canvas: "fixed per action"
+  frame_order: "left-to-right, top-to-bottom"
+  foot_baseline_px: 336
+  grounded_states: ["idle", "walk", "run"]
+  airborne_states: ["jump-rise", "jump-apex", "jump-fall", "land"]
+  direction_states: ["down", "side", "up"]
+  motion_phases: []
+  loop: true
+  collision_role: "visual_only | player | platform | pickup | finish | trigger"
+  godot_node_target: "AnimatedSprite2D | Sprite2D | StaticBody2D | Area2D"
+local_repair:
+  # Required only when an animation is derived by moving/repainting feet,
+  # hands, limbs, tails, weapons, or props after generation.
+  manifest: ""
+  required_true:
+    - old_foot_pixels_removed_or_covered_before_replacement
+    - replacement_feet_are_in_original_foot_zone
+    - no_second_lower_foot_pair
+    - no_hard_occlusion_blocks
+    - single_paw_pair_per_frame
+    - pixel_reference_erasure_checked
+    - erased_regions_use_key_color_not_transparent_black
+  required_false:
+    - body_translate_or_scale_animation
+    - body_wobble_animation
+  paw_blob_scan:
+    # Required for local foot/leg repairs. This is a pixel check, not a note.
+    enabled: true
+    region: [0, 0, 0, 0]
+    max_components: 4
+    min_area: 95
+    max_area_drift_ratio: 0.20
+    colors:
+      - name: fur_light
+        rgb: [255, 213, 124]
+        tolerance: 58
+      - name: fur_mid
+        rgb: [244, 160, 62]
+        tolerance: 50
+generation_prompt_rules:
+  - exact canvas, exact grid, exact cell size
+  - flat chroma-key background absent from the subject
+  - subject stays fully inside every cell safe zone
+  - no limb, tail, weapon, platform, or FX trail crosses a cell edge
+  - no visible grid lines, borders, labels, frame numbers, UI, or debug overlays
+  - same visible size, identity, lighting, and camera angle across all frames
+  - grounded character frames keep feet on the harness foot line
+  - walk/run loops alternate left and right foot contact poses
+  - top_down_survivor walk/move loops have enough lower-body transition variation; geometry alignment alone is not animation QA
+  - derived local repairs must record single-silhouette limb cleanup evidence
+  - repaired foot/leg sheets must pass pixel erasure plus paw blob scan, not only written repair claims
+  - top_down_survivor walk/run uses restrained shuffle loops, not side-view platformer sprints
+  - top_down_survivor characters need idle plus directional movement states before gameplay import
+  - jump sheets use readable phases and are not intended to loop blindly
+qa:
+  raw_file: ""
+  rectified_file: ""
+  rectifier_report: ""
+  harness_report: ""
+  animation_preview: ""
+  loop_review: "required for idle/walk/run"
+  phase_review: "required for jump/attack/hurt/death"
+  edge_fragment_review: "no tail, limb, weapon, platform, or FX fragment from neighboring cells"
+  runtime_scale_review: "target in-game size recorded before Godot import"
+  grounding_review: "feet/pivot align with collision foot for grounded states"
+  expected_gate: "tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>"
