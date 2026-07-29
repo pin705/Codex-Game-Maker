@@ -6,6 +6,23 @@ intended_use: ""
 target_engine: "Godot 4.7.1"
 target_display_size: ""
 runtime_role: ""
+style_lock:
+  family_id: ""
+  locked_reference_paths: []
+  identity_anchors: []
+  material_anchors: []
+  palette_and_lighting_anchors: []
+  forbidden_drift: []
+presentation_contract:
+  source_kind: "dedicated-component"
+  render_mode: "uniform"
+  intended_surface_ids: []
+  rendered_size: ""
+  nine_slice_margins: ""
+  minimum_tested_size: ""
+  maximum_tested_size: ""
+  crop_safe_area: ""
+  runtime_composite_evidence: ""
 source_design:
   concept: "design/gdd/game-concept.md"
   art_bible: "design/art/art-bible.md"

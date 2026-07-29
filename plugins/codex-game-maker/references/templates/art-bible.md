@@ -9,6 +9,16 @@ One-line rule:
 Target feeling:
 Reference directions:
 
+## Coherence Lock
+
+Identity anchors:
+Material anchors:
+Camera/view anchors:
+Lighting anchors:
+Detail-density anchors:
+Forbidden drift and cheap/generic signals:
+Locked project-local look-dev references:
+
 ## Shape Language
 
 Characters:
@@ -35,6 +45,17 @@ Target sizes:
 Silhouette rules:
 Text policy:
 Accessibility:
+
+## Runtime Presentation Rules
+
+Actor/world scale ranges:
+Silhouette test sizes:
+Uniform-aspect assets:
+Dedicated nine-slice components and tested size ranges:
+Cover crop-safe areas:
+Tile/seam rules:
+Longest-copy and localization expansion targets:
+Cross-family composite review:
 
 ## Asset Generation Rules
 

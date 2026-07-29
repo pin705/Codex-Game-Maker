@@ -67,7 +67,7 @@ def validate_single_source() -> None:
 def validate_counts() -> None:
     expected = {
         "skills": (len([p for p in (PACKAGE / "skills").iterdir() if p.is_dir()]), 23),
-        "templates": (len(list((PACKAGE / "references" / "templates").glob("*"))), 57),
+        "templates": (len(list((PACKAGE / "references" / "templates").glob("*"))), 58),
         "guards": (len([p for p in (PACKAGE / "scripts" / "guards").iterdir() if p.is_file()]), 9),
     }
     commands = yaml.safe_load(
@@ -106,15 +106,26 @@ def validate_dynamic_contracts() -> None:
     assets = json.loads((templates / "asset-coverage.json").read_text(encoding="utf-8"))
     if not isinstance(assets.get("coverage_policy"), dict) or not isinstance(assets.get("groups"), list):
         fail("Asset coverage must remain game-contract driven")
+    asset_schema = assets.get("asset_schema") if isinstance(assets.get("asset_schema"), dict) else {}
+    if not isinstance(asset_schema.get("presentation"), dict):
+        fail("Asset coverage lost runtime presentation usages")
     audio = json.loads((templates / "audio-manifest.json").read_text(encoding="utf-8"))
     for field in ("coverage_policy", "required_buses", "coverage_requirements", "events"):
         if field not in audio:
             fail(f"Audio manifest lost dynamic field: {field}")
+    visual = json.loads((templates / "visual-quality-contract.json").read_text(encoding="utf-8"))
+    for field in ("required_viewports", "art_direction", "lookdev", "surfaces", "cross_surface_checks", "verification_commands"):
+        if field not in visual:
+            fail(f"Visual quality contract lost field: {field}")
 
     gate_text = (PACKAGE / "scripts" / "guards" / "player_ready_gate.py").read_text(encoding="utf-8")
     for forbidden in ("REQUIRED_STATES", "REQUIRED_GROUPS", "REQUIRED_AUDIO", "REQUIRED_EVIDENCE"):
         if forbidden in gate_text:
             fail(f"Player-ready gate regressed to fixed contract constant: {forbidden}")
+
+    for required_guardrail in ("visual-quality-contract.json", "asset.presentation_distorted", "visual_contract.finding_open"):
+        if required_guardrail not in gate_text:
+            fail(f"Player-ready gate lost visual guardrail: {required_guardrail}")
 
     contract_ref = "../../references/contracts/player-journey-schema.md"
     for skill_name in (

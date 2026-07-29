@@ -17,6 +17,7 @@ Read:
 - `docs/architecture/control-manifest.md`
 - `design/assets/asset-coverage.json`
 - relevant system GDDs and current runtime screenshots
+- `production/reviews/visual-quality-contract.json`
 
 Create `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md` if absent. Choose and justify `godot-theme`, `diegetic`, `custom-draw`, `hybrid`, or `intentionally-minimal`; reference real project-local implementation resources. A prose-only style description cannot pass player-ready.
 Route full barrier/conformance testing to `game-studio-accessibility`; UI focus and contrast alone do not constitute a complete accessibility pass.
@@ -28,6 +29,10 @@ Route full barrier/conformance testing to `game-studio-accessibility`; UI focus 
 - Prefer engine-native `Control` composition, anchors, containers, `StyleBox` resources, nine-slice assets, custom drawing, restrained shaders, and authored texture/icon layers.
 - Reject default gray panels, generic rounded SaaS cards, dashboard grids, neon gradients without narrative purpose, and stock web-form layouts as final presentation.
 - Use generated or authored decorative assets only when they improve identity and remain legible. Do not skin weak hierarchy with ornament.
+- Prove hierarchy first with an unskinned layout/wireframe, then apply authored materials. Ornament cannot repair weak composition, cramped copy or equal-weight cards.
+- Generate scalable panels/buttons as dedicated components. Use `NinePatchRect` only with verified patch margins and a tested size range; do not nine-slice arbitrary prop-pack crops. Preserve aspect ratio for icons and fixed-shape controls, and document intentional cover crops.
+- Keep text runtime-rendered in a protected content rect. Test the longest localized copy, font fallback and text scale so labels never collide with seals, borders, icons or adjacent controls.
+- Avoid reusing one ornate frame for navigation, HUD, cards, headers and results. A component family should share materials while varying silhouette and density according to hierarchy.
 
 ## Required Surface Pass
 
@@ -47,11 +52,12 @@ Implement and capture every state marked `ui_surface` in the game-specific state
 
 ## Visual QA Loop
 
-1. Capture every declared `ui_surface`, the busiest visual state, each modal/overlay, and each target aspect/device.
-2. Review hierarchy, art-bible coherence, gameplay obstruction, scale, clipping, safe zones, text contrast, focus, and input prompts.
-3. Reject “technically present” UI that still resembles generic HTML/dashboard composition.
-4. Fix blocker/high findings and recapture the affected states.
-5. Complete `production/reviews/visual-quality.md` from `../../references/templates/visual-quality-review.md` with reviewer, build/commit, current project-local media, its SHA-256, and `Gate: PASS` only after reviewing the actual captures.
-6. Record evidence paths in `design/game-state-matrix.json` and `production/evidence/player-ready.json`.
+1. Capture every declared `ui_surface`, the busiest visual state, each modal/overlay, and every required target viewport.
+2. Run a project-owned visual/layout smoke command that produces and binds those current captures.
+3. Inspect the pixels at full frame and actual display scale; review hierarchy, art-bible and cross-asset coherence, gameplay obstruction, scale, clipping, overlap, safe zones, text contrast, focus, input prompts and texture distortion.
+4. Reject “technically present” UI that still resembles generic HTML/dashboard composition, or ornate UI whose text, frame and content fight each other.
+5. Fix blocker/high findings and recapture the affected states.
+6. Have a human or clean-context independent agent review the final captures; the agent that authored the surfaces cannot self-certify final visual PASS. Complete both `production/reviews/visual-quality-contract.json` from `../../references/templates/visual-quality-contract.json` and the concise human review from `../../references/templates/visual-quality-review.md`. Every state × viewport capture is hash-bound; every check is `PASS` or justified `NOT_APPLICABLE`; every high/blocker is resolved.
+7. Record evidence paths in `design/game-state-matrix.json` and `production/evidence/player-ready.json`.
 
 Do not mark UI complete from scene-tree inspection alone. Require runtime captures and controller/keyboard navigation evidence.

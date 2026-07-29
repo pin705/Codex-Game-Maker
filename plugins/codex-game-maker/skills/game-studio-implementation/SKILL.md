@@ -23,6 +23,7 @@ Read:
 - current story and active session state
 - `../../references/rules/godot-code.md`
 - `production/quality-command-manifest.json`
+- `production/reviews/visual-quality-contract.json`
 
 ## Implementation Loop
 
@@ -30,10 +31,10 @@ Read:
 2. Identify the complete runtime path: input -> state/rules -> presentation -> audio/UI feedback -> terminal or persistent result.
 3. Implement engine-native scenes, scripts, resources, and signals with explicit ownership.
 4. Keep tuning in resources/data instead of scattering constants through node scripts.
-5. Integrate accepted runtime assets; retain fallbacks only for resilience, not as the intended final presentation.
+5. Integrate accepted runtime assets using their declared presentation usages: preserve uniform aspect, use only tested dedicated nine-slices, respect crop-safe/tile/frame contracts, and retain fallbacks only for resilience rather than intended final presentation.
 6. Add or update a headless test under `tests/` for the changed core path.
 7. Configure argv-only commands for Godot import/parse and focused tests, then run them through `python3 ../../scripts/cgm.py quality --root .`. `godot_import` must invoke `{godot}`; shell snippets, no-op commands, empty logs, unsupported Godot probes, stale command hashes, and external evidence paths are rejected.
-8. Run the scene or build and capture evidence for the player-visible result.
+8. Run the scene or build at every affected required viewport, capture evidence for the player-visible result, and update the structured visual contract without hiding open high/blocker findings.
 9. Mark the story done only after acceptance criteria and evidence pass.
 10. Update game-state and asset coverage statuses after integration.
 

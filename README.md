@@ -75,11 +75,12 @@ The workflow continues through:
 1. Concept, systems, art direction, target device, controls, and an explicit player-ready contract.
 2. A schema-v2 game-specific state graph: custom states, transitions, required journeys, completion conditions, recovery paths, experience requirements, and executable journey tests. Conventional title/pause/settings/victory screens are included only when the game's GDD requires them.
 3. A representative vertical slice, followed by the rest of the agreed core loop and content boundary.
-4. A game-specific asset coverage policy derived from its graph, systems, UI, content boundary, and target surfaces; accepted assets must be integrated and seen in runtime.
-5. Authored presentation through a declared Godot Theme, diegetic, custom-draw, hybrid, or intentionally minimal mode—never generic HTML/dashboard styling presented as final.
-6. A game-specific audio coverage contract for the states/actions/mix that actually exist—or a documented, playtested intentional-silence design.
-7. Executable engine-import, static-analysis, reliability, journey, and recovery checks; distinct evidence for every declared state; visual/audio review and a manual journey playtest.
-8. The cross-platform `player_ready_gate.py`; blockers are fixed and rechecked instead of being relabeled as done.
+4. A game-specific asset coverage policy derived from its graph, systems, UI, content boundary, and target surfaces; accepted assets must be integrated, presentation-safe, and seen in runtime.
+5. Look-dev locks a coherent direction across the visual families the game actually uses. Generated/mixed art compares candidates in runtime composites before bulk production instead of accepting the first plausible image.
+6. Authored presentation through a declared Godot Theme, diegetic, custom-draw, hybrid, or intentionally minimal mode—never generic HTML/dashboard styling presented as final.
+7. A game-specific audio coverage contract for the states/actions/mix that actually exist—or a documented, playtested intentional-silence design.
+8. Executable engine-import, static-analysis, reliability, journey, recovery, and visual-smoke checks; distinct evidence for every declared state; structured visual/audio review and a manual journey playtest.
+9. The cross-platform `player_ready_gate.py`; blockers are fixed and rechecked instead of being relabeled as done.
 
 The gate validates real media signatures, distinct runtime states, integrated asset provenance and runtime references, hashed command results tied to the current project fingerprint, visual/audio reviews, and manual playtest evidence. Taste-level quality still depends on reviewing the running game and testing with real players.
 
@@ -93,7 +94,9 @@ The template suggests examples; the gate never treats their names or counts as u
 - distinct per-state media, or distinct markers when states share a video;
 - UI inventory coverage for every state marked `ui_surface`;
 - asset/audio groups, minimums, and inventory sources declared for that game;
-- adversarial regression cases, including an endless sandbox with no title/pause/settings/victory/defeat state names, a deliberately unreachable-state failure case, and rejection of the legacy fixed-state dictionary.
+- asset presentation usages: runtime state, render mode, aspect ratio, dedicated/tested nine-slices, crop/tile/frame rules, and composite evidence;
+- a structured visual contract covering every required state × target viewport, locked look-dev references, current capture hashes, cross-family coherence, unresolved findings, and capture-producing command evidence;
+- adversarial regression cases, including an endless sandbox with no conventional state names, unreachable state/recovery failures, reused evidence, distorted runtime assets, under-declared inventories, fake look-dev comparison, unresolved high visual findings, and unbound captures.
 
 This proves internal consistency and evidence coverage. It cannot mathematically prove that a GDD itself is fun, tasteful, or commercially successful, so visual review and real-player testing remain required.
 
@@ -130,7 +133,7 @@ The commercial gate intentionally blocks on external actions that Codex cannot t
 | Tool scripts | 32 | Install, register, export, preview, asset processing, gates, hooks, imports. |
 | Top-level Python CLI scripts | 4 | Cross-platform doctor/orchestrator, quality runner, Godot installer, and exporter. |
 | Guard scripts | 9 | Engine, asset, story, production, release, Godot lint, review, player-ready, and strict commercial gates. |
-| Templates | 57 | GDD/art/UI/audio and evidence contracts plus business, builds, performance, compliance, localization, accessibility, marketing, security, telemetry, and live operations. |
+| Templates | 58 | GDD/art/UI/audio, structured visual-quality and evidence contracts plus business, builds, performance, compliance, localization, accessibility, marketing, security, telemetry, and live operations. |
 | Asset processors/workflows | 2 | Pixel processing plus higher-level bundle/import/repair orchestration. |
 | Natural-language aliases | 20 | `/player-ready`, `/commercial-release`, `/quality`, and focused studio passes. |
 
@@ -418,12 +421,12 @@ The user controls scope and can request checkpoints. Once autonomous/default exe
 |---|---|---|
 | Install | `plugins/codex-game-maker/tools/check-install.ps1` | Skills, scripts, templates, Godot availability, setup health. |
 | Asset tools | `plugins/codex-game-maker/tools/check-asset-tools.ps1` | Python, Pillow, numpy, processor/workflow scripts. |
-| Asset QA | `plugins/codex-game-maker/tools/check-asset-qa.ps1` | Alpha, frame count, GIF, metadata, chroma-key residue, map metadata. |
+| Asset QA | `plugins/codex-game-maker/tools/check-asset-qa.ps1` | Alpha, frame count, GIF, metadata, chroma-key residue, map metadata, presentation usage and runtime composition. |
 | Story | `plugins/codex-game-maker/tools/check-story-gate.ps1` | Acceptance criteria, files to touch, verification plan, done evidence. |
 | Production | `plugins/codex-game-maker/tools/check-production-gate.ps1` | Lightweight epic/sprint/story structure. |
 | Godot lint | `plugins/codex-game-maker/tools/check-godot-lint.ps1` | Missing `res://`, unused `delta`, tuning hardcodes, UI/gameplay coupling. |
 | Review | `plugins/codex-game-maker/tools/check-review-gate.ps1` | Smoke evidence, playtest evidence, project structure, export readiness. |
-| Player-ready | `python3 scripts/guards/player_ready_gate.py --root .` | Complete states, integrated asset coverage, authored UI spec, audio events/buses, tests, runtime artifacts, and manual playtest evidence. |
+| Player-ready | `python3 scripts/guards/player_ready_gate.py --root .` | Dynamic journeys, integrated asset/audio coverage, aspect/nine-slice/crop/tile presentation, structured state × viewport visual QA, authored UI, executable tests, bound runtime artifacts, and manual playtest evidence. |
 | Commercial release | `python3 scripts/cgm.py commercial-release --root .` | Strict player-ready result plus clean/versioned source, builds, hashes, signing/store status, performance, compliance, localization, accessibility, marketing, online/liveops, telemetry, and external approvals. |
 | Release wrapper | `plugins/codex-game-maker/tools/check-release-gate.ps1` | Legacy PowerShell entry point for the cross-platform commercial gate. |
 

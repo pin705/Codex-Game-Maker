@@ -3,6 +3,8 @@
 Status: Draft
 Implementation mode: [godot-theme | diegetic | custom-draw | hybrid | intentionally-minimal]
 Minimal UI rationale:
+Visual quality contract: `production/reviews/visual-quality-contract.json`
+Visual/layout smoke command ID:
 
 Implementation resources:
 - res://[project-local-theme-scene-script-or-resource]
@@ -29,6 +31,10 @@ Theme/style resources:
 Panels and frames:
 Buttons and focus states:
 Meters, cards, tooltips and prompts:
+
+| Asset/component ID | Source kind | Render mode | Native/frame size | Runtime/tested size range | Protected text rect | Evidence |
+|---|---|---|---|---|---|---|
+| [component-id] | [dedicated-component] | [uniform / nine-slice / tile / cover / custom] | [size] | [min / max] | [rect] | [runtime capture] |
 
 ## Input And Focus
 

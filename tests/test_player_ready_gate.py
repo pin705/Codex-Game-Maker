@@ -29,6 +29,17 @@ CLASSIC_STATES = (
 ASSET_GROUPS = ("actors-and-actions", "world-and-affordances", "presentation-and-feedback")
 AUDIO_EVENTS = ("navigate-choice", "perform-action", "world-bed", "session-outcome")
 EVIDENCE_CHECKS = ("primary-journey", "presentation", "sound", "manual-playtest")
+VISUAL_SURFACE_CHECKS = (
+    "art_bible_coherence", "cross_asset_coherence", "composition_hierarchy",
+    "text_legibility", "no_overlap_or_clipping", "asset_scale_grounding",
+    "safe_zones", "input_focus_feedback", "no_placeholder_or_generic_ui",
+    "no_distorted_textures",
+)
+VISUAL_CROSS_SURFACE_CHECKS = (
+    "world_character_scale", "world_character_palette_lighting",
+    "world_ui_material_language", "component_reuse_without_monotony",
+    "typography_hierarchy", "motion_fx_language",
+)
 COMPLIANCE_ITEMS = (
     "asset-rights", "dependency-licenses", "ai-provenance", "privacy-data-inventory",
     "privacy-policy-decision", "content-rating", "third-party-notices", "platform-terms",
@@ -123,21 +134,80 @@ def create_fake_godot(root: Path) -> str:
     return str(path.relative_to(root))
 
 
-def quality_commands(include_commercial: bool = False, journey_commands: tuple[str, ...] = ("core_loop", "recovery_flow")) -> list[dict]:
-    command_ids = ["godot_import", "godot_lint", "long_run", *journey_commands]
+def quality_commands(
+    include_commercial: bool = False,
+    journey_commands: tuple[str, ...] = ("core_loop", "recovery_flow"),
+    visual_artifacts: tuple[str, ...] = (),
+) -> list[dict]:
+    command_ids = ["godot_import", "godot_lint", "long_run", "visual_smoke", *journey_commands]
     if include_commercial:
         command_ids.extend(["build_web", "smoke_web", "performance_web"])
     return [
         {
             "id": command_id,
-            "argv": (["{godot}", "--headless", "--editor", "--quit"] if command_id == "godot_import" else [sys.executable, "-c", f"print('{command_id}: PASS')"]),
+            "argv": (["{godot}", "--headless", "--editor", "--quit"] if command_id == "godot_import" else [sys.executable, "tests/quality_probe.py", command_id]),
             "cwd": ".",
             "timeout_seconds": 30,
-            "required_for": ["player_ready", "commercial_release"] if command_id in {"godot_import", "godot_lint", "long_run", *journey_commands} else ["commercial_release"],
-            "expected_artifacts": [],
+            "required_for": ["player_ready", "commercial_release"] if command_id in {"godot_import", "godot_lint", "long_run", "visual_smoke", *journey_commands} else ["commercial_release"],
+            "expected_artifacts": list(visual_artifacts) if command_id == "visual_smoke" else [],
         }
         for command_id in command_ids
     ]
+
+
+def create_visual_contract(root: Path, state_captures: dict[str, str]) -> None:
+    artifacts = tuple(sorted(set(state_captures.values())))
+    write_json(root, "production/reviews/visual-quality-contract.json", {
+        "schema_version": 1,
+        "status": "verified",
+        "reviewer": "Fixture Visual Reviewer",
+        "reviewer_mode": "independent-agent",
+        "reviewer_independence": "Fixture reviewer did not author the runtime surfaces",
+        "build": "fixture",
+        "review_method": "actual-runtime-capture-inspection",
+        "required_viewports": [{"id": "fixture-640x360", "width": 640, "height": 360, "device": "fixture viewport"}],
+        "art_direction": {
+            "identity_rule": "Warm carved fixture presentation with clear silhouettes and restrained focus light",
+            "materials": ["carved metal", "matte field"],
+            "shape_language": ["strong silhouettes", "framed hierarchy"],
+            "palette_roles": ["warm focus", "cool world", "high-contrast text"],
+            "typography_roles": ["display", "body", "numeric feedback"],
+            "forbidden_patterns": ["generic dashboard", "distorted textures", "overlapping text"],
+        },
+        "lookdev": {
+            "source_mode": "authored",
+            "status": "verified",
+            "representative_asset_ids": ["fixture-lookdev"],
+            "candidate_ids": [],
+            "accepted_candidate_ids": [],
+            "rejected_candidate_ids": [],
+            "candidate_evidence": [],
+            "locked_reference_paths": [artifacts[0]],
+            "decision_rationale": "Authored fixture reference establishes the target material, scale, and hierarchy",
+            "evidence": [artifacts[0]],
+        },
+        "surfaces": [
+            {
+                "id": state_id,
+                "state_id": state_id,
+                "status": "verified",
+                "captures": [{"viewport_id": "fixture-640x360", "path": capture, "sha256": sha256_path(root / capture)}],
+                "checks": {check: "PASS" for check in VISUAL_SURFACE_CHECKS},
+                "not_applicable_rationales": {},
+                "findings": [],
+            }
+            for state_id, capture in state_captures.items()
+        ],
+        "cross_surface_checks": {check: "PASS" for check in VISUAL_CROSS_SURFACE_CHECKS},
+        "not_applicable_rationales": {},
+        "open_findings": [],
+        "verification_commands": [{
+            "id": "visual-smoke",
+            "required": True,
+            "command_id": "visual_smoke",
+            "expected_artifacts": list(artifacts),
+        }],
+    })
 
 
 def create_player_ready_fixture(root: Path, include_commercial_commands: bool = False) -> dict[str, str]:
@@ -147,6 +217,14 @@ def create_player_ready_fixture(root: Path, include_commercial_commands: bool = 
     write(root, "design/art/art-bible.md", "# Art Bible: Fixture\nStatus: Verified\nAuthored silhouettes, palette, typography, UI materials, motion, and asset rules verified.\n")
     write(root, "docs/architecture/architecture.md", "# Architecture: Fixture\nStatus: Verified\nGodot scene, data, signals, saves, testing, and export boundaries verified.\n")
     write(root, "docs/architecture/control-manifest.md", "# Control Manifest: Fixture\nStatus: Verified\nKeyboard, controller, focus, remapping, pause, restart, and prompt bindings verified.\n")
+    write(root, "tests/quality_probe.py", """#!/usr/bin/env python3
+import pathlib
+import sys
+
+if not pathlib.Path("project.godot").is_file() or len(sys.argv) != 2:
+    raise SystemExit(1)
+print(f"{sys.argv[1]}: verified fixture project")
+""")
     write(
         root,
         "production/player-ready-contract.md",
@@ -225,6 +303,7 @@ Status: Approved
         "victory": state_captures["success-recap"],
         "defeat": state_captures["recovery-recap"],
     }
+    create_visual_contract(root, state_captures)
 
     asset_rows = {}
     for index, group in enumerate(ASSET_GROUPS, start=1):
@@ -233,7 +312,26 @@ Status: Approved
         provenance_path = f"assets/source-prompts/{asset_id}.md"
         write_png(root, asset_path, (30 * index, 40 + 20 * index, 220 - 20 * index))
         write(root, provenance_path, "Source: authored fixture; license and commercial rights verified.\n")
-        asset_rows[group] = {"id": asset_id, "status": "verified", "path": asset_path, "provenance": provenance_path, "runtime_refs": ["scenes/main.tscn"]}
+        surface_id = CLASSIC_STATES[index - 1]
+        asset_rows[group] = {
+            "id": asset_id,
+            "status": "verified",
+            "path": asset_path,
+            "provenance": provenance_path,
+            "runtime_refs": ["scenes/main.tscn"],
+            "presentation": {
+                "source_kind": "dedicated-component",
+                "usages": [{
+                    "id": f"{asset_id}-runtime",
+                    "runtime_ref": "scenes/main.tscn",
+                    "surface_ids": [surface_id],
+                    "render_mode": "uniform",
+                    "rendered_size": [160, 90],
+                    "rationale": "Uniform fixture scaling preserves the authored aspect ratio in the declared state",
+                    "evidence": [state_captures[surface_id]],
+                }],
+            },
+        }
     write_json(
         root,
         "design/assets/asset-coverage.json",
@@ -361,6 +459,7 @@ Gate: PASS
         {
             "checks": {check: "PASS" for check in EVIDENCE_CHECKS},
             "quality_report": "production/evidence/quality-run.json",
+            "visual_contract": "production/reviews/visual-quality-contract.json",
             "visual_review": "production/reviews/visual-quality.md",
             "audio_review": "production/reviews/audio-listening.md",
             "artifacts": list(captures.values()) + audio_paths,
@@ -369,7 +468,7 @@ Gate: PASS
     write_json(
         root,
         "production/quality-command-manifest.json",
-        {"version": 2, "godot_path": create_fake_godot(root), "commands": quality_commands(include_commercial_commands)},
+        {"version": 2, "godot_path": create_fake_godot(root), "commands": quality_commands(include_commercial_commands, visual_artifacts=tuple(sorted(set(state_captures.values()))))},
     )
     return captures
 
@@ -414,6 +513,15 @@ def convert_to_endless_sandbox_fixture(root: Path) -> dict[str, str]:
         ],
         "required_evidence_checks": evidence_checks,
     })
+    coverage_path = root / "design/assets/asset-coverage.json"
+    coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+    for group, state_id in zip(coverage["groups"], state_ids):
+        for asset in group["assets"]:
+            for usage in asset["presentation"]["usages"]:
+                usage["surface_ids"] = [state_id]
+                usage["evidence"] = [captures[state_id]]
+        group["evidence"] = [captures[state_id]]
+    write_json(root, "design/assets/asset-coverage.json", coverage)
     write(root, "scripts/ui/sandbox_overlay.gd", "extends Control\n# Custom-drawn diegetic pack overlay.\n")
     rows = "\n".join(
         f"| {state_id} | Verify {role} | Authored fixture surface | Keyboard and controller | {Path(captures[state_id]).name} |"
@@ -462,14 +570,16 @@ All declared sandbox UI states have current runtime captures.
     write_json(root, "production/evidence/player-ready.json", {
         "checks": {check: "PASS" for check in evidence_checks},
         "quality_report": "production/evidence/quality-run.json",
+        "visual_contract": "production/reviews/visual-quality-contract.json",
         "visual_review": "production/reviews/visual-quality.md",
         "audio_review": "production/reviews/audio-listening.md",
         "artifacts": list(captures.values()),
     })
+    create_visual_contract(root, captures)
     write_json(root, "production/quality-command-manifest.json", {
         "version": 2,
         "godot_path": create_fake_godot(root),
-        "commands": quality_commands(False, ("sandbox_session", "inventory_return")),
+        "commands": quality_commands(False, ("sandbox_session", "inventory_return"), tuple(sorted(set(captures.values())))),
     })
     return captures
 
@@ -742,6 +852,19 @@ class PlayerReadyGateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertTrue(any(row["code"] == "assets.policy_below_inventory" for row in report["blockers"]))
 
+    def test_asset_presentation_blocks_aspect_ratio_distortion(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            coverage_path = root / "design/assets/asset-coverage.json"
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+            coverage["groups"][0]["assets"][0]["presentation"]["usages"][0]["rendered_size"] = [160, 160]
+            write_json(root, "design/assets/asset-coverage.json", coverage)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "asset.presentation_distorted" for row in report["blockers"]))
+
     def test_unreachable_declared_state_is_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -773,6 +896,69 @@ class PlayerReadyGateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertTrue(any(row["code"] == "states.schema" for row in report["blockers"]))
 
+    def test_generated_lookdev_requires_candidate_comparison(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            contract_path = root / "production/reviews/visual-quality-contract.json"
+            contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            contract["lookdev"].update({
+                "source_mode": "generated",
+                "candidate_ids": ["cheap-first-pass"],
+                "accepted_candidate_ids": ["cheap-first-pass"],
+                "rejected_candidate_ids": [],
+            })
+            write_json(root, "production/reviews/visual-quality-contract.json", contract)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "visual_contract.lookdev_candidates" for row in report["blockers"]))
+
+    def test_visual_contract_blocks_unresolved_high_finding(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            contract_path = root / "production/reviews/visual-quality-contract.json"
+            contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            contract["surfaces"][0]["findings"] = [{
+                "severity": "high",
+                "status": "open",
+                "finding": "Frame is stretched and text overlaps ornament",
+            }]
+            write_json(root, "production/reviews/visual-quality-contract.json", contract)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "visual_contract.finding_open" for row in report["blockers"]))
+
+    def test_visual_contract_rejects_production_self_review(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            contract_path = root / "production/reviews/visual-quality-contract.json"
+            contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            contract["reviewer_mode"] = "self-review"
+            contract["reviewer_independence"] = "The production agent reviewed its own work"
+            write_json(root, "production/reviews/visual-quality-contract.json", contract)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "visual_contract.reviewer_not_independent" for row in report["blockers"]))
+
+    def test_visual_capture_must_be_bound_to_quality_command(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            manifest_path = root / "production/quality-command-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            visual = next(row for row in manifest["commands"] if row["id"] == "visual_smoke")
+            visual["expected_artifacts"] = visual["expected_artifacts"][1:]
+            write_json(root, "production/quality-command-manifest.json", manifest)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "quality.required_artifact_unbound" for row in report["blockers"]))
+
     def test_quality_runner_rejects_noop_command(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -782,6 +968,27 @@ class PlayerReadyGateTests(unittest.TestCase):
             for command in manifest["commands"]:
                 if command["id"] == "godot_lint":
                     command["argv"] = ["echo", "PASS"]
+            write_json(root, "production/quality-command-manifest.json", manifest)
+            result = subprocess.run(
+                [sys.executable, str(QUALITY_RUNNER), "--root", str(root), "--profile", "player_ready"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            report = json.loads(result.stdout)
+        self.assertEqual(result.returncode, 1)
+        rejected = [row for row in report["results"] if row["id"] == "godot_lint"]
+        self.assertEqual(rejected[0]["status"], "BLOCKED")
+
+    def test_quality_runner_rejects_interpreter_eval_noop(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            manifest_path = root / "production/quality-command-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            for command in manifest["commands"]:
+                if command["id"] == "godot_lint":
+                    command["argv"] = [sys.executable, "-c", "print('PASS')"]
             write_json(root, "production/quality-command-manifest.json", manifest)
             result = subprocess.run(
                 [sys.executable, str(QUALITY_RUNNER), "--root", str(root), "--profile", "player_ready"],

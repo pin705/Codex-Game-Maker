@@ -1,6 +1,6 @@
 ---
 name: game-studio-asset-qa
-description: "Validate Codex Game Maker generated 2D assets. Use for checking accepted sprite sheets, transparent PNGs, frames, GIF previews, prop packs, layered map previews, pipeline metadata, chroma-key cleanup, edge cropping, Godot import readiness, and asset gate failures."
+description: "Validate Codex Game Maker generated 2D assets and their in-game presentation. Use for accepted sprite sheets, transparent PNGs, frames, GIF previews, prop packs, layered maps, pipeline metadata, chroma-key cleanup, edge cropping, style/coherence drift, cheap or generic art, distorted scaling, nine-slice/crop/tile misuse, runtime composition, Godot import readiness, and asset gate failures."
 ---
 
 # Game Studio Asset QA
@@ -44,6 +44,7 @@ Read if present:
 - `design/assets/harnesses/**`
 - `assets/generated/**/pipeline-meta.json`
 - `production/reviews/*.md`
+- `production/reviews/visual-quality-contract.json`
 - `../../references/templates/asset-qa-report.md`
 
 ## QA Checks
@@ -55,6 +56,18 @@ For accepted assets:
 - pipeline metadata exists
 - selected files are under `assets/generated/`
 - no accepted file points to Codex temporary generated-image folders
+- every asset has a presentation source kind and runtime usages tied to declared state IDs
+- uniform/native/sprite-frame uses preserve the authored aspect ratio
+- nine-slice assets are dedicated components with valid margins and tested size ranges
+- tiled and cover assets have seam or crop-safe evidence
+- every usage is visible in a current runtime composite
+
+For cross-asset quality:
+- compare the complete visible family, not isolated source files
+- verify camera/view, light direction, palette roles, material language, edge treatment and detail density agree
+- verify actors, props and FX read at their real runtime scale against the world
+- reject generic first-pass art, inconsistent AI styles, repeated one-size-fits-all panels, text/ornament collisions, stretched frames and decorative density that destroys hierarchy
+- keep blocker/high findings open until the affected runtime captures are replaced
 
 For sprite assets:
 - harness spec exists for runtime sprites
@@ -83,13 +96,11 @@ For map assets:
 
 ## Outcomes
 
-- `PASS`: accepted assets have source, processed outputs, metadata, and QA evidence.
+- `PASS`: accepted assets have source, processed outputs, metadata, presentation usages, cross-family coherence, and current runtime QA evidence.
 - `PASS_WITH_WARNINGS`: usable but missing non-critical previews, optional Godot import notes, or edge warnings.
 - `BLOCKED`: accepted runtime asset lacks prompt, processed output, metadata, frame outputs, or required map/collision deliverables.
 
-Use repair for cleanup parameters only. Regenerate instead when identity drifts, the raw sheet contains mixed actions, required frames are missing, the background is not flat, the raw art is severely cropped, or the GIF preview shows a broken gameplay loop.
+Use repair for cleanup parameters only. Regenerate instead when identity drifts, the raw sheet contains mixed actions, required frames are missing, the background is not flat, the raw art is severely cropped, the GIF preview shows a broken gameplay loop, or the asset looks cheap/off-style beside the locked look-dev references.
 Regenerate instead of repairing when the harness report blocks on canvas size, cell size, safe-zone exits, neighbor-frame fragments, platform crop, foot-line drift, or scale drift.
 
 Write `production/reviews/asset-qa-[YYYYMMDD-HHMM].md` only when the user asks for a formal report or before release/demo handoff.
-
-

@@ -62,7 +62,7 @@ Recommended counts:
 - 32 tool scripts
 - 4 top-level cross-platform Python CLI scripts
 - 9 guard scripts
-- 57 templates
+- 58 templates
 - 2 asset processor/workflow scripts
 - 20 natural-language command aliases
 

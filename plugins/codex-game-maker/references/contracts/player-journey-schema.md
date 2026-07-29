@@ -55,6 +55,7 @@ The state graph drives adjacent contracts:
 
 - UI: every `ui_surface` appears by exact ID in the UI screen inventory.
 - Assets: groups and `minimum_distinct_assets` are derived from visible systems and cited inventory sources; the distinct-asset floor cannot be lower than the declared required asset-ID inventory.
+- Visual quality: `production/reviews/visual-quality-contract.json` covers every required state at every declared target viewport, locks look-dev references, verifies asset/UI coherence and binds current captures to a visual-smoke command.
 - Audio: buses, coverage rows, events, and distinct-asset floor are derived from actual state/action/mix needs.
 - Quality: each journey and required recovery path contributes a command ID to the shell-free quality run.
 - Player-ready evidence: required check IDs come from this game, not a global list.

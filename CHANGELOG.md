@@ -4,7 +4,10 @@
 
 - Replaced fixed title/onboarding/gameplay/pause/settings/victory/defeat assumptions with a schema-v2, game-specific directed state graph covering custom journeys, completion states, recovery paths, experience requirements, and per-journey commands.
 - Replaced fixed asset groups, Godot Theme-only UI, fixed audio event IDs, and fixed evidence check IDs with game-specific coverage contracts while preserving strict integration/evidence validation.
-- Added adversarial graph tests, including an endless sandbox without conventional state names, an unreachable-state failure case, and rejection of the legacy fixed dictionary; the suite now contains 14 gate tests.
+- Added 24 adversarial player/commercial gate tests, including an endless sandbox without conventional state names, unreachable state/recovery failures, reused state evidence, distorted asset presentation, understated inventory floors, fake one-candidate look-dev, production self-review, unresolved high visual findings, unbound visual captures, interpreter-eval no-ops, and rejection of the legacy fixed dictionary.
+- Added a schema-v1 structured visual-quality contract covering look-dev selection/rejection, locked references, every required state × viewport, SHA-256-bound captures, surface/cross-surface checks, open findings, and visual-smoke artifact binding.
+- Added runtime asset-presentation contracts for aspect preservation, sprite frames, dedicated nine-slices with tested size ranges, tile seams, cover crop-safe areas, declared state usage, and runtime composite evidence.
+- Strengthened art/UI skills to reject first-pass generic AI art, cross-family style drift, tiny/mis-scaled actors, repeated one-size-fits-all chrome, text/ornament collisions, prop-pack crops misused as scalable panels, and self-authored visual PASS claims contradicted by captures.
 - Added semantic CI guards that prevent fixed state/group/audio constants from returning and require routing skills to reference the dynamic journey contract.
 - Removed the duplicate `codex-game-studio/`, root `tools/`, and root asset-requirements copies. `plugins/codex-game-maker/` is now the only implementation source of truth.
 - Added an evidence-backed commercial studio workflow spanning product/business planning, platforms, performance, compliance, localization, accessibility, narrative, online services, marketing, telemetry, support, live operations, and rollback.
@@ -14,8 +17,8 @@
 - Added commercial release, build matrix, performance, compliance, localization, accessibility, marketing, online/security, telemetry, narrative, business, and live-operations templates.
 - Added a verified Godot version policy recommending 4.7.1 and supporting the 4.6/4.7 release lines.
 - Added 20 studio aliases and deterministic mappings for quality, player-ready, and commercial release commands.
-- Hardened the player-ready gate with mandatory onboarding, approved non-placeholder design docs, a real Godot Theme resource, explicit required-asset inventories, distinct art/audio coverage, supported-engine probing, project-local evidence, structural PNG checks, and SHA-256-bound visual/audio/playtest reviews.
-- Hardened the quality runner against unsafe IDs, shell snippets, no-op commands, empty evidence, out-of-project artifacts, stale command rows, unsupported timeouts, and mismatched commercial engine probes.
+- Hardened the player-ready gate with game-specific experience requirements, approved non-placeholder design docs, declared Theme/diegetic/custom-draw presentation resources, explicit required-asset inventories, distinct art/audio coverage, supported-engine probing, project-local evidence, structural PNG checks, and SHA-256-bound visual/audio/playtest reviews.
+- Hardened the quality runner against unsafe IDs, shell snippets, interpreter eval snippets, no-op commands, empty evidence, out-of-project artifacts, stale command rows, unsupported timeouts, and mismatched commercial engine probes.
 - Added an end-to-end `game-studio-build` workflow that treats broad build requests as bounded player-ready work instead of stopping at a prototype.
 - Added dedicated Godot implementation, game-native UI/UX, and audio skills.
 - Added state, asset-coverage, UI, audio, player-ready contract, and evidence templates.

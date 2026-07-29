@@ -48,6 +48,7 @@ Check these artifacts:
 - `design/ui/ui-ux-spec.md`
 - `design/audio/audio-manifest.json`
 - `production/evidence/player-ready.json`
+- `production/reviews/visual-quality-contract.json`
 - `production/commercial-release-contract.json`
 - `production/build-matrix.json`
 - `production/compliance-manifest.json`
@@ -65,7 +66,7 @@ Report:
 - Missing highest-value artifact
 - Single recommended next skill
 
-Never infer `PLAYER_READY` from scene count, screenshots, code volume, or a booting build. That state requires the player-ready contract, complete state/asset/UI/audio coverage, automated checks, runtime captures, and a manual playtest.
+Never infer `PLAYER_READY` from scene count, screenshots, code volume, or a booting build. That state requires the player-ready contract, complete state/asset/UI/audio coverage, locked look-dev and structured visual QA, automated checks, runtime captures, and a manual playtest.
 
 ## Request Routing
 

@@ -62,6 +62,7 @@ $assetTemplates = @(
   "references/templates/asset-harness-spec.yaml",
   "references/templates/map-asset-spec.yaml",
   "references/templates/asset-qa-report.md",
+  "references/templates/visual-quality-contract.json",
   "references/templates/godot-import-manifest.yaml",
   "references/templates/scene-scale-plan.yaml",
   "references/templates/action-bundle-spec.yaml",

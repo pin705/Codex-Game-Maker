@@ -33,6 +33,7 @@ phases:
       - design/audio/audio-manifest.json
       - production/evidence/player-ready.json
       - production/quality-command-manifest.json
+      - production/reviews/visual-quality-contract.json
     next: technical-setup
     recommended_skill: game-studio-build
 
@@ -79,6 +80,7 @@ phases:
       - design/assets/godot-import-manifest.yaml
       - assets/source-prompts/*
       - assets/generated/**/pipeline-meta.json
+      - production/reviews/visual-quality-contract.json
     next: ui-ux
     recommended_skill: game-studio-art-assets
     detail_skills:

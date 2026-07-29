@@ -104,12 +104,18 @@ def project_fingerprint(root: Path) -> str:
     included = {".gd", ".tscn", ".tres", ".godot", ".json", ".cfg", ".gdshader"}
     ignored_parts = {".git", ".godot", "build", ".tools", "production"}
     code_roots = {"scenes", "scripts", "src", "tests", "addons", "resources"}
+    contract_paths = {
+        "design/game-state-matrix.json",
+        "design/assets/asset-coverage.json",
+        "design/audio/audio-manifest.json",
+        "design/ui/ui-ux-spec.md",
+    }
     candidates: list[Path] = []
     for path in root.rglob("*"):
         relative = path.relative_to(root)
         if not path.is_file() or any(part in ignored_parts for part in relative.parts):
             continue
-        if path.name in {"project.godot", "export_presets.cfg"} or (relative.parts and relative.parts[0] in code_roots and path.suffix.lower() in included):
+        if relative.as_posix() in contract_paths or path.name in {"project.godot", "export_presets.cfg"} or (relative.parts and relative.parts[0] in code_roots and path.suffix.lower() in included):
             candidates.append(path)
     digest = hashlib.sha256()
     for path in sorted(candidates):

@@ -72,6 +72,17 @@ For each game:
 
 Use `plugins/codex-game-maker/references/contracts/player-journey-schema.md` as the field and invariant reference.
 
+## v0.2 Visual Contract Migration
+
+Player-ready projects now need `production/reviews/visual-quality-contract.json` from the plugin template. A prose review that says PASS is no longer sufficient.
+
+1. Declare the actual target viewports and every required state from the schema-v2 graph.
+2. Lock project-local look-dev references. Generated or mixed art records at least two compared candidates plus accepted/rejected IDs and rationale.
+3. Add a current hash-bound capture for every required state × viewport and bind those files to a real `visual_smoke` quality command.
+4. Complete the per-surface and cross-surface checks; resolve every blocker/high finding instead of relabeling it.
+5. Add `presentation` usages to every asset-coverage row: state IDs, runtime reference, render mode, rendered size, rationale and composite evidence. Dedicated nine-slices also need margins and tested size ranges; cover/tile/sprite-frame modes need their specific evidence.
+6. Rerun quality and player-ready gates. Previous visual PASS prose does not migrate automatically.
+
 ## Upgrade Asset Tool Dependencies
 
 The runtime asset processor depends on Pillow and numpy:

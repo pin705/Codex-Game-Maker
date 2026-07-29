@@ -40,6 +40,20 @@ from cgm_validation import (  # noqa: E402
 
 REQUIRED_QUALITY_KINDS = {"engine_import", "static_analysis", "reliability"}
 UI_MODES = {"godot-theme", "diegetic", "custom-draw", "hybrid", "intentionally-minimal"}
+VISUAL_SURFACE_CHECKS = {
+    "art_bible_coherence", "cross_asset_coherence", "composition_hierarchy",
+    "text_legibility", "no_overlap_or_clipping", "asset_scale_grounding",
+    "safe_zones", "input_focus_feedback", "no_placeholder_or_generic_ui",
+    "no_distorted_textures",
+}
+VISUAL_CROSS_SURFACE_CHECKS = {
+    "world_character_scale", "world_character_palette_lighting",
+    "world_ui_material_language", "component_reuse_without_monotony",
+    "typography_hierarchy", "motion_fx_language",
+}
+VISUAL_SOURCE_MODES = {"generated", "authored", "sourced", "user-provided", "procedural", "mixed"}
+ASSET_SOURCE_KINDS = {"dedicated-component", "sprite-sheet", "tileable", "full-frame", "procedural", "sourced"}
+ASSET_RENDER_MODES = {"uniform", "native", "sprite-frame", "nine-slice", "tile", "cover", "procedural"}
 MEDIA_PATH_PATTERN = re.compile(r"((?:production|assets|marketing|build)/[A-Za-z0-9_./-]+\.(?:png|jpe?g|gif|webp|wav|ogg|mp3|flac|mp4|mov|webm))", re.IGNORECASE)
 UI_SECTIONS = {
     "Visual Language", "Screen Inventory", "HUD Hierarchy", "Component System",
@@ -55,6 +69,8 @@ UI_TEMPLATE_MARKERS = {
     "Non-color encoding:", "Reduced motion:", "Remapping and prompt updates:",
     "Transition language:", "Hover/focus/pressed/disabled states:", "UI audio cues:",
     "Runtime captures:", "Navigation test:", "Known findings:",
+    "Visual/layout smoke command ID:",
+    "| [component-id] | [dedicated-component] | [uniform / nine-slice / tile / cover / custom] | [size] | [min / max] | [rect] | [runtime capture] |",
 }
 
 
@@ -300,10 +316,292 @@ def validate_state_contract(
     return data, required_commands, godot_commands, evidence_checks, ui_states
 
 
+def validate_visual_contract(
+    root: Path,
+    state_contract: Optional[dict],
+    blockers: list[dict],
+    evidence: list[dict],
+) -> tuple[set[str], dict[str, set[str]]]:
+    path = root / "production/reviews/visual-quality-contract.json"
+    data = load_json(path, blockers, "visual_contract")
+    required_commands: set[str] = set()
+    command_artifacts: dict[str, set[str]] = {}
+    if data is None:
+        return required_commands, command_artifacts
+    if data.get("schema_version") != 1 or not status_ok(data.get("status")):
+        blockers.append(issue("visual_contract.status", "Visual quality contract must use schema_version 1 and verified status", path))
+    for field in ("reviewer", "reviewer_independence", "build", "review_method"):
+        if not str(data.get(field, "")).strip():
+            blockers.append(issue("visual_contract.metadata", f"Visual quality contract needs {field}", path))
+    if str(data.get("reviewer_mode", "")).strip().lower() not in {"human", "independent-agent"}:
+        blockers.append(issue("visual_contract.reviewer_not_independent", "Final visual PASS requires human or independent-agent review, not production self-review", path))
+
+    raw_viewports = data.get("required_viewports")
+    viewports = by_id(raw_viewports)
+    if not isinstance(raw_viewports, list) or not viewports or len(viewports) != len(raw_viewports):
+        blockers.append(issue("visual_contract.viewports", "required_viewports must be a non-empty array with unique IDs", path))
+    valid_viewports: dict[str, tuple[int, int]] = {}
+    for viewport_id, viewport in viewports.items():
+        try:
+            width = int(viewport.get("width", 0))
+            height = int(viewport.get("height", 0))
+        except (TypeError, ValueError):
+            width, height = 0, 0
+        if width < 320 or height < 180 or not str(viewport.get("device", "")).strip():
+            blockers.append(issue("visual_contract.viewport_invalid", f"Viewport {viewport_id} needs target dimensions and device", path))
+        else:
+            valid_viewports[viewport_id] = (width, height)
+
+    direction = data.get("art_direction") if isinstance(data.get("art_direction"), dict) else {}
+    if not str(direction.get("identity_rule", "")).strip():
+        blockers.append(issue("visual_contract.identity_missing", "art_direction needs a concrete identity_rule", path))
+    for field in ("materials", "shape_language", "palette_roles", "typography_roles", "forbidden_patterns"):
+        values = direction.get(field)
+        if not isinstance(values, list) or not values or not all(str(item).strip() for item in values):
+            blockers.append(issue("visual_contract.direction_incomplete", f"art_direction needs non-empty {field}", path))
+
+    lookdev = data.get("lookdev") if isinstance(data.get("lookdev"), dict) else {}
+    source_mode = str(lookdev.get("source_mode", "")).strip().lower()
+    candidates = {str(item) for item in lookdev.get("candidate_ids", []) if str(item)} if isinstance(lookdev.get("candidate_ids"), list) else set()
+    accepted = {str(item) for item in lookdev.get("accepted_candidate_ids", []) if str(item)} if isinstance(lookdev.get("accepted_candidate_ids"), list) else set()
+    rejected = {str(item) for item in lookdev.get("rejected_candidate_ids", []) if str(item)} if isinstance(lookdev.get("rejected_candidate_ids"), list) else set()
+    candidate_rows = by_id(lookdev.get("candidate_evidence"))
+    accepted_candidate_paths: set[Path] = set()
+    representative = {str(item) for item in lookdev.get("representative_asset_ids", []) if str(item)} if isinstance(lookdev.get("representative_asset_ids"), list) else set()
+    if source_mode not in VISUAL_SOURCE_MODES or not status_ok(lookdev.get("status")) or not representative or not str(lookdev.get("decision_rationale", "")).strip():
+        blockers.append(issue("visual_contract.lookdev_incomplete", "Look-dev needs a valid source mode, verified status, representative assets, and decision rationale", path))
+    if source_mode in {"generated", "mixed"} and (len(candidates) < 2 or not accepted or not rejected or not accepted.issubset(candidates) or not rejected.issubset(candidates)):
+        blockers.append(issue("visual_contract.lookdev_candidates", "Generated look-dev must compare at least two candidates and record accepted and rejected candidate IDs", path))
+    if source_mode in {"generated", "mixed"}:
+        if set(candidate_rows) != candidates:
+            blockers.append(issue("visual_contract.lookdev_candidate_evidence", "Every generated look-dev candidate ID needs one evidence row", path))
+        for candidate_id, candidate in candidate_rows.items():
+            outcome = str(candidate.get("outcome", "")).strip().lower()
+            candidate_path = resolve_project_path(root, str(candidate.get("path", "")))
+            candidate_hash = str(candidate.get("sha256", "")).strip().lower()
+            errors, _ = validate_media(candidate_path, expected_kind="image", min_width=320, min_height=180) if candidate_path and is_within(root, candidate_path) else (["candidate is missing or outside project"], {})
+            if errors or outcome not in {"accepted", "rejected"} or not candidate_hash or sha256_file(candidate_path) != candidate_hash:
+                blockers.append(issue("visual_contract.lookdev_candidate_evidence", f"Look-dev candidate {candidate_id} needs valid image, hash, and accepted/rejected outcome", candidate_path))
+            elif outcome == "accepted":
+                accepted_candidate_paths.add(candidate_path)
+            if (outcome == "accepted") != (candidate_id in accepted) or (outcome == "rejected") != (candidate_id in rejected):
+                blockers.append(issue("visual_contract.lookdev_candidate_outcome", f"Look-dev candidate {candidate_id} outcome disagrees with accepted/rejected IDs", path))
+    locked_paths = require_artifacts(root, lookdev.get("locked_reference_paths"), blockers, "visual_contract.lookdev_reference", "Look-dev has no locked project-local visual reference", path, media_only=True)
+    require_artifacts(root, lookdev.get("evidence"), blockers, "visual_contract.lookdev_evidence", "Look-dev has no comparison/runtime evidence", path, media_only=True, media_minimum=True)
+    if not locked_paths:
+        blockers.append(issue("visual_contract.lookdev_unlocked", "Look-dev must lock at least one accepted reference image", path))
+    elif source_mode in {"generated", "mixed"} and not accepted_candidate_paths.issubset({item.resolve() for item in locked_paths}):
+        blockers.append(issue("visual_contract.lookdev_reference_mismatch", "Accepted generated look-dev candidates must be included in locked_reference_paths", path))
+
+    state_rows = state_contract.get("states", []) if isinstance(state_contract, dict) else []
+    required_states = {
+        str(row.get("id")) for row in state_rows
+        if isinstance(row, dict) and row.get("id") and row.get("required", True)
+    }
+    declared_states = {
+        str(row.get("id")) for row in state_rows
+        if isinstance(row, dict) and row.get("id")
+    }
+    state_evidence: dict[str, set[Path]] = {}
+    for row in state_rows if isinstance(state_rows, list) else []:
+        if not isinstance(row, dict) or not row.get("id"):
+            continue
+        paths: set[Path] = set()
+        for raw in row.get("evidence", []) if isinstance(row.get("evidence"), list) else []:
+            raw_path = raw.get("path", "") if isinstance(raw, dict) else raw
+            resolved = resolve_project_path(root, str(raw_path))
+            if resolved is not None:
+                paths.add(resolved)
+        state_evidence[str(row.get("id"))] = paths
+
+    raw_surfaces = data.get("surfaces")
+    surfaces = by_id(raw_surfaces)
+    if not isinstance(raw_surfaces, list) or len(surfaces) != len(raw_surfaces):
+        blockers.append(issue("visual_contract.surfaces_invalid", "surfaces must be an array with unique IDs", path))
+    covered_states: set[str] = set()
+    all_capture_paths: set[str] = set()
+    for surface_id, surface in surfaces.items():
+        state_id = str(surface.get("state_id", "")).strip()
+        if surface_id != state_id or state_id not in declared_states:
+            blockers.append(issue("visual_contract.surface_state", f"Visual surface {surface_id} must use the exact declared state ID", path))
+            continue
+        if state_id in required_states:
+            covered_states.add(state_id)
+        if not status_ok(surface.get("status")):
+            blockers.append(issue("visual_contract.surface_incomplete", f"Visual surface {state_id} is not verified", path))
+        raw_captures = surface.get("captures")
+        capture_viewports: set[str] = set()
+        if not isinstance(raw_captures, list) or not raw_captures:
+            blockers.append(issue("visual_contract.capture_missing", f"Visual surface {state_id} has no captures", path))
+            raw_captures = []
+        for capture in raw_captures:
+            if not isinstance(capture, dict):
+                blockers.append(issue("visual_contract.capture_invalid", f"Visual surface {state_id} has an invalid capture row", path))
+                continue
+            viewport_id = str(capture.get("viewport_id", "")).strip()
+            capture_viewports.add(viewport_id)
+            raw_capture_path = str(capture.get("path", "")).strip()
+            capture_path = resolve_project_path(root, raw_capture_path)
+            expected_hash = str(capture.get("sha256", "")).strip().lower()
+            errors, info = validate_media(capture_path, expected_kind="image", min_width=320, min_height=180) if capture_path and is_within(root, capture_path) else (["capture is missing or outside project"], {})
+            if errors:
+                for error in errors:
+                    blockers.append(issue("visual_contract.capture_invalid", f"Visual surface {state_id}: {error}", capture_path))
+                continue
+            expected_size = valid_viewports.get(viewport_id)
+            if expected_size and (info.get("width"), info.get("height")) != expected_size:
+                blockers.append(issue("visual_contract.capture_size", f"Visual surface {state_id} capture does not match viewport {viewport_id}", capture_path, expected=expected_size, actual=(info.get("width"), info.get("height"))))
+            if not expected_hash or sha256_file(capture_path) != expected_hash:
+                blockers.append(issue("visual_contract.capture_hash", f"Visual surface {state_id} capture hash is missing or stale", capture_path))
+            if capture_path not in state_evidence.get(state_id, set()):
+                blockers.append(issue("visual_contract.capture_unbound", f"Visual surface {state_id} capture is not bound to that state's evidence", capture_path))
+            all_capture_paths.add(raw_capture_path)
+        for viewport_id in sorted(set(valid_viewports) - capture_viewports):
+            blockers.append(issue("visual_contract.viewport_uncovered", f"Visual surface {state_id} has no capture for viewport {viewport_id}", path))
+
+        checks = surface.get("checks") if isinstance(surface.get("checks"), dict) else {}
+        rationales = surface.get("not_applicable_rationales") if isinstance(surface.get("not_applicable_rationales"), dict) else {}
+        for check_id in sorted(VISUAL_SURFACE_CHECKS):
+            status = str(checks.get(check_id, "")).strip().upper()
+            if status not in {"PASS", "NOT_APPLICABLE"}:
+                blockers.append(issue("visual_contract.check_failed", f"Visual surface {state_id} check {check_id} is not PASS or NOT_APPLICABLE", path))
+            elif status == "NOT_APPLICABLE" and not str(rationales.get(check_id, "")).strip():
+                blockers.append(issue("visual_contract.na_unjustified", f"Visual surface {state_id} check {check_id} needs an N/A rationale", path))
+        for finding in surface.get("findings", []) if isinstance(surface.get("findings"), list) else []:
+            if isinstance(finding, dict) and str(finding.get("severity", "")).strip().lower() in {"blocker", "high"} and str(finding.get("status", "")).strip().lower() != "resolved":
+                blockers.append(issue("visual_contract.finding_open", f"Visual surface {state_id} has an unresolved {finding.get('severity')} finding", path))
+
+    for state_id in sorted(required_states - covered_states):
+        blockers.append(issue("visual_contract.state_uncovered", f"Visual contract does not review required state {state_id}", path))
+
+    cross_checks = data.get("cross_surface_checks") if isinstance(data.get("cross_surface_checks"), dict) else {}
+    cross_rationales = data.get("not_applicable_rationales") if isinstance(data.get("not_applicable_rationales"), dict) else {}
+    for check_id in sorted(VISUAL_CROSS_SURFACE_CHECKS):
+        status = str(cross_checks.get(check_id, "")).strip().upper()
+        if status not in {"PASS", "NOT_APPLICABLE"}:
+            blockers.append(issue("visual_contract.cross_check_failed", f"Cross-surface check {check_id} is not PASS or NOT_APPLICABLE", path))
+        elif status == "NOT_APPLICABLE" and not str(cross_rationales.get(check_id, "")).strip():
+            blockers.append(issue("visual_contract.na_unjustified", f"Cross-surface check {check_id} needs an N/A rationale", path))
+    for finding in data.get("open_findings", []) if isinstance(data.get("open_findings"), list) else []:
+        if isinstance(finding, dict) and str(finding.get("severity", "")).strip().lower() in {"blocker", "high"} and str(finding.get("status", "")).strip().lower() != "resolved":
+            blockers.append(issue("visual_contract.finding_open", f"Visual contract has an unresolved {finding.get('severity')} finding", path))
+
+    raw_commands = data.get("verification_commands")
+    commands = by_id(raw_commands)
+    if not isinstance(raw_commands, list) or not commands or len(commands) != len(raw_commands):
+        blockers.append(issue("visual_contract.commands_invalid", "verification_commands must be a non-empty array with unique IDs", path))
+    bound_artifacts: set[str] = set()
+    for command in commands.values():
+        if not command.get("required", True):
+            continue
+        command_id = str(command.get("command_id", "")).strip()
+        expected_artifacts = {str(item) for item in command.get("expected_artifacts", []) if str(item)} if isinstance(command.get("expected_artifacts"), list) else set()
+        if not command_id or not expected_artifacts:
+            blockers.append(issue("visual_contract.command_incomplete", f"Visual verification command {command.get('id')} needs command_id and expected_artifacts", path))
+            continue
+        required_commands.add(command_id)
+        command_artifacts.setdefault(command_id, set()).update(expected_artifacts)
+        bound_artifacts.update(expected_artifacts)
+    for raw_capture_path in sorted(all_capture_paths - bound_artifacts):
+        blockers.append(issue("visual_contract.capture_command_unbound", f"Runtime capture is not bound to a visual verification command: {raw_capture_path}", path))
+    evidence.append({"code": "visual.contract", "states": len(covered_states), "viewports": len(valid_viewports), "captures": len(all_capture_paths)})
+    return required_commands, command_artifacts
+
+
+def positive_pair(value: Any) -> Optional[tuple[float, float]]:
+    if not isinstance(value, list) or len(value) != 2:
+        return None
+    try:
+        pair = (float(value[0]), float(value[1]))
+    except (TypeError, ValueError):
+        return None
+    return pair if pair[0] > 0 and pair[1] > 0 else None
+
+
+def validate_asset_presentation(
+    root: Path,
+    asset_id: str,
+    asset: dict,
+    artifact_info: dict,
+    declared_state_ids: set[str],
+    blockers: list[dict],
+    source: Any,
+) -> None:
+    presentation = asset.get("presentation") if isinstance(asset.get("presentation"), dict) else {}
+    source_kind = str(presentation.get("source_kind", "")).strip().lower()
+    raw_usages = presentation.get("usages")
+    usages = by_id(raw_usages)
+    if source_kind not in ASSET_SOURCE_KINDS or not isinstance(raw_usages, list) or not usages or len(usages) != len(raw_usages):
+        blockers.append(issue("asset.presentation_invalid", f"Asset {asset_id} needs a valid source_kind and unique presentation usages", source))
+        return
+    runtime_refs = {
+        resolve_project_path(root, str(item))
+        for item in asset.get("runtime_refs", []) if str(item)
+    } if isinstance(asset.get("runtime_refs"), list) else set()
+    source_width = artifact_info.get("width") if artifact_info.get("kind") == "image" else None
+    source_height = artifact_info.get("height") if artifact_info.get("kind") == "image" else None
+
+    for usage_id, usage in usages.items():
+        render_mode = str(usage.get("render_mode", "")).strip().lower()
+        runtime_ref = resolve_project_path(root, str(usage.get("runtime_ref", "")))
+        surface_ids = {str(item) for item in usage.get("surface_ids", []) if str(item)} if isinstance(usage.get("surface_ids"), list) else set()
+        rendered_size = positive_pair(usage.get("rendered_size"))
+        if render_mode not in ASSET_RENDER_MODES or runtime_ref is None or runtime_ref not in runtime_refs or not runtime_ref.exists():
+            blockers.append(issue("asset.presentation_usage_invalid", f"Asset {asset_id} usage {usage_id} needs a valid render_mode and runtime_ref already declared by the asset", source))
+        if not surface_ids or not surface_ids.issubset(declared_state_ids):
+            blockers.append(issue("asset.presentation_surface_invalid", f"Asset {asset_id} usage {usage_id} must map to declared game state IDs", source))
+        if render_mode != "procedural" and rendered_size is None:
+            blockers.append(issue("asset.presentation_size_missing", f"Asset {asset_id} usage {usage_id} needs rendered_size", source))
+        if not str(usage.get("rationale", "")).strip():
+            blockers.append(issue("asset.presentation_rationale_missing", f"Asset {asset_id} usage {usage_id} needs a composition/scaling rationale", source))
+        require_artifacts(root, usage.get("evidence"), blockers, "asset.presentation_evidence", f"Asset {asset_id} usage {usage_id} has no runtime composite evidence", source, media_only=True, media_minimum=True)
+        if render_mode == "procedural" and source_kind != "procedural":
+            blockers.append(issue("asset.presentation_procedural_source", f"Asset {asset_id} usage {usage_id} is procedural but its source_kind is not", source))
+
+        if not source_width or not source_height or rendered_size is None:
+            continue
+        comparison_size = positive_pair(usage.get("source_frame_size")) if render_mode == "sprite-frame" else (float(source_width), float(source_height))
+        if render_mode in {"uniform", "native", "sprite-frame"}:
+            if comparison_size is None:
+                blockers.append(issue("asset.presentation_frame_size_missing", f"Asset {asset_id} usage {usage_id} needs source_frame_size", source))
+            else:
+                source_ratio = comparison_size[0] / comparison_size[1]
+                rendered_ratio = rendered_size[0] / rendered_size[1]
+                if abs(source_ratio - rendered_ratio) / source_ratio > 0.05:
+                    blockers.append(issue("asset.presentation_distorted", f"Asset {asset_id} usage {usage_id} changes aspect ratio without an approved stretch mode", source, source_ratio=source_ratio, rendered_ratio=rendered_ratio))
+        elif render_mode == "nine-slice":
+            margins = usage.get("nine_slice_margins")
+            try:
+                margins = [int(item) for item in margins] if isinstance(margins, list) and len(margins) == 4 else []
+            except (TypeError, ValueError):
+                margins = []
+            minimum = positive_pair(usage.get("minimum_tested_size"))
+            maximum = positive_pair(usage.get("maximum_tested_size"))
+            if source_kind != "dedicated-component" or len(margins) != 4 or any(item <= 0 for item in margins):
+                blockers.append(issue("asset.presentation_nine_slice_invalid", f"Asset {asset_id} usage {usage_id} must use a dedicated component with four positive nine-slice margins", source))
+            elif margins[0] + margins[2] >= source_width or margins[1] + margins[3] >= source_height:
+                blockers.append(issue("asset.presentation_nine_slice_margins", f"Asset {asset_id} usage {usage_id} nine-slice margins consume the source texture", source))
+            if minimum is None or maximum is None or minimum[0] > rendered_size[0] or minimum[1] > rendered_size[1] or maximum[0] < rendered_size[0] or maximum[1] < rendered_size[1]:
+                blockers.append(issue("asset.presentation_nine_slice_range", f"Asset {asset_id} usage {usage_id} needs a tested size range covering its runtime size", source))
+        elif render_mode == "tile":
+            if source_kind not in {"dedicated-component", "tileable"}:
+                blockers.append(issue("asset.presentation_tile_source", f"Asset {asset_id} usage {usage_id} is tiled but was not authored as tileable", source))
+            require_artifacts(root, usage.get("seam_test_evidence"), blockers, "asset.presentation_seam_evidence", f"Asset {asset_id} usage {usage_id} has no seam-test evidence", source, media_only=True, media_minimum=True)
+        elif render_mode == "cover":
+            safe_area = usage.get("crop_safe_area")
+            try:
+                safe_area = [float(item) for item in safe_area] if isinstance(safe_area, list) and len(safe_area) == 4 else []
+            except (TypeError, ValueError):
+                safe_area = []
+            if len(safe_area) != 4 or safe_area[0] < 0 or safe_area[1] < 0 or safe_area[2] <= 0 or safe_area[3] <= 0 or safe_area[0] + safe_area[2] > source_width or safe_area[1] + safe_area[3] > source_height:
+                blockers.append(issue("asset.presentation_crop_safe_area", f"Asset {asset_id} usage {usage_id} needs a crop_safe_area for cover mode", source))
+
+
 def validate_quality(
     root: Path,
     required_commands: set[str],
     godot_commands: set[str],
+    required_artifacts_by_command: dict[str, set[str]],
     blockers: list[dict],
     warnings: list[dict],
     evidence: list[dict],
@@ -372,6 +670,14 @@ def validate_quality(
             path = resolve_project_path(root, str(artifact.get("path", ""))) if isinstance(artifact, dict) else None
             if path is None or not path.exists() or not artifact.get("sha256") or sha256_path(path) != artifact.get("sha256"):
                 blockers.append(issue("quality.artifact_invalid", f"Command {command_id} has invalid artifact evidence", path))
+        recorded_artifacts = {
+            resolve_project_path(root, str(artifact.get("path", "")))
+            for artifact in result.get("artifacts", []) if isinstance(artifact, dict)
+        }
+        for raw_expected in sorted(required_artifacts_by_command.get(command_id, set())):
+            expected_path = resolve_project_path(root, raw_expected)
+            if expected_path not in recorded_artifacts:
+                blockers.append(issue("quality.required_artifact_unbound", f"Command {command_id} is not bound to required artifact {raw_expected}", expected_path))
         evidence.append({"code": "quality.command", "id": command_id, "duration_seconds": result.get("duration_seconds")})
     return report
 
@@ -412,9 +718,13 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                 evidence.append({"code": "godot.main_scene", "path": str(scene)})
 
     states, required_commands, godot_commands, evidence_checks, ui_state_ids = validate_state_contract(root, blockers, evidence)
+    visual_commands, visual_command_artifacts = validate_visual_contract(root, states, blockers, evidence)
+    required_commands.update(visual_commands)
 
     coverage = load_json(root / "design/assets/asset-coverage.json", blockers, "assets")
     integrated_asset_hashes: set[str] = set()
+    state_rows = states.get("states", []) if isinstance(states, dict) else []
+    declared_state_ids = {str(row.get("id")) for row in state_rows if isinstance(row, dict) and row.get("id")}
     if coverage is not None:
         raw_groups = coverage.get("groups")
         groups = by_id(raw_groups)
@@ -461,7 +771,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                 if path is None or not is_within(root, path):
                     blockers.append(issue("asset.path_missing", f"Asset in {group_id} has no path", "design/assets/asset-coverage.json"))
                     continue
-                errors, _ = validate_artifact(path)
+                errors, artifact_info = validate_artifact(path)
                 for error in errors:
                     blockers.append(issue("asset.invalid", f"Invalid integrated asset: {error}", path))
                 if not errors and path.is_file():
@@ -479,6 +789,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                         runtime_ref = resolve_project_path(root, str(raw_ref))
                         if runtime_ref is None or not is_within(root, runtime_ref) or not runtime_ref.exists():
                             blockers.append(issue("asset.runtime_ref_invalid", f"Missing runtime reference: {raw_ref}", runtime_ref))
+                validate_asset_presentation(root, str(asset.get("id", "<missing>")), asset, artifact_info, declared_state_ids, blockers, "design/assets/asset-coverage.json")
         required_asset_floor = sum(
             len({str(item) for item in group.get("required_asset_ids", []) if str(item)})
             for group in groups.values()
@@ -615,7 +926,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
     require_pass_review(root, "*visual*.md", "visual.review_missing", {"image", "video"}, blockers)
     audio_review_kinds = {"audio", "video"} if audio and audio.get("intentional_silence") else {"audio"}
     require_pass_review(root, "*audio*.md", "audio.review_missing", audio_review_kinds, blockers)
-    validate_quality(root, required_commands, godot_commands, blockers, warnings, evidence)
+    validate_quality(root, required_commands, godot_commands, visual_command_artifacts, blockers, warnings, evidence)
 
     report = load_json(root / "production/evidence/player-ready.json", blockers, "evidence")
     if report is not None:
@@ -629,6 +940,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
         require_artifacts(root, report.get("artifacts"), blockers, "evidence.artifacts", "No player-ready artifacts recorded", "production/evidence/player-ready.json")
         expected_links = {
             "quality_report": "production/evidence/quality-run.json",
+            "visual_contract": "production/reviews/visual-quality-contract.json",
             "visual_review": "production/reviews/visual-quality.md",
             "audio_review": "production/reviews/audio-listening.md",
         }

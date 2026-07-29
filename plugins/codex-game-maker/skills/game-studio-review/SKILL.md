@@ -63,6 +63,7 @@ Read if present:
 - `docs/architecture/adr-*.md`
 - `production/playtests/*.md`
 - `production/reviews/*.md`
+- `production/reviews/visual-quality-contract.json`
 - `production/stories/*.md`
 - `production/epics/*.md`
 - `production/sprints/*.md`
@@ -89,6 +90,7 @@ Use templates:
 - `../../references/templates/performance-budget.json`
 - `../../references/templates/compliance-manifest.json`
 - `../../references/templates/visual-quality-review.md`
+- `../../references/templates/visual-quality-contract.json`
 - `../../references/templates/audio-listening-review.md`
 - `../../references/templates/implementation-story.md` or installed `../../references/templates/implementation-story.md`
 - `../../references/templates/epic.md` or installed `../../references/templates/epic.md`
@@ -110,7 +112,7 @@ Use templates:
 3. If implementation work is requested, require a small story and focused executable verification.
 4. If a story is being closed, require checked acceptance criteria and command/runtime evidence.
 5. If generated assets exist, run asset gates when available and always validate provenance, media signatures, runtime integration, and current captures.
-6. Review actual visual/audio evidence; file presence and self-authored PASS labels are insufficient.
+6. Review actual visual/audio evidence pixel-by-pixel at full frame and runtime scale; file presence and self-authored PASS labels are insufficient. Final visual PASS must come from a human or clean-context independent agent that did not author the production surfaces. Reject a visual review that claims no findings while captures visibly contain overlap, clipping, distorted nine-slices, weak contrast, inconsistent asset families, generic first-pass art, tiny unreadable actors or decoration that defeats hierarchy.
 7. For generated-asset playable showcases, check the scene scale plan and `playable-showcase-qa.md` evidence.
 8. Run `../../tools/check-production-gate.ps1 -Root .` when epics/sprints exist.
 9. Run `python3 ../../scripts/cgm.py player-ready --root .` when a player-ready contract exists.
@@ -124,7 +126,7 @@ Use templates:
    - Production: scope, sequence, dependency risk, smallest useful next step.
    - QA: smoke coverage, regression risk, playtest evidence, blockers.
    - Player Journey: validate each schema-v2 journey's declared start, transitions, required states, completion states, and recovery paths; do not impose conventional state names. Every passing manual playtest names its tester and build and binds current media with SHA-256.
-   - UI/UX: art-bible coherence, hierarchy, safe zones, responsive layout, focus order, input prompts, accessibility, modal completeness, and runtime captures. The passing review records reviewer/build and hashes the reviewed media.
+   - UI/UX: art-bible and cross-asset coherence, hierarchy, safe zones, responsive layout, focus order, input prompts, accessibility, modal completeness, texture scaling, longest-copy layout, and runtime captures. The structured visual contract covers every required state × viewport, records look-dev selection/rejection, binds captures to a visual-smoke command, and leaves no unresolved high/blocker.
    - Audio: event coverage, buses, persisted settings, mix readability, provenance, pause/restart cleanup, and listening evidence. The passing review records reviewer/build and hashes the reviewed media.
    - Business: audience, positioning, price/model, scope economics, assumptions, and go/no-go criteria.
    - Accessibility: declared feature coverage, target-platform behavior, store claims, and qualified player review.
@@ -132,7 +134,7 @@ Use templates:
    - Platform/Performance: reproducible signed builds, target-device smoke, budgets, hashes, and store requirements.
    - Compliance/Security: licenses, AI provenance, privacy/data, ratings, terms, secrets, threat model, and approvals.
    - Marketing/LiveOps: truthful current store assets, telemetry/crash policy, support, incident, rollback, and patch readiness.
-   - Sprite QA: frame count, alpha, chroma-key cleanup, edge touch, GIF preview, Godot pivot/frame metadata.
+   - Sprite QA: frame count, alpha, chroma-key cleanup, edge touch, GIF preview, Godot pivot/frame metadata, runtime scale, grounding and coherence with the environment/FX family.
    - Map/Level Asset QA: preview, separated runtime objects, collision, zones, camera bounds, Godot scene/import readiness.
    - Godot Import QA: accepted assets resolve to project files, import intent is recorded, `res://` references are valid.
    - Playable Showcase QA: scene scale, grounding on large and small platforms, state machine, all pickup instances, finish trigger, web preview.
@@ -176,6 +178,8 @@ Minimum player-ready evidence adds:
 
 - Distinct runtime evidence for every required state in the game-specific graph; shared videos need distinct state markers.
 - Complete asset coverage with accepted assets integrated into current runtime scenes.
+- Verified asset presentation usages: aspect-preserving sprites/icons, dedicated tested nine-slices, justified cover crops/tiles, and current runtime composites.
+- A schema-v1 visual quality contract with locked look-dev references, every required state × viewport, hash-bound captures, passing surface/cross-surface checks and no unresolved high/blocker.
 - Keyboard and controller navigation evidence where the target supports both.
 - Audio listening evidence for every required game-specific coverage row, busiest mix, transitions, and persistence/interruption behavior.
 - Passing commands for every required journey/recovery path plus the declared engine-import, static-analysis, and reliability requirements, followed by a human/manual journey playtest.

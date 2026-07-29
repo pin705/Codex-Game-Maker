@@ -94,7 +94,11 @@ def run_quality(root: Path, manifest_path: Path, report_path: Path, profile: str
         executable = Path(argv_raw[0]).name.lower()
         shell_code_flags = {"-c", "-command", "/c", "/k"}
         no_op_executables = {"true", "false", "echo", "printf", "ver", "cmd.exe"}
-        if executable in no_op_executables or (executable in {"sh", "bash", "zsh", "fish", "cmd", "powershell", "pwsh"} and shell_code_flags.intersection({item.lower() for item in argv_raw[1:]})):
+        interpreter_eval = (
+            (executable.startswith("python") and len(argv_raw) > 1 and argv_raw[1].lower() == "-c")
+            or (executable in {"node", "nodejs", "deno", "bun", "ruby", "perl"} and len(argv_raw) > 1 and argv_raw[1].lower() in {"-e", "--eval"})
+        )
+        if executable in no_op_executables or interpreter_eval or (executable in {"sh", "bash", "zsh", "fish", "cmd", "powershell", "pwsh"} and shell_code_flags.intersection({item.lower() for item in argv_raw[1:]})):
             result["error"] = "Shell snippets and no-op commands are not valid quality evidence"
             results.append(result)
             continue

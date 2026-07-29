@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "planned",
+  "reviewer": "",
+  "reviewer_mode": "independent-agent",
+  "reviewer_independence": "",
+  "build": "",
+  "review_method": "actual-runtime-capture-inspection",
+  "required_viewports": [
+    {
+      "id": "replace-with-target-viewport",
+      "width": 1280,
+      "height": 720,
+      "device": "replace-with-target-device"
+    }
+  ],
+  "art_direction": {
+    "identity_rule": "",
+    "materials": [],
+    "shape_language": [],
+    "palette_roles": [],
+    "typography_roles": [],
+    "forbidden_patterns": []
+  },
+  "lookdev": {
+    "source_mode": "generated",
+    "status": "planned",
+    "representative_asset_ids": [],
+    "candidate_ids": [],
+    "accepted_candidate_ids": [],
+    "rejected_candidate_ids": [],
+    "candidate_evidence": [
+      {
+        "id": "",
+        "outcome": "accepted",
+        "path": "",
+        "sha256": ""
+      }
+    ],
+    "locked_reference_paths": [],
+    "decision_rationale": "",
+    "evidence": []
+  },
+  "surfaces": [
+    {
+      "id": "replace-with-state-id",
+      "state_id": "replace-with-state-id",
+      "status": "planned",
+      "captures": [
+        {
+          "viewport_id": "replace-with-target-viewport",
+          "path": "",
+          "sha256": ""
+        }
+      ],
+      "checks": {
+        "art_bible_coherence": "planned",
+        "cross_asset_coherence": "planned",
+        "composition_hierarchy": "planned",
+        "text_legibility": "planned",
+        "no_overlap_or_clipping": "planned",
+        "asset_scale_grounding": "planned",
+        "safe_zones": "planned",
+        "input_focus_feedback": "planned",
+        "no_placeholder_or_generic_ui": "planned",
+        "no_distorted_textures": "planned"
+      },
+      "not_applicable_rationales": {},
+      "findings": []
+    }
+  ],
+  "cross_surface_checks": {
+    "world_character_scale": "planned",
+    "world_character_palette_lighting": "planned",
+    "world_ui_material_language": "planned",
+    "component_reuse_without_monotony": "planned",
+    "typography_hierarchy": "planned",
+    "motion_fx_language": "planned"
+  },
+  "not_applicable_rationales": {},
+  "open_findings": [],
+  "verification_commands": [
+    {
+      "id": "visual-smoke",
+      "required": true,
+      "command_id": "visual_smoke",
+      "expected_artifacts": []
+    }
+  ]
+}

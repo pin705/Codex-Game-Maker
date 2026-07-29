@@ -1,6 +1,7 @@
 {
   "checks": {},
   "quality_report": "production/evidence/quality-run.json",
+  "visual_contract": "production/reviews/visual-quality-contract.json",
   "visual_review": "production/reviews/visual-quality.md",
   "audio_review": "production/reviews/audio-listening.md",
   "artifacts": []

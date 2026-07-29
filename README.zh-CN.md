@@ -30,7 +30,7 @@ Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产�
 
 流程不会套用固定的 title/pause/victory 清单。每个游戏都要声明自己的 schema-v2 状态图、transition、required journey、completion/recovery path、experience requirement，以及由该游戏实际系统推导出的资产、UI 和音频 coverage。`player_ready_gate.py` 会阻止 agent 把 mock、空模板或只会启动的场景说成完成。
 
-Gate 会验证 graph reachability、每个 required state 的不同运行证据、每条 journey/recovery 的 executable command、资产 provenance/runtime references、UI surface coverage、动态 audio contract、绑定当前项目 fingerprint 的命令日志与哈希、视觉/音频 review，以及人工 playtest evidence。测试中包含一个没有传统 title/pause/settings/victory/defeat 状态名的 endless sandbox。真正的审美质量仍必须查看运行中的游戏并让真实玩家测试。
+Gate 会验证 graph reachability、每个 required state 的不同运行证据、每条 journey/recovery 的 executable command、资产 provenance/runtime references、UI surface coverage、动态 audio contract，以及绑定当前项目 fingerprint 的命令日志与哈希。视觉流程会先锁定 look-dev，再检查每个 required state × target viewport 的当前截图、资产比例/九宫格/crop/tile 用法、跨资产风格一致性、未关闭的 High/Blocker，并把截图绑定到真实 visual-smoke command。测试覆盖没有传统状态名的 endless sandbox、错误复用截图、拉伸资产、虚假单候选 look-dev 与未绑定视觉证据。真正的“好玩”和市场审美仍必须由真实玩家测试与有判断力的视觉 review 决定。
 
 ## 商业发布模式
 
@@ -65,7 +65,7 @@ python3 scripts/cgm.py commercial-release --root /path/to/game
 | 工具脚本 | 32 | 安装、注册、导出、预览、资产处理、gate、hook、import |
 | 顶层 Python CLI 脚本 | 4 | 跨平台 doctor/orchestrator、quality runner、Godot installer 与 exporter |
 | gate 脚本 | 9 | engine、asset、story、production、release、Godot lint、review、player-ready、commercial release |
-| 模板 | 57 | GDD/art/UI/audio/evidence，以及 business、build、performance、compliance、localization、accessibility、marketing、security、telemetry、liveops |
+| 模板 | 58 | GDD/art/UI/audio、结构化视觉质量/evidence，以及 business、build、performance、compliance、localization、accessibility、marketing、security、telemetry、liveops |
 | 资产处理脚本 | 2 | pixel processor + workflow coordinator |
 | 自然语言 aliases | 20 | `/player-ready`、`/commercial-release`、`/quality` 与各专业 pass |
 

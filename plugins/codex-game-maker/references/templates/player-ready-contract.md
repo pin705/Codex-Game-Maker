@@ -36,6 +36,7 @@ Define the game-specific journeys in `design/game-state-matrix.json`. Do not cop
 ## Quality Gates
 
 - [ ] Required art coverage is integrated and runtime-verified.
+- [ ] Look-dev is locked; asset presentation usages and structured visual quality checks pass for every required state and target viewport.
 - [ ] UI is art-directed, responsive, readable, and navigable without a mouse.
 - [ ] Audio coverage is integrated or intentional silence is justified.
 - [ ] Core-loop and long-run automated tests pass.

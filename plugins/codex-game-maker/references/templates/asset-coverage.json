@@ -12,7 +12,21 @@
     "status": "planned",
     "path": "",
     "provenance": "",
-    "runtime_refs": []
+    "runtime_refs": [],
+    "presentation": {
+      "source_kind": "dedicated-component",
+      "usages": [
+        {
+          "id": "",
+          "runtime_ref": "",
+          "surface_ids": [],
+          "render_mode": "uniform",
+          "rendered_size": [0, 0],
+          "rationale": "",
+          "evidence": []
+        }
+      ]
+    }
   },
   "groups": [
     {
