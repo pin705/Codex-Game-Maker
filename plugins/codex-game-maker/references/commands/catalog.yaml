@@ -1,12 +1,18 @@
 activation:
   type: natural-language-alias
-  note: "Aliases such as /release and /team-ui are explicit professional-mode triggers. They are not required for the default flow and can later map to true slash commands if Codex supports them."
+  note: "A broad make/build/finish request already defaults to player-ready. /player-ready makes that target explicit; aliases such as /release and /team-ui select focused professional passes."
 
 commands:
+  - alias: /player-ready
+    mode: end-to-end
+    recommended_skill: game-studio-build
+    purpose: "Build or continue the complete bounded game through gameplay, assets, UI, audio, tests, runtime evidence, and manual playtest."
+    default_status: available
+
   - alias: /release
     mode: professional
     recommended_skill: game-studio-review
-    purpose: "Prepare release checklist, changelog, build evidence, and launch readiness."
+    purpose: "Prepare platform builds, release checklist, changelog, licensing, performance, packaging evidence, and launch readiness after player-ready passes."
     default_status: available
 
   - alias: /hotfix
@@ -17,27 +23,27 @@ commands:
 
   - alias: /team-ui
     mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Coordinate UI/UX, Godot Control implementation, art consistency, and QA review."
-    default_status: planned
+    recommended_skill: game-studio-ui-ux
+    purpose: "Design, implement, capture, and QA game-native HUD, menus, controls presentation, responsive layouts, focus, and accessibility."
+    default_status: available
 
   - alias: /team-level
     mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Coordinate level design, implementation, art readability, and playtest evidence."
-    default_status: planned
+    recommended_skill: game-studio-implementation
+    purpose: "Implement complete level paths, encounters, environment integration, transitions, and playtest evidence."
+    default_status: available
 
   - alias: /team-combat
     mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Coordinate combat rules, implementation, feedback, tuning, and QA."
-    default_status: planned
+    recommended_skill: game-studio-implementation
+    purpose: "Implement combat rules, controls, enemies, feedback, tuning, terminal states, tests, and playtest evidence."
+    default_status: available
 
   - alias: /audio-pass
     mode: professional
-    recommended_skill: game-studio-art-assets
-    purpose: "Plan music/SFX needs, source or generate audio briefs, and define trigger points."
-    default_status: planned
+    recommended_skill: game-studio-audio
+    purpose: "Inventory, create or source, integrate, mix, expose settings for, and verify music, ambience, UI, and gameplay audio."
+    default_status: available
 
   - alias: /narrative-pass
     mode: professional
@@ -53,9 +59,9 @@ commands:
 
   - alias: /accessibility-pass
     mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Check input remapping, color/readability, subtitles, difficulty assists, and motion comfort."
-    default_status: planned
+    recommended_skill: game-studio-ui-ux
+    purpose: "Check input remapping, focus, color/readability, text scale, subtitles, difficulty assists, and motion comfort."
+    default_status: available
 
   - alias: /hooks-on
     mode: professional

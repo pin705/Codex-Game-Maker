@@ -1,4 +1,4 @@
-﻿---
+---
 name: game-studio-sprite-assets
 description: "Create game-ready 2D sprite assets with Codex Game Maker. Use for GPT Image 2 sprite sheets, characters, enemies, NPCs, props, projectiles, impacts, FX, frame extraction, transparent PNG outputs, GIF previews, Godot sprite import metadata, and sprite asset QA."
 ---
@@ -12,16 +12,16 @@ Use this for isolated 2D game assets and animated sprite sheets.
 Read if present:
 - `design/art/art-bible.md`
 - `design/assets/asset-manifest.yaml`
-- `codex-game-studio/references/templates/sprite-asset-spec.yaml`
-- `codex-game-studio/references/templates/asset-harness-spec.yaml`
-- `codex-game-studio/references/templates/scene-scale-plan.yaml`
-- `codex-game-studio/references/templates/asset-prompt-spec.yaml`
-- `codex-game-studio/references/templates/topdown-survivor-character-contract.yaml`
-- `codex-game-studio/references/rules/generated-assets.md`
-- `codex-game-studio/references/rules/playable-showcase-integration.md`
-- `codex-game-studio/references/rules/topdown-survivor-character-assets.md`
-- `codex-game-studio/scripts/assets/cgs_asset_processor.py`
-- `codex-game-studio/scripts/assets/cgs_asset_harness.py`
+- `../../references/templates/sprite-asset-spec.yaml`
+- `../../references/templates/asset-harness-spec.yaml`
+- `../../references/templates/scene-scale-plan.yaml`
+- `../../references/templates/asset-prompt-spec.yaml`
+- `../../references/templates/topdown-survivor-character-contract.yaml`
+- `../../references/rules/generated-assets.md`
+- `../../references/rules/playable-showcase-integration.md`
+- `../../references/rules/topdown-survivor-character-assets.md`
+- `../../scripts/assets/cgs_asset_processor.py`
+- `../../scripts/assets/cgs_asset_harness.py`
 
 If no art bible exists, use `game-studio-art-assets` first.
 
@@ -43,7 +43,7 @@ Do not force the user to choose rows, columns, or frame counts when the request 
 Before generating any sprite that may enter gameplay, create an asset harness:
 
 ```powershell
-tools/create-asset-harness.ps1 -Root . -AssetId hero-cat-run -Kind sprite -Action run -Rows 3 -Cols 4 -CellWidth 384 -CellHeight 384 -SafeMargin 48 -KeyColor "#FF00FF" -Loop
+../../../tools/create-asset-harness.ps1 -Root . -AssetId hero-cat-run -Kind sprite -Action run -Rows 3 -Cols 4 -CellWidth 384 -CellHeight 384 -SafeMargin 48 -KeyColor "#FF00FF" -Loop
 ```
 
 Use the generated files as the source of truth:
@@ -64,14 +64,14 @@ The final image prompt must include the harness contract:
 After saving a raw sheet, run the harness gate before processing:
 
 ```powershell
-tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png
+../../../tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png
 ```
 
 If the raw image has the right subject and motion but the generator missed exact canvas size, row/column layout, or safe-zone placement, run deterministic rectification before processing:
 
 ```powershell
-tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png -Output assets/raw/hero-cat-run-rectified.png
-tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-rectified.png
+../../../tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png -Output assets/raw/hero-cat-run-rectified.png
+../../../tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-rectified.png
 ```
 
 Rectification is only for geometry: exact canvas, grid normalization, safe padding, pivot/bottom alignment, foreground-mask isolation, and component placement. The rectified output must not preserve rectangular chroma-key gradient blocks around the subject; if it does, fix the rectifier or rerun with stricter key tolerance before processing. Regenerate instead of rectifying when identity drifts, the action is not a real loop, a run/walk does not alternate feet, a jump pose sequence is wrong, limbs are missing, or neighboring-frame fragments are baked into the subject.
@@ -80,7 +80,7 @@ Rectification is only for geometry: exact canvas, grid normalization, safe paddi
 
 - Use built-in image generation for raw raster art.
 - Use a flat solid chroma-key background for assets that need transparency, unless the user explicitly chooses another workflow.
-- Before writing the final image prompt, run `tools/suggest-key-color.ps1 -Description "<asset description>"` when available.
+- Before writing the final image prompt, run `../../../tools/suggest-key-color.ps1 -Description "<asset description>"` when available.
 - Use the suggested key color in the prompt. Example: green slime/forest assets should usually use `#FF00FF`; purple/pink magic FX should usually use `#00FF00`.
 - If the user explicitly asks for a specific background/key color, honor it and record the reason.
 - Record the chosen key color in the prompt spec, asset manifest notes, and `pipeline-meta.json`.
@@ -124,7 +124,7 @@ For controllable heroes with multiple actions:
 - A run/walk action must be a real loop: first and last poses should connect cleanly, foot contact should alternate predictably, and the body should not scale or drift between frames.
 - Do not fake locomotion by stacking a second full-body character, duplicated limbs, or unmasked limb crops on top of the base frame. Reference-guided derived animation must either regenerate clean frames, repaint the old limb region, or use a local warp/deformation pass that moves one visible body.
 - When repairing animation locally, never keep both the old foot/hand/limb and the shifted replacement visible. Clear or repaint the original pixels before pasting the moved part, then review the GIF for a single clean character silhouette.
-- If the repair moves or repaints feet, hands, limbs, tails, weapons, or props, add `local_repair` to the harness spec and point it at a repair manifest. Rerun `tools/check-asset-harness.ps1` after that; the accepted report must include `harness.local_repair.pixel_erasure`, `harness.local_repair.paw_blob_scan` for foot/leg repairs, and `harness.local_repair.evidence`, not just geometry evidence.
+- If the repair moves or repaints feet, hands, limbs, tails, weapons, or props, add `local_repair` to the harness spec and point it at a repair manifest. Rerun `../../../tools/check-asset-harness.ps1` after that; the accepted report must include `harness.local_repair.pixel_erasure`, `harness.local_repair.paw_blob_scan` for foot/leg repairs, and `harness.local_repair.evidence`, not just geometry evidence.
 - For local foot repairs, never paste replacement feet under the old generated feet. Erase old paw/shin pixels back to the selected key color, repaint only the necessary seam, and keep one connected leg-and-paw setup per side in the original footprint. Large robe-colored rectangles or mask patches are blockers.
 - When removing old pixels from a chroma-key raw sheet, erase them to the selected key color, not transparent black. Transparent black becomes false opaque residue after RGB export.
 - Do not accept whole-body shake, sprite wobble, camera jitter, or pivot jitter as a walk/run loop. Top-down survivor movement still needs visible foot and/or hand alternation.
@@ -141,7 +141,7 @@ For controllable heroes with multiple actions:
 - A jump action should usually be split into pose phases: anticipation/takeoff, rise, apex, fall, and land. If only one `jump` sheet exists, the runtime state machine must select or hold phase frames instead of blindly looping the sheet.
 - If generated run/jump frames are cropped, have tail/feet crossing cell edges, or do not loop, regenerate with stricter safe-padding and pose instructions before using them in a showcase.
 - If a jump frame shows a tail, limb, weapon, or effect from a neighboring frame, treat it as a harness failure and regenerate with larger cell size or safe margin.
-- If the generator returns a portrait sheet, wrong pixel dimensions, or a contact-sheet layout that still contains all expected frames, use `tools/rectify-asset-to-harness.ps1` to isolate components into the harness canvas, then rerun the harness gate.
+- If the generator returns a portrait sheet, wrong pixel dimensions, or a contact-sheet layout that still contains all expected frames, use `../../../tools/rectify-asset-to-harness.ps1` to isolate components into the harness canvas, then rerun the harness gate.
 
 ## Runtime Integration Rules
 
@@ -152,7 +152,7 @@ For a generated player/enemy that enters Godot gameplay:
 - Normalize frames to a fixed canvas before import.
 - Record pivot, foot line, frame size, action FPS, loop/non-loop, and state-machine mapping.
 - Use `AnimatedSprite2D` or `SpriteFrames` only after the normalized frames pass QA.
-- For generated art used in a playable showcase, apply `references/rules/playable-showcase-integration.md` before declaring the scene ready.
+- For generated art used in a playable showcase, apply `../../references/rules/playable-showcase-integration.md` before declaring the scene ready.
 - Add a small motion state machine for controllable characters. Minimum states: idle, run, jump-rise, jump-fall, land, hurt/dead when relevant.
 - Do not treat one global foot offset as enough when platform sizes vary. Grounded visual foot sink must derive from the current floor/platform visual scale.
 - If a character looks correct on large platforms but sinks into small platforms, fix the runtime grounding contract instead of only tuning the sprite.
@@ -168,7 +168,7 @@ For a generated player/enemy that enters Godot gameplay:
 For a player, enemy, NPC, summon, or important animated object with multiple actions, create the bundle spec first:
 
 ```powershell
-tools/create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat with blue backpack" -Actions "idle,run,jump,attack,hurt"
+../../../tools/create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat with blue backpack" -Actions "idle,run,jump,attack,hurt"
 ```
 
 This writes:
@@ -182,10 +182,10 @@ After raw sheets are saved under `assets/raw/<asset-id>-<action>-sheet.png`, rer
 
 ## Processing
 
-After the raw or rectified sheet passes `tools/check-asset-harness.ps1`, run:
+After the raw or rectified sheet passes `../../../tools/check-asset-harness.ps1`, run:
 
 ```powershell
-tools/process-sprite-sheet.ps1 -Input <raw.png> -OutDir assets/generated/<category>/<asset-id> -Rows <rows> -Cols <cols> -AssetId <asset-id> -KeyColor "<selected-key-color>"
+../../../tools/process-sprite-sheet.ps1 -Input <raw.png> -OutDir assets/generated/<category>/<asset-id> -Rows <rows> -Cols <cols> -AssetId <asset-id> -KeyColor "<selected-key-color>"
 ```
 
 Use `-KeyColor auto` only as a fallback when the selected key color is unknown; it samples the raw sheet border to infer the chroma key.
@@ -201,7 +201,7 @@ Expected outputs:
 For accepted Godot sprite bundles, create Godot 4.4 resources:
 
 ```powershell
-tools/import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
+../../../tools/import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
 ```
 
 Expected Godot outputs:
@@ -231,15 +231,15 @@ Accepted sprite assets must record:
 Before using the asset in-game, run:
 
 ```powershell
-tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>
-tools/check-asset-qa.ps1 -Root .
+../../../tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>
+../../../tools/check-asset-qa.ps1 -Root .
 ```
 
 If QA finds residue or edge-touch issues that can be repaired deterministically, try:
 
 ```powershell
-tools/repair-asset-processing.ps1 -Root .
-tools/repair-asset-processing.ps1 -Root . -Apply
+../../../tools/repair-asset-processing.ps1 -Root .
+../../../tools/repair-asset-processing.ps1 -Root . -Apply
 ```
 
 Block or regenerate when:

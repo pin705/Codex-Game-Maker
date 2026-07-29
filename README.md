@@ -4,31 +4,32 @@
 
 ![Codex Game Maker banner](assets/brand/banner.png)
 
-**Codex skills for Godot-first game projects, game-ready 2D assets, and engine-ready prototypes.**
+**Codex skills for building complete, polished, player-ready Godot games—not just one-screen prototypes.**
 
-**Quick links:** [Install](#quick-start) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Engine Support](#engine-support) · [Skills](#whats-included) · [Professional Features](#professional-features) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
+**Quick links:** [Install](#quick-start) · [Player-Ready Mode](#player-ready-mode) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Status](https://img.shields.io/badge/status-v0.1--alpha-orange)
 ![Godot](https://img.shields.io/badge/Godot-4.4-blue)
 ![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 ![Assets](https://img.shields.io/badge/GPT%20Image-2D%20assets-purple)
-![Tools](https://img.shields.io/badge/tools-29-blue)
-![Skills](https://img.shields.io/badge/skills-8-blueviolet)
+![Tools](https://img.shields.io/badge/tools-32-blue)
+![Skills](https://img.shields.io/badge/skills-12-blueviolet)
 ![AI Built For](https://img.shields.io/badge/AI%20built%20for-Codex-111827)
 
 Turn a single Codex session into a Godot-first game making workspace.
 
-Godot 4.4 workflows. GPT Image-ready 2D assets. Lightweight gates. Explicit professional modes.
+Godot-first workflows. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Runtime and playtest evidence.
 
 > Status: `v0.1-alpha`. The core workflow is usable, but this is still an early preview. Use it as a template, inspect what it writes, and expect the showcase layer to evolve.
 
-Codex Game Maker turns a Codex session into a practical game-making workspace: guided game design, engine detection, Godot 4.4 setup, sprite and map asset processing, Godot import helpers, lightweight production gates, and explicit professional workflows.
+Codex Game Maker turns a Codex session into an end-to-end game-making workspace: guided design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, and manual playtest evidence.
 
 ## Table Of Contents
 
 - [What Makes It Different](#what-makes-it-different)
 - [Showcase Plans](#showcase-plans)
+- [Player-Ready Mode](#player-ready-mode)
 - [What's Included](#whats-included)
 - [Engine Support](#engine-support)
 - [Quick Start](#quick-start)
@@ -49,8 +50,9 @@ Codex Game Maker is not just a prompt pack. It is a Codex-first game workflow wh
 |---|---|
 | Godot-first projects | Blank folders default to Godot 4.4 + Web export, with installer/register/preview tools. |
 | Game-ready 2D assets | Sprite sheets become transparent frames, GIF previews, metadata, QA reports, and Godot resources. |
-| Lean studio structure | 8 core skills and review lenses instead of a huge default roster. |
-| Explicit professional mode | Release, hooks, team passes, accessibility, localization, and audio workflows are opt-in. |
+| End-to-end ownership | Broad build requests continue through complete gameplay, states, assets, UI, audio, tests, captures, and playtest. |
+| Authored presentation | A coherent art bible drives the HUD, menus, controls, feedback, icons, typography, motion, and audio identity. |
+| Evidence gates | One screen, placeholder assets, default controls, generic dashboard UI, silence, or untested claims cannot pass player-ready. |
 | Web-aware troubleshooting | Use web search for official docs when engine versions, APIs, export errors, or resource issues matter. |
 
 ## Showcase Plans
@@ -62,14 +64,31 @@ Generated showcase projects are treated as local output and are not committed to
 - 12-20 second demo GIF.
 - Workflow diagram: prompt -> GPT Image -> processor -> QA -> Godot -> browser preview.
 
+## Player-Ready Mode
+
+A broad request such as “make this game,” “finish this prototype,” or “build it autonomously” routes to the `game-studio-build` skill. Unless the user explicitly asks for only a prototype, the default outcome is a bounded `PLAYER_READY` game.
+
+The workflow continues through:
+
+1. Concept, systems, art direction, target device, controls, and an explicit player-ready contract.
+2. A complete state matrix: boot, title, onboarding, gameplay, pause, settings, failure, victory/results, restart, and any game-specific modals.
+3. A representative vertical slice, followed by the rest of the agreed core loop and content boundary.
+4. Full asset coverage for characters, environments, gameplay feedback, UI, and release branding; accepted assets must be integrated and seen in runtime.
+5. A reusable Godot UI theme and authored game-native HUD/menus rather than default controls, HTML-like cards, or dashboard layouts.
+6. Integrated music, ambience, SFX, UI feedback, buses, and persisted audio settings—or a documented, playtested intentional-silence design.
+7. Automated core-loop and long-run checks, captures for every required state, visual/audio review, controls verification, and a manual playtest.
+8. The cross-platform `player_ready_gate.py`; blockers are fixed and rechecked instead of being relabeled as done.
+
+The gate enforces coverage and evidence. Taste-level commercial quality still depends on reviewing the actual running game and testing with real players, so the workflow records captures and playtest findings instead of promising quality from files alone.
+
 ## What's Included
 
 | Category | Count | Description |
 |---|---:|---|
-| Core skills | 8 | Start, design, art, sprite assets, map assets, asset QA, architecture, review. |
-| Tool scripts | 29 | Install, register, export, preview, asset processing, gates, hooks, imports. |
-| Guard scripts | 7 | Engine, asset, story, production, release, Godot lint, review gates. |
-| Templates | 31 | GDDs, art briefs, asset specs, stories, production, release, QA, import manifests. |
+| Core skills | 12 | Start, build orchestration, design, implementation, art, sprite/map assets, asset QA, UI/UX, audio, architecture, review. |
+| Tool scripts | 32 | Install, register, export, preview, asset processing, gates, hooks, imports. |
+| Guard scripts | 8 | Engine, asset, story, production, release, Godot lint, review, and cross-platform player-ready gates. |
+| Templates | 40 | GDDs, art briefs, state/coverage contracts, UI/audio specs, stories, production, release, QA, import manifests. |
 | Asset processors/workflows | 2 | Pixel processing plus higher-level bundle/import/repair orchestration. |
 | Professional aliases | 10 | `/release`, `/hotfix`, `/team-*`, `/audio-pass`, `/localization-pass`, and more. |
 
@@ -125,7 +144,7 @@ Open Codex in the folder and ask:
 Use Codex Game Maker to start this game project.
 ```
 
-For a blank folder, new project, or broad multi-system request, Codex Game Maker enters a planning handshake first: it summarizes the idea, detects project context, proposes defaults, asks at most three important questions, and lets the user say "go with defaults" before files are created.
+For a blank folder, new project, or broad multi-system request, Codex Game Maker uses a lean kickoff: it summarizes the idea, detects project context, proposes defaults, and asks at most three important questions. Say “go with defaults and build it player-ready” to approve bounded autonomous execution; routine asset, UI, audio, and implementation choices then proceed without repeated confirmation.
 
 For long-running projects, use the largest context window your Codex environment supports. A 1M-token context window is recommended when available; the repository cannot force that setting, so Codex Game Maker also records continuity in planning docs, manifests, and `production/session-state/active.md`.
 
@@ -295,10 +314,11 @@ Professional workflows are explicit and opt-in.
 | `/release` | Available | Release checklist, changelog, patch notes, release gate. |
 | `/hotfix` | Available | Small urgent fix flow with focused verification. |
 | `/hooks-on` | Available | Install optional professional git hooks. |
-| `/team-ui` | Planned | UI/UX, Godot Control implementation, art consistency, QA review. |
-| `/team-level` | Planned | Level design, implementation, art readability, playtest evidence. |
-| `/team-combat` | Planned | Combat rules, feedback, tuning, and QA. |
-| `/audio-pass` | Planned | Music/SFX plan and trigger points. |
+| `/player-ready` | Available | Run the complete build and evidence loop. |
+| `/team-ui` | Available | Authored UI/UX, Godot Control implementation, responsive/focus/accessibility QA. |
+| `/team-level` | Available | Level implementation, environment integration, transitions, and playtest evidence. |
+| `/team-combat` | Available | Combat implementation, feedback, tuning, tests, and QA. |
+| `/audio-pass` | Available | Audio inventory, sourcing/creation, integration, buses, settings, mix, and listening QA. |
 | `/narrative-pass` | Planned | Story, dialogue, worldbuilding, narrative delivery. |
 | `/localization-pass` | Planned | Text surfaces, fonts, string length, localization readiness. |
 | `/accessibility-pass` | Planned | Input, readability, subtitles, assists, motion comfort. |
@@ -318,15 +338,15 @@ powershell -ExecutionPolicy Bypass -File tools\uninstall-professional-hooks.ps1
 
 ## How It Works
 
-1. Codex detects the current project stage and engine.
-2. New projects and broad requests start with a planning handshake before implementation.
-3. Design and art skills create lightweight docs before broad implementation.
-4. Asset skills plan and process generated runtime assets.
-5. Architecture and story gates keep implementation small and reviewable.
-6. QA/review gates check evidence before demos, exports, and handoff.
-7. Professional workflows can be explicitly activated for larger projects.
+1. Codex detects the engine, project stage, and current delivery state.
+2. The kickoff defines a bounded outcome; broad build requests default to player-ready.
+3. The build orchestrator creates state, asset, UI, audio, and evidence contracts.
+4. Specialized skills implement complete gameplay slices and production presentation.
+5. Automated and runtime checks expose gaps after every integration pass.
+6. Visual, audio, controls, long-run, and manual playtests drive polish iterations.
+7. Player-ready and release gates prevent prototypes or unsupported claims from being handed off as finished.
 
-This is not an autopilot system. The user stays in control; Codex Game Maker provides structure, defaults, tools, and review gates.
+The user controls scope and can request checkpoints. Once autonomous/default execution is approved, the plugin is designed to continue through the bounded workflow instead of stopping after the first scene.
 
 ## Safety And Gates
 
@@ -339,6 +359,7 @@ This is not an autopilot system. The user stays in control; Codex Game Maker pro
 | Production | `tools/check-production-gate.ps1` | Lightweight epic/sprint/story structure. |
 | Godot lint | `tools/check-godot-lint.ps1` | Missing `res://`, unused `delta`, tuning hardcodes, UI/gameplay coupling. |
 | Review | `tools/check-review-gate.ps1` | Smoke evidence, playtest evidence, project structure, export readiness. |
+| Player-ready | `python3 scripts/guards/player_ready_gate.py --root .` | Complete states, integrated asset coverage, authored UI spec, audio events/buses, tests, runtime artifacts, and manual playtest evidence. |
 | Release | `tools/check-release-gate.ps1` | Professional release readiness. |
 
 ## Suggested Prompts
@@ -346,7 +367,7 @@ This is not an autopilot system. The user stays in control; Codex Game Maker pro
 Start a new project:
 
 ```text
-Use Codex Game Maker to start a small cozy platformer. Guide me step by step and go with defaults if I do not know.
+Use Codex Game Maker to build a small cozy platformer player-ready from start to finish. Go with defaults, continue autonomously, and do not stop at a one-screen prototype or mock assets.
 ```
 
 Create a sprite bundle:
@@ -365,6 +386,12 @@ Review before a demo:
 
 ```text
 Use Codex Game Maker to review this project before I export a browser demo.
+```
+
+Finish a weak prototype:
+
+```text
+/player-ready Audit this prototype, then finish every gameplay state, replace incomplete assets, redesign the HTML-like UI as game-native UI, integrate audio, run tests, capture every state, playtest it, and keep iterating until the player-ready gate passes.
 ```
 
 Professional release mode:

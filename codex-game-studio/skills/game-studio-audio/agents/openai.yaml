@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Audio"
+  short_description: "Design and integrate complete game audio"
+  default_prompt: "Use $game-studio-audio to create and verify the game audio pass."

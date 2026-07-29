@@ -5,7 +5,7 @@ platformer showcases. Apply them whenever generated art becomes a playable
 Godot scene, web preview, or public demo.
 
 For Vampire Survivors / Survivor.io style controllable characters, also apply
-`codex-game-studio/references/rules/topdown-survivor-character-assets.md`.
+`references/rules/topdown-survivor-character-assets.md`.
 
 ## Problems To Prevent
 

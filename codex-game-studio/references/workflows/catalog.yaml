@@ -1,78 +1,156 @@
-﻿phases:
+phases:
   blank:
     next: concept
     recommended_skill: game-studio-start
+
   concept:
     required:
       - design/gdd/game-concept.md
       - design/art/art-bible.md
+    next: systems-design
     recommended_skill: game-studio-design
+
   systems-design:
     required:
       - design/gdd/systems-index.md
       - design/gdd/*-system.md
+    next: player-ready-contract
     recommended_skill: game-studio-design
+
+  player-ready-contract:
+    required:
+      - production/player-ready-contract.md
+      - design/game-state-matrix.json
+      - design/assets/asset-coverage.json
+      - design/ui/ui-ux-spec.md
+      - design/audio/audio-manifest.json
+      - production/evidence/player-ready.json
+    next: technical-setup
+    recommended_skill: game-studio-build
+
+  technical-setup:
+    required:
+      - project.godot
+      - docs/architecture/adr-*.md
+    next: architecture
+    recommended_skill: game-studio-architecture
+
+  architecture:
+    required:
+      - docs/architecture/architecture.md
+      - docs/architecture/control-manifest.md
+    next: implementation
+    recommended_skill: game-studio-architecture
+
+  implementation:
+    required:
+      - production/stories/STORY-*.md
+      - src/**
+      - tests/**/*.gd
+    next: art-assets
+    recommended_skill: game-studio-implementation
+
+  implementation-story:
+    required:
+      - production/stories/STORY-*.md
+    recommended_skill: game-studio-implementation
+
   art-assets:
     required:
       - design/art/art-bible.md
       - design/assets/asset-manifest.yaml
+      - design/assets/asset-coverage.json
       - design/assets/godot-import-manifest.yaml
       - assets/source-prompts/*
       - assets/generated/**/pipeline-meta.json
+    next: ui-ux
     recommended_skill: game-studio-art-assets
     detail_skills:
       - game-studio-sprite-assets
       - game-studio-map-assets
       - game-studio-asset-qa
-  technical-setup:
+
+  ui-ux:
     required:
-      - project.godot
-      - docs/architecture/adr-*.md
-    recommended_skill: game-studio-architecture
-  architecture:
+      - design/ui/ui-ux-spec.md
+      - design/game-state-matrix.json
+      - production/evidence/player-ready.json
+    next: audio
+    recommended_skill: game-studio-ui-ux
+
+  audio:
     required:
-      - docs/architecture/architecture.md
-      - docs/architecture/control-manifest.md
-    recommended_skill: game-studio-architecture
-  implementation-story:
-    required:
-      - production/stories/STORY-*.md
-    recommended_skill: game-studio-review
+      - design/audio/audio-manifest.json
+      - production/evidence/player-ready.json
+    next: integration-qa
+    recommended_skill: game-studio-audio
+
   production:
     required:
       - production/epics/EPIC-*.md
       - production/sprints/*.md
       - production/stories/STORY-*.md
+    recommended_skill: game-studio-implementation
+
+  integration-qa:
+    required:
+      - production/smoke-tests/*.md
+      - production/regression/*.md
+      - production/playtests/*.md
+      - production/evidence/player-ready.json
+    next: player-ready
     recommended_skill: game-studio-review
+
   smoke-qa:
     required:
       - production/smoke-tests/*.md
       - production/regression/*.md
     recommended_skill: game-studio-review
+
+  player-ready:
+    required:
+      - production/player-ready-contract.md
+      - design/game-state-matrix.json
+      - design/assets/asset-coverage.json
+      - design/ui/ui-ux-spec.md
+      - design/audio/audio-manifest.json
+      - production/evidence/player-ready.json
+      - production/playtests/*.md
+      - tests/**/*.gd
+    gate: scripts/guards/player_ready_gate.py
+    recommended_skill: game-studio-build
+
   release:
     required:
       - production/releases/*release*.md
+      - production/evidence/player-ready.json
       - CHANGELOG.md
     recommended_skill: game-studio-review
+
   review:
     required:
       - production/reviews/review-*.md
       - production/playtests/*.md
     recommended_skill: game-studio-review
+
 defaults:
   engine: godot
   blank_project_recommendation: "Godot 4.4 + Web export"
-  review_mode: lean
-  story_mode: small-slice
-  asset_mode: processed-runtime-assets-and-qa
-  qa_mode: smoke-and-regression-light
+  broad_build_outcome: player-ready
+  review_mode: evidence-first
+  story_mode: small-complete-player-slice
+  asset_mode: complete-coverage-integrated-and-runtime-verified
+  ui_mode: authored-game-native-and-responsive
+  audio_mode: integrated-mixed-and-listened
+  qa_mode: automated-runtime-visual-audio-and-manual-playtest
   professional_mode: explicit-alias-only
-  release_mode: professional-only
+  release_mode: player-ready-plus-platform-release-gates
   core_roles:
     - creative
     - game-design
     - art
+    - ui-ux
+    - audio
     - technical
     - production
     - qa
-

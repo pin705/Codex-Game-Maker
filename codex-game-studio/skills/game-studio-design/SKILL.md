@@ -14,11 +14,11 @@ Read if present:
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
 - `production/session-state/active.md`
-- repo-local `codex-game-studio/references/agents/core-agent-roster.md` or installed-skill `references/agents/core-agent-roster.md`
-- repo-local `codex-game-studio/references/policies/collaboration-policy.md` or installed-skill `references/policies/collaboration-policy.md`
-- repo-local `codex-game-studio/references/policies/engine-selection.md` or installed-skill `references/policies/engine-selection.md`
-- repo-local `codex-game-studio/references/policies/web-search-policy.md` or installed-skill `references/policies/web-search-policy.md`
-- repo-local `codex-game-studio/references/templates/kickoff-brief.md` or installed-skill `references/templates/kickoff-brief.md`
+- repo-local `../../references/agents/core-agent-roster.md` or installed-skill `../../references/agents/core-agent-roster.md`
+- repo-local `../../references/policies/collaboration-policy.md` or installed-skill `../../references/policies/collaboration-policy.md`
+- repo-local `../../references/policies/engine-selection.md` or installed-skill `../../references/policies/engine-selection.md`
+- repo-local `../../references/policies/web-search-policy.md` or installed-skill `../../references/policies/web-search-policy.md`
+- repo-local `../../references/templates/kickoff-brief.md` or installed-skill `../../references/templates/kickoff-brief.md`
 
 Before engine recommendations, detect existing project files. Blank projects default to Godot 4.4 + Web export.
 
@@ -37,11 +37,11 @@ Proceed after the user answers or explicitly accepts defaults.
 ## Workflow
 
 1. Clarify the user's current state: no idea, vague idea, clear concept, or existing work.
-2. Produce or update `design/gdd/game-concept.md` using repo-local `codex-game-studio/references/templates/game-concept.md` or installed-skill `references/templates/game-concept.md`.
+2. Produce or update `design/gdd/game-concept.md` using repo-local `../../references/templates/game-concept.md` or installed-skill `../../references/templates/game-concept.md`.
 3. Define 3-5 game pillars and 3 anti-pillars.
 4. Define the core loop at 30 seconds, 5-15 minutes, session, and long-term levels.
 5. Produce `design/gdd/systems-index.md` with MVP systems and dependencies.
-6. For each MVP system, create a system GDD using repo-local `codex-game-studio/references/templates/system-gdd.md` or installed-skill `references/templates/system-gdd.md`.
+6. For each MVP system, create a system GDD using repo-local `../../references/templates/system-gdd.md` or installed-skill `../../references/templates/system-gdd.md`.
 7. Run the six-role review lens:
    - Creative: is the fantasy and hook coherent?
    - Game Design: are rules, loops, and MVP boundaries testable?

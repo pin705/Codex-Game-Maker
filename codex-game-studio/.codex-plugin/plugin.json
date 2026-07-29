@@ -1,14 +1,13 @@
-﻿{
+{
   "name": "codex-game-maker",
   "version": "0.1.0",
-  "description": "A lean Codex game-making workflow for Godot-first games, game-ready GPT Image 2D assets, production planning, and QA gates.",
+  "description": "A Godot-first, end-to-end workflow that builds complete player-ready games with authored gameplay, assets, UI, audio, tests, and evidence gates.",
   "author": {
     "name": "Codex Game Maker",
-    "email": "",
-    "url": ""
+    "url": "https://github.com/pin705"
   },
-  "homepage": "",
-  "repository": "",
+  "homepage": "https://github.com/pin705/Codex-Game-Maker",
+  "repository": "https://github.com/pin705/Codex-Game-Maker",
   "license": "MIT",
   "keywords": [
     "game-development",
@@ -21,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Codex Game Maker",
-    "shortDescription": "Godot-first game-making workflows for Codex.",
-    "longDescription": "A lean game development operating system for Codex: guided concept design, Godot-first engine detection, art bible, game-ready GPT Image 2 sprite/map asset pipeline, architecture templates, and review/QA gates.",
+    "shortDescription": "Build polished, player-ready Godot games end to end.",
+    "longDescription": "Turn a game idea or incomplete prototype into a bounded player-ready Godot experience. Codex Game Maker orchestrates design, complete gameplay states, production 2D assets, game-native HUD and menus, controls, audio, automated tests, runtime captures, manual playtests, and evidence gates without treating a one-screen mock as finished.",
     "developerName": "Codex Game Maker",
     "category": "Developer Tools",
     "capabilities": [
@@ -31,17 +30,12 @@
       "Image Generation",
       "Web Research"
     ],
-    "websiteURL": "",
-    "privacyPolicyURL": "",
-    "termsOfServiceURL": "",
+    "websiteURL": "https://github.com/pin705/Codex-Game-Maker",
     "defaultPrompt": [
-      "Start a new Godot-first game project with Codex Game Maker.",
-      "Turn this game idea into a concept doc, art bible, and first asset prompts.",
-      "Create game-ready 2D sprite assets with transparent frames, GIF preview, metadata, and Godot import notes.",
-      "Audit this existing project and tell me which engine and stage it appears to be.",
-      "Review this game project and run a QA gate before demo/export."
+      "Build this game end to end until it passes the player-ready gate; do not stop at a prototype or mock assets.",
+      "Turn this incomplete Godot prototype into a polished player-ready game with complete UI, controls, art, audio, tests, and playtest evidence.",
+      "Review this game honestly and list every blocker preventing it from reaching players."
     ],
     "brandColor": "#3B82F6"
   }
 }
-

@@ -11,8 +11,8 @@ Use after `game-studio-design` has produced at least a concept and initial syste
 
 Detect the current engine before recommending architecture:
 
-- Repo-local: `codex-game-studio/scripts/guards/detect_engine.ps1`
-- Installed skill: `scripts/guards/detect_engine.ps1`
+- Repo-local: `../../scripts/guards/detect_engine.ps1`
+- Installed skill: `../../scripts/guards/detect_engine.ps1`
 
 Rules:
 - Blank project: recommend Godot 4.4 + Web export.
@@ -26,10 +26,10 @@ Read if present:
 - `design/gdd/game-concept.md`
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
-- `codex-game-studio/references/policies/collaboration-policy.md` or `references/policies/collaboration-policy.md`
-- `codex-game-studio/references/policies/engine-selection.md` or `references/policies/engine-selection.md`
-- `codex-game-studio/references/policies/web-search-policy.md` or `references/policies/web-search-policy.md`
-- `codex-game-studio/references/rules/godot-code.md` or `references/rules/godot-code.md`
+- `../../references/policies/collaboration-policy.md` or `../../references/policies/collaboration-policy.md`
+- `../../references/policies/engine-selection.md` or `../../references/policies/engine-selection.md`
+- `../../references/policies/web-search-policy.md` or `../../references/policies/web-search-policy.md`
+- `../../references/rules/godot-code.md` or `../../references/rules/godot-code.md`
 - `docs/architecture/architecture.md`
 - `docs/architecture/adr-*.md`
 
@@ -47,7 +47,7 @@ Do not invent Godot API details when official docs can be checked.
 
 For new projects, target Godot 4.4. If the local Godot CLI is missing or not 4.4:
 - Warn, but continue with docs and source generation.
-- Tell the user how to run `tools/install-godot.ps1 -WithExportTemplates` or open the project manually in Godot 4.4.
+- Tell the user how to run `../../../tools/install-godot.ps1 -WithExportTemplates` or open the project manually in Godot 4.4.
 - Ask for the Godot executable path if they want Codex to run validation/export.
 - Avoid claiming export/runtime verification was completed.
 
@@ -61,9 +61,9 @@ Common outputs:
 - `production/stories/STORY-[id]-[slug].md` for the next implementation slice when the user is ready to build.
 
 Use templates:
-- `references/templates/architecture.md`
-- `references/templates/adr.md`
-- `references/templates/control-manifest.md`
+- `../../references/templates/architecture.md`
+- `../../references/templates/adr.md`
+- `../../references/templates/control-manifest.md`
 
 ## Architecture Workflow
 
@@ -83,11 +83,11 @@ Use templates:
 7. Create `control-manifest.md` with concrete implementation rules.
    - Gameplay code must use project-specific actions like `move_left`, `move_right`, `jump`, and `restart`; do not rely on Godot default `ui_*` actions.
    - If visible control text mentions WASD, arrows, Space, R, Esc, gamepad, or touch controls, those inputs must be explicitly bound and browser-verified.
-8. Before implementing gameplay code, create one small story from `references/templates/implementation-story.md`.
-9. Run `tools/check-story-gate.ps1 -Mode Ready` for the story.
-10. Run `tools/check-godot-lint.ps1 -Root .` after Godot code changes.
+8. Before implementing gameplay code, create one small story from `../../references/templates/implementation-story.md`.
+9. Run `../../../tools/check-story-gate.ps1 -Mode Ready` for the story.
+10. Run `../../../tools/check-godot-lint.ps1 -Root .` after Godot code changes.
 11. If Godot export is unavailable, report exactly what is missing and how to install/configure Godot 4.4.
-12. For browser preview, prefer `tools/preview-godot-web.ps1 -Project .` after Godot CLI/templates are available.
+12. For browser preview, prefer `../../../tools/preview-godot-web.ps1 -Project .` after Godot CLI/templates are available.
 13. Update production/session-state/active.md.
 
 Do not create a new Godot project or implementation files from a one-line idea before the kickoff/defaults have been confirmed.

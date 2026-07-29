@@ -1,4 +1,4 @@
-﻿---
+---
 name: game-studio-asset-qa
 description: "Validate Codex Game Maker generated 2D assets. Use for checking accepted sprite sheets, transparent PNGs, frames, GIF previews, prop packs, layered map previews, pipeline metadata, chroma-key cleanup, edge cropping, Godot import readiness, and asset gate failures."
 ---
@@ -12,27 +12,27 @@ Use this before generated assets enter gameplay, demos, review, or release.
 Run:
 
 ```powershell
-tools/check-asset-qa.ps1 -Root .
+../../../tools/check-asset-qa.ps1 -Root .
 ```
 
 For any accepted runtime sprite, platform, large prop, map object, or collision-bearing asset, also run the harness gate against the raw image:
 
 ```powershell
-tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>
+../../../tools/check-asset-harness.ps1 -Spec <harness.json> -Input <raw.png>
 ```
 
-Also run `tools/check-asset-tools.ps1` if Python processors or dependencies may be missing.
+Also run `../../../tools/check-asset-tools.ps1` if Python processors or dependencies may be missing.
 
 When QA failures are processor-level issues such as chroma-key residue or safe-padding edge touch, run a dry repair pass before asking the user to regenerate:
 
 ```powershell
-tools/repair-asset-processing.ps1 -Root .
+../../../tools/repair-asset-processing.ps1 -Root .
 ```
 
 Apply only deterministic repairs:
 
 ```powershell
-tools/repair-asset-processing.ps1 -Root . -Apply
+../../../tools/repair-asset-processing.ps1 -Root . -Apply
 ```
 
 ## Context To Read
@@ -44,7 +44,7 @@ Read if present:
 - `design/assets/harnesses/**`
 - `assets/generated/**/pipeline-meta.json`
 - `production/reviews/*.md`
-- `codex-game-studio/references/templates/asset-qa-report.md`
+- `../../references/templates/asset-qa-report.md`
 
 ## QA Checks
 

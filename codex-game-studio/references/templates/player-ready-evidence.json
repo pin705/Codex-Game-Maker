@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "core_loop": "NOT_RUN",
+    "long_run": "NOT_RUN",
+    "visual_quality": "NOT_RUN",
+    "controls": "NOT_RUN",
+    "ui_states": "NOT_RUN",
+    "audio": "NOT_RUN",
+    "manual_playtest": "NOT_RUN"
+  },
+  "artifacts": []
+}

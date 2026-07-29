@@ -4,13 +4,13 @@
 
 ![Codex Game Maker banner](assets/brand/banner.png)
 
-**面向 Codex 的 Godot 优先游戏制作工作流，重点支持可进游戏的 2D 资产和可验证原型。**
+**面向 Codex 的 Godot 优先端到端游戏工作流：目标是完整、精致、可交给玩家，而不是单屏原型。**
 
-**快速跳转：** [安装](#快速开始) · [资产流程](#gpt-image-资产流程) · [引擎支持](#引擎支持) · [Skills](#当前包含) · [专业功能](#专业功能) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
+**快速跳转：** [安装](#快速开始) · [Player-Ready 模式](#player-ready-模式) · [资产流程](#gpt-image-资产流程) · [Skills](#当前包含) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
 
 > 当前状态：`v0.1-alpha`。核心工具已经能跑，但仍是早期预览版。
 
-Codex Game Maker 会把一个 Codex 会话变成轻量游戏制作空间：项目启动、引擎检测、Godot 4.4 安装/注册、sprite/map 资产处理、Godot 导入、轻量 production/review gate，以及可显式开启的专业流程。
+Codex Game Maker 会把一个 Codex 会话变成端到端游戏制作空间：设计、Godot 实现、完整状态、生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图和人工 playtest evidence。
 
 ## 它有什么不同
 
@@ -18,20 +18,29 @@ Codex Game Maker 会把一个 Codex 会话变成轻量游戏制作空间：项�
 |---|---|
 | Godot 优先 | 空白项目默认推荐 Godot 4.4 + Web export。 |
 | 资产可进游戏 | GPT Image 的图不会停在“好看”，而是进入透明帧、GIF、metadata、QA、Godot import。 |
-| 默认流程轻量 | 只有 8 个核心 skills，不做一堆用不上的 agent。 |
-| 专业流程显式开启 | release、team pass、hooks、accessibility、localization 等只在明确触发时启用。 |
+| 端到端负责 | 宽泛的“制作/完成游戏”请求会继续经过玩法、完整状态、资产、UI、音频、测试与 playtest。 |
+| 有设计感的呈现 | art bible 统一驱动 HUD、菜单、图标、字体、动效和音频识别。 |
+| Evidence gate | 单屏、placeholder、默认控件、网页 dashboard 风格 UI、静音或未测试声明都不能通过 player-ready。 |
 | 遇到版本/资源问题会查文档 | 引擎版本、API、Web export、资源生成不满意时优先查官方文档和网络资源。 |
+
+## Player-Ready 模式
+
+“制作这个游戏”“完成这个原型”或“自动从头做到尾”等宽泛请求会进入 `game-studio-build`。除非用户明确只要 prototype，否则默认目标是边界清晰的 `PLAYER_READY` 游戏。
+
+流程会覆盖完整玩家旅程、全部可见状态、角色/环境/反馈/UI/品牌资产、Godot 原生主题与菜单、控制器 focus、音频总线与事件、自动 core-loop/long-run 测试、每个状态的运行证据以及人工 playtest。`player_ready_gate.py` 会阻止 agent 把 mock、空模板或只会启动的场景说成完成。
+
+Gate 能强制 coverage 与 evidence；真正的商业审美仍必须查看运行中的游戏并让真实玩家测试，因此流程要求截图、录屏/监听与 playtest 记录，而不是只看代码自我宣称质量。
 
 ## 当前包含
 
 | 类别 | 数量 | 说明 |
 |---|---:|---|
-| 核心 skills | 8 | start、design、art、sprite、map、asset QA、architecture、review |
-| 工具脚本 | 29 | 安装、注册、导出、预览、资产处理、gate、hook、import |
-| gate 脚本 | 7 | engine、asset、story、production、release、Godot lint、review |
-| 模板 | 31 | GDD、art、asset、story、production、release、QA、import manifest |
+| 核心 skills | 12 | start、build、design、implementation、art、sprite/map、asset QA、UI/UX、audio、architecture、review |
+| 工具脚本 | 32 | 安装、注册、导出、预览、资产处理、gate、hook、import |
+| gate 脚本 | 8 | engine、asset、story、production、release、Godot lint、review、player-ready |
+| 模板 | 40 | GDD、art、状态/coverage、UI/audio、story、production、release、QA、import manifest |
 | 资产处理脚本 | 2 | pixel processor + workflow coordinator |
-| Pro aliases | 10 | `/release`、`/team-*`、`/audio-pass`、`/localization-pass` 等 |
+| Pro aliases | 11 | `/player-ready`、`/release`、`/team-*`、`/audio-pass`、`/localization-pass` 等 |
 
 ## 引擎支持
 
@@ -62,7 +71,7 @@ pwsh -File tools/check-install.ps1
 Use Codex Game Maker to start this game project.
 ```
 
-对于空文件夹、新项目、或者涉及多个系统/资产/工作流的复杂需求，Codex Game Maker 会先进入 planning handshake：总结需求、检测当前项目上下文、给出默认方案、最多问 3 个关键问题，并允许用户回复 `go with defaults` 后再开始创建文件。
+对于空文件夹、新项目、或者涉及多个系统/资产/工作流的复杂需求，Codex Game Maker 会使用精简 kickoff：总结需求、检测项目上下文、给出默认方案、最多问 3 个关键问题。回复 `go with defaults and build it player-ready` 后，日常实现、资产、UI 与音频选择会自动继续，不再反复确认。
 
 如果 Codex 环境支持更大的上下文窗口，建议为长期游戏项目使用最大可用上下文，目标是 1M tokens。仓库文件本身不能强制修改真实会话 context，因此 Codex Game Maker 会通过 planning docs、asset manifests 和 `production/session-state/active.md` 保持连续性。
 
@@ -160,18 +169,19 @@ design/assets/godot-import-manifest.yaml
 | `/release` | 可用 | 发布 checklist、changelog、patch notes、release gate |
 | `/hotfix` | 可用 | 紧急修复流程 |
 | `/hooks-on` | 可用 | 安装可选 professional git hooks |
-| `/team-ui` | 规划中 | UI/UX 专项流程 |
-| `/team-level` | 规划中 | 关卡专项流程 |
-| `/team-combat` | 规划中 | 战斗专项流程 |
-| `/audio-pass` | 规划中 | 音频规划 |
+| `/player-ready` | 可用 | 完整 build、polish 与 evidence 循环 |
+| `/team-ui` | 可用 | 游戏化 UI、响应式布局、focus、accessibility 与运行 QA |
+| `/team-level` | 可用 | 关卡实现、环境集成、过渡与 playtest |
+| `/team-combat` | 可用 | 战斗实现、反馈、平衡、测试与 QA |
+| `/audio-pass` | 可用 | 音频清单、制作/来源、集成、混音、设置与监听 QA |
 | `/narrative-pass` | 规划中 | 叙事检查 |
 | `/localization-pass` | 规划中 | 本地化检查 |
-| `/accessibility-pass` | 规划中 | 无障碍检查 |
+| `/accessibility-pass` | 可用 | 无障碍检查 |
 
 ## 示例提示词
 
 ```text
-Use Codex Game Maker to start a small cozy platformer. Ask at most three important questions, then proceed with reasonable defaults.
+Use Codex Game Maker to build a small cozy platformer player-ready from start to finish. Go with defaults, continue autonomously, and do not stop at a one-screen prototype or mock assets.
 ```
 
 ```text
@@ -191,9 +201,10 @@ powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
 powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
 powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
 powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
+python3 codex-game-studio/scripts/guards/player_ready_gate.py --root .
 ```
 
-这些 gate 用来检查工具完整性、资产可用性、Godot 脚本风险、story/smoke evidence 和发布前基本质量。
+这些 gate 用来检查工具完整性、资产可用性、Godot 脚本风险、完整状态、游戏化 UI、音频、自动测试、运行 artifacts、人工 playtest 与发布前质量。
 
 ## License
 

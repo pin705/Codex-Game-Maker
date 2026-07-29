@@ -14,9 +14,11 @@ Read if present:
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
 - `design/assets/asset-manifest.yaml`
+- `design/assets/asset-coverage.json`
 - repo-local `../../references/policies/collaboration-policy.md` or installed-skill `../../references/policies/collaboration-policy.md`
 - repo-local `../../references/templates/art-bible.md` or installed-skill `../../references/templates/art-bible.md`
 - repo-local `../../references/templates/asset-prompt-spec.yaml` or installed-skill `../../references/templates/asset-prompt-spec.yaml`
+- repo-local `../../references/templates/asset-coverage.json` or installed-skill `../../references/templates/asset-coverage.json`
 - repo-local `../../references/policies/web-search-policy.md` or installed-skill `../../references/policies/web-search-policy.md`
 - repo-local `../../scripts/guards/asset_gate.ps1` or installed-skill `../../scripts/guards/asset_gate.ps1`
 
@@ -27,18 +29,31 @@ If no art bible exists, create or draft `design/art/art-bible.md` before generat
 Use this lifecycle for project-bound assets:
 
 1. Art bible
-2. Asset brief
-3. Prompt spec
-4. Draft generation
-5. Human pick
-6. Post-process or slicing
-7. Manifest update
-8. In-game or mockup verification
-9. Asset gate
+2. Full asset coverage inventory
+3. Asset brief
+4. Prompt spec
+5. Draft generation
+6. Human pick, or best-candidate selection with recorded QA when autonomous execution is approved
+7. Post-process or slicing
+8. Manifest and coverage update
+9. In-game integration and runtime verification
+10. Asset gate
 
 Never leave a project-used generated asset only in Codex's default generated image directory. Move or copy accepted outputs into `assets/generated/`.
 
-Before generating many assets, pause with a short asset brief and ask for confirmation. If the user wants speed, generate only a small first batch, usually 1-3 assets, before scaling up.
+Before generating many assets, use a small representative batch, usually 1-3 assets, to validate the art direction. Ask for confirmation unless the user already approved autonomous execution; in autonomous mode, compare the batch against the art bible, select or revise it with recorded evidence, then continue without routine approval pauses.
+
+## Coverage Contract
+
+For player-ready work, create `design/assets/asset-coverage.json` before bulk production and inventory every player-visible need. Cover at least:
+
+- player characters and all required actions/states
+- enemies, NPCs, interactables, rewards, projectiles, impacts, and gameplay FX
+- environments, levels, props, backgrounds, transitions, and readable collision affordances
+- HUD, menu, settings, tutorial, modal, cursor/focus, and input-prompt art
+- title, logo, icon, loading/fallback, and release branding surfaces
+
+Every required group and asset must move through `planned -> draft -> accepted -> integrated -> verified`. `mock`, `placeholder`, `draft`, `generated`, or `accepted` alone never satisfies player-ready coverage. If a deliberately invisible or procedural asset is appropriate, record the rationale and runtime evidence instead of inventing a file requirement.
 
 ## Route Detailed Asset Work
 
@@ -60,6 +75,8 @@ Do not keep all asset production detail in the art bible. The art bible defines 
 - Runtime sprite and prop assets should use a solid chroma-key raw background and local post-processing to alpha. Default to `#FF00FF`, but choose a different key color when the subject uses magenta, pink, purple, or similar FX colors.
 - Controllable hero multi-action assets must be generated per action first, QA'd, then assembled into delivery atlases only after each action passes.
 - Playable maps must produce runtime data: separate objects, props, collision, zones, exits, camera bounds, or Godot-native nodes. Do not stop at one baked background unless the user asked for background-only art.
+- UI assets must follow `design/ui/ui-ux-spec.md` and the art bible. A collection of generic rounded panels, web cards, default icons, or unrelated decorative images is not a coherent game UI kit.
+- Asset generation is incomplete until accepted files are connected to actual scenes/resources and seen in current runtime evidence. A mockup may guide art direction but cannot prove integration.
 
 ## Web Search Triggers
 
@@ -76,6 +93,7 @@ For resources, prefer official marketplaces, public domain/CC0 sources, creator 
 Common outputs:
 - `design/art/art-bible.md`
 - `design/assets/asset-manifest.yaml`
+- `design/assets/asset-coverage.json`
 - `design/assets/godot-import-manifest.yaml`
 - `design/assets/prompts/<asset-id>.md`
 - `assets/source-prompts/<asset-id>.yaml`
@@ -86,6 +104,7 @@ Common outputs:
 - `assets/generated/<category>/<asset-id>/pipeline-meta.json`
 
 Update `production/session-state/active.md` after each accepted asset batch.
+Update `design/assets/asset-coverage.json` after acceptance, integration, and runtime verification; do not batch-mark unverified assets complete.
 
 ## Asset Gate
 
@@ -110,3 +129,11 @@ The gate should pass before a demo/review when accepted generated assets exist. 
 - sprite assets have frames, GIF preview, alpha, frame count, and chroma-key cleanup evidence
 - map assets have preview, props metadata, collision/zones metadata when gameplay requires them
 - Godot projects have import intent recorded
+
+When `production/player-ready-contract.md` exists, also run:
+
+```bash
+python3 ../../scripts/guards/player_ready_gate.py --root .
+```
+
+Any incomplete required coverage group, missing integrated path, or missing runtime evidence blocks `PLAYER_READY` even when the legacy asset gate passes.

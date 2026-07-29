@@ -1,0 +1,9 @@
+{
+  "groups": [
+    {"id": "player", "required": true, "status": "planned", "assets": [], "evidence": []},
+    {"id": "environment", "required": true, "status": "planned", "assets": [], "evidence": []},
+    {"id": "gameplay-feedback", "required": true, "status": "planned", "assets": [], "evidence": []},
+    {"id": "ui", "required": true, "status": "planned", "assets": [], "evidence": []},
+    {"id": "release-branding", "required": true, "status": "planned", "assets": [], "evidence": []}
+  ]
+}
