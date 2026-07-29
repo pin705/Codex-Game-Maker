@@ -1,6 +1,6 @@
 ﻿# Upgrading Codex Game Maker
 
-Codex Game Maker is currently a v0.2.0-alpha.2 project. Expect fast iteration around tools, templates, release contracts, and asset metadata. This guide keeps local projects upgradeable without losing game work.
+Codex Game Maker is currently a v0.2.0-alpha.3 project. Expect fast iteration around tools, templates, release contracts, and asset metadata. This guide keeps local projects upgradeable without losing game work.
 
 ## Upgrade Principles
 

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.2.0-alpha.3 - 2026-07-29
+
+This cache-visible plugin release contains the dynamic game-state workflow and the strengthened visual-quality and asset-presentation gates described below.
+
 - Replaced fixed title/onboarding/gameplay/pause/settings/victory/defeat assumptions with a schema-v2, game-specific directed state graph covering custom journeys, completion states, recovery paths, experience requirements, and per-journey commands.
 - Replaced fixed asset groups, Godot Theme-only UI, fixed audio event IDs, and fixed evidence check IDs with game-specific coverage contracts while preserving strict integration/evidence validation.
 - Added 24 adversarial player/commercial gate tests, including an endless sandbox without conventional state names, unreachable state/recovery failures, reused state evidence, distorted asset presentation, understated inventory floors, fake one-candidate look-dev, production self-review, unresolved high visual findings, unbound visual captures, interpreter-eval no-ops, and rejection of the legacy fixed dictionary.

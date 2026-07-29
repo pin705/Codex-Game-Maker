@@ -54,7 +54,7 @@ Recommended badges:
 - Godot 4.7.1
 - GPT Image Ready
 - Windows / macOS / Linux
-- v0.2.0-alpha.2
+- v0.2.0-alpha.3
 
 Recommended counts:
 

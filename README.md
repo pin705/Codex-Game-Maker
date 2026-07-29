@@ -9,7 +9,7 @@
 **Quick links:** [Install](#quick-start) · [Player-Ready Mode](#player-ready-mode) · [Commercial Release Mode](#commercial-release-mode) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-v0.2.0--alpha.2-orange)
+![Status](https://img.shields.io/badge/status-v0.2.0--alpha.3-orange)
 ![Godot](https://img.shields.io/badge/Godot-4.7.1-blue)
 ![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 ![Assets](https://img.shields.io/badge/GPT%20Image-2D%20assets-purple)
@@ -21,7 +21,7 @@ Turn a single Codex session into a Godot-first game making workspace.
 
 Godot-first workflows. Product and game design. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Accessibility and localization. Verified builds. Store and launch readiness.
 
-> Status: `v0.2.0-alpha.2`. The player-ready and commercial workflows are executable, but this remains a pre-release tool. A passing gate means the declared contract has verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, or real-player judgment.
+> Status: `v0.2.0-alpha.3`. The player-ready and commercial workflows are executable, but this remains a pre-release tool. A passing gate means the declared contract has verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, or real-player judgment.
 
 Codex Game Maker turns a Codex session into an end-to-end game studio workspace: product planning, game design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, manual playtesting, performance, builds, compliance, localization, accessibility, store marketing, telemetry, support, and rollback planning.
 

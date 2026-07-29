@@ -1,6 +1,6 @@
 ﻿# Contributing
 
-Codex Game Maker is currently `v0.2.0-alpha.2`. Contributions should keep the project approachable, evidence-backed, cross-platform, and Godot-first.
+Codex Game Maker is currently `v0.2.0-alpha.3`. Contributions should keep the project approachable, evidence-backed, cross-platform, and Godot-first.
 
 ## Priorities
 
