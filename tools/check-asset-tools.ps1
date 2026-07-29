@@ -3,10 +3,10 @@ param()
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
-$pythonHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_python.ps1"
-$processor = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_processor.py"
-$workflow = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_workflows.py"
-$harness = Join-Path $repoRoot.Path "codex-game-studio/scripts/assets/cgs_asset_harness.py"
+$pythonHelper = Join-Path $repoRoot.Path "scripts/lib/cgs_python.ps1"
+$processor = Join-Path $repoRoot.Path "scripts/assets/cgs_asset_processor.py"
+$workflow = Join-Path $repoRoot.Path "scripts/assets/cgs_asset_workflows.py"
+$harness = Join-Path $repoRoot.Path "scripts/assets/cgs_asset_harness.py"
 $requirements = Join-Path $repoRoot.Path "requirements-asset-tools.txt"
 
 if (!(Test-Path -LiteralPath $pythonHelper)) {

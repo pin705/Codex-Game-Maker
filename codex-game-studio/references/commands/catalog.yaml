@@ -1,70 +1,127 @@
 activation:
   type: natural-language-alias
-  note: "A broad make/build/finish request already defaults to player-ready. /player-ready makes that target explicit; aliases such as /release and /team-ui select focused professional passes."
+  note: "Aliases route Codex skills. Deterministic execution uses the cross-platform CLI: python3 scripts/cgm.py <doctor|quality|player-ready|commercial-release|export>."
 
 commands:
   - alias: /player-ready
     mode: end-to-end
     recommended_skill: game-studio-build
-    purpose: "Build or continue the complete bounded game through gameplay, assets, UI, audio, tests, runtime evidence, and manual playtest."
+    purpose: "Build and verify the complete bounded player experience."
+    executable: "python3 scripts/cgm.py player-ready --root ."
+    default_status: available
+
+  - alias: /commercial-release
+    mode: commercial
+    recommended_skill: game-studio-commercial-release
+    purpose: "Run every applicable commercial workstream and strict release gate."
+    executable: "python3 scripts/cgm.py commercial-release --root ."
+    default_status: available
+
+  - alias: /quality
+    mode: deterministic
+    recommended_skill: game-studio-review
+    purpose: "Run configured quality commands without a shell and record hashed evidence."
+    executable: "python3 scripts/cgm.py quality --root ."
     default_status: available
 
   - alias: /release
-    mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Prepare platform builds, release checklist, changelog, licensing, performance, packaging evidence, and launch readiness after player-ready passes."
+    mode: commercial
+    recommended_skill: game-studio-commercial-release
+    purpose: "Prepare platform builds, compliance, performance, store package, launch operations, and go/no-go evidence."
     default_status: available
 
   - alias: /hotfix
     mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Triage a released build bug, make the smallest patch, and run focused verification."
+    recommended_skill: game-studio-liveops
+    purpose: "Triage a released-build incident, patch, migrate safely, verify, roll out, and monitor."
+    default_status: available
+
+  - alias: /business-pass
+    mode: commercial
+    recommended_skill: game-studio-business
+    purpose: "Validate audience, market, scope, price, budget, economics, and go/no-go assumptions."
+    default_status: available
+
+  - alias: /platform-pass
+    mode: commercial
+    recommended_skill: game-studio-platforms
+    purpose: "Build, package, sign, test, and prepare each target/store independently."
+    default_status: available
+
+  - alias: /compliance-pass
+    mode: commercial
+    recommended_skill: game-studio-compliance
+    purpose: "Close licensing, privacy, ratings, terms, data, commerce, and external-approval blockers."
+    default_status: available
+
+  - alias: /performance-pass
+    mode: commercial
+    recommended_skill: game-studio-performance
+    purpose: "Measure target-device FPS, frame time, memory, loading, stability, and regression budgets."
     default_status: available
 
   - alias: /team-ui
     mode: professional
     recommended_skill: game-studio-ui-ux
-    purpose: "Design, implement, capture, and QA game-native HUD, menus, controls presentation, responsive layouts, focus, and accessibility."
+    purpose: "Design, implement, capture, and QA authored game-native UI."
     default_status: available
 
   - alias: /team-level
     mode: professional
     recommended_skill: game-studio-implementation
-    purpose: "Implement complete level paths, encounters, environment integration, transitions, and playtest evidence."
+    purpose: "Implement complete level paths, encounters, transitions, assets, tests, and playtests."
     default_status: available
 
   - alias: /team-combat
     mode: professional
     recommended_skill: game-studio-implementation
-    purpose: "Implement combat rules, controls, enemies, feedback, tuning, terminal states, tests, and playtest evidence."
+    purpose: "Implement combat, enemies, feedback, tuning, terminal states, tests, and playtests."
     default_status: available
 
   - alias: /audio-pass
     mode: professional
     recommended_skill: game-studio-audio
-    purpose: "Inventory, create or source, integrate, mix, expose settings for, and verify music, ambience, UI, and gameplay audio."
+    purpose: "Create/source, integrate, mix, configure, listen to, and verify complete audio."
     default_status: available
 
   - alias: /narrative-pass
     mode: professional
-    recommended_skill: game-studio-design
-    purpose: "Review story, dialogue, worldbuilding, and narrative delivery."
-    default_status: planned
+    recommended_skill: game-studio-narrative
+    purpose: "Design and verify production narrative, state, dialogue IDs, content, and runtime branches."
+    default_status: available
 
   - alias: /localization-pass
-    mode: professional
-    recommended_skill: game-studio-review
-    purpose: "Check text surfaces, font risks, string length, and localization readiness."
-    default_status: planned
+    mode: commercial
+    recommended_skill: game-studio-localization
+    purpose: "Externalize, translate, render, capture, and linguistically approve release locales."
+    default_status: available
 
   - alias: /accessibility-pass
-    mode: professional
-    recommended_skill: game-studio-ui-ux
-    purpose: "Check input remapping, focus, color/readability, text scale, subtitles, difficulty assists, and motion comfort."
+    mode: commercial
+    recommended_skill: game-studio-accessibility
+    purpose: "Implement and test declared accessibility features with player evidence."
+    default_status: available
+
+  - alias: /online-pass
+    mode: commercial
+    recommended_skill: game-studio-online-services
+    purpose: "Verify backend, multiplayer, identity, data, security, load, failure, backup, and restore."
+    default_status: available
+
+  - alias: /liveops-pass
+    mode: commercial
+    recommended_skill: game-studio-liveops
+    purpose: "Prepare telemetry, crashes, alerts, incidents, rollback, support, community, and patches."
+    default_status: available
+
+  - alias: /marketing-pass
+    mode: commercial
+    recommended_skill: game-studio-marketing
+    purpose: "Create truthful, current, localized, rights-cleared store and launch assets."
     default_status: available
 
   - alias: /hooks-on
     mode: professional
     recommended_skill: game-studio-review
-    purpose: "Install optional professional git hooks for gate automation."
+    purpose: "Install optional professional git hooks for legacy gate automation."
     default_status: available

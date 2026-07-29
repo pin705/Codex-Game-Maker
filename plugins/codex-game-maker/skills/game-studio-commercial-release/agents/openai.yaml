@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Commercial Release"
+  short_description: "Gate a game for real commercial release"
+  default_prompt: "Use $game-studio-commercial-release to prepare and verify this game for commercial launch."

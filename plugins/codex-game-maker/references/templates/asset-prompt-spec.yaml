@@ -3,7 +3,7 @@ name: ""
 category: ""
 asset_kind: "sprite"
 intended_use: ""
-target_engine: "Godot 4.4"
+target_engine: "Godot 4.7.1"
 target_display_size: ""
 runtime_role: ""
 source_design:

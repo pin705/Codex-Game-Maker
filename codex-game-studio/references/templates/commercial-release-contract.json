@@ -1,0 +1,21 @@
+{
+  "status": "draft",
+  "release_id": "",
+  "release_type": "premium-launch",
+  "version": "",
+  "build_commit": "",
+  "engine": {"name": "Godot", "version": ""},
+  "target_platforms": [],
+  "stores": [],
+  "release_locales": ["en"],
+  "audience": {"minimum_age": null, "children_targeted": false},
+  "business_model": {"type": "premium", "price": null, "iap": false, "ads": false, "dlc": false},
+  "narrative_in_scope": false,
+  "online_features": {"enabled": false, "services": [], "accounts": false, "chat": false, "ugc": false},
+  "data_practices": {"collects_data": false, "third_party_sdks": []},
+  "live_service": false,
+  "external_approvals": [
+    {"id": "release-owner", "owner": "", "status": "planned", "decided_on": "", "evidence": []},
+    {"id": "legal-owner", "owner": "", "status": "planned", "decided_on": "", "evidence": []}
+  ]
+}

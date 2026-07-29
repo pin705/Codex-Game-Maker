@@ -1,7 +1,7 @@
 # Architecture: [Game Title]
 
 Status: Draft
-Engine: Godot 4.4 unless existing project detection says otherwise
+Engine: Godot 4.7.1 unless existing project detection says otherwise
 
 ## Engine Detection
 

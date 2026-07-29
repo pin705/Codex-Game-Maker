@@ -7,8 +7,14 @@ phases:
     required:
       - design/gdd/game-concept.md
       - design/art/art-bible.md
-    next: systems-design
+    next: business-validation
     recommended_skill: game-studio-design
+
+  business-validation:
+    required:
+      - business/product-brief.md
+    next: systems-design
+    recommended_skill: game-studio-business
 
   systems-design:
     required:
@@ -25,12 +31,14 @@ phases:
       - design/ui/ui-ux-spec.md
       - design/audio/audio-manifest.json
       - production/evidence/player-ready.json
+      - production/quality-command-manifest.json
     next: technical-setup
     recommended_skill: game-studio-build
 
   technical-setup:
     required:
       - project.godot
+      - export_presets.cfg
       - docs/architecture/adr-*.md
     next: architecture
     recommended_skill: game-studio-architecture
@@ -39,6 +47,7 @@ phases:
     required:
       - docs/architecture/architecture.md
       - docs/architecture/control-manifest.md
+      - production/quality-command-manifest.json
     next: implementation
     recommended_skill: game-studio-architecture
 
@@ -54,6 +63,12 @@ phases:
     required:
       - production/stories/STORY-*.md
     recommended_skill: game-studio-implementation
+
+  narrative:
+    conditional: production/commercial-release-contract.json#narrative_in_scope
+    required:
+      - design/narrative/narrative-bible.md
+    recommended_skill: game-studio-narrative
 
   art-assets:
     required:
@@ -74,16 +89,22 @@ phases:
     required:
       - design/ui/ui-ux-spec.md
       - design/game-state-matrix.json
-      - production/evidence/player-ready.json
+      - production/reviews/*visual*.md
     next: audio
     recommended_skill: game-studio-ui-ux
 
   audio:
     required:
       - design/audio/audio-manifest.json
-      - production/evidence/player-ready.json
-    next: integration-qa
+      - production/reviews/*audio*.md
+    next: accessibility
     recommended_skill: game-studio-audio
+
+  accessibility:
+    required:
+      - design/accessibility/accessibility-conformance.json
+    next: integration-qa
+    recommended_skill: game-studio-accessibility
 
   production:
     required:
@@ -97,14 +118,9 @@ phases:
       - production/smoke-tests/*.md
       - production/regression/*.md
       - production/playtests/*.md
+      - production/evidence/quality-run.json
       - production/evidence/player-ready.json
     next: player-ready
-    recommended_skill: game-studio-review
-
-  smoke-qa:
-    required:
-      - production/smoke-tests/*.md
-      - production/regression/*.md
     recommended_skill: game-studio-review
 
   player-ready:
@@ -114,18 +130,85 @@ phases:
       - design/assets/asset-coverage.json
       - design/ui/ui-ux-spec.md
       - design/audio/audio-manifest.json
+      - production/evidence/quality-run.json
       - production/evidence/player-ready.json
       - production/playtests/*.md
+      - production/reviews/*visual*.md
+      - production/reviews/*audio*.md
       - tests/**/*.gd
+    command: python3 scripts/cgm.py player-ready --root .
     gate: scripts/guards/player_ready_gate.py
     recommended_skill: game-studio-build
+
+  commercial-contract:
+    required:
+      - production/commercial-release-contract.json
+      - business/product-brief.md
+    next: platform-builds
+    recommended_skill: game-studio-commercial-release
+
+  platform-builds:
+    required:
+      - production/build-matrix.json
+      - production/quality-command-manifest.json
+    next: performance
+    recommended_skill: game-studio-platforms
+
+  performance:
+    required:
+      - production/performance-budget.json
+      - production/evidence/performance/**
+    next: compliance
+    recommended_skill: game-studio-performance
+
+  compliance:
+    required:
+      - production/compliance-manifest.json
+      - docs/legal/third-party-notices.md
+      - docs/legal/data-inventory.md
+    next: localization
+    recommended_skill: game-studio-compliance
+
+  localization:
+    required:
+      - design/localization/localization-manifest.json
+    next: marketing
+    recommended_skill: game-studio-localization
+
+  online-services:
+    conditional: production/commercial-release-contract.json#online_features.enabled
+    required:
+      - docs/online/online-services-plan.md
+      - docs/security/threat-model.md
+    recommended_skill: game-studio-online-services
+
+  marketing:
+    required:
+      - marketing/store-manifest.json
+    next: liveops
+    recommended_skill: game-studio-marketing
+
+  liveops:
+    required:
+      - production/liveops-plan.md
+      - production/telemetry-crash-plan.md
+    next: commercial-release
+    recommended_skill: game-studio-liveops
+
+  commercial-release:
+    required:
+      - production/commercial-release-contract.json
+      - production/evidence/commercial-release-gate.json
+    command: python3 scripts/cgm.py commercial-release --root .
+    gate: scripts/guards/commercial_release_gate.py
+    recommended_skill: game-studio-commercial-release
 
   release:
     required:
       - production/releases/*release*.md
-      - production/evidence/player-ready.json
+      - production/evidence/commercial-release-gate.json
       - CHANGELOG.md
-    recommended_skill: game-studio-review
+    recommended_skill: game-studio-commercial-release
 
   review:
     required:
@@ -135,22 +218,32 @@ phases:
 
 defaults:
   engine: godot
-  blank_project_recommendation: "Godot 4.4 + Web export"
+  godot_version_policy: references/policies/godot-version-policy.json
+  blank_project_recommendation: "Godot 4.7.1 stable + declared export targets"
   broad_build_outcome: player-ready
+  commercial_build_outcome: commercial-release
   review_mode: evidence-first
   story_mode: small-complete-player-slice
   asset_mode: complete-coverage-integrated-and-runtime-verified
   ui_mode: authored-game-native-and-responsive
   audio_mode: integrated-mixed-and-listened
-  qa_mode: automated-runtime-visual-audio-and-manual-playtest
-  professional_mode: explicit-alias-only
-  release_mode: player-ready-plus-platform-release-gates
+  qa_mode: executable-commands-valid-media-runtime-and-human-playtest
+  release_mode: strict-cross-platform-commercial-gate
   core_roles:
+    - business
     - creative
     - game-design
+    - narrative
     - art
     - ui-ux
     - audio
+    - accessibility
+    - localization
     - technical
+    - online-services
+    - performance
+    - compliance
+    - marketing
     - production
     - qa
+    - liveops

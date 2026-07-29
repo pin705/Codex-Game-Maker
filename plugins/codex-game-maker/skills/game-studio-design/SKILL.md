@@ -20,7 +20,7 @@ Read if present:
 - repo-local `../../references/policies/web-search-policy.md` or installed-skill `../../references/policies/web-search-policy.md`
 - repo-local `../../references/templates/kickoff-brief.md` or installed-skill `../../references/templates/kickoff-brief.md`
 
-Before engine recommendations, detect existing project files. Blank projects default to Godot 4.4 + Web export.
+Before engine recommendations, detect existing project files. Blank projects default to Godot 4.7.1 + Web export.
 
 ## Lean Kickoff Requirement
 

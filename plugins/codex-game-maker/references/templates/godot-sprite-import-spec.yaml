@@ -1,5 +1,5 @@
 bundle_id: HERO-000
-godot_version: "4.4"
+godot_version: "4.7.1"
 target:
   spriteframes: resources/animations/HERO-000_spriteframes.tres
   scene: scenes/characters/HERO-000.tscn

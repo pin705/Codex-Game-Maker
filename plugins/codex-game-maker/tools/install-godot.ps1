@@ -1,5 +1,7 @@
 param(
   [string]$InstallDir = "",
+  [string]$Version = "4.7.1",
+  [string]$Status = "stable",
   [switch]$NoPath,
   [switch]$WithExportTemplates,
   [switch]$Force
@@ -15,17 +17,15 @@ if (!(Test-Path -LiteralPath $platformHelper)) {
 
 . $platformHelper
 
-$version = "4.4"
-$status = "stable"
 if ([string]::IsNullOrWhiteSpace($InstallDir)) {
   $InstallDir = Join-Path $repoRoot.Path ".tools/godot"
 }
 
 $installBase = [System.IO.Path]::GetFullPath($InstallDir)
-$profile = Get-CgsGodotInstallProfile -Version $version -Status $status -InstallBase $installBase
+$profile = Get-CgsGodotInstallProfile -Version $Version -Status $Status -InstallBase $installBase
 $zipPath = Join-Path $profile.install_root $profile.file_name
 
-Write-Host "Codex Game Maker - Godot 4.4 Setup"
+Write-Host "Codex Game Maker - Godot $Version Setup"
 Write-Host "Detected OS: $($profile.platform) ($($profile.architecture))"
 Write-Host "Install directory: $($profile.install_root)"
 Write-Host "Command wrapper: $($profile.wrapper_path)"
@@ -33,9 +33,9 @@ Write-Host "Command wrapper: $($profile.wrapper_path)"
 New-Item -ItemType Directory -Force -Path $profile.install_root | Out-Null
 
 if ((Test-Path -LiteralPath $profile.executable_path) -and !$Force) {
-  Write-Host "Godot 4.4 already exists: $($profile.executable_path)"
+  Write-Host "Godot $Version already exists: $($profile.executable_path)"
 } else {
-  Write-Host "Downloading Godot 4.4 stable from official GitHub release..."
+  Write-Host "Downloading Godot $Version $Status from official GitHub release..."
   Write-Host "  $($profile.download_url)"
   Invoke-WebRequest -Uri $profile.download_url -OutFile $zipPath
 
@@ -45,7 +45,7 @@ if ((Test-Path -LiteralPath $profile.executable_path) -and !$Force) {
 
   if (!(Test-Path -LiteralPath $profile.executable_path)) {
     $found = Get-ChildItem -LiteralPath $profile.install_root -Recurse -File -ErrorAction SilentlyContinue |
-      Where-Object { $_.Name -like "Godot_v4.4-stable*" -or $_.Name -eq "Godot" } |
+      Where-Object { $_.Name -like "Godot_v$Version-$Status*" -or $_.Name -eq "Godot" } |
       Select-Object -First 1
     if ($found) {
       Write-Host "Found extracted Godot executable candidate: $($found.FullName)"
@@ -87,7 +87,7 @@ if ($WithExportTemplates) {
 
   Write-Host ""
   Write-Host "Installing Godot export templates for browser preview..."
-  Invoke-CgsPowerShellScript -ScriptPath $templatesScript
+  Invoke-CgsPowerShellScript -ScriptPath $templatesScript -ArgumentList @("-Version", $Version, "-Status", $Status)
   if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } else {
   Write-Host ""
@@ -98,5 +98,4 @@ if ($WithExportTemplates) {
     Write-Host "  pwsh -File tools/install-godot-export-templates.ps1"
   }
 }
-
 

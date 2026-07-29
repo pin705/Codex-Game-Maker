@@ -1,0 +1,15 @@
+{
+  "status": "draft",
+  "items": [
+    {"id": "asset-rights", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "dependency-licenses", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "ai-provenance", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "privacy-data-inventory", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "privacy-policy-decision", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "content-rating", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "third-party-notices", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "platform-terms", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "commerce-disclosures", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []},
+    {"id": "secrets-scan", "required": true, "status": "planned", "owner": "", "source": "", "rationale": "", "evidence": []}
+  ]
+}

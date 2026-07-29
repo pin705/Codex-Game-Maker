@@ -6,21 +6,22 @@
 
 **面向 Codex 的 Godot 优先端到端游戏工作流：目标是完整、精致、可交给玩家，而不是单屏原型。**
 
-**快速跳转：** [安装](#快速开始) · [Player-Ready 模式](#player-ready-模式) · [资产流程](#gpt-image-资产流程) · [Skills](#当前包含) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
+**快速跳转：** [安装](#快速开始) · [Player-Ready 模式](#player-ready-模式) · [商业发布模式](#商业发布模式) · [资产流程](#gpt-image-资产流程) · [Skills](#当前包含) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
 
-> 当前状态：`v0.1-alpha`。核心工具已经能跑，但仍是早期预览版。
+> 当前状态：`v0.2.0-alpha.1`。Player-ready 与商业发布流程均可执行，但仍是预发布工具。Gate 通过只代表声明范围内已有可验证证据，不能替代平台认证、法律顾问、签名授权、商店审核或真实玩家判断。
 
-Codex Game Maker 会把一个 Codex 会话变成端到端游戏制作空间：设计、Godot 实现、完整状态、生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图和人工 playtest evidence。
+Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产品与游戏设计、Godot 实现、完整状态、生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图、人工 playtest、性能、构建、合规、本地化、无障碍、商店素材、遥测、客服与回滚计划。
 
 ## 它有什么不同
 
 | 方向 | 说明 |
 |---|---|
-| Godot 优先 | 空白项目默认推荐 Godot 4.4 + Web export。 |
+| Godot 优先 | 空白项目遵循已验证的版本策略；当前推荐 Godot 4.7.1，支持 4.6/4.7 系列。 |
 | 资产可进游戏 | GPT Image 的图不会停在“好看”，而是进入透明帧、GIF、metadata、QA、Godot import。 |
 | 端到端负责 | 宽泛的“制作/完成游戏”请求会继续经过玩法、完整状态、资产、UI、音频、测试与 playtest。 |
 | 有设计感的呈现 | art bible 统一驱动 HUD、菜单、图标、字体、动效和音频识别。 |
 | Evidence gate | 单屏、placeholder、默认控件、网页 dashboard 风格 UI、静音或未测试声明都不能通过 player-ready。 |
+| 商业全流程 | 商业目标、平台、性能、合规、本地化、无障碍、营销、在线服务、发布、客服、遥测与回滚最终汇入一个 release contract。 |
 | 遇到版本/资源问题会查文档 | 引擎版本、API、Web export、资源生成不满意时优先查官方文档和网络资源。 |
 
 ## Player-Ready 模式
@@ -29,24 +30,51 @@ Codex Game Maker 会把一个 Codex 会话变成端到端游戏制作空间：�
 
 流程会覆盖完整玩家旅程、全部可见状态、角色/环境/反馈/UI/品牌资产、Godot 原生主题与菜单、控制器 focus、音频总线与事件、自动 core-loop/long-run 测试、每个状态的运行证据以及人工 playtest。`player_ready_gate.py` 会阻止 agent 把 mock、空模板或只会启动的场景说成完成。
 
-Gate 能强制 coverage 与 evidence；真正的商业审美仍必须查看运行中的游戏并让真实玩家测试，因此流程要求截图、录屏/监听与 playtest 记录，而不是只看代码自我宣称质量。
+Gate 会验证真实媒体签名、至少五个不同运行状态、资产 provenance/runtime references、绑定当前项目 fingerprint 的命令日志与哈希、视觉/音频 review，以及人工 playtest evidence。真正的审美质量仍必须查看运行中的游戏并让真实玩家测试。
+
+## 商业发布模式
+
+`/commercial-release` 会把已通过 player-ready 的候选版本推进为“针对明确平台、语言、商业模式、在线范围与发布层级”的 release candidate，而不是笼统声称一个 build 在所有平台都已商业就绪。
+
+它会增加：
+
+1. 目标用户、市场定位、范围、预算、定价、商业化与 go/no-go 假设。
+2. 固定版本的平台 build matrix、可复现导出、artifact hash、签名/公证状态、smoke test 与商店准备度。
+3. 目标设备上的 frame time、内存、加载、稳定性与回归预算。
+4. 版权/来源、隐私/数据、评级、条款、支付、年龄义务与审批记录。
+5. 字符串外置、语言覆盖、字体、溢出截图、语言审校、无障碍符合性与目标设备测试。
+6. 真实且版权清晰的商店素材与声明，以及发布运营、遥测/crash、客服、事故响应、回滚和补丁计划。
+7. 在适用时验证叙事连续性，以及在线服务的安全、负载、故障、备份与恢复。
+
+跨平台 CLI：
+
+```bash
+python3 scripts/cgm.py doctor --root /path/to/game
+python3 scripts/cgm.py quality --root /path/to/game
+python3 scripts/cgm.py player-ready --root /path/to/game
+python3 scripts/cgm.py commercial-release --root /path/to/game
+```
+
+法律/评级批准、保密主机认证、商店账号决策、签名凭据与不可逆发布必须由对应授权人完成；插件会把它们保留为 blocker，不会伪造通过。
 
 ## 当前包含
 
 | 类别 | 数量 | 说明 |
 |---|---:|---|
-| 核心 skills | 12 | start、build、design、implementation、art、sprite/map、asset QA、UI/UX、audio、architecture、review |
+| 核心 skills | 23 | Player-ready 全流程，加 business、commercial release、platform、compliance、performance、localization、accessibility、narrative、online、liveops、marketing |
 | 工具脚本 | 32 | 安装、注册、导出、预览、资产处理、gate、hook、import |
-| gate 脚本 | 8 | engine、asset、story、production、release、Godot lint、review、player-ready |
-| 模板 | 40 | GDD、art、状态/coverage、UI/audio、story、production、release、QA、import manifest |
+| 顶层 Python CLI 脚本 | 4 | 跨平台 doctor/orchestrator、quality runner、Godot installer 与 exporter |
+| gate 脚本 | 9 | engine、asset、story、production、release、Godot lint、review、player-ready、commercial release |
+| 模板 | 57 | GDD/art/UI/audio/evidence，以及 business、build、performance、compliance、localization、accessibility、marketing、security、telemetry、liveops |
 | 资产处理脚本 | 2 | pixel processor + workflow coordinator |
-| Pro aliases | 11 | `/player-ready`、`/release`、`/team-*`、`/audio-pass`、`/localization-pass` 等 |
+| 自然语言 aliases | 20 | `/player-ready`、`/commercial-release`、`/quality` 与各专业 pass |
 
 ## 引擎支持
 
 | 引擎 / 技术栈 | 支持等级 | 当前能力 |
 |---|---:|---|
-| Godot 4.4 | 一等支持 | 检测、安装/注册、Web 导出、浏览器预览、GDScript lint、sprite 导入、map 场景导入 |
+| Godot 4.7.1 | 推荐 | 跨平台安装/导出、export templates、检测/注册、Web 预览、GDScript lint、sprite/map 导入 |
+| Godot 4.6 / 4.7 | 支持 | 发布候选必须固定项目使用的精确引擎与 export-template 版本 |
 | Phaser / Three.js / PixiJS / HTML canvas | 基础适配 | 能识别并尊重已有 Web 项目；空白项目仍默认推荐 Godot |
 | Unity | 检测与接管 | 能识别并保留已有 Unity 项目；暂时没有 Unity 专业流程 |
 | Unreal | 检测与接管 | 能识别并保留已有 Unreal 项目；暂时没有 Unreal 专业流程 |
@@ -77,7 +105,19 @@ Use Codex Game Maker to start this game project.
 
 ## Godot
 
-安装 Godot 4.4 和 Web 导出模板：
+在 Windows、macOS 或 Linux 安装版本策略推荐的 Godot 与对应 export templates：
+
+```bash
+python3 codex-game-studio/scripts/cgm.py install-godot --with-export-templates
+```
+
+只查看下载与安装计划：
+
+```bash
+python3 codex-game-studio/scripts/cgm.py install-godot --dry-run
+```
+
+兼容 PowerShell 入口：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\install-godot.ps1 -WithExportTemplates
@@ -86,7 +126,7 @@ powershell -ExecutionPolicy Bypass -File tools\install-godot.ps1 -WithExportTemp
 如果本机已经有 Godot，可以注册已有路径：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\register-godot.ps1 -GodotPath "F:\Godot_v4.4-stable_mono_win64\Godot_v4.4-stable_mono_win64"
+powershell -ExecutionPolicy Bypass -File tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
 ```
 
 浏览器预览：
@@ -166,17 +206,26 @@ design/assets/godot-import-manifest.yaml
 
 | 别名 | 状态 | 用途 |
 |---|---:|---|
-| `/release` | 可用 | 发布 checklist、changelog、patch notes、release gate |
+| `/commercial-release` | 可用 | 执行声明平台的完整商业工作流与严格 gate |
+| `/quality` | 可用 | 执行 argv 命令并记录带哈希的质量证据 |
+| `/release` | 可用 | 准备 build、合规、商店包、发布运营与 go/no-go evidence |
 | `/hotfix` | 可用 | 紧急修复流程 |
 | `/hooks-on` | 可用 | 安装可选 professional git hooks |
 | `/player-ready` | 可用 | 完整 build、polish 与 evidence 循环 |
+| `/business-pass` | 可用 | 验证用户、市场、范围、定价、预算、经济模型与 go/no-go 假设 |
 | `/team-ui` | 可用 | 游戏化 UI、响应式布局、focus、accessibility 与运行 QA |
 | `/team-level` | 可用 | 关卡实现、环境集成、过渡与 playtest |
 | `/team-combat` | 可用 | 战斗实现、反馈、平衡、测试与 QA |
 | `/audio-pass` | 可用 | 音频清单、制作/来源、集成、混音、设置与监听 QA |
-| `/narrative-pass` | 规划中 | 叙事检查 |
-| `/localization-pass` | 规划中 | 本地化检查 |
+| `/narrative-pass` | 可用 | 叙事状态、dialogue ID、运行分支、连续性与内容 QA |
+| `/localization-pass` | 可用 | 字符串外置、字体、语言覆盖、溢出截图与语言审校 |
 | `/accessibility-pass` | 可用 | 无障碍检查 |
+| `/platform-pass` | 可用 | 分平台导出、打包、签名、hash、smoke test 与商店准备 |
+| `/performance-pass` | 可用 | 目标设备性能测量与回归预算 |
+| `/compliance-pass` | 可用 | 权利、隐私、评级、支付、数据、条款与外部批准 |
+| `/online-pass` | 可用 | 身份、数据、安全、负载、故障、备份与恢复 |
+| `/liveops-pass` | 可用 | 遥测、crash、客服、事故、回滚与补丁 |
+| `/marketing-pass` | 可用 | 真实、最新、本地化且版权清晰的商店与发布素材 |
 
 ## 示例提示词
 
@@ -202,9 +251,10 @@ powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
 powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
 powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
 python3 codex-game-studio/scripts/guards/player_ready_gate.py --root .
+python3 codex-game-studio/scripts/cgm.py commercial-release --root .
 ```
 
-这些 gate 用来检查工具完整性、资产可用性、Godot 脚本风险、完整状态、游戏化 UI、音频、自动测试、运行 artifacts、人工 playtest 与发布前质量。
+这些 gate 用来检查工具完整性、资产可用性、Godot 脚本风险、完整状态、游戏化 UI、音频、自动测试、运行 artifacts、人工 playtest，以及商业发布所需的版本化 build、性能、合规、本地化、无障碍、营销、在线服务与 liveops evidence。
 
 ## License
 

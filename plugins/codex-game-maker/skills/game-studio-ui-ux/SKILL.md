@@ -18,7 +18,8 @@ Read:
 - `design/assets/asset-coverage.json`
 - relevant system GDDs and current runtime screenshots
 
-Create `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md` if absent.
+Create `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md` if absent. Fill `Theme resource:` with a real project-local Godot `.tres` Theme; a prose-only style description cannot pass player-ready.
+Route full barrier/conformance testing to `game-studio-accessibility`; UI focus and contrast alone do not constitute a complete accessibility pass.
 
 ## Visual Direction Contract
 
@@ -58,6 +59,7 @@ Implement and capture every required state from the game-state matrix, including
 2. Review hierarchy, art-bible coherence, gameplay obstruction, scale, clipping, safe zones, text contrast, focus, and input prompts.
 3. Reject “technically present” UI that still resembles generic HTML/dashboard composition.
 4. Fix blocker/high findings and recapture the affected states.
-5. Record evidence paths in `design/game-state-matrix.json` and `production/evidence/player-ready.json`.
+5. Complete `production/reviews/visual-quality.md` from `../../references/templates/visual-quality-review.md` with reviewer, build/commit, current project-local media, its SHA-256, and `Gate: PASS` only after reviewing the actual captures.
+6. Record evidence paths in `design/game-state-matrix.json` and `production/evidence/player-ready.json`.
 
 Do not mark UI complete from scene-tree inspection alone. Require runtime captures and controller/keyboard navigation evidence.

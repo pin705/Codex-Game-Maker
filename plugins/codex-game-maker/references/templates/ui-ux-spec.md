@@ -11,6 +11,7 @@ Materials, shape language, palette, typography, iconography, depth and ornament:
 | State | Player goal | Required components | Input modes | Evidence |
 |---|---|---|---|---|
 | Title | Start/continue | | | |
+| Onboarding | Learn controls and first objective | | | |
 | Gameplay | Read and act | | | |
 | Pause | Resume or leave | | | |
 | Settings | Configure | | | |
@@ -26,6 +27,7 @@ Center-playfield protection:
 ## Component System
 
 Theme/style resources:
+Theme resource: res://[path-to-game-theme.tres]
 Panels and frames:
 Buttons and focus states:
 Meters, cards, tooltips and prompts:

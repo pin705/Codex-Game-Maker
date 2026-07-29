@@ -82,9 +82,9 @@ foreach ($key in $signals.Keys) {
 
 $recommendation = if ($detected.Count -eq 0) {
   if ($nestedProjects.Godot.Count -gt 0) {
-    "No root engine project detected. Nested Godot project(s) found: $($nestedProjects.Godot -join ', '). Open one of those folders, or start a new root project with Godot 4.4 + Web export."
+    "No root engine project detected. Nested Godot project(s) found: $($nestedProjects.Godot -join ', '). Open one of those folders, or start a new root project with Godot 4.7.1 + Web export."
   } else {
-    "Blank project: recommend Godot 4.4 + Web export."
+    "Blank project: recommend Godot 4.7.1 + Web export."
   }
 } elseif ($detected -contains "Godot") {
   "Existing Godot project: continue with Godot."

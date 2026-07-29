@@ -5,11 +5,15 @@
   "events": [
     {"id": "ui-confirm", "status": "planned", "asset": "", "trigger": ""},
     {"id": "ui-back", "status": "planned", "asset": "", "trigger": ""},
+    {"id": "ui-focus", "status": "planned", "asset": "", "trigger": ""},
+    {"id": "ui-invalid", "status": "planned", "asset": "", "trigger": ""},
     {"id": "player-action", "status": "planned", "asset": "", "trigger": ""},
     {"id": "damage-or-failure", "status": "planned", "asset": "", "trigger": ""},
     {"id": "reward", "status": "planned", "asset": "", "trigger": ""},
     {"id": "victory", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "defeat", "status": "planned", "asset": "", "trigger": ""}
+    {"id": "defeat", "status": "planned", "asset": "", "trigger": ""},
+    {"id": "music-main", "status": "planned", "asset": "", "trigger": ""},
+    {"id": "ambience-gameplay", "status": "planned", "asset": "", "trigger": ""}
   ],
   "evidence": []
 }

@@ -1,4 +1,4 @@
-﻿param(
+param(
   [string]$Root = "."
 )
 
@@ -6,19 +6,19 @@ $ErrorActionPreference = "Stop"
 
 $repo = Resolve-Path -LiteralPath $Root
 $repoPath = $repo.Path
-$pluginJson = Join-Path $repoPath "codex-game-studio/.codex-plugin/plugin.json"
-$skillsRoot = Join-Path $repoPath "codex-game-studio/skills"
-$platformHelper = Join-Path $repoPath "codex-game-studio/scripts/lib/cgs_platform.ps1"
-$engineDetector = Join-Path $repoPath "codex-game-studio/scripts/guards/detect_engine.ps1"
-$reviewGate = Join-Path $repoPath "codex-game-studio/scripts/guards/review_gate.ps1"
-$storyGate = Join-Path $repoPath "codex-game-studio/scripts/guards/story_gate.ps1"
-$assetGate = Join-Path $repoPath "codex-game-studio/scripts/guards/asset_gate.ps1"
-$godotLintGate = Join-Path $repoPath "codex-game-studio/scripts/guards/godot_lint_gate.ps1"
-$productionGate = Join-Path $repoPath "codex-game-studio/scripts/guards/production_gate.ps1"
-$releaseGate = Join-Path $repoPath "codex-game-studio/scripts/guards/release_gate.ps1"
-$assetProcessor = Join-Path $repoPath "codex-game-studio/scripts/assets/cgs_asset_processor.py"
-$assetHarness = Join-Path $repoPath "codex-game-studio/scripts/assets/cgs_asset_harness.py"
-$pythonHelper = Join-Path $repoPath "codex-game-studio/scripts/lib/cgs_python.ps1"
+$pluginJson = Join-Path $repoPath ".codex-plugin/plugin.json"
+$skillsRoot = Join-Path $repoPath "skills"
+$platformHelper = Join-Path $repoPath "scripts/lib/cgs_platform.ps1"
+$engineDetector = Join-Path $repoPath "scripts/guards/detect_engine.ps1"
+$reviewGate = Join-Path $repoPath "scripts/guards/review_gate.ps1"
+$storyGate = Join-Path $repoPath "scripts/guards/story_gate.ps1"
+$assetGate = Join-Path $repoPath "scripts/guards/asset_gate.ps1"
+$godotLintGate = Join-Path $repoPath "scripts/guards/godot_lint_gate.ps1"
+$productionGate = Join-Path $repoPath "scripts/guards/production_gate.ps1"
+$releaseGate = Join-Path $repoPath "scripts/guards/release_gate.ps1"
+$assetProcessor = Join-Path $repoPath "scripts/assets/cgs_asset_processor.py"
+$assetHarness = Join-Path $repoPath "scripts/assets/cgs_asset_harness.py"
+$pythonHelper = Join-Path $repoPath "scripts/lib/cgs_python.ps1"
 $assetRequirements = Join-Path $repoPath "requirements-asset-tools.txt"
 $godotChecker = Join-Path $repoPath "tools/check-godot.ps1"
 $reviewGateWrapper = Join-Path $repoPath "tools/check-review-gate.ps1"
@@ -27,13 +27,13 @@ $assetGateWrapper = Join-Path $repoPath "tools/check-asset-gate.ps1"
 $assetQaWrapper = Join-Path $repoPath "tools/check-asset-qa.ps1"
 $assetToolsWrapper = Join-Path $repoPath "tools/check-asset-tools.ps1"
 $keyColorSuggestWrapper = Join-Path $repoPath "tools/suggest-key-color.ps1"
-$assetWorkflow = Join-Path $repoPath "codex-game-studio/scripts/assets/cgs_asset_workflows.py"
+$assetWorkflow = Join-Path $repoPath "scripts/assets/cgs_asset_workflows.py"
 $godotLintWrapper = Join-Path $repoPath "tools/check-godot-lint.ps1"
 $productionGateWrapper = Join-Path $repoPath "tools/check-production-gate.ps1"
 $releaseGateWrapper = Join-Path $repoPath "tools/check-release-gate.ps1"
-$commandsCatalog = Join-Path $repoPath "codex-game-studio/references/commands/catalog.yaml"
-$playableShowcaseRules = Join-Path $repoPath "codex-game-studio/references/rules/playable-showcase-integration.md"
-$topdownSurvivorRules = Join-Path $repoPath "codex-game-studio/references/rules/topdown-survivor-character-assets.md"
+$commandsCatalog = Join-Path $repoPath "references/commands/catalog.yaml"
+$playableShowcaseRules = Join-Path $repoPath "references/rules/playable-showcase-integration.md"
+$topdownSurvivorRules = Join-Path $repoPath "references/rules/topdown-survivor-character-assets.md"
 $previewTools = @(
   "tools/install-godot-export-templates.ps1",
   "tools/export-godot-web.ps1",
@@ -58,19 +58,19 @@ $previewTools = @(
 )
 
 $assetTemplates = @(
-  "codex-game-studio/references/templates/sprite-asset-spec.yaml",
-  "codex-game-studio/references/templates/asset-harness-spec.yaml",
-  "codex-game-studio/references/templates/map-asset-spec.yaml",
-  "codex-game-studio/references/templates/asset-qa-report.md",
-  "codex-game-studio/references/templates/godot-import-manifest.yaml",
-  "codex-game-studio/references/templates/scene-scale-plan.yaml",
-  "codex-game-studio/references/templates/action-bundle-spec.yaml",
-  "codex-game-studio/references/templates/action-bundle-report.md",
-  "codex-game-studio/references/templates/godot-sprite-import-spec.yaml",
-  "codex-game-studio/references/templates/map-scene-import-spec.yaml",
-  "codex-game-studio/references/templates/reference-variant-spec.yaml",
-  "codex-game-studio/references/templates/topdown-survivor-character-contract.yaml",
-  "codex-game-studio/references/templates/playable-showcase-qa.md"
+  "references/templates/sprite-asset-spec.yaml",
+  "references/templates/asset-harness-spec.yaml",
+  "references/templates/map-asset-spec.yaml",
+  "references/templates/asset-qa-report.md",
+  "references/templates/godot-import-manifest.yaml",
+  "references/templates/scene-scale-plan.yaml",
+  "references/templates/action-bundle-spec.yaml",
+  "references/templates/action-bundle-report.md",
+  "references/templates/godot-sprite-import-spec.yaml",
+  "references/templates/map-scene-import-spec.yaml",
+  "references/templates/reference-variant-spec.yaml",
+  "references/templates/topdown-survivor-character-contract.yaml",
+  "references/templates/playable-showcase-qa.md"
 )
 
 $ok = $true
@@ -339,5 +339,4 @@ if ($ok) {
 Write-Host ""
 Report "FAIL" "Codex Game Maker setup has issues to fix."
 exit 1
-
 

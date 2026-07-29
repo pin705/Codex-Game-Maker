@@ -1,0 +1,53 @@
+name: Validate Codex Game Maker
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator dependency
+        run: python -m pip install --disable-pip-version-check PyYAML
+
+      - name: Compile cross-platform tooling
+        run: |
+          python -m py_compile \
+            plugins/codex-game-maker/scripts/lib/cgm_validation.py \
+            plugins/codex-game-maker/scripts/quality_runner.py \
+            plugins/codex-game-maker/scripts/guards/player_ready_gate.py \
+            plugins/codex-game-maker/scripts/guards/commercial_release_gate.py \
+            plugins/codex-game-maker/scripts/cgm.py \
+            plugins/codex-game-maker/scripts/install_godot.py \
+            plugins/codex-game-maker/scripts/export_godot.py
+
+      - name: Run gate tests
+        run: python -m unittest -v tests/test_player_ready_gate.py
+
+      - name: Validate repository structure and mirrored package
+        run: python tests/validate_repository.py
+
+      - name: Validate every skill
+        run: |
+          for root in plugins/codex-game-maker codex-game-studio; do
+            for skill in "$root"/skills/*; do
+              python tests/quick_validate_skill.py "$skill"
+            done
+          done
+
+      - name: Validate both plugin layouts
+        run: |
+          python tests/validate_plugin_contract.py plugins/codex-game-maker
+          python tests/validate_plugin_contract.py codex-game-studio

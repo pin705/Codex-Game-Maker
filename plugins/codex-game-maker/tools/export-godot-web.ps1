@@ -30,7 +30,7 @@ function Get-GodotTemplateVersion {
     return "$($fallback.Groups[1].Value).stable"
   }
 
-  return "4.4.stable"
+  return "4.7.1.stable"
 }
 
 function Ensure-WebPreset {
@@ -165,5 +165,4 @@ foreach ($file in $expectedFiles) {
   godot_version = "$versionOutput"
   missing_files = $missing
 } | ConvertTo-Json -Depth 4
-
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Localization"
+  short_description: "Ship localized text, fonts, UI, and QA"
+  default_prompt: "Use $game-studio-localization to implement and verify every supported language."

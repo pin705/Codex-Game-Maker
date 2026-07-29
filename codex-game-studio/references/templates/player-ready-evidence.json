@@ -8,5 +8,8 @@
     "audio": "NOT_RUN",
     "manual_playtest": "NOT_RUN"
   },
+  "quality_report": "production/evidence/quality-run.json",
+  "visual_review": "production/reviews/visual-quality.md",
+  "audio_review": "production/reviews/audio-listening.md",
   "artifacts": []
 }

@@ -1,7 +1,7 @@
 {
   "name": "codex-game-maker",
-  "version": "0.1.0",
-  "description": "A Godot-first, end-to-end workflow that builds complete player-ready games with authored gameplay, assets, UI, audio, tests, and evidence gates.",
+  "version": "0.2.0-alpha.1",
+  "description": "A Godot-first commercial game studio workflow covering player-ready production, verified builds, platforms, performance, compliance, localization, marketing, and live operations.",
   "author": {
     "name": "Codex Game Maker",
     "url": "https://github.com/pin705"
@@ -15,13 +15,15 @@
     "ai-assets",
     "sprites",
     "2d-assets",
-    "codex"
+    "codex",
+    "commercial-release",
+    "game-studio"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Codex Game Maker",
-    "shortDescription": "Build polished, player-ready Godot games end to end.",
-    "longDescription": "Turn a game idea or incomplete prototype into a bounded player-ready Godot experience. Codex Game Maker orchestrates design, complete gameplay states, production 2D assets, game-native HUD and menus, controls, audio, automated tests, runtime captures, manual playtests, and evidence gates without treating a one-screen mock as finished.",
+    "shortDescription": "Build and commercially release verified Godot games.",
+    "longDescription": "Run a Godot-first commercial studio workflow from product thesis through player-ready production and target-platform release. Codex Game Maker covers design, implementation, 2D assets, authored UI, audio, accessibility, localization, narrative, executable quality commands, valid runtime media, performance budgets, builds/signing, compliance, store marketing, online services, telemetry, support, rollback, and strict evidence-backed release gates.",
     "developerName": "Codex Game Maker",
     "category": "Developer Tools",
     "capabilities": [
@@ -33,8 +35,8 @@
     "websiteURL": "https://github.com/pin705/Codex-Game-Maker",
     "defaultPrompt": [
       "Build this game end to end until it passes the player-ready gate; do not stop at a prototype or mock assets.",
-      "Turn this incomplete Godot prototype into a polished player-ready game with complete UI, controls, art, audio, tests, and playtest evidence.",
-      "Review this game honestly and list every blocker preventing it from reaching players."
+      "Prepare this game for commercial release across its declared platforms and keep working until the strict commercial gate passes.",
+      "Audit this project honestly across player-ready quality, performance, platforms, compliance, localization, accessibility, marketing, and live operations."
     ],
     "brandColor": "#3B82F6",
     "composerIcon": "./assets/logo.png",

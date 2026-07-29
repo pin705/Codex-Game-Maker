@@ -21,6 +21,7 @@ Read:
 - `design/audio/audio-manifest.json`
 - current story and active session state
 - `../../references/rules/godot-code.md`
+- `production/quality-command-manifest.json`
 
 ## Implementation Loop
 
@@ -30,7 +31,7 @@ Read:
 4. Keep tuning in resources/data instead of scattering constants through node scripts.
 5. Integrate accepted runtime assets; retain fallbacks only for resilience, not as the intended final presentation.
 6. Add or update a headless test under `tests/` for the changed core path.
-7. Run Godot import/parse, the focused headless test, and lint checks.
+7. Configure argv-only commands for Godot import/parse and focused tests, then run them through `python3 ../../scripts/cgm.py quality --root .`. `godot_import` must invoke `{godot}`; shell snippets, no-op commands, empty logs, unsupported Godot probes, stale command hashes, and external evidence paths are rejected.
 8. Run the scene or build and capture evidence for the player-visible result.
 9. Mark the story done only after acceptance criteria and evidence pass.
 10. Update game-state and asset coverage statuses after integration.
@@ -60,4 +61,4 @@ Unless the contract explicitly excludes them, implement:
 
 ## Definition Of Done
 
-A feature is done only when code, visuals, audio/UI feedback, input, tests, and runtime evidence agree. “The script exists” or “the scene opens” is insufficient.
+A feature is done only when code, visuals, audio/UI feedback, input, executable tests, hashed logs, and runtime evidence agree. “The script exists” or “the scene opens” is insufficient.

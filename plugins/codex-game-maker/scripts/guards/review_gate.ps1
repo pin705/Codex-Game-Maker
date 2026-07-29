@@ -143,8 +143,8 @@ if ($hasGodot) {
   if ($godotCmd) {
     $versionOutput = & $godotCmd --version 2>&1 | Select-Object -First 1
     Add-Item $evidence "godot.cli.version" "Godot CLI found: $versionOutput" $godotCmd
-    if ("$versionOutput" -notmatch "^4\.4") {
-      Add-Item $warnings "godot.version.mismatch" "Godot CLI is available, but it does not appear to be Godot 4.4: $versionOutput" $godotCmd
+    if ("$versionOutput" -notmatch "^4\.(6|7)") {
+      Add-Item $warnings "godot.version.mismatch" "Godot CLI is not on a fully supported line from godot-version-policy.json: $versionOutput" $godotCmd
     }
   } else {
     Add-Item $warnings "godot.cli.missing" "Godot CLI was not found. Run tools/install-godot.ps1 from the Codex Game Maker root for validation/export."
@@ -304,5 +304,4 @@ $gate = if ($blockers.Count -gt 0) {
   evidence = $evidence
   checks = $checks
 } | ConvertTo-Json -Depth 6
-
 

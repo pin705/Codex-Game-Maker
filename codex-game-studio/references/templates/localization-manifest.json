@@ -1,0 +1,9 @@
+{
+  "status": "draft",
+  "source_locale": "en",
+  "release_locales": ["en"],
+  "pseudo_localization": {"status": "planned", "evidence": []},
+  "locales": [
+    {"id": "en", "status": "planned", "catalog": "", "font_coverage": "", "linguistic_approval": "source", "evidence": []}
+  ]
+}

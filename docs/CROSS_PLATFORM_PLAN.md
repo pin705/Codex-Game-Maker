@@ -1,15 +1,15 @@
-﻿# Cross-Platform Plan
+﻿# Cross-Platform Runtime
 
-Date: 2026-05-06
+Updated: 2026-07-29
 
-Codex Game Maker should work on Windows, macOS, and Linux with one workflow. The default experience stays approachable: users run the same tool names, and scripts detect the operating system internally.
+Codex Game Maker supports Windows, macOS, and Linux through the Python `cgm.py` entry point, with PowerShell wrappers retained for the detailed asset toolchain.
 
 ## Supported Baseline
 
 - Windows: Windows PowerShell 5.1 or PowerShell 7.
 - macOS: PowerShell 7 (`pwsh`).
 - Linux: PowerShell 7 (`pwsh`).
-- Godot: Godot 4.4 standard editor/CLI, installed manually or through `tools/install-godot.ps1`.
+- Godot: Godot 4.7.1 standard editor/CLI, installed manually or through `tools/install-godot.ps1`.
 
 ## Automatic Detection
 
@@ -45,13 +45,13 @@ After the first command, wrappers should call nested scripts with the right Powe
 
 ## Godot Install Behavior
 
-`tools/install-godot.ps1` should detect OS and download the matching official Godot 4.4 asset:
+`tools/install-godot.ps1` should detect OS and download the matching official Godot 4.7.1 asset:
 
-- Windows x86_64: `Godot_v4.4-stable_win64.exe.zip`
-- Windows arm64: `Godot_v4.4-stable_windows_arm64.exe.zip`
-- macOS: `Godot_v4.4-stable_macos.universal.zip`
-- Linux x86_64: `Godot_v4.4-stable_linux.x86_64.zip`
-- Linux arm64: `Godot_v4.4-stable_linux.arm64.zip`
+- Windows x86_64: `Godot_v4.7.1-stable_win64.exe.zip`
+- Windows arm64: `Godot_v4.7.1-stable_windows_arm64.exe.zip`
+- macOS: `Godot_v4.7.1-stable_macos.universal.zip`
+- Linux x86_64: `Godot_v4.7.1-stable_linux.x86_64.zip`
+- Linux arm64: `Godot_v4.7.1-stable_linux.arm64.zip`
 
 Install layout:
 
@@ -90,5 +90,4 @@ Required before public release:
 - Export and serve the sample Godot Web project on each OS.
 
 Current local validation is Windows-only; macOS/Linux behavior is implemented by shared detection logic but still needs real machine testing.
-
 

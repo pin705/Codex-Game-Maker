@@ -1,0 +1,17 @@
+{
+  "status": "draft",
+  "features": [
+    {"id": "text-readability", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "contrast", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "non-color-cues", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "subtitles-captions", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "audio-alternatives", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "input-remapping", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "ui-navigation-focus", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "difficulty-timing-assists", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "motion-camera-controls", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "photosensitivity", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "accessible-help-support", "status": "planned", "rationale": "", "evidence": []},
+    {"id": "player-review", "status": "planned", "rationale": "", "evidence": []}
+  ]
+}

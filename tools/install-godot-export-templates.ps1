@@ -1,5 +1,5 @@
-﻿param(
-  [string]$Version = "4.4",
+param(
+  [string]$Version = "4.7.1",
   [string]$Status = "stable",
   [string]$DownloadDir = "",
   [switch]$Force
@@ -8,7 +8,7 @@
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
-$platformHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_platform.ps1"
+$platformHelper = Join-Path $repoRoot.Path "scripts/lib/cgs_platform.ps1"
 if (!(Test-Path -LiteralPath $platformHelper)) {
   throw "Cannot find platform helper: $platformHelper"
 }
@@ -77,5 +77,4 @@ if ((Get-CgsPlatform) -eq "windows") {
 } else {
   Write-Host "  pwsh -File tools/export-godot-web.ps1 -Project ."
 }
-
 

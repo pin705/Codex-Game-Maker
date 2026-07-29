@@ -1,9 +1,10 @@
 {
+  "asset_schema": {"id": "", "status": "planned", "path": "", "provenance": "", "runtime_refs": []},
   "groups": [
-    {"id": "player", "required": true, "status": "planned", "assets": [], "evidence": []},
-    {"id": "environment", "required": true, "status": "planned", "assets": [], "evidence": []},
-    {"id": "gameplay-feedback", "required": true, "status": "planned", "assets": [], "evidence": []},
-    {"id": "ui", "required": true, "status": "planned", "assets": [], "evidence": []},
-    {"id": "release-branding", "required": true, "status": "planned", "assets": [], "evidence": []}
+    {"id": "player", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
+    {"id": "environment", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
+    {"id": "gameplay-feedback", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
+    {"id": "ui", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
+    {"id": "release-branding", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []}
   ]
 }

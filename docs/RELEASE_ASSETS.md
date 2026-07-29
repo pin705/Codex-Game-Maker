@@ -10,7 +10,7 @@ This document tracks what is needed before Codex Game Maker looks polished on Gi
 | Default README language | English | Chinese version lives in `README.zh-CN.md`. |
 | Target audience | Everyone | Beginner-first, with explicit professional features. |
 | License | MIT | Add `LICENSE` before first public release. |
-| Primary engine | Godot 4.4 | Existing web/Unity/Unreal projects are respected. |
+| Primary engine | Godot 4.7.1 | Existing web/Unity/Unreal projects are respected. |
 
 ## Visual Assets
 
@@ -27,8 +27,8 @@ Current status:
 - `logo.png`: generated and saved.
 - `banner.png`: generated from the logo for README use.
 - `social-preview.png`: generated from the logo for GitHub social preview.
-- `demo.gif`: still needed.
-- `workflow-diagram.png`: still needed.
+- `demo.gif`: optional showcase enhancement.
+- `workflow-diagram.png`: optional showcase enhancement.
 
 ## Demo GIF Flow
 
@@ -51,28 +51,25 @@ Claude Code Game Studios presents credibility through concrete counts and visibl
 Recommended badges:
 
 - MIT License
-- Godot 4.4
+- Godot 4.7.1
 - GPT Image Ready
 - Windows / macOS / Linux
-- v0.1-alpha
+- v0.2.0-alpha.1
 
 Recommended counts:
 
-- 8 core skills
-- 29 tool scripts
-- 7 guard scripts
-- 30 templates
+- 23 core skills
+- 32 tool scripts
+- 4 top-level cross-platform Python CLI scripts
+- 9 guard scripts
+- 57 templates
 - 2 asset processor/workflow scripts
-- optional professional command aliases
+- 20 natural-language command aliases
 
-## Before Public Release
+## Optional Showcase Enhancements
 
-- Replace placeholder GitHub URLs in README.
-- Add final logo, banner, and social preview.
-- Add one real asset-driven showcase, not only a skeleton.
+- Add a real asset-driven showcase from a released example project.
 - Record one short demo GIF.
-- Run Windows validation.
-- Run macOS smoke test.
-- Run Linux smoke test.
-- Check that `tmp/`, `.tools/`, `.godot/`, and `build/` are not committed.
+- Render a static workflow diagram from the current commercial lifecycle.
 
+Repository validation remains mandatory on Windows, macOS, and Linux release targets; generated game output under `tmp/`, `.tools/`, `.godot/`, and `build/` must stay uncommitted.

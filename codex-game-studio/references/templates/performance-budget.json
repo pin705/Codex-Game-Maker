@@ -1,0 +1,16 @@
+{
+  "status": "draft",
+  "targets": [
+    {
+      "id": "web",
+      "status": "planned",
+      "budgets": {"min_fps": 60, "max_frame_time_ms": 20, "max_memory_mb": 512, "max_startup_seconds": 5, "max_scene_load_seconds": 3, "max_memory_growth_mb": 32, "max_crashes": 0},
+      "results": {"min_fps": null, "max_frame_time_ms": null, "max_memory_mb": null, "max_startup_seconds": null, "max_scene_load_seconds": null, "max_memory_growth_mb": null, "max_crashes": null},
+      "device": "",
+      "duration_seconds": null,
+      "build_sha256": "",
+      "measurement_command_id": "",
+      "evidence": []
+    }
+  ]
+}

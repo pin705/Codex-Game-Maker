@@ -1,5 +1,5 @@
 param(
-  [string]$Version = "4.4",
+  [string]$Version = "4.7.1",
   [string]$Status = "stable",
   [string]$DownloadDir = "",
   [switch]$Force
@@ -77,5 +77,4 @@ if ((Get-CgsPlatform) -eq "windows") {
 } else {
   Write-Host "  pwsh -File tools/export-godot-web.ps1 -Project ."
 }
-
 

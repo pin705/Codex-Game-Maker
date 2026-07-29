@@ -1,6 +1,6 @@
 param(
   [string]$RequiredMajor = "4",
-  [string]$RequiredMinor = "4",
+  [string]$RequiredMinor = "7",
   [string]$GodotPath = ""
 )
 
@@ -23,7 +23,7 @@ if (!$godotPath) {
     required = "Godot $RequiredMajor.$RequiredMinor"
     severity = "WARN"
     platform = (Get-CgsPlatform)
-    message = "Godot CLI was not found. From the Codex Game Maker root, run tools/install-godot.ps1 with PowerShell. It installs Godot 4.4 under .tools/godot, creates a repo-local wrapper, and updates PATH unless -NoPath is provided. Restart Codex or your terminal afterward."
+    message = "Godot CLI was not found. Run tools/install-godot.ps1 with PowerShell. It installs the recommended supported Godot release under .tools/godot, creates a repo-local wrapper, and updates PATH unless -NoPath is provided."
   } | ConvertTo-Json -Depth 4
   exit 0
 }
@@ -46,8 +46,7 @@ $compatible = ($major -eq $RequiredMajor -and $minor -eq $RequiredMinor)
   message = if ($compatible) {
     "Godot CLI is available and matches the recommended minor version."
   } else {
-    "Godot CLI was found, but it is not Godot $RequiredMajor.$RequiredMinor. Prefer Godot 4.4 for generated projects unless the user chooses another version."
+    "Godot CLI was found, but it is not on the recommended Godot $RequiredMajor.$RequiredMinor line. Check references/policies/godot-version-policy.json before commercial release."
   }
 } | ConvertTo-Json -Depth 4
-
 

@@ -1,4 +1,4 @@
-﻿param(
+param(
   [string]$Project = ".",
   [string]$Out = "build/web",
   [string]$Preset = "Web",
@@ -10,7 +10,7 @@
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
-$platformHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_platform.ps1"
+$platformHelper = Join-Path $repoRoot.Path "scripts/lib/cgs_platform.ps1"
 if (!(Test-Path -LiteralPath $platformHelper)) {
   throw "Cannot find platform helper: $platformHelper"
 }
@@ -30,7 +30,7 @@ function Get-GodotTemplateVersion {
     return "$($fallback.Groups[1].Value).stable"
   }
 
-  return "4.4.stable"
+  return "4.7.1.stable"
 }
 
 function Ensure-WebPreset {
@@ -165,5 +165,4 @@ foreach ($file in $expectedFiles) {
   godot_version = "$versionOutput"
   missing_files = $missing
 } | ConvertTo-Json -Depth 4
-
 

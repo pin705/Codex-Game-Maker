@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "godot_path": "",
+  "commands": [
+    {"id": "godot_import", "argv": ["{godot}", "--headless", "--editor", "--quit", "--path", "{root}"], "cwd": ".", "timeout_seconds": 120, "required_for": ["player_ready", "commercial_release"], "expected_artifacts": []},
+    {"id": "godot_lint", "argv": [], "cwd": ".", "timeout_seconds": 120, "required_for": ["player_ready", "commercial_release"], "expected_artifacts": []},
+    {"id": "core_loop", "argv": [], "cwd": ".", "timeout_seconds": 180, "required_for": ["player_ready", "commercial_release"], "expected_artifacts": []},
+    {"id": "long_run", "argv": [], "cwd": ".", "timeout_seconds": 600, "required_for": ["player_ready", "commercial_release"], "expected_artifacts": []}
+  ]
+}

@@ -177,7 +177,7 @@ def append_import_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
     path = import_manifest_path(root)
     ensure_dir(path.parent)
     if not path.exists():
-        path.write_text('godot_version: "4.4"\nimports:\n', encoding="utf-8")
+        path.write_text('godot_version: "4.7.1"\nimports:\n', encoding="utf-8")
 
     existing_ids: set[str] = set()
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -382,7 +382,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
         f"view: {args.view}",
         f"view_profile: {view_profile}",
         f"direction_model: {direction_model}",
-        "godot_version: \"4.4\"",
+        "godot_version: \"4.7\"",
         "actions:",
     ]
 
@@ -1073,7 +1073,7 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
         "[application]",
         f'config/name="{args.title}"',
         'run/main_scene="res://scenes/main/Main.tscn"',
-        'config/features=PackedStringArray("4.4", "Forward Plus")',
+        'config/features=PackedStringArray("4.7", "Forward Plus")',
         "",
         "[display]",
         "window/size/viewport_width=960",
@@ -1178,7 +1178,7 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
     write_text(project / "README.md", "\n".join([
         f"# {args.title}",
         "",
-        "A Godot 4.4 showcase skeleton for validating Codex Game Maker generated assets.",
+        "A Godot 4.7.1 showcase skeleton for validating Codex Game Maker generated assets.",
         "",
         "Expected flow:",
         "",
@@ -1202,7 +1202,7 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
         "",
         "- style: readable 2D game-ready assets",
         "- background handling: smart chroma key with transparent processed outputs",
-        "- runtime target: Godot 4.4",
+        "- runtime target: Godot 4.7.1",
         "",
     ]))
     write_text(project / "scripts" / "main.gd", "\n".join([
@@ -1295,7 +1295,7 @@ def build_parser() -> argparse.ArgumentParser:
     variant.add_argument("--key-color", default="suggest")
     variant.set_defaults(func=reference_variant_command)
 
-    showcase = sub.add_parser("showcase", help="create a Godot 4.4 asset pipeline showcase skeleton")
+    showcase = sub.add_parser("showcase", help="create a Godot 4.7.1 asset pipeline showcase skeleton")
     showcase.add_argument("--root", default=".")
     showcase.add_argument("--name", default="asset-pipeline-showcase")
     showcase.add_argument("--title", default="Asset Pipeline Showcase")
@@ -1317,5 +1317,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
 

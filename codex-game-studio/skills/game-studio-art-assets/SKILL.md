@@ -53,7 +53,7 @@ For player-ready work, create `design/assets/asset-coverage.json` before bulk pr
 - HUD, menu, settings, tutorial, modal, cursor/focus, and input-prompt art
 - title, logo, icon, loading/fallback, and release branding surfaces
 
-Every required group and asset must move through `planned -> draft -> accepted -> integrated -> verified`. `mock`, `placeholder`, `draft`, `generated`, or `accepted` alone never satisfies player-ready coverage. If a deliberately invisible or procedural asset is appropriate, record the rationale and runtime evidence instead of inventing a file requirement.
+Every required group records a concrete `coverage_basis` and exhaustive `required_asset_ids`; every listed ID must have a matching asset row. Every required group and asset must move through `planned -> draft -> accepted -> integrated -> verified`. Each asset row records `path`, `provenance`, and one or more `runtime_refs`. Player-ready requires at least four distinct integrated production artifacts across the mandatory groups, so one generic image copied across the manifest cannot pass. `mock`, `placeholder`, `draft`, `generated`, or `accepted` alone never satisfies player-ready coverage. If a deliberately invisible or procedural asset is appropriate, record the rationale, rights/source decision, runtime references, and evidence instead of inventing a raster file requirement.
 
 ## Route Detailed Asset Work
 

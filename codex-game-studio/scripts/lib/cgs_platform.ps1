@@ -132,7 +132,7 @@ function Get-CgsDefaultCodexHome {
 
 function Get-CgsGodotInstallProfile {
   param(
-    [string]$Version = "4.4",
+    [string]$Version = "4.7.1",
     [string]$Status = "stable",
     [string]$InstallBase = "",
     [string]$Platform = "",
@@ -309,7 +309,7 @@ function Get-CgsGodotCandidatePaths {
   param(
     [string]$Root = "",
     [string]$RequiredMajor = "4",
-    [string]$RequiredMinor = "4",
+    [string]$RequiredMinor = "7",
     [string]$GodotPath = ""
   )
 
@@ -341,19 +341,19 @@ function Get-CgsGodotCandidatePaths {
       (Join-Path $installBase "bin/godot.cmd"),
       (Join-Path $installBase "bin/godot"),
       (Join-Path $installBase "godot.cmd"),
-      (Join-Path $installBase "Godot_v4.4-stable_win64.exe"),
-      (Join-Path $installBase "windows/Godot_v4.4-stable_win64.exe"),
-      (Join-Path $installBase "windows/Godot_v4.4-stable_windows_arm64.exe"),
+      (Join-Path $installBase "Godot_v4.7.1-stable_win64.exe"),
+      (Join-Path $installBase "windows/Godot_v4.7.1-stable_win64.exe"),
+      (Join-Path $installBase "windows/Godot_v4.7.1-stable_windows_arm64.exe"),
       (Join-Path $installBase "macos/Godot.app/Contents/MacOS/Godot"),
-      (Join-Path $installBase "linux/Godot_v4.4-stable_linux.x86_64"),
-      (Join-Path $installBase "linux/Godot_v4.4-stable_linux.arm64"),
-      (Join-Path $installBase "linux/Godot_v4.4-stable_linux.x86_32")
+      (Join-Path $installBase "linux/Godot_v4.7.1-stable_linux.x86_64"),
+      (Join-Path $installBase "linux/Godot_v4.7.1-stable_linux.arm64"),
+      (Join-Path $installBase "linux/Godot_v4.7.1-stable_linux.x86_32")
     )) {
       [void]$candidates.Add($candidate)
     }
   }
 
-  foreach ($name in @("godot", "godot4", "godot4.4", "Godot_v$RequiredMajor.$RequiredMinor")) {
+  foreach ($name in @("godot", "godot4", "godot4.7", "Godot_v$RequiredMajor.$RequiredMinor")) {
     $cmd = Get-Command $name -ErrorAction SilentlyContinue
     if ($cmd) { [void]$candidates.Add($cmd.Source) }
   }
@@ -454,5 +454,4 @@ function Find-CgsGodotCommand {
 
   return $null
 }
-
 

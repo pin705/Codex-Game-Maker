@@ -1,6 +1,6 @@
 ---
 name: game-studio-review
-description: "Review a game project with Codex Game Maker. Use for prototype, vertical-slice, player-ready, MVP, or release review; QA gates; playtests; visual/UI/audio quality; smoke checks; bug-risk triage; and evidence-backed reports. One-screen builds, mock assets, generic UI, incomplete player journeys, and unsupported readiness claims are blockers for player-ready work."
+description: "Review a game project from prototype through commercial release. Use for player-ready or commercial audits, executable quality commands, valid runtime media, visual/audio/accessibility/localization review, performance, platform builds, compliance, store readiness, live operations, smoke/regression checks, and evidence-backed go/no-go findings."
 ---
 
 # Game Studio Review
@@ -9,21 +9,26 @@ Use this after a concept, architecture pass, prototype, MVP, or release candidat
 
 ## Required First Step
 
-Run or mentally follow the review gate before making claims:
-- repo-local `../../scripts/guards/review_gate.ps1`
-- installed-skill `../../scripts/guards/review_gate.ps1`
-- repo wrapper `../../tools/check-review-gate.ps1`
+Start cross-platform with:
 
-Also detect the current engine:
-- repo-local `../../scripts/guards/detect_engine.ps1`
-- installed-skill `../../scripts/guards/detect_engine.ps1`
+```bash
+python3 ../../scripts/cgm.py doctor --root .
+```
+
+PowerShell review/asset/story gates remain legacy detail checks when PowerShell is available; their absence must not prevent the Python player-ready and commercial gates from running.
 
 Do not claim the game was tested, exported, or playable unless there is evidence from a command, editor run, browser run, screenshot, playtest note, or user confirmation.
 
-If `production/player-ready-contract.md` exists, run the cross-platform player-ready gate before classifying completion:
+If `production/player-ready-contract.md` exists, run executable quality commands and the media-aware player-ready gate before classifying completion:
 
 ```bash
-python3 ../../scripts/guards/player_ready_gate.py --root .
+python3 ../../scripts/cgm.py player-ready --root .
+```
+
+If `production/commercial-release-contract.json` exists, also run:
+
+```bash
+python3 ../../scripts/cgm.py commercial-release --root .
 ```
 
 ## Context To Read
@@ -40,6 +45,18 @@ Read if present:
 - `design/audio/audio-manifest.json`
 - `production/player-ready-contract.md`
 - `production/evidence/player-ready.json`
+- `production/quality-command-manifest.json`
+- `production/evidence/quality-run.json`
+- `production/commercial-release-contract.json`
+- `production/build-matrix.json`
+- `production/performance-budget.json`
+- `production/compliance-manifest.json`
+- `design/localization/localization-manifest.json`
+- `design/accessibility/accessibility-conformance.json`
+- `marketing/store-manifest.json`
+- `business/product-brief.md`
+- `production/liveops-plan.md`
+- `production/telemetry-crash-plan.md`
 - `docs/architecture/architecture.md`
 - `docs/architecture/control-manifest.md`
 - `docs/architecture/adr-*.md`
@@ -66,6 +83,12 @@ Use templates:
 - `../../references/templates/playtest-evidence.md` or installed `../../references/templates/playtest-evidence.md`
 - `../../references/templates/player-ready-contract.md` or installed `../../references/templates/player-ready-contract.md`
 - `../../references/templates/player-ready-evidence.json` or installed `../../references/templates/player-ready-evidence.json`
+- `../../references/templates/commercial-release-contract.json`
+- `../../references/templates/build-matrix.json`
+- `../../references/templates/performance-budget.json`
+- `../../references/templates/compliance-manifest.json`
+- `../../references/templates/visual-quality-review.md`
+- `../../references/templates/audio-listening-review.md`
 - `../../references/templates/implementation-story.md` or installed `../../references/templates/implementation-story.md`
 - `../../references/templates/epic.md` or installed `../../references/templates/epic.md`
 - `../../references/templates/sprint-plan.md` or installed `../../references/templates/sprint-plan.md`
@@ -81,16 +104,16 @@ Use templates:
 
 ## Review Workflow
 
-1. Run engine detection and review gate checks.
-2. If implementation work is requested, require a small story under `production/stories/` and run `../../tools/check-story-gate.ps1 -Mode Ready`.
-3. If a story is being closed, run `../../tools/check-story-gate.ps1 -Mode Done`.
-4. If generated assets exist or an art pass is being reviewed, run `../../tools/check-asset-gate.ps1 -Root .`.
-5. If accepted runtime assets exist, run `../../tools/check-asset-qa.ps1 -Root .`.
-6. Run `../../tools/check-godot-lint.ps1 -Root .` for Godot projects with code changes.
+1. Run `cgm.py doctor`, inspect the supported-version policy, and identify the target delivery state.
+2. Validate that the quality manifest contains non-empty argv arrays and current hashed command evidence.
+3. If implementation work is requested, require a small story and focused executable verification.
+4. If a story is being closed, require checked acceptance criteria and command/runtime evidence.
+5. If generated assets exist, run asset gates when available and always validate provenance, media signatures, runtime integration, and current captures.
+6. Review actual visual/audio evidence; file presence and self-authored PASS labels are insufficient.
 7. For generated-asset playable showcases, check the scene scale plan and `playable-showcase-qa.md` evidence.
 8. Run `../../tools/check-production-gate.ps1 -Root .` when epics/sprints exist.
-9. Run `../../tools/check-release-gate.ps1 -Root .` only when `/release`, `/hotfix`, or release candidate review is explicitly requested.
-10. If a player-ready contract exists, run `python3 ../../scripts/guards/player_ready_gate.py --root .`.
+9. Run `python3 ../../scripts/cgm.py player-ready --root .` when a player-ready contract exists.
+10. Run `python3 ../../scripts/cgm.py commercial-release --root .` for release/store/gold-master claims.
 11. Summarize evidence first: what was read, what was run, what could not be verified.
 12. Apply the six useful role lenses plus player-journey, UI, audio, and asset-specific QA lenses:
    - Creative: pillar/hook/fantasy coherence.
@@ -99,9 +122,15 @@ Use templates:
    - Technical: engine/version/API/export risks, scene/resource structure, error-prone code.
    - Production: scope, sequence, dependency risk, smallest useful next step.
    - QA: smoke coverage, regression risk, playtest evidence, blockers.
-   - Player Journey: boot-to-title, onboarding, complete core loop, pause/settings, failure/recovery, victory/results, replay/continue, and clean restart.
-   - UI/UX: art-bible coherence, hierarchy, safe zones, responsive layout, focus order, input prompts, accessibility, modal completeness, and runtime captures.
-   - Audio: event coverage, buses, persisted settings, mix readability, provenance, pause/restart cleanup, and listening evidence.
+   - Player Journey: boot-to-title, onboarding, complete core loop, pause/settings, failure/recovery, victory/results, replay/continue, and clean restart. Every passing manual playtest names its tester and build and binds current media with SHA-256.
+   - UI/UX: art-bible coherence, hierarchy, safe zones, responsive layout, focus order, input prompts, accessibility, modal completeness, and runtime captures. The passing review records reviewer/build and hashes the reviewed media.
+   - Audio: event coverage, buses, persisted settings, mix readability, provenance, pause/restart cleanup, and listening evidence. The passing review records reviewer/build and hashes the reviewed media.
+   - Business: audience, positioning, price/model, scope economics, assumptions, and go/no-go criteria.
+   - Accessibility: declared feature coverage, target-platform behavior, store claims, and qualified player review.
+   - Localization/Narrative: string/branch completeness, glyphs, expansion, linguistic approval, and runtime evidence.
+   - Platform/Performance: reproducible signed builds, target-device smoke, budgets, hashes, and store requirements.
+   - Compliance/Security: licenses, AI provenance, privacy/data, ratings, terms, secrets, threat model, and approvals.
+   - Marketing/LiveOps: truthful current store assets, telemetry/crash policy, support, incident, rollback, and patch readiness.
    - Sprite QA: frame count, alpha, chroma-key cleanup, edge touch, GIF preview, Godot pivot/frame metadata.
    - Map/Level Asset QA: preview, separated runtime objects, collision, zones, camera bounds, Godot scene/import readiness.
    - Godot Import QA: accepted assets resolve to project files, import intent is recorded, `res://` references are valid.
@@ -119,6 +148,8 @@ Use templates:
 - `VERTICAL_SLICE`: one representative path approaches final quality, but the full bounded journey may remain incomplete.
 - `PLAYER_READY`: the complete bounded journey is coherent and integrated; all required state, asset, UI, audio, test, runtime, and manual-playtest evidence passes.
 - `RELEASE_CANDIDATE`: player-ready plus target-platform build, performance, packaging, legal/licensing, and release evidence.
+- `COMMERCIAL_RELEASE_READY`: strict commercial gate passes for every declared target; external owner/store approvals are recorded.
+- `RELEASED`: the authorized store/platform accepted the build and monitoring confirms launch health.
 
 Never upgrade a result based only on effort or visual impression. Use the contract and evidence.
 
@@ -169,9 +200,9 @@ Use a story gate to prevent broad, vague implementation:
 
 ## Professional Mode
 
-Treat aliases in `../../references/commands/catalog.yaml` such as `/release`, `/team-ui`, and `/audio-pass` as explicit professional-mode triggers. Do not enter these modes during the default flow.
+Treat aliases in `../../references/commands/catalog.yaml` as skill routing. Deterministic gate execution uses `../../scripts/cgm.py`.
 
-`/release` and `/hotfix` are professional mode. Use release templates and `../../tools/check-release-gate.ps1`.
+`/release` and `/commercial-release` route to `game-studio-commercial-release`; `/hotfix` routes to `game-studio-liveops` plus focused review.
 
 Hooks are also professional mode. Install them only when the user explicitly asks, using `../../tools/install-professional-hooks.ps1`.
 
@@ -192,4 +223,3 @@ Record source links in the review report when they influence a finding.
 - Separate blockers from warnings and improvements.
 - Keep summaries short.
 - Do not invent test results.
-

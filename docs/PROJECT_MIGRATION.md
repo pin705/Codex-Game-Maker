@@ -16,7 +16,7 @@ Use this guide when adopting Codex Game Maker into an existing game project or m
 
 Expected direction:
 
-- Recommend Godot 4.4.
+- Recommend Godot 4.7.1.
 - Create concept, art bible, architecture notes, and first implementation story.
 - Install Godot only when validation/export/browser preview is needed.
 
@@ -32,7 +32,7 @@ Expected direction:
 
 - Keep `project.godot`, scenes, scripts, resources, and import settings.
 - Add Codex Game Maker design/production/asset metadata around the existing project.
-- Use Godot 4.4 guidance unless the project clearly targets another Godot 4.x version.
+- Use Godot 4.7.1 guidance unless the project clearly targets another Godot 4.x version.
 - Use web search for official Godot docs when version-specific APIs or export behavior matter.
 
 First checks:

@@ -1,6 +1,6 @@
 ﻿# Engine Selection Policy
 
-Codex Game Maker is Godot-first and targets Godot 4.4 for new projects.
+Codex Game Maker is Godot-first and targets Godot 4.7.1 for new projects.
 
 ## Detection First
 
@@ -13,7 +13,7 @@ Before recommending an engine, inspect the current project:
 
 ## Recommendation Rules
 
-- Blank folder: recommend Godot 4.4 with Web export.
+- Blank folder: recommend Godot 4.7.1 with Web export.
 - Existing Godot project: stay on Godot.
 - Existing Unity/Unreal project: stay on the existing engine unless the user asks to migrate.
 - Existing web project: stay on web stack, but do not recommend Phaser, Three.js, or PixiJS unless already present or requested.
@@ -24,9 +24,9 @@ Before recommending an engine, inspect the current project:
 Godot CLI is strongly recommended for a smooth first-run experience.
 
 - If CLI is available, use it to check version, run validation, and export when possible.
-- If CLI is missing, guide the user to run `tools/install-godot.ps1`. It detects Windows/macOS/Linux, installs Godot 4.4 under the Codex Game Maker folder, creates a `godot`/`godot.cmd` wrapper, and adds `.tools/godot/bin` to PATH unless `-NoPath` is provided. Manual editor steps if needed:
-  1. Download Godot 4.4 from the official Godot website.
-  2. Put the executable somewhere stable, such as `C:\Tools\Godot\Godot_v4.4-stable_win64.exe`, `/Applications/Godot.app`, or `~/Tools/Godot/Godot_v4.4-stable_linux.x86_64`.
+- If CLI is missing, guide the user to run `tools/install-godot.ps1`. It detects Windows/macOS/Linux, installs Godot 4.7.1 under the Codex Game Maker folder, creates a `godot`/`godot.cmd` wrapper, and adds `.tools/godot/bin` to PATH unless `-NoPath` is provided. Manual editor steps if needed:
+  1. Download Godot 4.7.1 from the official Godot website.
+  2. Put the executable somewhere stable, such as `C:\Tools\Godot\Godot_v4.7.1-stable_win64.exe`, `/Applications/Godot.app`, or `~/Tools/Godot/Godot_v4.7.1-stable_linux.x86_64`.
   3. Optionally add that folder to PATH, or tell Codex the full executable path.
   4. Open the generated project folder.
   5. Open `project.godot`.
@@ -34,7 +34,7 @@ Godot CLI is strongly recommended for a smooth first-run experience.
 - Generated projects should include a clear README telling users which scene to run.
 - For browser preview, prefer `tools/preview-godot-web.ps1 -Project .` after Godot and export templates are installed.
 - First-time browser setup can use `tools/install-godot.ps1 -WithExportTemplates`.
-- Prefer Godot 4.4 for new projects. Use another 4.x version only if the user explicitly chooses it or an existing project already uses it.
+- Prefer the recommended stable patch in `references/policies/godot-version-policy.json` for new projects. Existing EOL projects require a migration plan before commercial release.
 - On macOS/Linux, run tools through PowerShell 7: `pwsh -File tools/check-install.ps1`.
 
 ## Web Search
@@ -45,10 +45,9 @@ Search official docs when:
 - The user provides an engine error or complains that generated code/resources do not work.
 
 Official starting points:
-- Godot 4.4 release page: https://godotengine.org/releases/4.4/
-- Godot 4.4 docs: https://docs.godotengine.org/en/4.4/
-- Godot 4.4 command line docs: https://docs.godotengine.org/en/4.4/tutorials/editor/command_line_tutorial.html
-- Godot 4.4 Web export docs: https://docs.godotengine.org/en/4.4/tutorials/export/exporting_for_web.html
-- Godot 4.4 stable download archive: https://godotengine.org/download/archive/4.4-stable/
-
+- Godot release archive: https://godotengine.org/download/archive/
+- Godot release support policy: https://docs.godotengine.org/en/stable/about/release_policy.html
+- Stable documentation: https://docs.godotengine.org/en/stable/
+- Command line: https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html
+- Web export: https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html
 

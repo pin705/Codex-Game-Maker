@@ -1,5 +1,6 @@
 # Playtest Evidence: [Project / Build]
 
+Status: Draft
 Date:
 Tester:
 Build or commit:
@@ -33,6 +34,7 @@ Observed issues:
 
 Screenshots:
 - [path]
+Media SHA-256:
 
 Recording:
 - [path]

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Business"
+  short_description: "Validate market, scope, pricing, and economics"
+  default_prompt: "Use $game-studio-business to validate this game as a sustainable commercial product."

@@ -17,6 +17,9 @@ Create these from the shared templates before broad implementation:
 - `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md`
 - `design/audio/audio-manifest.json` from `../../references/templates/audio-manifest.json`
 - `production/evidence/player-ready.json` from `../../references/templates/player-ready-evidence.json`
+- `production/quality-command-manifest.json` from `../../references/templates/quality-command-manifest.json`
+- `production/reviews/visual-quality.md` from `../../references/templates/visual-quality-review.md`
+- `production/reviews/audio-listening.md` from `../../references/templates/audio-listening-review.md`
 
 Also read the concept, systems GDDs, art bible, architecture, control manifest, active session state, and existing playtest evidence.
 
@@ -24,7 +27,7 @@ Also read the concept, systems GDDs, art bible, architecture, control manifest, 
 
 - If the user explicitly asks for an idea, document, mockup, or prototype only, stop at that named outcome and label it accurately.
 - If the user asks to make/build a game without narrowing the outcome, enter `player-ready` mode.
-- If the user asks for commercial release, complete player-ready first, then run the release workflow. Do not equate player-ready with store-ready.
+- If the user asks for commercial release, complete player-ready first, then route to `game-studio-commercial-release`. Do not equate player-ready with store-ready.
 - Ask at most three high-impact kickoff questions. Offer an autonomous defaults path. Once the user approves autonomous/default operation, continue through small batches without repeatedly asking for routine choices.
 
 ## Player-Ready Loop
@@ -38,14 +41,16 @@ Also read the concept, systems GDDs, art bible, architecture, control manifest, 
 7. Route visual production to the art, sprite, map, and asset-QA skills.
 8. Route HUD, menus, onboarding, settings, focus, and responsive presentation to `game-studio-ui-ux`.
 9. Route music, ambience, SFX, buses, and trigger integration to `game-studio-audio`.
-10. Capture deterministic and hands-on evidence for every required state.
-11. Run review, asset, story, runtime, and player-ready gates.
-12. Iterate on blockers and high-severity visual/playtest findings. Do not stop at the first technically working version.
+10. Configure and execute Godot import, core-loop, and long-run commands through the shell-free quality runner.
+11. Capture distinct valid runtime media and complete visual/audio reviews for every required state.
+12. Route accessibility coverage to `game-studio-accessibility`.
+13. Run review, asset, story, runtime, and player-ready gates.
+14. Iterate on blockers and high-severity visual/playtest findings. Do not stop at the first technically working version.
 
 Run the cross-platform final gate:
 
 ```bash
-python3 ../../scripts/guards/player_ready_gate.py --root .
+python3 ../../scripts/cgm.py player-ready --root .
 ```
 
 ## No-Early-Stop Rules
@@ -54,14 +59,14 @@ python3 ../../scripts/guards/player_ready_gate.py --root .
 - Mock, placeholder, draft, or merely generated assets do not satisfy coverage. Required assets must be integrated and visually verified in runtime.
 - A title screen plus gameplay HUD is not complete UI. Cover pause, settings, onboarding/controls, failure, victory/results, and every modal required by the design.
 - Default engine controls, flat gray panels, generic cards, dashboard grids, and unrelated web-app styling are not acceptable final art direction.
-- Code completion is not player readiness. Require input, feedback, audio, readable UI, state transitions, runtime evidence, and a manual core-loop playtest.
+- Code completion is not player readiness. Require hashed command evidence, valid distinct runtime media, input, feedback, audio, readable UI, state transitions, visual/audio reviews, and a manual core-loop playtest.
 - Never claim commercial readiness without a target-platform release profile and release evidence.
 
 ## Completion States
 
 - `PROTOTYPE`: the core idea runs; coverage may be incomplete.
 - `VERTICAL_SLICE`: one representative path has near-final quality; the complete player journey may be incomplete.
-- `PLAYER_READY`: the bounded game is complete, coherent, integrated, and verified by `player_ready_gate.py` plus actual playtest evidence.
+- `PLAYER_READY`: the bounded game is complete, coherent, integrated, and verified by `cgm.py player-ready` plus actual playtest evidence.
 - `RELEASE_CANDIDATE`: player-ready plus platform build, performance, legal, packaging, and release gates.
 
 When blocked, update `production/session-state/active.md` with the exact remaining phase and next action. Never collapse an unfinished phase into “done.”

@@ -1,27 +1,20 @@
 param(
   [string]$Root = ".",
-  [switch]$Strict
+  [switch]$SkipQuality
 )
 
 $ErrorActionPreference = "Stop"
-
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
-$platformHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_platform.ps1"
-$releaseGate = Join-Path $repoRoot.Path "codex-game-studio/scripts/guards/release_gate.ps1"
-
-if (!(Test-Path -LiteralPath $platformHelper)) {
-  throw "Cannot find platform helper: $platformHelper"
-}
-if (!(Test-Path -LiteralPath $releaseGate)) {
-  throw "Cannot find release gate script: $releaseGate"
+$cli = Join-Path $repoRoot.Path "scripts/cgm.py"
+if (!(Test-Path -LiteralPath $cli)) {
+  throw "Cannot find cross-platform Codex Game Maker CLI: $cli"
 }
 
-. $platformHelper
+$python = Get-Command python3 -ErrorAction SilentlyContinue
+if (!$python) { $python = Get-Command python -ErrorAction SilentlyContinue }
+if (!$python) { throw "Python 3 is required for the commercial release gate." }
 
-$argsList = @("-Root", $Root)
-if ($Strict) {
-  $argsList += "-Strict"
-}
-
-Invoke-CgsPowerShellScript -ScriptPath $releaseGate -ArgumentList $argsList
+$arguments = @($cli, "commercial-release", "--root", $Root)
+if ($SkipQuality) { $arguments += "--skip-quality" }
+& $python.Source @arguments
 exit $LASTEXITCODE

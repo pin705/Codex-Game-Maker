@@ -1,6 +1,6 @@
 ﻿# Upgrading Codex Game Maker
 
-Codex Game Maker is currently a v0.1 alpha project. Expect fast iteration around tools, templates, and asset metadata. This guide keeps local projects upgradeable without losing game work.
+Codex Game Maker is currently a v0.2.0-alpha.1 project. Expect fast iteration around tools, templates, release contracts, and asset metadata. This guide keeps local projects upgradeable without losing game work.
 
 ## Upgrade Principles
 
@@ -128,16 +128,22 @@ Use `-KeyColor auto` only when the raw image exists but the selected key color w
 
 ## Godot Version
 
-Blank projects should target Godot 4.4. Check local Godot availability:
+Blank projects should use `codex-game-studio/references/policies/godot-version-policy.json`, currently recommending Godot 4.7.1. Check local Godot availability:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\check-godot.ps1
 ```
 
-Install Godot 4.4 and export templates when browser preview/export matters:
+Install the recommended Godot version and matching export templates when browser preview/export matters:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\install-godot.ps1 -WithExportTemplates
+```
+
+Cross-platform Python entry point:
+
+```bash
+python3 codex-game-studio/scripts/cgm.py install-godot --with-export-templates
 ```
 
 ## After Upgrading
@@ -168,5 +174,4 @@ Until v1.0:
 - Existing accepted assets should not be invalidated without a clear migration path.
 
 If a future change needs a migration script, it should be added under `tools/` and documented here.
-
 

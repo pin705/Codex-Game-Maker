@@ -1,7 +1,7 @@
 asset_id: ASSET-000
 name: ""
 asset_kind: "sprite"
-target_engine: "Godot 4.4"
+target_engine: "Godot 4.7.1"
 view_profile: "neutral | side_platformer | top_down_survivor"
 harness:
   spec_file: "design/assets/harnesses/ASSET-000.harness.json"

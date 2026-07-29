@@ -1,5 +1,5 @@
 asset_id: LEVEL-000
-godot_version: "4.4"
+godot_version: "4.7.1"
 target_scene: scenes/levels/LEVEL-000.tscn
 nodes:
   root: Node2D

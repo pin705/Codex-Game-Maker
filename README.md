@@ -6,30 +6,31 @@
 
 **Codex skills for building complete, polished, player-ready Godot games—not just one-screen prototypes.**
 
-**Quick links:** [Install](#quick-start) · [Player-Ready Mode](#player-ready-mode) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
+**Quick links:** [Install](#quick-start) · [Player-Ready Mode](#player-ready-mode) · [Commercial Release Mode](#commercial-release-mode) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-v0.1--alpha-orange)
-![Godot](https://img.shields.io/badge/Godot-4.4-blue)
+![Status](https://img.shields.io/badge/status-v0.2.0--alpha.1-orange)
+![Godot](https://img.shields.io/badge/Godot-4.7.1-blue)
 ![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 ![Assets](https://img.shields.io/badge/GPT%20Image-2D%20assets-purple)
 ![Tools](https://img.shields.io/badge/tools-32-blue)
-![Skills](https://img.shields.io/badge/skills-12-blueviolet)
+![Skills](https://img.shields.io/badge/skills-23-blueviolet)
 ![AI Built For](https://img.shields.io/badge/AI%20built%20for-Codex-111827)
 
 Turn a single Codex session into a Godot-first game making workspace.
 
-Godot-first workflows. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Runtime and playtest evidence.
+Godot-first workflows. Product and game design. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Accessibility and localization. Verified builds. Store and launch readiness.
 
-> Status: `v0.1-alpha`. The core workflow is usable, but this is still an early preview. Use it as a template, inspect what it writes, and expect the showcase layer to evolve.
+> Status: `v0.2.0-alpha.1`. The player-ready and commercial workflows are executable, but this remains a pre-release tool. A passing gate means the declared contract has verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, or real-player judgment.
 
-Codex Game Maker turns a Codex session into an end-to-end game-making workspace: guided design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, and manual playtest evidence.
+Codex Game Maker turns a Codex session into an end-to-end game studio workspace: product planning, game design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, manual playtesting, performance, builds, compliance, localization, accessibility, store marketing, telemetry, support, and rollback planning.
 
 ## Table Of Contents
 
 - [What Makes It Different](#what-makes-it-different)
 - [Showcase Plans](#showcase-plans)
 - [Player-Ready Mode](#player-ready-mode)
+- [Commercial Release Mode](#commercial-release-mode)
 - [What's Included](#whats-included)
 - [Engine Support](#engine-support)
 - [Quick Start](#quick-start)
@@ -48,11 +49,12 @@ Codex Game Maker is not just a prompt pack. It is a Codex-first game workflow wh
 
 | Pillar | What It Means |
 |---|---|
-| Godot-first projects | Blank folders default to Godot 4.4 + Web export, with installer/register/preview tools. |
+| Godot-first projects | Blank folders use the verified Godot version policy, currently recommending 4.7.1 with 4.6 and 4.7 supported. |
 | Game-ready 2D assets | Sprite sheets become transparent frames, GIF previews, metadata, QA reports, and Godot resources. |
 | End-to-end ownership | Broad build requests continue through complete gameplay, states, assets, UI, audio, tests, captures, and playtest. |
 | Authored presentation | A coherent art bible drives the HUD, menus, controls, feedback, icons, typography, motion, and audio identity. |
 | Evidence gates | One screen, placeholder assets, default controls, generic dashboard UI, silence, or untested claims cannot pass player-ready. |
+| Commercial lifecycle | Business, platform, performance, compliance, localization, accessibility, marketing, online, launch, support, telemetry, and rollback workstreams converge on one release contract. |
 | Web-aware troubleshooting | Use web search for official docs when engine versions, APIs, export errors, or resource issues matter. |
 
 ## Showcase Plans
@@ -79,29 +81,56 @@ The workflow continues through:
 7. Automated core-loop and long-run checks, captures for every required state, visual/audio review, controls verification, and a manual playtest.
 8. The cross-platform `player_ready_gate.py`; blockers are fixed and rechecked instead of being relabeled as done.
 
-The gate enforces coverage and evidence. Taste-level commercial quality still depends on reviewing the actual running game and testing with real players, so the workflow records captures and playtest findings instead of promising quality from files alone.
+The gate validates real media signatures, distinct runtime states, integrated asset provenance and runtime references, hashed command results tied to the current project fingerprint, visual/audio reviews, and manual playtest evidence. Taste-level quality still depends on reviewing the running game and testing with real players.
+
+## Commercial Release Mode
+
+`/commercial-release` extends a passing player-ready candidate into a release candidate for explicitly declared platforms, locales, business model, online scope, and launch tier. It does not claim that one generic build is universally commercial-ready.
+
+The workflow adds:
+
+1. Product thesis, audience, market position, scope, budget, pricing, monetization, and go/no-go assumptions.
+2. Version-pinned platform build matrices, reproducible exports, artifact hashes, signing/notarization status, smoke tests, and store-specific readiness.
+3. Measured target-device frame time, memory, loading, stability, and regression budgets.
+4. Rights/provenance, privacy/data, ratings, terms, commerce, age-related obligations, and an auditable approval register.
+5. Externalized strings, locale coverage, fonts, overflow captures, linguistic review, accessibility conformance, and target-device tests.
+6. Truthful rights-cleared store assets and claims, launch operations, telemetry/crash handling, support, incident response, rollback, and patch plans.
+7. Conditional narrative continuity and online-service security/load/backup/restore evidence when those features are in scope.
+
+Run the cross-platform CLI from the plugin root:
+
+```bash
+python3 scripts/cgm.py doctor --root /path/to/game
+python3 scripts/cgm.py quality --root /path/to/game
+python3 scripts/cgm.py player-ready --root /path/to/game
+python3 scripts/cgm.py commercial-release --root /path/to/game
+```
+
+The commercial gate intentionally blocks on external actions that Codex cannot truthfully perform: legal or ratings approval, confidential console certification, store-account decisions, signing credentials, and irreversible publishing.
 
 ## What's Included
 
 | Category | Count | Description |
 |---|---:|---|
-| Core skills | 12 | Start, build orchestration, design, implementation, art, sprite/map assets, asset QA, UI/UX, audio, architecture, review. |
+| Core skills | 23 | Player-ready production plus business, commercial release, platforms, compliance, performance, localization, accessibility, narrative, online services, live operations, and marketing. |
 | Tool scripts | 32 | Install, register, export, preview, asset processing, gates, hooks, imports. |
-| Guard scripts | 8 | Engine, asset, story, production, release, Godot lint, review, and cross-platform player-ready gates. |
-| Templates | 40 | GDDs, art briefs, state/coverage contracts, UI/audio specs, stories, production, release, QA, import manifests. |
+| Top-level Python CLI scripts | 4 | Cross-platform doctor/orchestrator, quality runner, Godot installer, and exporter. |
+| Guard scripts | 9 | Engine, asset, story, production, release, Godot lint, review, player-ready, and strict commercial gates. |
+| Templates | 57 | GDD/art/UI/audio and evidence contracts plus business, builds, performance, compliance, localization, accessibility, marketing, security, telemetry, and live operations. |
 | Asset processors/workflows | 2 | Pixel processing plus higher-level bundle/import/repair orchestration. |
-| Professional aliases | 10 | `/release`, `/hotfix`, `/team-*`, `/audio-pass`, `/localization-pass`, and more. |
+| Natural-language aliases | 20 | `/player-ready`, `/commercial-release`, `/quality`, and focused studio passes. |
 
 ## Engine Support
 
 | Engine / Stack | Support Level | What Works Now |
 |---|---:|---|
-| Godot 4.4 | First-class | Detection, installer/register tool, Web export, browser preview, GDScript lint, sprite import, map scene import. |
+| Godot 4.7.1 | Recommended | Cross-platform installer/exporter, export templates, detection/register tools, Web preview, GDScript lint, sprite import, map scene import. |
+| Godot 4.6 / 4.7 | Supported | The current policy supports these release lines; use the exact project-pinned version for reproducible releases. |
 | Phaser / Three.js / PixiJS / HTML canvas | Basic/adoptable | Existing web projects are detected and respected; Codex can work in those stacks, but Godot remains the default for blank projects. |
 | Unity | Detect/adopt only | Existing Unity projects are recognized and preserved; no Unity specialist pipeline yet. |
 | Unreal | Detect/adopt only | Existing Unreal projects are recognized and preserved; no Unreal specialist pipeline yet. |
 
-Blank folders default to Godot 4.4 + Web export. Existing projects keep their current engine unless the user asks to migrate.
+Blank folders use `references/policies/godot-version-policy.json`; it currently recommends Godot 4.7.1. Existing projects keep their engine until compatibility and migration are reviewed. Release candidates pin the exact engine version and export templates.
 
 ## Quick Start
 
@@ -164,7 +193,19 @@ Restart Codex after installing.
 
 ## Install Or Register Godot
 
-Install Godot 4.4 and matching export templates:
+Install the policy-recommended Godot and matching export templates on Windows, macOS, or Linux:
+
+```bash
+python3 codex-game-studio/scripts/cgm.py install-godot --with-export-templates
+```
+
+Preview the resolved download without changing the machine:
+
+```bash
+python3 codex-game-studio/scripts/cgm.py install-godot --dry-run
+```
+
+Legacy PowerShell wrapper:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\install-godot.ps1 -WithExportTemplates
@@ -179,7 +220,7 @@ pwsh -File tools/install-godot.ps1 -WithExportTemplates
 If Godot is already installed somewhere else, register it instead:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\register-godot.ps1 -GodotPath "F:\Godot_v4.4-stable_mono_win64\Godot_v4.4-stable_mono_win64"
+powershell -ExecutionPolicy Bypass -File tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
 ```
 
 Verify:
@@ -311,17 +352,26 @@ Professional workflows are explicit and opt-in.
 
 | Alias | Status | Purpose |
 |---|---:|---|
-| `/release` | Available | Release checklist, changelog, patch notes, release gate. |
+| `/commercial-release` | Available | Run the full declared-platform commercial workflow and strict gate. |
+| `/quality` | Available | Execute argv-based quality commands and record hashed evidence. |
+| `/release` | Available | Prepare builds, compliance, store package, launch operations, and go/no-go evidence. |
 | `/hotfix` | Available | Small urgent fix flow with focused verification. |
 | `/hooks-on` | Available | Install optional professional git hooks. |
 | `/player-ready` | Available | Run the complete build and evidence loop. |
+| `/business-pass` | Available | Validate audience, market, scope, price, budget, economics, and go/no-go assumptions. |
 | `/team-ui` | Available | Authored UI/UX, Godot Control implementation, responsive/focus/accessibility QA. |
 | `/team-level` | Available | Level implementation, environment integration, transitions, and playtest evidence. |
 | `/team-combat` | Available | Combat implementation, feedback, tuning, tests, and QA. |
 | `/audio-pass` | Available | Audio inventory, sourcing/creation, integration, buses, settings, mix, and listening QA. |
-| `/narrative-pass` | Planned | Story, dialogue, worldbuilding, narrative delivery. |
-| `/localization-pass` | Planned | Text surfaces, fonts, string length, localization readiness. |
-| `/accessibility-pass` | Planned | Input, readability, subtitles, assists, motion comfort. |
+| `/narrative-pass` | Available | Narrative state, dialogue IDs, runtime branches, continuity, and content QA. |
+| `/localization-pass` | Available | String externalization, fonts, locale coverage, overflow captures, and linguistic approval. |
+| `/accessibility-pass` | Available | Input, readability, subtitles, assists, motion comfort, captures, and player evidence. |
+| `/platform-pass` | Available | Export, package, sign, hash, smoke test, and prepare each target/store independently. |
+| `/performance-pass` | Available | Measure target-device performance and enforce regression budgets. |
+| `/compliance-pass` | Available | Rights, privacy, ratings, commerce, data, terms, and approval blockers. |
+| `/online-pass` | Available | Online identity, data, security, load, failure, backup, and restore. |
+| `/liveops-pass` | Available | Telemetry, crash handling, support, incidents, rollback, and patches. |
+| `/marketing-pass` | Available | Truthful, current, localized, rights-cleared store and launch assets. |
 
 Aliases live in:
 
@@ -344,7 +394,7 @@ powershell -ExecutionPolicy Bypass -File tools\uninstall-professional-hooks.ps1
 4. Specialized skills implement complete gameplay slices and production presentation.
 5. Automated and runtime checks expose gaps after every integration pass.
 6. Visual, audio, controls, long-run, and manual playtests drive polish iterations.
-7. Player-ready and release gates prevent prototypes or unsupported claims from being handed off as finished.
+7. Player-ready and commercial gates prevent prototypes, stale evidence, fake media, unsigned builds, or unsupported claims from being handed off as finished.
 
 The user controls scope and can request checkpoints. Once autonomous/default execution is approved, the plugin is designed to continue through the bounded workflow instead of stopping after the first scene.
 
@@ -360,7 +410,8 @@ The user controls scope and can request checkpoints. Once autonomous/default exe
 | Godot lint | `tools/check-godot-lint.ps1` | Missing `res://`, unused `delta`, tuning hardcodes, UI/gameplay coupling. |
 | Review | `tools/check-review-gate.ps1` | Smoke evidence, playtest evidence, project structure, export readiness. |
 | Player-ready | `python3 scripts/guards/player_ready_gate.py --root .` | Complete states, integrated asset coverage, authored UI spec, audio events/buses, tests, runtime artifacts, and manual playtest evidence. |
-| Release | `tools/check-release-gate.ps1` | Professional release readiness. |
+| Commercial release | `python3 scripts/cgm.py commercial-release --root .` | Strict player-ready result plus clean/versioned source, builds, hashes, signing/store status, performance, compliance, localization, accessibility, marketing, online/liveops, telemetry, and external approvals. |
+| Release wrapper | `tools/check-release-gate.ps1` | Legacy PowerShell entry point for the cross-platform commercial gate. |
 
 ## Suggested Prompts
 
@@ -394,10 +445,10 @@ Finish a weak prototype:
 /player-ready Audit this prototype, then finish every gameplay state, replace incomplete assets, redesign the HTML-like UI as game-native UI, integrate audio, run tests, capture every state, playtest it, and keep iterating until the player-ready gate passes.
 ```
 
-Professional release mode:
+Commercial release mode:
 
 ```text
-/release Prepare this Godot Web demo for a public alpha release.
+/commercial-release Prepare this game for commercial release on its declared platforms. Continue until every automatable gate passes and report only the external approvals that still require their authorized owner.
 ```
 
 ## Repository Layout

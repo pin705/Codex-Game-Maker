@@ -6,8 +6,8 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
-$platformHelper = Join-Path $repoRoot.Path "codex-game-studio/scripts/lib/cgs_platform.ps1"
-$assetGate = Join-Path $repoRoot.Path "codex-game-studio/scripts/guards/asset_gate.ps1"
+$platformHelper = Join-Path $repoRoot.Path "scripts/lib/cgs_platform.ps1"
+$assetGate = Join-Path $repoRoot.Path "scripts/guards/asset_gate.ps1"
 
 if (!(Test-Path -LiteralPath $platformHelper)) {
   throw "Cannot find platform helper: $platformHelper"

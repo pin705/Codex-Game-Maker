@@ -21,7 +21,9 @@ Read the concept, art bible, systems GDDs, game-state matrix, UI spec, control m
 6. Add variation for frequent sounds through small pitch/volume/sample pools while preserving readability.
 7. Implement persisted volume controls and mute behavior.
 8. Test overlap, pause behavior, restart cleanup, scene transitions, and the busiest gameplay state.
-9. Record integrated asset paths, triggers, and evidence in the manifest.
+9. Record integrated asset paths, triggers, and evidence in the manifest. Required player-ready IDs include confirm/back/focus/invalid UI, player action, failure, reward, victory, defeat, main music, and gameplay ambience.
+10. Use at least four distinct integrated audio files across UI, gameplay, music/ambience, and outcomes; do not point every event at one placeholder tone.
+11. Complete `production/reviews/audio-listening.md` from `../../references/templates/audio-listening-review.md` on target output devices, recording reviewer, build/commit, current audio evidence, and its SHA-256.
 
 ## Minimum Player-Ready Coverage
 
@@ -34,7 +36,7 @@ Read the concept, art bible, systems GDDs, game-state matrix, UI spec, control m
 - ambience or intentional environmental silence
 - volume settings and bus routing
 
-Temporary beeps, missing files, unlicensed sources, and events marked `planned`, `mock`, or `placeholder` block player-ready. A deliberately silent design is allowed only when `intentional_silence` is true with a concrete rationale and playtest evidence.
+Temporary beeps, invalid media signatures, missing files, unlicensed sources, and events marked `planned`, `mock`, or `placeholder` block player-ready. A deliberately silent design is allowed only when `intentional_silence` is true with a concrete rationale and playtest evidence.
 
 ## Quality Rules
 

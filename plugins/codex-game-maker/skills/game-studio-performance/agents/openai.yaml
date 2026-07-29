@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Performance"
+  short_description: "Profile budgets, stability, and device coverage"
+  default_prompt: "Use $game-studio-performance to profile this game against release budgets."

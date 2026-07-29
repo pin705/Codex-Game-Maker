@@ -198,7 +198,7 @@ Expected outputs:
 - optional `direction-strips/*.png`
 - `pipeline-meta.json`
 
-For accepted Godot sprite bundles, create Godot 4.4 resources:
+For accepted Godot sprite bundles, create Godot 4.7.1 resources:
 
 ```powershell
 ../../tools/import-sprite-to-godot.ps1 -Project . -BundleId hero-cat

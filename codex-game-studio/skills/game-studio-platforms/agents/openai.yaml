@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Platforms"
+  short_description: "Build, package, sign, and ship each target"
+  default_prompt: "Use $game-studio-platforms to create and verify the target-platform build matrix."

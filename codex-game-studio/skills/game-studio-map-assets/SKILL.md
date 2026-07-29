@@ -102,7 +102,7 @@ For layered map previews:
 ../../../tools/compose-layered-map-preview.ps1 -Base <base.png> -Placements <placements.json> -Out <preview.png>
 ```
 
-For accepted map assets with preview, props, collision, and zones metadata, create an editable Godot 4.4 level scene:
+For accepted map assets with preview, props, collision, and zones metadata, create an editable Godot 4.7.1 level scene:
 
 ```powershell
 ../../../tools/import-map-to-godot.ps1 -Project . -AssetId <level-id>
@@ -121,7 +121,7 @@ Expected map deliverables:
 
 ## Godot Handoff
 
-Prefer Godot 4.4 structures:
+Prefer Godot 4.7.1 structures:
 - `Sprite2D` for separate props and backgrounds
 - `AnimatedSprite2D` for animated objects
 - `TileMapLayer` when the map is tile/editing-first

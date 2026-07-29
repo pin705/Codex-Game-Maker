@@ -1,5 +1,7 @@
 ﻿# Asset Pipeline Completion Plan
 
+> Historical implementation plan. Current requirements live in the asset skills, templates, and executable player-ready/commercial gates.
+
 This is the priority plan for making Codex Game Maker's 2D asset workflow feel complete. It focuses on game-ready sprite, map, prop, and Godot handoff capabilities. Multilingual README work and public branding are intentionally postponed until before release.
 
 ## Current Baseline
@@ -148,7 +150,7 @@ Acceptance:
 
 Status: alpha implemented.
 
-Goal: turn processed frames into Godot 4.4 resources.
+Goal: turn processed frames into Godot 4.7.1 resources.
 
 Add:
 
@@ -179,7 +181,7 @@ Required metadata:
 
 Acceptance:
 
-- Generated `.tres` or `.tscn` loads in Godot 4.4.
+- Generated `.tres` or `.tscn` loads in Godot 4.7.1.
 - The review gate can detect the imported resource.
 - If Godot CLI is available, run an import/open validation command.
 
@@ -220,7 +222,7 @@ Godot nodes:
 - `Sprite2D` for placed props.
 - `StaticBody2D` + `CollisionShape2D` for solid collision.
 - `Area2D` for pickups, checkpoints, exits, encounters, triggers.
-- `Parallax2D` or equivalent Godot 4.4 parallax setup when needed.
+- `Parallax2D` or equivalent Godot 4.7.1 parallax setup when needed.
 - `TileMapLayer` when tile metadata exists.
 
 Acceptance:
@@ -261,7 +263,7 @@ Acceptance:
 
 ## Phase 6: Showcase Demo
 
-Status: alpha implemented as a generated Godot 4.4 showcase skeleton.
+Status: alpha implemented as a generated Godot 4.7.1 showcase skeleton.
 
 Goal: prove the pipeline by shipping a small playable Godot sample.
 
@@ -274,7 +276,7 @@ Demo should include:
 - Generated character action bundle.
 - Generated props.
 - Generated level preview plus editable collision.
-- Godot 4.4 Web export.
+- Godot 4.7.1 Web export.
 - Browser preview command.
 - Asset QA report.
 - README with exact reproduction commands.
@@ -312,5 +314,4 @@ These matter for launch, but they should not block the core pipeline.
 6. Cat platformer showcase demo.
 
 This order keeps the work grounded: each phase turns generated art into something closer to a playable Godot project.
-
 

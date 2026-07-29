@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Marketing"
+  short_description: "Create truthful store assets and launch materials"
+  default_prompt: "Use $game-studio-marketing to build and verify the game store and launch package."

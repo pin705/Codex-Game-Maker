@@ -3,6 +3,7 @@
   "states": {
     "boot": {"status": "planned", "scene": "", "evidence": []},
     "title": {"status": "planned", "scene": "", "evidence": []},
+    "onboarding": {"status": "planned", "scene": "", "evidence": []},
     "gameplay": {"status": "planned", "scene": "", "evidence": []},
     "pause": {"status": "planned", "scene": "", "evidence": []},
     "settings": {"status": "planned", "scene": "", "evidence": []},
