@@ -100,22 +100,35 @@ def sha256_json(value: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def style_lock_digest(value: dict[str, Any]) -> str:
+    """Hash a style lock without its self-referential digest field."""
+    normalized = {key: item for key, item in value.items() if key != "digest"}
+    return sha256_json(normalized)
+
+
 def project_fingerprint(root: Path) -> str:
     included = {".gd", ".tscn", ".tres", ".godot", ".json", ".cfg", ".gdshader"}
     ignored_parts = {".git", ".godot", "build", ".tools", "production"}
     code_roots = {"scenes", "scripts", "src", "tests", "addons", "resources"}
     contract_paths = {
         "design/game-state-matrix.json",
+        "design/art/art-bible.md",
+        "design/art/style-lock.json",
         "design/assets/asset-coverage.json",
         "design/audio/audio-manifest.json",
         "design/ui/ui-ux-spec.md",
+        "production/reviews/visual-quality-contract.json",
     }
     candidates: list[Path] = []
     for path in root.rglob("*"):
         relative = path.relative_to(root)
-        if not path.is_file() or any(part in ignored_parts for part in relative.parts):
+        if not path.is_file():
             continue
-        if relative.as_posix() in contract_paths or path.name in {"project.godot", "export_presets.cfg"} or (relative.parts and relative.parts[0] in code_roots and path.suffix.lower() in included):
+        relative_text = relative.as_posix()
+        explicit_contract = relative_text in contract_paths or relative_text.startswith("assets/source-prompts/")
+        if not explicit_contract and any(part in ignored_parts for part in relative.parts):
+            continue
+        if explicit_contract or path.name in {"project.godot", "export_presets.cfg"} or (relative.parts and relative.parts[0] in code_roots and path.suffix.lower() in included):
             candidates.append(path)
     digest = hashlib.sha256()
     for path in sorted(candidates):

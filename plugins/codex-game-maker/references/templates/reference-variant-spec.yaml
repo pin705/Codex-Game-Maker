@@ -2,6 +2,11 @@ asset_id: HERO-000
 reference_file: assets/references/HERO-000.png
 description: ""
 key_color: "#FF00FF"
+style_lock:
+  path: design/art/style-lock.json
+  style_version: "1.0.0"
+  style_lock_sha256: ""
+  art_bible_sha256: ""
 identity_lock:
   preserve: silhouette, face shape, costume motifs, color palette, readable proportions
   allowed_variation: pose, limb placement, expression, squash/stretch, motion smear

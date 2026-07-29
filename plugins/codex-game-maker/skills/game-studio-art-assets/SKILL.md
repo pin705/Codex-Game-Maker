@@ -13,6 +13,8 @@ Read if present:
 - `design/gdd/game-concept.md`
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `design/assets/asset-manifest.yaml`
 - `design/assets/asset-coverage.json`
 - `production/reviews/visual-quality-contract.json`
@@ -33,7 +35,7 @@ Use this lifecycle for project-bound assets:
 2. Full asset coverage inventory
 3. Look-dev set spanning every visual family that actually exists in the game, such as world, actors, FX and UI
 4. Multiple candidates for generated/mixed look-dev, compared together in a runtime composite at target scale
-5. Locked accepted references plus recorded rejected candidates and decision rationale
+5. Locked accepted references plus recorded rejected candidates and decision rationale; write and seal `design/art/style-lock.json`
 6. Family-aware asset brief and prompt spec
 7. Production generation using the locked references, camera, lighting, scale, material and palette anchors
 8. Post-process or slicing
@@ -45,6 +47,8 @@ Use this lifecycle for project-bound assets:
 Never leave a project-used generated asset only in Codex's default generated image directory. Move or copy accepted outputs into `assets/generated/`.
 
 Before bulk generation, build a representative look-dev set from the visual families this game actually needs; do not use a fixed asset count or validate only a hero portrait while the shipped world and UI use unrelated styles. For generated or mixed art, compare at least two candidates, composite the candidates at actual runtime scale, reject weak/generic directions, and lock accepted project-local reference images in `production/reviews/visual-quality-contract.json`. Ask for confirmation unless the user already approved autonomous execution; in autonomous mode, record the selection and rejection evidence, then continue without routine approval pauses.
+
+Production prompts are invalid until `python3 ../../scripts/cgm.py style-lock verify --root .` passes. Use the action-bundle `--lookdev` escape only for candidate comparison; its output cannot be accepted or player-ready. After an approved style change, reseal with a new semantic `style_version`, update the session-state digest, and regenerate or explicitly migrate every affected family.
 
 ## Coverage Contract
 

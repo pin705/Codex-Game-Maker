@@ -1,7 +1,7 @@
 ﻿# Game Concept: [Working Title]
 
 Status: Draft
-Engine target: Godot 4.7.1 + Web export unless existing project detection says otherwise
+Engine target: Godot 4.6.2 + Web export unless existing project detection says otherwise
 
 ## Elevator Pitch
 

@@ -6,11 +6,11 @@
 
 **Codex skills for building complete, polished, player-ready Godot games—not just one-screen prototypes.**
 
-**Quick links:** [Install](#quick-start) · [Player-Ready Mode](#player-ready-mode) · [Commercial Release Mode](#commercial-release-mode) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
+**Quick links:** [Install](#quick-start) · [Update](#update-an-installed-plugin) · [Player-Ready Mode](#player-ready-mode) · [Commercial Release Mode](#commercial-release-mode) · [1.0 Scope](#10-scope-and-evidence-standard) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-v0.2.0--alpha.3-orange)
-![Godot](https://img.shields.io/badge/Godot-4.7.1-blue)
+![Status](https://img.shields.io/badge/status-v1.0.0-stable-brightgreen)
+![Godot](https://img.shields.io/badge/Godot-4.6.2-blue)
 ![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 ![Assets](https://img.shields.io/badge/GPT%20Image-2D%20assets-purple)
 ![Tools](https://img.shields.io/badge/tools-32-blue)
@@ -21,16 +21,17 @@ Turn a single Codex session into a Godot-first game making workspace.
 
 Godot-first workflows. Product and game design. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Accessibility and localization. Verified builds. Store and launch readiness.
 
-> Status: `v0.2.0-alpha.3`. The player-ready and commercial workflows are executable, but this remains a pre-release tool. A passing gate means the declared contract has verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, or real-player judgment.
+> Status: `v1.0.0`. The Godot-first commercial 2D workflow, project contracts, migration path, and release tooling are stable. A passing gate means the declared scope has current verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, independent visual judgment, or real-player testing.
 
 Codex Game Maker turns a Codex session into an end-to-end game studio workspace: product planning, game design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, manual playtesting, performance, builds, compliance, localization, accessibility, store marketing, telemetry, support, and rollback planning.
 
 ## Table Of Contents
 
 - [What Makes It Different](#what-makes-it-different)
-- [Showcase Plans](#showcase-plans)
+- [Evaluation And Showcase Evidence](#evaluation-and-showcase-evidence)
 - [Player-Ready Mode](#player-ready-mode)
 - [Commercial Release Mode](#commercial-release-mode)
+- [1.0 Scope And Evidence Standard](#10-scope-and-evidence-standard)
 - [What's Included](#whats-included)
 - [Engine Support](#engine-support)
 - [Quick Start](#quick-start)
@@ -49,7 +50,7 @@ Codex Game Maker is not just a prompt pack. It is a Codex-first game workflow wh
 
 | Pillar | What It Means |
 |---|---|
-| Godot-first projects | Blank folders use the verified Godot version policy, currently recommending 4.7.1 with 4.6 and 4.7 supported. |
+| Godot-first projects | Blank folders use the verified Godot version policy, currently recommending 4.6.2 on the supported 4.6 line. |
 | Game-ready 2D assets | Sprite sheets become transparent frames, GIF previews, metadata, QA reports, and Godot resources. |
 | End-to-end ownership | Broad build requests continue through complete gameplay, states, assets, UI, audio, tests, captures, and playtest. |
 | Authored presentation | A coherent art bible drives the HUD, menus, controls, feedback, icons, typography, motion, and audio identity. |
@@ -57,14 +58,11 @@ Codex Game Maker is not just a prompt pack. It is a Codex-first game workflow wh
 | Commercial lifecycle | Business, platform, performance, compliance, localization, accessibility, marketing, online, launch, support, telemetry, and rollback workstreams converge on one release contract. |
 | Web-aware troubleshooting | Use web search for official docs when engine versions, APIs, export errors, or resource issues matter. |
 
-## Showcase Plans
+## Evaluation And Showcase Evidence
 
-Generated showcase projects are treated as local output and are not committed to the repository by default. Planned before a polished public release:
+The repository tracks a versioned benchmark corpus, routing and hard-negative cases, a weighted rubric, run schema, scorer, and adversarial gate fixtures under `evals/` and `tests/`. Use `python3 evals/run_eval.py validate` to validate the corpus and `aggregate` only after real blind runs have been collected.
 
-- Cat platformer asset showcase with generated action bundle.
-- Real Godot Web export evidence.
-- 12-20 second demo GIF.
-- Workflow diagram: prompt -> GPT Image -> processor -> QA -> Godot -> browser preview.
+Generated game projects and large capture media stay outside the plugin package by default. Publish them as GitHub release artifacts or Git LFS evidence with their brief, plugin commit, run metadata, hashes, reviewer provenance, and score. A demo GIF or showcase is useful presentation, but is not accepted as general quality proof by itself.
 
 ## Player-Ready Mode
 
@@ -125,15 +123,28 @@ python3 scripts/cgm.py commercial-release --root /path/to/game
 
 The commercial gate intentionally blocks on external actions that Codex cannot truthfully perform: legal or ratings approval, confidential console certification, store-account decisions, signing credentials, and irreversible publishing.
 
+## 1.0 Scope And Evidence Standard
+
+The intended 1.0 product is a dependable **Godot-first commercial 2D game-production toolkit**. Its first-party completion bar covers bounded 2D gameplay, game-specific player journeys, authored UI, 2D asset integration, audio, accessibility, localization, reproducible quality evidence, and declared desktop/Web release preparation.
+
+Some adjacent work is deliberately conditional rather than bundled as a universal promise:
+
+- 3D projects may use the planning, architecture, review, performance, compliance, and release contracts, but a complete first-party 3D asset/runtime pipeline is outside the 1.0 core. Use project-appropriate external 3D tools and specialists.
+- Console work requires platform-holder approval, NDA material, licensed SDKs, development hardware, certification access, and authorized owners. The plugin may prepare non-confidential plans and evidence, but cannot certify or submit a console title.
+- Online services and backends are included only when declared in scope. The plugin can design and verify provider-specific security, data, load, backup, restore, and failure evidence; it does not bundle or operate a hosted backend.
+- Store accounts, signing/notarization credentials, ratings, tax/payment setup, platform agreements, legal advice, and irreversible publishing remain external human-authority steps.
+
+Evidence claims stay narrow and reproducible. Repository validators and regression tests prove that declared contracts and guardrails behave as tested; they do not prove that a game is fun, visually excellent, commercially successful, certified, or legally approved. A player-ready or commercial PASS requires current project-bound artifacts and honest reviews. Benchmark or quality claims should be published only with reproducible eval inputs, outputs, scoring rules, and reviewer provenance; planned showcases, self-authored PASS labels, and one successful example are not proof of general quality.
+
 ## What's Included
 
 | Category | Count | Description |
 |---|---:|---|
 | Core skills | 23 | Player-ready production plus business, commercial release, platforms, compliance, performance, localization, accessibility, narrative, online services, live operations, and marketing. |
 | Tool scripts | 32 | Install, register, export, preview, asset processing, gates, hooks, imports. |
-| Top-level Python CLI scripts | 4 | Cross-platform doctor/orchestrator, quality runner, Godot installer, and exporter. |
+| Top-level Python CLI scripts | 7 | Cross-platform orchestration, quality, verified Godot install/export, style lock, audio QA, and migration. |
 | Guard scripts | 9 | Engine, asset, story, production, release, Godot lint, review, player-ready, and strict commercial gates. |
-| Templates | 58 | GDD/art/UI/audio, structured visual-quality and evidence contracts plus business, builds, performance, compliance, localization, accessibility, marketing, security, telemetry, and live operations. |
+| Templates | 60 | GDD/art/style/session/UI/audio, structured visual-quality and evidence contracts plus business, builds, performance, compliance, localization, accessibility, marketing, security, telemetry, and live operations. |
 | Asset processors/workflows | 2 | Pixel processing plus higher-level bundle/import/repair orchestration. |
 | Natural-language aliases | 20 | `/player-ready`, `/commercial-release`, `/quality`, and focused studio passes. |
 
@@ -141,13 +152,15 @@ The commercial gate intentionally blocks on external actions that Codex cannot t
 
 | Engine / Stack | Support Level | What Works Now |
 |---|---:|---|
-| Godot 4.7.1 | Recommended | Cross-platform installer/exporter, export templates, detection/register tools, Web preview, GDScript lint, sprite import, map scene import. |
-| Godot 4.6 / 4.7 | Supported | The current policy supports these release lines; use the exact project-pinned version for reproducible releases. |
+| Godot 4.6.2 | Recommended | Cross-platform installer/exporter, export templates, detection/register tools, Web preview, GDScript lint, sprite import, map scene import. |
+| Godot 4.6 | Supported | Use the latest verified patch and pin the exact project/export-template version for reproducible releases. |
+| Godot 4.5 | Security/platform fixes only | Existing projects may remain temporarily, but new work should use 4.6 and commercial releases need an explicit migration/risk decision. |
+| Godot 4.7 development builds | Not production-supported | Pre-release builds may be evaluated separately, but cannot satisfy player-ready or commercial engine gates. |
 | Phaser / Three.js / PixiJS / HTML canvas | Basic/adoptable | Existing web projects are detected and respected; Codex can work in those stacks, but Godot remains the default for blank projects. |
 | Unity | Detect/adopt only | Existing Unity projects are recognized and preserved; no Unity specialist pipeline yet. |
 | Unreal | Detect/adopt only | Existing Unreal projects are recognized and preserved; no Unreal specialist pipeline yet. |
 
-Blank folders use `references/policies/godot-version-policy.json`; it currently recommends Godot 4.7.1. Existing projects keep their engine until compatibility and migration are reviewed. Release candidates pin the exact engine version and export templates.
+Blank folders use `references/policies/godot-version-policy.json`; it currently recommends Godot 4.6.2. Existing projects keep their engine until compatibility and migration are reviewed. Release candidates pin the exact engine version and export templates.
 
 ## Quick Start
 
@@ -158,14 +171,48 @@ Add this repository as a Codex marketplace:
 ```bash
 codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
 codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
 ```
 
-Start a new Codex task after installation so the bundled skills are loaded.
-When this repository publishes an update or adds another plugin, refresh it with:
+Confirm that `codex-game-maker@codex-game-maker` is shown as installed and enabled, then start a **new Codex task** so the bundled skills are loaded. An already-open task may continue using the previous skill snapshot.
+
+#### Update An Installed Plugin
+
+Refreshing the marketplace snapshot alone does not reinstall an already-cached plugin package. Run the complete update flow:
 
 ```bash
 codex plugin marketplace upgrade codex-game-maker
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
 ```
+
+Confirm that the installed version changed as expected, then start a new Codex task.
+
+#### Uninstall Or Roll Back
+
+Remove the plugin while keeping the marketplace available:
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+```
+
+If this repository is no longer needed as a marketplace, remove it separately:
+
+```bash
+codex plugin marketplace remove codex-game-maker
+```
+
+To roll back, use a known-good Git tag or commit that contains the marketplace catalog. Removing and re-adding the marketplace makes the selected ref explicit:
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+codex plugin marketplace remove codex-game-maker
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker --ref <known-good-tag-or-commit>
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
+```
+
+Start a new Codex task after uninstalling or rolling back. Back up or commit the game project first; plugin removal does not migrate or delete files already created in that project.
 
 The marketplace catalog lives at `.agents/plugins/marketplace.json`, and plugin
 packages live under `plugins/`.
@@ -237,7 +284,7 @@ pwsh -File plugins/codex-game-maker/tools/install-godot.ps1 -WithExportTemplates
 If Godot is already installed somewhere else, register it instead:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\register-godot.ps1 -GodotPath "F:\Godot_v4.6.2-stable_win64.exe"
 ```
 
 Verify:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Asset QA"
+  short_description: "Verify assets and runtime presentation"
+  default_prompt: "Use $game-studio-asset-qa to validate generated assets, style continuity, and their runtime presentation."

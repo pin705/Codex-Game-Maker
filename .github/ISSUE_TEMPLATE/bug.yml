@@ -1,0 +1,38 @@
+name: Bug report
+description: Report a reproducible plugin, tool, gate, or migration defect
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Remove secrets, credentials, private assets, and player data before submitting."
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version and commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Codex, OS, Python, PowerShell, and Godot versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Include the exact sanitized command, fixture, expected result, and actual result.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety
+      options:
+        - label: I removed secrets, credentials, private assets, and personal/player data.
+          required: true

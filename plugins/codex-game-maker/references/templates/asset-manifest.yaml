@@ -1,3 +1,7 @@
+style_lock:
+  path: design/art/style-lock.json
+  style_version: ""
+  sha256: ""
 assets:
   - asset_id: ASSET-000
     name: ""
@@ -17,6 +21,8 @@ assets:
     harness_spec: ""
     harness_report: ""
     source_prompt: ""
+    style_version: ""
+    style_lock_sha256: ""
     expected_frames: 0
     frame_size: ""
     anchor: center

@@ -2,7 +2,7 @@
 tmp/
 .research/
 examples/
-production/session-state/
+dist/
 
 **/.godot/
 **/build/

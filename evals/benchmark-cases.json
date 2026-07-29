@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "platformer-new-build",
+      "genre": "2d-platformer",
+      "mode": "new-project",
+      "prompt": "Build a small premium forest-shrine platformer player-ready from an empty folder. Use defaults and continue autonomously.",
+      "must_cover": ["complete-player-journey", "controller-and-keyboard", "multi-action-character", "level-recovery", "authored-ui", "audio", "real-build"]
+    },
+    {
+      "id": "survivor-content-heavy",
+      "genre": "top-down-survivor",
+      "mode": "new-project",
+      "prompt": "Build a polished top-down survivor with a meta hub, multiple enemies, boss, upgrades, pause, settings, results, audio, and a complete replay loop.",
+      "must_cover": ["dynamic-state-graph", "runtime-scale", "cross-family-art", "game-feel", "progression", "long-run"]
+    },
+    {
+      "id": "strategy-ui-heavy",
+      "genre": "card-strategy",
+      "mode": "new-project",
+      "prompt": "Create a commercial-quality card strategy slice whose information-heavy interface still feels native to the game world and works with controller focus.",
+      "must_cover": ["ui-hierarchy", "longest-copy", "controller-focus", "responsive-layout", "non-generic-ui", "accessibility"]
+    },
+    {
+      "id": "nonstandard-puzzle-flow",
+      "genre": "open-ended-puzzle",
+      "mode": "new-project",
+      "prompt": "Create a quiet open-ended puzzle sandbox with no conventional victory or defeat screen. Derive its actual session, recovery, save, and safe-exit flow.",
+      "must_cover": ["nonstandard-state-names", "reachable-journeys", "safe-exit", "intentional-completion", "no-fixed-screen-list"]
+    },
+    {
+      "id": "rescue-low-quality-project",
+      "genre": "existing-project",
+      "mode": "repair",
+      "prompt": "Audit and repair this playable but cheap-looking game. Replace generic HTML-like UI, inconsistent art, stretched textures, tiny actors, weak feedback, and incomplete states until player-ready.",
+      "must_cover": ["honest-audit", "style-relock", "asset-replacement", "ui-rebuild", "before-after-evidence", "no-false-pass"]
+    },
+    {
+      "id": "fresh-task-style-continuation",
+      "genre": "continuation",
+      "mode": "three-task-sequence",
+      "prompt": "Continue the existing game in a fresh task by adding a new environment, enemy family, boss, and result UI without changing its locked visual identity.",
+      "must_cover": ["style-lock-preflight", "style-digest-match", "cross-family-contact-sheet", "reject-unversioned-drift", "fresh-task-continuity"]
+    }
+  ]
+}

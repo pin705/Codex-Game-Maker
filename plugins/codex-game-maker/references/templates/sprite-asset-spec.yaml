@@ -2,7 +2,7 @@ asset_id: SPRITE-000
 name: ""
 asset_kind: sprite
 category: player
-target_engine: "Godot 4.7.1"
+target_engine: "Godot 4.6.2"
 intended_use: ""
 generation_provider: "gpt_image"
 art_style: "project-native"

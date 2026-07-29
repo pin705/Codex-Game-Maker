@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Sprite Assets"
+  short_description: "Create verified game-ready 2D sprites"
+  default_prompt: "Use $game-studio-sprite-assets to create, process, import, and verify game-ready 2D sprite assets."

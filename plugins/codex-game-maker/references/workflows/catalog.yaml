@@ -223,7 +223,7 @@ phases:
 defaults:
   engine: godot
   godot_version_policy: references/policies/godot-version-policy.json
-  blank_project_recommendation: "Godot 4.7.1 stable + declared export targets"
+  blank_project_recommendation: "Godot 4.6.2 stable + declared export targets"
   broad_build_outcome: player-ready
   commercial_build_outcome: commercial-release
   review_mode: evidence-first

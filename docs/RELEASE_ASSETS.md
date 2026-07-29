@@ -10,7 +10,7 @@ This document tracks what is needed before Codex Game Maker looks polished on Gi
 | Default README language | English | Chinese version lives in `README.zh-CN.md`. |
 | Target audience | Everyone | Beginner-first, with explicit professional features. |
 | License | MIT | Add `LICENSE` before first public release. |
-| Primary engine | Godot 4.7.1 | Existing web/Unity/Unreal projects are respected. |
+| Primary engine | Godot 4.6.2 | Existing web/Unity/Unreal projects are respected. |
 
 ## Visual Assets
 
@@ -51,18 +51,18 @@ Claude Code Game Studios presents credibility through concrete counts and visibl
 Recommended badges:
 
 - MIT License
-- Godot 4.7.1
+- Godot 4.6.2
 - GPT Image Ready
 - Windows / macOS / Linux
-- v0.2.0-alpha.3
+- v1.0.0 stable
 
 Recommended counts:
 
 - 23 core skills
 - 32 tool scripts
-- 4 top-level cross-platform Python CLI scripts
+- 7 top-level cross-platform Python CLI scripts
 - 9 guard scripts
-- 58 templates
+- 60 templates
 - 2 asset processor/workflow scripts
 - 20 natural-language command aliases
 

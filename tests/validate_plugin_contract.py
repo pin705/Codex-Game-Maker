@@ -89,14 +89,21 @@ def validate(root: Path) -> list[str]:
         for index, path in enumerate(screenshots):
             validate_asset(root, path, f"interface.screenshots[{index}]", errors)
 
-    for skill in sorted((root / "skills").glob("*")):
+    skills_root = root / "skills"
+    if not skills_root.is_dir():
+        return errors + ["skills/ directory is required"]
+    display_names: set[str] = set()
+    for skill in sorted(skills_root.glob("*")):
         if not skill.is_dir():
             continue
+        if not (skill / "SKILL.md").is_file():
+            errors.append(f"{skill.name}: SKILL.md is required")
         agent_path = skill / "agents" / "openai.yaml"
         if not agent_path.is_file():
+            errors.append(f"{skill.name}: agents/openai.yaml is required")
             continue
         try:
-            agent = yaml.safe_load(agent_path.read_text(encoding="utf-8"))
+            agent = yaml.safe_load(agent_path.read_text(encoding="utf-8-sig"))
         except yaml.YAMLError as exc:
             errors.append(f"{skill.name}: invalid agents/openai.yaml: {exc}")
             continue
@@ -104,9 +111,21 @@ def validate(root: Path) -> list[str]:
         if not isinstance(skill_interface, dict):
             errors.append(f"{skill.name}: agent interface must be an object")
             continue
-        for field in ("display_name", "short_description"):
+        for field in ("display_name", "short_description", "default_prompt"):
             if not non_empty(skill_interface.get(field)):
                 errors.append(f"{skill.name}: interface.{field} must be non-empty")
+        short_description = skill_interface.get("short_description")
+        if non_empty(short_description) and not 25 <= len(str(short_description).strip()) <= 64:
+            errors.append(f"{skill.name}: interface.short_description must be 25-64 characters")
+        default_prompt = skill_interface.get("default_prompt")
+        if non_empty(default_prompt) and f"${skill.name}" not in str(default_prompt):
+            errors.append(f"{skill.name}: interface.default_prompt must mention ${skill.name}")
+        display_name = skill_interface.get("display_name")
+        if non_empty(display_name):
+            normalized_display_name = str(display_name).strip().casefold()
+            if normalized_display_name in display_names:
+                errors.append(f"{skill.name}: interface.display_name must be unique")
+            display_names.add(normalized_display_name)
     return errors
 
 

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 1.0.0 - 2026-07-29
+
+- Stabilized the Godot-first commercial 2D workflow, dynamic player-journey contract, player-ready gate, and declared-platform commercial release gate.
+- Added a sealed, versioned project style lock with art-bible/reference hashes, cross-family bindings, fresh-task session state, production prompt enforcement, change control, and style-regression tests.
+- Added measurable audio QA for WAV assets and hash-bound command metrics for compressed audio.
+- Added conservative project migration with dry-run, backup, migration report, and explicit post-migration blockers rather than invented approval evidence.
+- Added six benchmark briefs, full-skill routing cases, hard-negative visual/game defects, a weighted blind-review rubric, reproducible run metadata, scoring, aggregation, and false-PASS regression tests.
+- Added 23 complete `agents/openai.yaml` interfaces and validators for every bundled skill.
+- Replaced the nonexistent future engine pin with official Godot 4.6.2 stable downloads and SHA-512 values; installers now use a stable user cache, safe extraction, trusted manifests, executable/template hashes, and atomic editor replacement.
+- Added Windows, macOS, and Linux validation, real scheduled Godot import/runtime/Web-export smoke tests, clean marketplace install checks, deterministic ZIP packaging, SHA-256 checksums, file SBOM, and tag-driven release automation.
+- Added security/support policies, ownership and contribution templates, stable version consistency checks, rollback/uninstall guidance, and explicit 1.0 scope boundaries for 3D, consoles, hosted backends, stores, signing, ratings, legal decisions, and publication.
+
 ## 0.2.0-alpha.3 - 2026-07-29
 
 This cache-visible plugin release contains the dynamic game-state workflow and the strengthened visual-quality and asset-presentation gates described below.
@@ -19,7 +31,7 @@ This cache-visible plugin release contains the dynamic game-state workflow and t
 - Added `cgm.py`, a cross-platform CLI for diagnostics, command-backed quality evidence, player-ready validation, commercial release validation, Godot installation, and exports.
 - Added a strict `commercial_release_gate.py` and strengthened `player_ready_gate.py` with real media validation, asset provenance/runtime references, project fingerprints, artifact hashes, visual/audio reviews, and linked manual playtest evidence.
 - Added commercial release, build matrix, performance, compliance, localization, accessibility, marketing, online/security, telemetry, narrative, business, and live-operations templates.
-- Added a verified Godot version policy recommending 4.7.1 and supporting the 4.6/4.7 release lines.
+- Added a verified Godot version policy recommending 4.6.2, supporting the 4.6 stable line, and rejecting 4.7 development builds for production gates.
 - Added 20 studio aliases and deterministic mappings for quality, player-ready, and commercial release commands.
 - Hardened the player-ready gate with game-specific experience requirements, approved non-placeholder design docs, declared Theme/diegetic/custom-draw presentation resources, explicit required-asset inventories, distinct art/audio coverage, supported-engine probing, project-local evidence, structural PNG checks, and SHA-256-bound visual/audio/playtest reviews.
 - Hardened the quality runner against unsafe IDs, shell snippets, interpreter eval snippets, no-op commands, empty evidence, out-of-project artifacts, stale command rows, unsupported timeouts, and mismatched commercial engine probes.

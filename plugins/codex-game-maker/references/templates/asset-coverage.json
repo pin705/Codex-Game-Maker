@@ -1,4 +1,9 @@
 {
+  "style_lock": {
+    "path": "design/art/style-lock.json",
+    "style_version": "",
+    "sha256": ""
+  },
   "coverage_policy": {
     "minimum_distinct_assets": 1,
     "rationale": "replace with a justified floor derived from this game's complete visible inventory",
@@ -12,6 +17,8 @@
     "status": "planned",
     "path": "",
     "provenance": "",
+    "style_version": "",
+    "style_lock_sha256": "",
     "runtime_refs": [],
     "presentation": {
       "source_kind": "dedicated-component",

@@ -3,10 +3,14 @@ name: ""
 category: ""
 asset_kind: "sprite"
 intended_use: ""
-target_engine: "Godot 4.7.1"
+target_engine: "Godot 4.6.2"
 target_display_size: ""
 runtime_role: ""
 style_lock:
+  path: "design/art/style-lock.json"
+  style_version: ""
+  style_lock_sha256: ""
+  art_bible_sha256: ""
   family_id: ""
   locked_reference_paths: []
   identity_anchors: []

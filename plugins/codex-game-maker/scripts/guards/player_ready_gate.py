@@ -33,6 +33,7 @@ from cgm_validation import (  # noqa: E402
     sha256_path,
     sniff_media,
     status_ok,
+    style_lock_digest,
     validate_artifact,
     validate_media,
 )
@@ -107,6 +108,87 @@ def require_pass_review(
         if status and status.group(1).strip().lower() in PASS_STATUSES and gate_pass and reviewer and build and valid_media and hash_ok and "[path]" not in text:
             return
     blockers.append(issue(code, f"No passing {pattern} review found", review_dir))
+
+
+def require_style_binding(
+    value: Any,
+    expected_version: str,
+    expected_digest: str,
+    blockers: list[dict],
+    source: Any,
+    code: str,
+) -> None:
+    binding = value if isinstance(value, dict) else {}
+    if binding.get("path") != "design/art/style-lock.json":
+        blockers.append(issue(f"{code}.path", "Style binding must reference design/art/style-lock.json", source))
+    if not expected_version or binding.get("style_version") != expected_version:
+        blockers.append(issue(f"{code}.version", "Style binding version is missing or stale", source))
+    if not expected_digest or binding.get("sha256") != expected_digest:
+        blockers.append(issue(f"{code}.digest", "Style binding SHA-256 is missing or stale", source))
+
+
+def validate_style_lock(root: Path, blockers: list[dict], evidence: list[dict]) -> tuple[Optional[dict], str]:
+    path = root / "design/art/style-lock.json"
+    data = load_json(path, blockers, "style_lock")
+    if data is None:
+        return None, ""
+    if data.get("schema_version") != 1 or data.get("status") != "locked":
+        blockers.append(issue("style_lock.status", "Style lock must use schema_version 1 and status locked", path))
+    style_id = str(data.get("style_id", "")).strip()
+    style_version = str(data.get("style_version", "")).strip()
+    identity = str(data.get("identity_rule", "")).strip()
+    if not style_id or not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,63}", style_id):
+        blockers.append(issue("style_lock.id", "style_id must be a concrete lower-case hyphen ID", path))
+    if not re.fullmatch(r"\d+\.\d+\.\d+", style_version):
+        blockers.append(issue("style_lock.version", "style_version must be semantic version x.y.z", path))
+    if len(identity) < 24:
+        blockers.append(issue("style_lock.identity", "identity_rule must be a concrete game-specific visual rule", path))
+    art_raw = str(data.get("source_art_bible", ""))
+    art_path = resolve_project_path(root, art_raw)
+    art_hash = str(data.get("art_bible_sha256", "")).lower()
+    if art_raw != "design/art/art-bible.md" or art_path is None or not is_within(root, art_path) or not art_path.is_file():
+        blockers.append(issue("style_lock.art_bible", "Style lock must bind the project art bible", art_path))
+    elif not art_hash or sha256_file(art_path) != art_hash:
+        blockers.append(issue("style_lock.art_bible_hash", "Art bible SHA-256 is missing or stale", art_path))
+    anchors = data.get("anchors") if isinstance(data.get("anchors"), dict) else {}
+    for field in ("materials", "shape_language", "camera_and_view", "lighting", "palette_roles", "typography_roles", "detail_density", "motion_and_fx"):
+        values = anchors.get(field)
+        if not isinstance(values, list) or not values or not all(str(item).strip() for item in values):
+            blockers.append(issue("style_lock.anchors", f"Style lock needs non-empty {field} anchors", path))
+    forbidden = data.get("forbidden_drift")
+    families = data.get("approved_families")
+    if not isinstance(forbidden, list) or len(forbidden) < 2 or not all(str(item).strip() for item in forbidden):
+        blockers.append(issue("style_lock.forbidden_drift", "Style lock needs at least two concrete forbidden-drift rules", path))
+    if not isinstance(families, list) or not families or not all(str(item).strip() for item in families):
+        blockers.append(issue("style_lock.families", "Style lock needs the approved visual families", path))
+        family_ids: set[str] = set()
+    else:
+        family_ids = {str(item) for item in families}
+    references = data.get("locked_references")
+    if not isinstance(references, list) or not references:
+        blockers.append(issue("style_lock.references", "Style lock needs hashed project-local reference images", path))
+        references = []
+    for row in references:
+        if not isinstance(row, dict):
+            blockers.append(issue("style_lock.reference", "Invalid locked-reference row", path))
+            continue
+        reference = resolve_project_path(root, str(row.get("path", "")))
+        expected_hash = str(row.get("sha256", "")).lower()
+        reference_families = {str(item) for item in row.get("families", []) if str(item)} if isinstance(row.get("families"), list) else set()
+        errors, _ = validate_media(reference, expected_kind="image", min_width=320, min_height=180) if reference and is_within(root, reference) else (["missing or outside project"], {})
+        if errors or not expected_hash or (reference and sha256_file(reference) != expected_hash):
+            blockers.append(issue("style_lock.reference_invalid", "Locked reference needs a valid project-local image and current SHA-256", reference))
+        if not reference_families or not reference_families.issubset(family_ids):
+            blockers.append(issue("style_lock.reference_families", "Locked reference families must be declared in approved_families", reference))
+    change = data.get("change_control") if isinstance(data.get("change_control"), dict) else {}
+    for field in ("change_reason", "approved_by", "approved_on"):
+        if not str(change.get(field, "")).strip():
+            blockers.append(issue("style_lock.change_control", f"Style lock change_control needs {field}", path))
+    actual_digest = style_lock_digest(data)
+    if data.get("digest") != actual_digest:
+        blockers.append(issue("style_lock.digest", "Style lock digest is missing or stale", path, expected=actual_digest, actual=data.get("digest", "")))
+    evidence.append({"code": "style_lock.bound", "style_id": style_id, "style_version": style_version, "sha256": actual_digest})
+    return data, actual_digest
 
 
 def reachable(adjacency: dict[str, set[str]], start: str) -> set[str]:
@@ -319,6 +401,8 @@ def validate_state_contract(
 def validate_visual_contract(
     root: Path,
     state_contract: Optional[dict],
+    style_version: str,
+    style_digest: str,
     blockers: list[dict],
     evidence: list[dict],
 ) -> tuple[set[str], dict[str, set[str]]]:
@@ -328,6 +412,7 @@ def validate_visual_contract(
     command_artifacts: dict[str, set[str]] = {}
     if data is None:
         return required_commands, command_artifacts
+    require_style_binding(data.get("style_lock"), style_version, style_digest, blockers, path, "visual_contract.style_lock")
     if data.get("schema_version") != 1 or not status_ok(data.get("status")):
         blockers.append(issue("visual_contract.status", "Visual quality contract must use schema_version 1 and verified status", path))
     for field in ("reviewer", "reviewer_independence", "build", "review_method"):
@@ -718,7 +803,9 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                 evidence.append({"code": "godot.main_scene", "path": str(scene)})
 
     states, required_commands, godot_commands, evidence_checks, ui_state_ids = validate_state_contract(root, blockers, evidence)
-    visual_commands, visual_command_artifacts = validate_visual_contract(root, states, blockers, evidence)
+    style_lock, style_digest = validate_style_lock(root, blockers, evidence)
+    style_version = str(style_lock.get("style_version", "")) if isinstance(style_lock, dict) else ""
+    visual_commands, visual_command_artifacts = validate_visual_contract(root, states, style_version, style_digest, blockers, evidence)
     required_commands.update(visual_commands)
 
     coverage = load_json(root / "design/assets/asset-coverage.json", blockers, "assets")
@@ -726,6 +813,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
     state_rows = states.get("states", []) if isinstance(states, dict) else []
     declared_state_ids = {str(row.get("id")) for row in state_rows if isinstance(row, dict) and row.get("id")}
     if coverage is not None:
+        require_style_binding(coverage.get("style_lock"), style_version, style_digest, blockers, "design/assets/asset-coverage.json", "assets.style_lock")
         raw_groups = coverage.get("groups")
         groups = by_id(raw_groups)
         if not isinstance(raw_groups, list) or not groups or len(groups) != len(raw_groups):
@@ -781,6 +869,10 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                     blockers.append(issue("asset.provenance_missing", f"Asset in {group_id} has no valid provenance/license record", provenance))
                 elif not re.search(r"\b(source|author|generated|license|rights)\b", provenance.read_text(encoding="utf-8-sig"), re.IGNORECASE):
                     blockers.append(issue("asset.provenance_incomplete", f"Asset in {group_id} provenance does not record source/license/rights", provenance))
+                elif asset.get("style_version") != style_version or asset.get("style_lock_sha256") != style_digest:
+                    blockers.append(issue("asset.style_binding", f"Asset {asset.get('id')} is not bound to the current style lock", "design/assets/asset-coverage.json"))
+                elif style_digest not in provenance.read_text(encoding="utf-8-sig", errors="ignore"):
+                    blockers.append(issue("asset.provenance_style_binding", f"Asset {asset.get('id')} provenance does not name the current style digest", provenance))
                 runtime_refs = asset.get("runtime_refs")
                 if not isinstance(runtime_refs, list) or not runtime_refs:
                     blockers.append(issue("asset.runtime_refs_missing", f"Asset in {group_id} has no runtime integration references", "design/assets/asset-coverage.json"))
@@ -840,10 +932,17 @@ def evaluate(root: Path, strict: bool = False) -> dict:
             blockers.append(issue("ui.theme_missing", "godot-theme/hybrid mode needs an implemented Godot Theme resource", ui_path))
         if mode == "intentionally-minimal" and not re.search(r"^Minimal UI rationale:\s*\S.+$", ui_text, re.MULTILINE | re.IGNORECASE):
             blockers.append(issue("ui.minimal_unjustified", "Intentionally minimal UI needs a concrete rationale", ui_path))
+        ui_style_path = re.search(r"^Style lock:\s*`([^`]+)`\s*$", ui_text, re.MULTILINE | re.IGNORECASE)
+        ui_style_version = re.search(r"^Style version:\s*(\S+)\s*$", ui_text, re.MULTILINE | re.IGNORECASE)
+        ui_style_digest = re.search(r"^Style SHA-256:\s*([0-9a-f]{64})\s*$", ui_text, re.MULTILINE | re.IGNORECASE)
+        if not ui_style_path or ui_style_path.group(1) != "design/art/style-lock.json" or not ui_style_version or ui_style_version.group(1) != style_version or not ui_style_digest or ui_style_digest.group(1).lower() != style_digest:
+            blockers.append(issue("ui.style_binding", "UI spec is not bound to the current style lock version and SHA-256", ui_path))
 
     audio = load_json(root / "design/audio/audio-manifest.json", blockers, "audio")
     audio_hashes: set[str] = set()
+    required_audio_events: set[str] = set()
     if audio is not None:
+        require_style_binding(audio.get("style_lock"), style_version, style_digest, blockers, "design/audio/audio-manifest.json", "audio.style_lock")
         if audio.get("intentional_silence"):
             if not str(audio.get("silence_rationale", "")).strip():
                 blockers.append(issue("audio.silence_unjustified", "Intentional silence needs a rationale", "design/audio/audio-manifest.json"))
@@ -856,19 +955,18 @@ def evaluate(root: Path, strict: bool = False) -> dict:
             coverage_rows = by_id(raw_coverage)
             if not isinstance(raw_coverage, list) or not coverage_rows or len(coverage_rows) != len(raw_coverage):
                 blockers.append(issue("audio.coverage_invalid", "coverage_requirements must be a non-empty array with unique game-specific IDs", "design/audio/audio-manifest.json"))
-            required_events: set[str] = set()
             for coverage_id, coverage_row in coverage_rows.items():
                 if not coverage_row.get("required", True):
                     continue
                 event_ids = {str(item) for item in coverage_row.get("event_ids", []) if str(item)} if isinstance(coverage_row.get("event_ids"), list) else set()
                 if not str(coverage_row.get("rationale", "")).strip() or not event_ids:
                     blockers.append(issue("audio.coverage_contract_incomplete", f"Audio coverage {coverage_id} needs rationale and event_ids", "design/audio/audio-manifest.json"))
-                required_events.update(event_ids)
+                required_audio_events.update(event_ids)
             raw_events = audio.get("events")
             events = by_id(raw_events)
             if not isinstance(raw_events, list) or len(events) != len(raw_events):
                 blockers.append(issue("audio.events_invalid", "Audio events must be an array with unique IDs", "design/audio/audio-manifest.json"))
-            for event_id in sorted(required_events):
+            for event_id in sorted(required_audio_events):
                 event = events.get(event_id)
                 if not event or not status_ok(event.get("status")):
                     blockers.append(issue("audio.event_incomplete", f"Audio event {event_id} is not verified", "design/audio/audio-manifest.json"))
@@ -887,6 +985,24 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                     blockers.append(issue("audio.provenance_missing", f"Audio event {event_id} has no project-local provenance/license record", provenance))
                 if not str(event.get("trigger", "")).strip():
                     blockers.append(issue("audio.trigger_missing", f"Audio event {event_id} has no trigger", "design/audio/audio-manifest.json"))
+            qa_raw = str(audio.get("qa_report", ""))
+            qa_path = resolve_project_path(root, qa_raw)
+            qa = load_json(qa_path, blockers, "audio.qa") if qa_path and is_within(root, qa_path) else None
+            if qa_raw != "production/evidence/audio-qa.json":
+                blockers.append(issue("audio.qa.path", "Audio QA report must use production/evidence/audio-qa.json", qa_path))
+            if qa is not None:
+                if qa.get("schema_version") != 1 or qa.get("gate") != "PASS":
+                    blockers.append(issue("audio.qa.blocked", "Audio QA report is not passing", qa_path))
+                if qa.get("manifest_sha256") != sha256_file(root / "design/audio/audio-manifest.json"):
+                    blockers.append(issue("audio.qa.manifest_changed", "Audio QA report does not match the current audio manifest", qa_path))
+                qa_results = by_id(qa.get("results"))
+                events = by_id(audio.get("events"))
+                for event_id in sorted(required_audio_events):
+                    row = qa_results.get(event_id)
+                    event = events.get(event_id, {})
+                    asset_path = resolve_project_path(root, str(event.get("asset", "")))
+                    if not row or row.get("status") != "PASS" or not asset_path or not asset_path.is_file() or row.get("sha256") != sha256_file(asset_path):
+                        blockers.append(issue("audio.qa.event", f"Audio event {event_id} lacks current passing measured QA", qa_path))
         require_artifacts(root, audio.get("evidence"), blockers, "audio.evidence", "Audio manifest has no listening/runtime evidence", "design/audio/audio-manifest.json")
         if not audio.get("intentional_silence"):
             policy = audio.get("coverage_policy") if isinstance(audio.get("coverage_policy"), dict) else {}
@@ -930,6 +1046,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
 
     report = load_json(root / "production/evidence/player-ready.json", blockers, "evidence")
     if report is not None:
+        require_style_binding(report.get("style_lock"), style_version, style_digest, blockers, "production/evidence/player-ready.json", "evidence.style_lock")
         checks = report.get("checks")
         if not isinstance(checks, dict):
             blockers.append(issue("evidence.checks_invalid", "checks must be an object", "production/evidence/player-ready.json"))

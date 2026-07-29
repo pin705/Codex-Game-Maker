@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Start"
+  short_description: "Route complete game studio work"
+  default_prompt: "Use $game-studio-start to inspect this project and route the next player-ready or commercial workflow."

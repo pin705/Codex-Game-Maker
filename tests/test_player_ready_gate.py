@@ -16,10 +16,11 @@ PLUGIN = REPO_ROOT / "plugins/codex-game-maker"
 PLAYER_GATE = PLUGIN / "scripts/guards/player_ready_gate.py"
 COMMERCIAL_GATE = PLUGIN / "scripts/guards/commercial_release_gate.py"
 QUALITY_RUNNER = PLUGIN / "scripts/quality_runner.py"
+AUDIO_QA = PLUGIN / "scripts/audio_qa.py"
 VALIDATION_LIB = PLUGIN / "scripts/lib"
 sys.path.insert(0, str(VALIDATION_LIB))
 
-from cgm_validation import sha256_path  # noqa: E402
+from cgm_validation import sha256_path, style_lock_digest  # noqa: E402
 
 
 CLASSIC_STATES = (
@@ -122,13 +123,13 @@ def create_fake_godot(root: Path) -> str:
         path = write(
             root,
             "tools/godot.cmd",
-            "@echo off\r\nif \"%1\"==\"--version\" (echo 4.7.1.stable.official.fixture) else (echo Godot fixture command: PASS)\r\n",
+            "@echo off\r\nif \"%1\"==\"--version\" (echo 4.6.2.stable.official.fixture) else (echo Godot fixture command: PASS)\r\n",
         )
     else:
         path = write(
             root,
             "tools/godot",
-            "#!/usr/bin/env python3\nimport sys\nprint('4.7.1.stable.official.fixture' if '--version' in sys.argv else 'Godot fixture command: PASS')\n",
+            "#!/usr/bin/env python3\nimport sys\nprint('4.6.2.stable.official.fixture' if '--version' in sys.argv else 'Godot fixture command: PASS')\n",
         )
         path.chmod(0o755)
     return str(path.relative_to(root))
@@ -157,6 +158,8 @@ def quality_commands(
 
 def create_visual_contract(root: Path, state_captures: dict[str, str]) -> None:
     artifacts = tuple(sorted(set(state_captures.values())))
+    style = json.loads((root / "design/art/style-lock.json").read_text(encoding="utf-8"))
+    style_binding = {"path": "design/art/style-lock.json", "style_version": style["style_version"], "sha256": style["digest"]}
     write_json(root, "production/reviews/visual-quality-contract.json", {
         "schema_version": 1,
         "status": "verified",
@@ -165,6 +168,7 @@ def create_visual_contract(root: Path, state_captures: dict[str, str]) -> None:
         "reviewer_independence": "Fixture reviewer did not author the runtime surfaces",
         "build": "fixture",
         "review_method": "actual-runtime-capture-inspection",
+        "style_lock": style_binding,
         "required_viewports": [{"id": "fixture-640x360", "width": 640, "height": 360, "device": "fixture viewport"}],
         "art_direction": {
             "identity_rule": "Warm carved fixture presentation with clear silhouettes and restrained focus light",
@@ -212,7 +216,7 @@ def create_visual_contract(root: Path, state_captures: dict[str, str]) -> None:
 
 def create_player_ready_fixture(root: Path, include_commercial_commands: bool = False) -> dict[str, str]:
     write(root, "scenes/main.tscn", "[gd_scene format=3]\n")
-    write(root, "project.godot", '[application]\nrun/main_scene="res://scenes/main.tscn"\n[application]\nconfig/features=PackedStringArray("4.7")\n')
+    write(root, "project.godot", '[application]\nrun/main_scene="res://scenes/main.tscn"\n[application]\nconfig/features=PackedStringArray("4.6")\n')
     write(root, "design/gdd/game-concept.md", "# Game Concept: Fixture\nStatus: Verified\nCore loop, audience, pillars, scope, and player journey verified.\n")
     write(root, "design/art/art-bible.md", "# Art Bible: Fixture\nStatus: Verified\nAuthored silhouettes, palette, typography, UI materials, motion, and asset rules verified.\n")
     write(root, "docs/architecture/architecture.md", "# Architecture: Fixture\nStatus: Verified\nGodot scene, data, signals, saves, testing, and export boundaries verified.\n")
@@ -245,6 +249,41 @@ Status: Approved
         relative = f"production/evidence/states/{state}.png"
         write_png(root, relative, color)
         state_captures[state] = relative
+    style_lock = {
+        "schema_version": 1,
+        "style_id": "fixture-authored-style",
+        "style_version": "1.0.0",
+        "status": "locked",
+        "source_art_bible": "design/art/art-bible.md",
+        "art_bible_sha256": sha256_path(root / "design/art/art-bible.md"),
+        "identity_rule": "Warm carved fixture presentation with clear silhouettes and restrained focus light",
+        "anchors": {
+            "materials": ["carved metal", "matte field"],
+            "shape_language": ["strong silhouettes", "framed hierarchy"],
+            "camera_and_view": ["fixed readable gameplay view"],
+            "lighting": ["restrained warm focus over cool world"],
+            "palette_roles": ["warm focus", "cool world", "high-contrast text"],
+            "typography_roles": ["display", "body", "numeric feedback"],
+            "detail_density": ["quiet playfield with concentrated interface detail"],
+            "motion_and_fx": ["fast restrained state feedback"],
+        },
+        "forbidden_drift": ["generic dashboard", "distorted textures", "overlapping text"],
+        "approved_families": ["world", "actors", "feedback", "ui"],
+        "locked_references": [{
+            "path": state_captures["active-run"],
+            "sha256": sha256_path(root / state_captures["active-run"]),
+            "families": ["world", "actors", "feedback", "ui"],
+        }],
+        "change_control": {
+            "previous_digest": "",
+            "change_reason": "initial fixture lock",
+            "approved_by": "Fixture Art Owner",
+            "approved_on": "2026-07-29",
+        },
+    }
+    style_lock["digest"] = style_lock_digest(style_lock)
+    write_json(root, "design/art/style-lock.json", style_lock)
+    style_binding = {"path": "design/art/style-lock.json", "style_version": style_lock["style_version"], "sha256": style_lock["digest"]}
     transitions = {
         "launch-pad": [{"to": "front-door", "trigger": "startup-complete"}],
         "front-door": [{"to": "guided-first-step", "trigger": "begin-session"}, {"to": "tuning-desk", "trigger": "configure"}],
@@ -311,13 +350,15 @@ Status: Approved
         asset_path = f"assets/generated/{group}/{asset_id}.png"
         provenance_path = f"assets/source-prompts/{asset_id}.md"
         write_png(root, asset_path, (30 * index, 40 + 20 * index, 220 - 20 * index))
-        write(root, provenance_path, "Source: authored fixture; license and commercial rights verified.\n")
+        write(root, provenance_path, f"Source: authored fixture; license and commercial rights verified.\nStyle lock SHA-256: {style_lock['digest']}\n")
         surface_id = CLASSIC_STATES[index - 1]
         asset_rows[group] = {
             "id": asset_id,
             "status": "verified",
             "path": asset_path,
             "provenance": provenance_path,
+            "style_version": style_lock["style_version"],
+            "style_lock_sha256": style_lock["digest"],
             "runtime_refs": ["scenes/main.tscn"],
             "presentation": {
                 "source_kind": "dedicated-component",
@@ -336,6 +377,7 @@ Status: Approved
         root,
         "design/assets/asset-coverage.json",
         {
+            "style_lock": style_binding,
             "coverage_policy": {
                 "minimum_distinct_assets": len(ASSET_GROUPS),
                 "rationale": "One distinct integrated fixture artifact per declared visible-system group",
@@ -363,6 +405,9 @@ Status: Approved
 Status: Verified
 Implementation mode: godot-theme
 Minimal UI rationale: Not applicable; the fixture uses an authored Godot Theme.
+Style lock: `design/art/style-lock.json`
+Style version: {style_version}
+Style SHA-256: {style_digest}
 
 Implementation resources:
 - res://resources/ui/game-theme.tres
@@ -402,7 +447,7 @@ Fast restrained transitions clarify state changes, with authored focus, pressed,
 
 ## Evidence
 Runtime captures and full keyboard/controller navigation passed with no open high-severity findings.
-""",
+""".format(style_version=style_lock["style_version"], style_digest=style_lock["digest"]),
     )
 
     write(root, "resources/ui/game-theme.tres", '[gd_resource type="Theme" format=3]\n')
@@ -415,14 +460,17 @@ Runtime captures and full keyboard/controller navigation passed with no open hig
         write_wav(root, audio_path, 220 + index * 37)
         write(root, provenance_path, "Source: authored fixture tone; license and commercial rights verified.\n")
         audio_paths.append(audio_path)
-        audio_events.append({"id": event, "status": "verified", "asset": audio_path, "provenance": provenance_path, "trigger": f"signal:{event}"})
+        audio_events.append({"id": event, "status": "verified", "asset": audio_path, "provenance": provenance_path, "trigger": f"signal:{event}", "loop": False})
     write_json(
         root,
         "design/audio/audio-manifest.json",
         {
+            "style_lock": style_binding,
             "intentional_silence": False,
             "silence_rationale": "",
             "coverage_policy": {"minimum_distinct_assets": len(AUDIO_EVENTS), "rationale": "Distinct fixture audio for navigation, action, world bed, and outcome"},
+            "qa_policy": {"minimum_duration_seconds": 0.05, "minimum_sample_rate": 22050, "minimum_rms_dbfs": -36, "maximum_rms_dbfs": -6, "maximum_peak_dbfs": -0.1, "maximum_loop_seam_normalized": 0.2},
+            "qa_report": "production/evidence/audio-qa.json",
             "required_buses": ["Master", "Feedback", "World"],
             "buses": ["Master", "Feedback", "World"],
             "coverage_requirements": [
@@ -433,6 +481,9 @@ Runtime captures and full keyboard/controller navigation passed with no open hig
             "evidence": audio_paths + [captures["gameplay"]],
         },
     )
+    audio_qa = subprocess.run([sys.executable, str(AUDIO_QA), "--root", str(root)], capture_output=True, text=True)
+    if audio_qa.returncode != 0:
+        raise AssertionError(audio_qa.stdout + audio_qa.stderr)
 
     write(root, "tests/test_core_loop.gd", "extends Node\n")
     write(
@@ -457,6 +508,7 @@ Gate: PASS
         root,
         "production/evidence/player-ready.json",
         {
+            "style_lock": style_binding,
             "checks": {check: "PASS" for check in EVIDENCE_CHECKS},
             "quality_report": "production/evidence/quality-run.json",
             "visual_contract": "production/reviews/visual-quality-contract.json",
@@ -474,6 +526,8 @@ Gate: PASS
 
 
 def convert_to_endless_sandbox_fixture(root: Path) -> dict[str, str]:
+    style_lock = json.loads((root / "design/art/style-lock.json").read_text(encoding="utf-8"))
+    style_binding = {"path": "design/art/style-lock.json", "style_version": style_lock["style_version"], "sha256": style_lock["digest"]}
     state_ids = ("drop-in", "roaming-loop", "pack-overlay", "safe-exit")
     colors = ((32, 72, 108), (52, 132, 86), (126, 82, 152), (210, 150, 70))
     captures: dict[str, str] = {}
@@ -531,6 +585,9 @@ def convert_to_endless_sandbox_fixture(root: Path) -> dict[str, str]:
 Status: Verified
 Implementation mode: custom-draw
 Minimal UI rationale: The sandbox uses a diegetic custom-drawn pack instead of conventional menus.
+Style lock: `design/art/style-lock.json`
+Style version: {style_lock['style_version']}
+Style SHA-256: {style_lock['digest']}
 
 Implementation resources:
 - res://scripts/ui/sandbox_overlay.gd
@@ -568,6 +625,7 @@ All declared sandbox UI states have current runtime captures.
     write(root, "production/playtests/manual-core-loop.md", f"# Manual Sandbox Journey\nStatus: Verified\nTester: Fixture Tester\nBuild: fixture\n## Results\nOpen-ended session and safe exit completed.\n## Media\nScreenshot: {captures['roaming-loop']}\nMedia SHA-256: {sha256_path(play_media)}\n## Verdict\nGate: PASS\n")
     write(root, "production/reviews/visual-quality.md", f"# Visual Review\nStatus: Verified\nBuild: fixture\nReviewer: Fixture Reviewer\nEvidence: {captures['roaming-loop']}\nEvidence SHA-256: {sha256_path(play_media)}\nGate: PASS\n")
     write_json(root, "production/evidence/player-ready.json", {
+        "style_lock": style_binding,
         "checks": {check: "PASS" for check in evidence_checks},
         "quality_report": "production/evidence/quality-run.json",
         "visual_contract": "production/reviews/visual-quality-contract.json",
@@ -600,7 +658,7 @@ def create_commercial_fixture(root: Path) -> None:
             "release_type": "premium-launch",
             "version": "1.0.0",
             "build_commit": "fixture-commit",
-            "engine": {"name": "Godot", "version": "4.7.1"},
+            "engine": {"name": "Godot", "version": "4.6.2"},
             "target_platforms": ["web"],
             "stores": ["direct"],
             "release_locales": ["en"],
@@ -944,6 +1002,64 @@ class PlayerReadyGateTests(unittest.TestCase):
             result, report = run_json(PLAYER_GATE, root)
         self.assertEqual(result.returncode, 1)
         self.assertTrue(any(row["code"] == "visual_contract.reviewer_not_independent" for row in report["blockers"]))
+
+    def test_missing_style_lock_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            (root / "design/art/style-lock.json").unlink()
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "style_lock.missing" for row in report["blockers"]))
+
+    def test_stale_art_bible_style_hash_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            write(root, "design/art/art-bible.md", "# Art Bible: Drifted\nStatus: Verified\nA silent unversioned direction change.\n")
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "style_lock.art_bible_hash" for row in report["blockers"]))
+
+    def test_stale_style_digest_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            lock_path = root / "design/art/style-lock.json"
+            lock = json.loads(lock_path.read_text(encoding="utf-8"))
+            lock["identity_rule"] = "A different unapproved visual identity that was not versioned or re-hashed"
+            write_json(root, "design/art/style-lock.json", lock)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "style_lock.digest" for row in report["blockers"]))
+
+    def test_asset_style_binding_mismatch_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            coverage_path = root / "design/assets/asset-coverage.json"
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+            coverage["groups"][0]["assets"][0]["style_lock_sha256"] = "0" * 64
+            write_json(root, "design/assets/asset-coverage.json", coverage)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "asset.style_binding" for row in report["blockers"]))
+
+    def test_asset_provenance_must_name_style_digest(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            coverage = json.loads((root / "design/assets/asset-coverage.json").read_text(encoding="utf-8"))
+            provenance = coverage["groups"][0]["assets"][0]["provenance"]
+            write(root, provenance, "Source: authored fixture; license and commercial rights verified.\n")
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "asset.provenance_style_binding" for row in report["blockers"]))
 
     def test_visual_capture_must_be_bound_to_quality_command(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

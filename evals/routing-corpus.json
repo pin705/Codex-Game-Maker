@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {"id": "start-broad", "prompt": "Make this game end to end and do not stop at a prototype.", "expected_skills": ["game-studio-start", "game-studio-build"], "forbidden_skills": []},
+    {"id": "audit-existing", "prompt": "Audit whether this project is honestly player-ready.", "expected_skills": ["game-studio-start", "game-studio-review"], "forbidden_skills": []},
+    {"id": "commercial-launch", "prompt": "Prepare this release candidate for paid launch on Steam and itch.", "expected_skills": ["game-studio-commercial-release", "game-studio-platforms", "game-studio-compliance"], "forbidden_skills": []},
+    {"id": "concept-only", "prompt": "Turn this loose idea into a scoped GDD and core-loop design.", "expected_skills": ["game-studio-design"], "forbidden_skills": ["game-studio-commercial-release"]},
+    {"id": "architecture", "prompt": "Design the Godot scene, save, CI, resource, and export architecture.", "expected_skills": ["game-studio-architecture"], "forbidden_skills": []},
+    {"id": "implementation", "prompt": "Implement the missing combat, save, restart, and recovery states.", "expected_skills": ["game-studio-implementation"], "forbidden_skills": []},
+    {"id": "art-direction", "prompt": "Create the art bible and lock a coherent visual direction before generating assets.", "expected_skills": ["game-studio-art-assets"], "forbidden_skills": []},
+    {"id": "sprites", "prompt": "Generate, process, and import the hero idle, run, jump, attack, hurt, and death sheets.", "expected_skills": ["game-studio-sprite-assets"], "forbidden_skills": []},
+    {"id": "maps", "prompt": "Create an editable forest level with layers, props, collisions, checkpoints, and exits.", "expected_skills": ["game-studio-map-assets"], "forbidden_skills": []},
+    {"id": "asset-qa", "prompt": "Why do these accepted sprites have chroma residue, cropping, scale drift, and mismatched style? Validate them.", "expected_skills": ["game-studio-asset-qa"], "forbidden_skills": []},
+    {"id": "ui-ux", "prompt": "Replace this plastic HTML dashboard HUD with premium game-native menus and controller navigation.", "expected_skills": ["game-studio-ui-ux"], "forbidden_skills": []},
+    {"id": "audio", "prompt": "The game is silent. Build and verify complete music, ambience, UI, combat, and outcome audio coverage.", "expected_skills": ["game-studio-audio"], "forbidden_skills": []},
+    {"id": "accessibility", "prompt": "Implement remapping, captions, non-color cues, reduced motion, and keyboard-only navigation.", "expected_skills": ["game-studio-accessibility"], "forbidden_skills": []},
+    {"id": "localization", "prompt": "Externalize strings and verify English, Vietnamese, and Japanese layouts and fonts.", "expected_skills": ["game-studio-localization"], "forbidden_skills": []},
+    {"id": "performance", "prompt": "Profile frame time, memory, startup, shader stutter, and long-run stability on target devices.", "expected_skills": ["game-studio-performance"], "forbidden_skills": []},
+    {"id": "platforms", "prompt": "Export, sign, smoke-test, and package Windows, macOS, Linux, and Web builds.", "expected_skills": ["game-studio-platforms"], "forbidden_skills": []},
+    {"id": "business", "prompt": "Validate audience, competitors, pricing, scope, budget, and commercial viability.", "expected_skills": ["game-studio-business"], "forbidden_skills": []},
+    {"id": "compliance", "prompt": "Audit asset rights, dependency licenses, AI provenance, privacy, ratings, and notices.", "expected_skills": ["game-studio-compliance"], "forbidden_skills": []},
+    {"id": "marketing", "prompt": "Create a truthful store page, capsule plan, screenshots, trailer beats, and launch positioning.", "expected_skills": ["game-studio-marketing"], "forbidden_skills": []},
+    {"id": "narrative", "prompt": "Design and implement branching narrative variables, dialogue IDs, consequences, and save continuity.", "expected_skills": ["game-studio-narrative"], "forbidden_skills": []},
+    {"id": "online", "prompt": "Design secure accounts, cloud saves, matchmaking, leaderboards, abuse controls, and outage recovery.", "expected_skills": ["game-studio-online-services"], "forbidden_skills": []},
+    {"id": "liveops", "prompt": "Prepare telemetry, crash monitoring, alerts, support, incident response, rollback, and patch operations.", "expected_skills": ["game-studio-liveops"], "forbidden_skills": []},
+    {"id": "negative-web-page", "prompt": "Build a normal marketing website for my bakery.", "expected_skills": [], "forbidden_skills": ["game-studio-start", "game-studio-build"]},
+    {"id": "negative-image-edit", "prompt": "Remove the background from this family photo.", "expected_skills": [], "forbidden_skills": ["game-studio-art-assets", "game-studio-asset-qa"]},
+    {"id": "ambiguous-art-vs-qa", "prompt": "The generated enemies look cheap and inconsistent with the game; fix the pipeline and replace them.", "expected_skills": ["game-studio-art-assets", "game-studio-asset-qa"], "forbidden_skills": []},
+    {"id": "ambiguous-ui-accessibility", "prompt": "Rebuild the settings UI so controller focus, text scaling, contrast, and reduced motion actually work.", "expected_skills": ["game-studio-ui-ux", "game-studio-accessibility"], "forbidden_skills": []},
+    {"id": "ambiguous-review-release", "prompt": "Tell me honestly whether this signed candidate can be submitted to its declared stores.", "expected_skills": ["game-studio-review", "game-studio-commercial-release"], "forbidden_skills": []},
+    {"id": "ambiguous-build-platform", "prompt": "Finish the game and produce a verified Web build for players.", "expected_skills": ["game-studio-build", "game-studio-platforms"], "forbidden_skills": []}
+  ]
+}

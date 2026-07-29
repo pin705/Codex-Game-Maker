@@ -1,10 +1,10 @@
 ﻿# Contributing
 
-Codex Game Maker is currently `v0.2.0-alpha.3`. Contributions should keep the project approachable, evidence-backed, cross-platform, and Godot-first.
+Codex Game Maker is currently `v1.0.0`. Contributions should preserve the stable contracts while keeping the project approachable, evidence-backed, cross-platform, and Godot-first.
 
 ## Priorities
 
-- Improve the supported Godot 4.6/4.7 workflow and keep the recommended version policy current.
+- Improve the supported Godot 4.6 workflow and keep stable/prerelease/EOL policy data current.
 - Improve GPT Image 2D asset processing and QA.
 - Add small, testable tools and executable evidence for broad process.
 - Preserve strict player-ready and declared-platform commercial release gates.
@@ -29,8 +29,10 @@ python3 plugins/codex-game-maker/scripts/cgm.py player-ready --root .
 Plugin changes must also pass the repository CI contract:
 
 ```bash
-python3 -m unittest -v tests/test_player_ready_gate.py
+python3 -m unittest discover -v tests
+python3 evals/run_eval.py validate
 python3 tests/validate_repository.py
+python3 tests/validate_plugin_contract.py plugins/codex-game-maker
 ```
 
 ## Style

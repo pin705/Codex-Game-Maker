@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Art Assets"
+  short_description: "Lock and produce coherent game art"
+  default_prompt: "Use $game-studio-art-assets to establish a style lock and build a coherent production asset pipeline."

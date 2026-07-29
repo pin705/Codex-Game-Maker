@@ -250,7 +250,7 @@ Claude 源项目重点覆盖 Godot、Unity、Unreal。Codex 版保留三大引�
 
 | 项目状态 | 推荐 |
 |---|---|
-| 空白目录 | Godot 4.7.1 + Web 导出路线。 |
+| 空白目录 | Godot 4.6.2 + Web 导出路线。 |
 | 已有 `.godot` / `project.godot` | 沿用 Godot。 |
 | 已有 Unity/Unreal 工程文件 | 沿用现有引擎，不强行迁移。 |
 | 已有 Web 技术栈 | 沿用现有栈，但不主动推荐 Phaser/Three/Pixi。 |
@@ -333,7 +333,7 @@ Concept
    贯穿 Concept 到 Polish，用于风格探索、角色/道具/UI 资产生成、资产审查。
 
 2. **Playable Prototype Track**  
-   贯穿 Pre-Production 到 Production，优先用 Godot 4.7.1 项目和导出预设验证 fun factor。
+   贯穿 Pre-Production 到 Production，优先用 Godot 4.6.2 项目和导出预设验证 fun factor。
 
 建议阶段门禁：
 
@@ -341,7 +341,7 @@ Concept
 |---|---|
 | Concept -> Systems Design | 是否有 Visual Identity Anchor；是否有首批 style references 或 generated mood samples。 |
 | Systems Design -> Technical Setup | GDD 是否能导出资产需求；关键 mechanics 是否有 prototype hypothesis。 |
-| Technical Setup -> Pre-Production | 是否选定 Godot 4.7.1 或已有引擎；是否有 asset import policy。 |
+| Technical Setup -> Pre-Production | 是否选定 Godot 4.6.2 或已有引擎；是否有 asset import policy。 |
 | Pre-Production -> Production | 是否有可玩的 vertical slice；AI 资产是否已进入 manifest，而不是临时文件。 |
 | Production -> Polish | Godot/editor/export 验证；核心循环试玩证据；没有未追踪生成资产。 |
 | Polish -> Release | 资产授权/来源记录完整；发布构建可重复。 |
@@ -452,5 +452,5 @@ optional team workflow references
 4. 把 source agents 压缩成 6 个核心角色视角，写入 `core-agent-roster.md`。
 5. 做一个端到端 demo：从一句游戏想法 -> kickoff brief -> game concept -> art bible -> Godot architecture -> QA gate。
 
-这个 demo 跑通后，再决定是否拆出 production/team workflow。这样能尽快验证 Codex + GPT Image 2 + Godot 4.7.1 的核心优势，而不是先陷入 72 个命令的机械搬运。
+这个 demo 跑通后，再决定是否拆出 production/team workflow。这样能尽快验证 Codex + GPT Image 2 + Godot 4.6.2 的核心优势，而不是先陷入 72 个命令的机械搬运。
 

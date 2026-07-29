@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status": "planned",
+  "run_id": "",
+  "case_id": "",
+  "variant": "plugin-current",
+  "brief_sha256": "",
+  "plugin": {"version": "", "commit": ""},
+  "agent": {"model": "", "reasoning_effort": "", "context_mode": "fresh-task"},
+  "timing": {"started_at": "", "finished_at": "", "duration_seconds": 0},
+  "routing": {"expected_skills": [], "activated_skills": [], "forbidden_skills": []},
+  "scores": {},
+  "review": {"reviewer": "", "mode": "independent-agent", "independence": "", "blind": true},
+  "known_defects": [],
+  "decision": "BLOCKED",
+  "artifacts": [{"path": "", "kind": "", "sha256": ""}],
+  "blind_comparison": {"baseline_run_id": "", "winner": "", "rationale": ""},
+  "notes": ""
+}

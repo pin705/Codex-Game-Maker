@@ -6,9 +6,9 @@
 
 **面向 Codex 的 Godot 优先端到端游戏工作流：目标是完整、精致、可交给玩家，而不是单屏原型。**
 
-**快速跳转：** [安装](#快速开始) · [Player-Ready 模式](#player-ready-模式) · [商业发布模式](#商业发布模式) · [资产流程](#gpt-image-资产流程) · [Skills](#当前包含) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
+**快速跳转：** [安装与更新](#快速开始) · [Player-Ready 模式](#player-ready-模式) · [商业发布模式](#商业发布模式) · [1.0 范围](#10-范围与证据标准) · [资产流程](#gpt-image-资产流程) · [Skills](#当前包含) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
 
-> 当前状态：`v0.2.0-alpha.3`。Player-ready 与商业发布流程均可执行，但仍是预发布工具。Gate 通过只代表声明范围内已有可验证证据，不能替代平台认证、法律顾问、签名授权、商店审核或真实玩家判断。
+> 当前状态：`v1.0.0`。Godot 优先的商业 2D 工作流、项目 contract、迁移路径与发布工具已经进入稳定版。Gate 通过只代表声明范围内已有当前、可验证的 evidence，不能替代平台认证、法律顾问、签名授权、商店审核、独立视觉判断或真实玩家测试。
 
 Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产品与游戏设计、Godot 实现、完整状态、生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图、人工 playtest、性能、构建、合规、本地化、无障碍、商店素材、遥测、客服与回滚计划。
 
@@ -16,7 +16,7 @@ Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产�
 
 | 方向 | 说明 |
 |---|---|
-| Godot 优先 | 空白项目遵循已验证的版本策略；当前推荐 Godot 4.7.1，支持 4.6/4.7 系列。 |
+| Godot 优先 | 空白项目遵循已验证的版本策略；当前推荐 Godot 4.6.2，并支持 4.6 稳定系列。 |
 | 资产可进游戏 | GPT Image 的图不会停在“好看”，而是进入透明帧、GIF、metadata、QA、Godot import。 |
 | 端到端负责 | 宽泛的“制作/完成游戏”请求会继续经过玩法、完整状态、资产、UI、音频、测试与 playtest。 |
 | 有设计感的呈现 | art bible 统一驱动 HUD、菜单、图标、字体、动效和音频识别。 |
@@ -57,15 +57,28 @@ python3 scripts/cgm.py commercial-release --root /path/to/game
 
 法律/评级批准、保密主机认证、商店账号决策、签名凭据与不可逆发布必须由对应授权人完成；插件会把它们保留为 blocker，不会伪造通过。
 
+## 1.0 范围与证据标准
+
+1.0 的核心目标是成为可靠的 **Godot 优先商业 2D 游戏制作工具集**。第一方完成标准覆盖：有明确边界的 2D 玩法、游戏专属玩家旅程、游戏化 UI、2D 资产集成、音频、无障碍、本地化、可复现质量证据，以及针对已声明桌面/Web 平台的发布准备。
+
+以下能力属于条件式或外部协作范围，不是 1.0 对所有项目的无条件承诺：
+
+- 3D 项目可以使用规划、架构、评审、性能、合规和发布 contracts，但完整的第一方 3D 资产与运行时 pipeline 不属于 1.0 核心；需要采用适合项目的外部 3D 工具和专业人员。
+- 主机平台需要平台方授权、NDA 内容、许可 SDK、开发机、认证权限与对应负责人。插件可以准备非保密计划和 evidence，但不能完成主机认证或提交。
+- 在线服务和后端只在项目明确声明时进入范围。插件可以设计并验证特定供应商的安全、数据、负载、备份、恢复与故障 evidence，但不自带也不代运营托管后端。
+- 商店账号、签名/公证凭据、评级、税务/支付设置、平台协议、法律意见与不可逆发布仍由有权限的人负责。
+
+所有证据声明必须保持窄范围并可复现。仓库 validator 和 regression tests 只能证明已声明 contract 与 guardrail 按测试运行；它们不能证明游戏一定好玩、视觉优秀、商业成功、通过认证或获得法律批准。Player-ready 或 commercial PASS 必须绑定当前项目 artifacts，并接受诚实评审。只有在同时公开可复现的 eval 输入、输出、评分规则与 reviewer provenance 时，才应发布 benchmark 或质量结论；计划中的 showcase、自行填写的 PASS、单个成功例子都不能证明普遍质量。
+
 ## 当前包含
 
 | 类别 | 数量 | 说明 |
 |---|---:|---|
 | 核心 skills | 23 | Player-ready 全流程，加 business、commercial release、platform、compliance、performance、localization、accessibility、narrative、online、liveops、marketing |
 | 工具脚本 | 32 | 安装、注册、导出、预览、资产处理、gate、hook、import |
-| 顶层 Python CLI 脚本 | 4 | 跨平台 doctor/orchestrator、quality runner、Godot installer 与 exporter |
+| 顶层 Python CLI 脚本 | 7 | 跨平台 orchestrator、quality、已校验 Godot 安装/导出、style lock、audio QA 与 migration |
 | gate 脚本 | 9 | engine、asset、story、production、release、Godot lint、review、player-ready、commercial release |
-| 模板 | 58 | GDD/art/UI/audio、结构化视觉质量/evidence，以及 business、build、performance、compliance、localization、accessibility、marketing、security、telemetry、liveops |
+| 模板 | 60 | GDD/art/style/session/UI/audio、结构化视觉质量/evidence，以及 business、build、performance、compliance、localization、accessibility、marketing、security、telemetry、liveops |
 | 资产处理脚本 | 2 | pixel processor + workflow coordinator |
 | 自然语言 aliases | 20 | `/player-ready`、`/commercial-release`、`/quality` 与各专业 pass |
 
@@ -73,8 +86,10 @@ python3 scripts/cgm.py commercial-release --root /path/to/game
 
 | 引擎 / 技术栈 | 支持等级 | 当前能力 |
 |---|---:|---|
-| Godot 4.7.1 | 推荐 | 跨平台安装/导出、export templates、检测/注册、Web 预览、GDScript lint、sprite/map 导入 |
-| Godot 4.6 / 4.7 | 支持 | 发布候选必须固定项目使用的精确引擎与 export-template 版本 |
+| Godot 4.6.2 | 推荐 | 跨平台安装/导出、export templates、检测/注册、Web 预览、GDScript lint、sprite/map 导入 |
+| Godot 4.6 | 支持 | 使用已验证的最新 patch；发布候选必须固定精确引擎与 export-template 版本 |
+| Godot 4.5 | 仅安全/平台修复 | 现有项目可临时保留，但新项目应使用 4.6，商业发布需明确迁移/风险决定 |
+| Godot 4.7 开发版 | 不支持生产 | 可以单独评估预发布版本，但不能满足 player-ready 或 commercial 的引擎 gate |
 | Phaser / Three.js / PixiJS / HTML canvas | 基础适配 | 能识别并尊重已有 Web 项目；空白项目仍默认推荐 Godot |
 | Unity | 检测与接管 | 能识别并保留已有 Unity 项目；暂时没有 Unity 专业流程 |
 | Unreal | 检测与接管 | 能识别并保留已有 Unreal 项目；暂时没有 Unreal 专业流程 |
@@ -86,7 +101,48 @@ python3 scripts/cgm.py commercial-release --root /path/to/game
 ```bash
 codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
 codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
 ```
+
+确认 `codex-game-maker@codex-game-maker` 显示为已安装且启用，然后新建一个 **Codex task**。已经打开的 task 可能继续使用旧的 skills snapshot。
+
+### 更新已安装的 plugin
+
+只刷新 marketplace snapshot 不会重新安装已经缓存的 plugin package。请执行完整流程：
+
+```bash
+codex plugin marketplace upgrade codex-game-maker
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
+```
+
+确认安装版本符合预期，然后新建 Codex task。
+
+### 卸载或回滚
+
+只卸载 plugin、保留 marketplace：
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+```
+
+如果不再需要这个 marketplace，再单独移除：
+
+```bash
+codex plugin marketplace remove codex-game-maker
+```
+
+回滚时使用包含 marketplace catalog 的已知可用 Git tag 或 commit：
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+codex plugin marketplace remove codex-game-maker
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker --ref <known-good-tag-or-commit>
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
+```
+
+卸载或回滚后也要新建 Codex task。操作前先提交或备份游戏项目；移除 plugin 不会迁移或删除此前已经写入项目的文件。
 
 如需开发或验证 plugin source：
 
@@ -135,7 +191,7 @@ powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-
 如果本机已经有 Godot，可以注册已有路径：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\register-godot.ps1 -GodotPath "F:\Godot_v4.6.2-stable_win64.exe"
 ```
 
 浏览器预览：

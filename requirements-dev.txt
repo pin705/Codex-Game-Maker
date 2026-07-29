@@ -1,0 +1,2 @@
+-r plugins/codex-game-maker/requirements-asset-tools.txt
+PyYAML==6.0.2

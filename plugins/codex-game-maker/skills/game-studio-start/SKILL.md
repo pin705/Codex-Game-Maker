@@ -22,6 +22,8 @@ When the user asks for autonomous execution, accepts defaults, or says to make/b
 
 Codex Game Maker cannot force the host session context window from repo files. When the host supports it, prefer the largest available context window, with 1M tokens as the recommended target for long-running game projects. When it is unavailable, keep continuity through `production/session-state/active.md`, planning docs, manifests, and brief implementation summaries.
 
+On every fresh task, read `design/art/style-lock.json` and `production/session-state/active.md` before visual, UI, audio, or content work. Run `python3 ../../scripts/cgm.py style-lock verify --root .`; stop production generation when the stored digest is missing or stale. A requested style change must bump `style_version`, record change control, reseal the lock, and migrate affected families explicitly.
+
 ## Required First Step
 
 Run or mentally follow the engine detector before recommending an engine:
@@ -32,7 +34,7 @@ Engine decision rules:
 - If `project.godot` or `.godot/` exists, treat the project as Godot.
 - If Unity or Unreal project files exist, respect the existing engine.
 - If a web stack exists, respect it, but do not recommend Phaser, Three.js, or PixiJS unless the user asks for pure web tech.
-- If the project is blank, recommend Godot 4.7.1 + Web export.
+- If the project is blank, recommend Godot 4.6.2 + Web export.
 - Godot CLI is optional for design work but required for verified builds. Read `../../references/policies/godot-version-policy.json`; install the recommended supported version with `python3 ../../scripts/cgm.py install-godot --with-export-templates` when missing.
 - If engine version, plugin compatibility, export behavior, or API usage is uncertain, use web search and prioritize official docs.
 
@@ -42,6 +44,8 @@ Check these artifacts:
 - `design/gdd/game-concept.md`
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `production/player-ready-contract.md`
 - `design/game-state-matrix.json`
 - `design/assets/asset-coverage.json`

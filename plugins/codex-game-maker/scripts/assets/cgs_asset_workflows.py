@@ -9,6 +9,7 @@ processed image outputs, and creates Godot-ready resources/scenes.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -22,6 +23,11 @@ try:
     import cgs_asset_processor as processor
 except ImportError:  # pragma: no cover - only used when launched oddly.
     processor = None  # type: ignore[assignment]
+
+try:
+    from PIL import Image
+except ImportError:  # pragma: no cover - surfaced as a production preflight error.
+    Image = None  # type: ignore[assignment]
 
 
 ACTION_DEFAULTS: dict[str, dict[str, Any]] = {
@@ -66,6 +72,132 @@ def ensure_dir(path: Path) -> None:
 def write_text(path: Path, content: str) -> None:
     ensure_dir(path.parent)
     path.write_text(content, encoding="utf-8")
+
+
+def canonical_json_sha256(value: dict[str, Any]) -> str:
+    normalized = {key: item for key, item in value.items() if key != "digest"}
+    payload = json.dumps(normalized, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def load_style_lock(root: Path, allow_unlocked_lookdev: bool = False) -> dict[str, Any]:
+    path = root / "design/art/style-lock.json"
+    if not path.is_file():
+        if allow_unlocked_lookdev:
+            return {"style_version": "lookdev", "digest": "unlocked-lookdev", "art_bible_sha256": "", "locked_references": []}
+        raise RuntimeError("Missing design/art/style-lock.json. Lock look-dev before production generation, or use --lookdev for candidate work.")
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
+    if not isinstance(data, dict):
+        raise RuntimeError("design/art/style-lock.json must contain an object")
+    expected = canonical_json_sha256(data)
+    if data.get("digest") != expected:
+        raise RuntimeError("design/art/style-lock.json has a missing or stale digest")
+    if data.get("schema_version") != 1:
+        raise RuntimeError("style lock schema_version must be 1")
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,63}", str(data.get("style_id", ""))):
+        raise RuntimeError("style lock style_id must be a concrete lower-case hyphen ID")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", str(data.get("style_version", ""))):
+        raise RuntimeError("style lock style_version must be x.y.z")
+    if len(str(data.get("identity_rule", "")).strip()) < 24:
+        raise RuntimeError("style lock identity_rule must be a concrete game-specific rule")
+    art_path = (root / str(data.get("source_art_bible", ""))).resolve()
+    try:
+        art_path.relative_to(root.resolve())
+    except ValueError as exc:
+        raise RuntimeError("style lock art bible must remain inside the project") from exc
+    if not art_path.is_file() or data.get("art_bible_sha256") != file_sha256(art_path):
+        raise RuntimeError("style lock art_bible_sha256 is missing or stale")
+    if data.get("status") != "locked":
+        raise RuntimeError("style lock status must be locked")
+    anchors = data.get("anchors") if isinstance(data.get("anchors"), dict) else {}
+    for field in ("materials", "shape_language", "camera_and_view", "lighting", "palette_roles", "typography_roles", "detail_density", "motion_and_fx"):
+        if not isinstance(anchors.get(field), list) or not anchors[field] or not all(str(item).strip() for item in anchors[field]):
+            raise RuntimeError(f"style lock needs non-empty anchors.{field}")
+    forbidden = data.get("forbidden_drift")
+    if not isinstance(forbidden, list) or len(forbidden) < 2 or not all(str(item).strip() for item in forbidden):
+        raise RuntimeError("style lock needs at least two concrete forbidden_drift rules")
+    change_control = data.get("change_control") if isinstance(data.get("change_control"), dict) else {}
+    for field in ("change_reason", "approved_by", "approved_on"):
+        if not str(change_control.get(field, "")).strip():
+            raise RuntimeError(f"style lock needs change_control.{field}")
+    approved_families = {str(item) for item in data.get("approved_families", []) if str(item)}
+    references = data.get("locked_references")
+    if not approved_families or not isinstance(references, list) or not references:
+        raise RuntimeError("style lock needs approved families and at least one locked reference")
+    for row in references:
+        if not isinstance(row, dict):
+            raise RuntimeError("style lock contains an invalid locked reference")
+        reference = (root / str(row.get("path", ""))).resolve()
+        try:
+            reference.relative_to(root.resolve())
+        except ValueError as exc:
+            raise RuntimeError("locked style references must remain inside the project") from exc
+        families = {str(item) for item in row.get("families", []) if str(item)}
+        if (
+            not reference.is_file()
+            or row.get("sha256") != file_sha256(reference)
+            or not families
+            or not families.issubset(approved_families)
+        ):
+            raise RuntimeError(f"locked style reference is missing, stale, or misclassified: {row.get('path', '')}")
+        if Image is None:
+            raise RuntimeError("Pillow is required to validate locked style reference images")
+        try:
+            with Image.open(reference) as image:
+                width, height = image.size
+                image.verify()
+        except Exception as exc:
+            raise RuntimeError(f"locked style reference is not a valid image: {row.get('path', '')}") from exc
+        if width < 320 or height < 180:
+            raise RuntimeError(f"locked style reference must be at least 320x180: {row.get('path', '')}")
+    return data
+
+
+def family_candidates(category: str) -> set[str]:
+    normalized = safe_id(category).lower()
+    aliases = {
+        "actors": {"actor", "actors", "character", "characters", "creature", "creatures", "enemy", "enemies", "boss", "bosses", "npc", "npcs", "player"},
+        "world": {"world", "environment", "environments", "map", "maps", "level", "levels", "prop", "props", "tile", "tiles", "background", "backgrounds"},
+        "feedback": {"feedback", "fx", "vfx", "effect", "effects", "projectile", "projectiles", "impact", "impacts"},
+        "ui": {"ui", "hud", "menu", "menus", "icon", "icons"},
+    }
+    candidates = {normalized}
+    for canonical, values in aliases.items():
+        if normalized in values:
+            candidates.update(values)
+            candidates.add(canonical)
+    return candidates
+
+
+def select_locked_reference(root: Path, style_lock: dict[str, Any], category: str, requested: str = "") -> str:
+    candidates = family_candidates(category)
+    requested_path = (root / requested).resolve() if requested else None
+    for row in style_lock.get("locked_references", []):
+        if not isinstance(row, dict) or not row.get("path"):
+            continue
+        path = (root / str(row["path"])).resolve()
+        families = {str(item).lower() for item in row.get("families", []) if str(item)}
+        if requested_path is not None and path != requested_path:
+            continue
+        if families & candidates:
+            return str(row["path"])
+    if requested:
+        raise RuntimeError(
+            "Production --reference-file must be sealed for the asset's visual family; "
+            "use --lookdev for candidates or reseal a new style version first"
+        )
+    raise RuntimeError(
+        f"The sealed style lock has no reference for asset family/category '{category}'; "
+        "add and reseal an appropriate reference before production generation"
+    )
 
 
 def as_posix(path: Path) -> str:
@@ -137,7 +269,7 @@ def import_manifest_path(root: Path) -> Path:
     return root / "design" / "assets" / "godot-import-manifest.yaml"
 
 
-def append_asset_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
+def append_asset_manifest(root: Path, entries: list[dict[str, Any]], style_lock: dict[str, Any]) -> Path:
     path = manifest_path(root)
     ensure_dir(path.parent)
     existing = parse_asset_manifest(path)
@@ -160,7 +292,13 @@ def append_asset_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
             by_id[asset_id] = {"asset_id": asset_id}
         by_id[asset_id].update(entry)
 
-    lines = ["assets:"]
+    lines = [
+        "style_lock:",
+        "  path: design/art/style-lock.json",
+        f"  style_version: {yaml_quote(str(style_lock.get('style_version', '')))}",
+        f"  sha256: {yaml_quote(str(style_lock.get('digest', '')))}",
+        "assets:",
+    ]
     for asset_id in order:
         entry = by_id[asset_id]
         lines.append("")
@@ -177,7 +315,7 @@ def append_import_manifest(root: Path, entries: list[dict[str, Any]]) -> Path:
     path = import_manifest_path(root)
     ensure_dir(path.parent)
     if not path.exists():
-        path.write_text('godot_version: "4.7.1"\nimports:\n', encoding="utf-8")
+        path.write_text('godot_version: "4.6.2"\nimports:\n', encoding="utf-8")
 
     existing_ids: set[str] = set()
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -305,8 +443,15 @@ def source_prompt_text(
     canvas_size: str,
     cell_size: str,
     safe_margin: int,
+    style_lock: dict[str, Any],
     reference_file: str = "",
 ) -> str:
+    locked_references = [str(row.get("path")) for row in style_lock.get("locked_references", []) if isinstance(row, dict) and row.get("path")]
+    anchors = style_lock.get("anchors") if isinstance(style_lock.get("anchors"), dict) else {}
+    identity_anchors = [str(style_lock.get("identity_rule", "")), *[str(item) for item in anchors.get("shape_language", [])]]
+    material_anchors = [str(item) for item in anchors.get("materials", [])]
+    palette_anchors = [str(item) for item in anchors.get("palette_roles", [])] + [str(item) for item in anchors.get("lighting", [])]
+    forbidden = [str(item) for item in style_lock.get("forbidden_drift", [])]
     return "\n".join([
         f"asset_id: {asset_id}",
         f"category: {category}",
@@ -328,6 +473,16 @@ def source_prompt_text(
         f"exact_cell_size: {cell_size}",
         f"safe_margin: {safe_margin}",
         f"reference_file: {reference_file}",
+        "style_lock:",
+        "  path: design/art/style-lock.json",
+        f"  style_version: {style_lock.get('style_version', '')}",
+        f"  style_lock_sha256: {style_lock.get('digest', '')}",
+        f"  art_bible_sha256: {style_lock.get('art_bible_sha256', '')}",
+        f"  locked_reference_paths: {json.dumps(locked_references, ensure_ascii=False)}",
+        f"  identity_anchors: {json.dumps([item for item in identity_anchors if item], ensure_ascii=False)}",
+        f"  material_anchors: {json.dumps(material_anchors, ensure_ascii=False)}",
+        f"  palette_and_lighting_anchors: {json.dumps(palette_anchors, ensure_ascii=False)}",
+        f"  forbidden_drift: {json.dumps(forbidden, ensure_ascii=False)}",
         "generation_prompt: >",
         f"  {description}. Create a {action.rows}x{action.cols} sprite-sheet grid for the {action.name} action.",
         f"  The final image must be exactly {canvas_size}; every cell must be exactly {cell_size}.",
@@ -353,8 +508,12 @@ def source_prompt_text(
 
 def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
     root = Path(args.root).resolve()
+    style_lock = load_style_lock(root, allow_unlocked_lookdev=bool(args.lookdev))
     bundle_id = safe_id(args.asset_id)
     category = safe_id(args.category)
+    selected_reference = args.reference_file
+    if not args.lookdev:
+        selected_reference = select_locked_reference(root, style_lock, category, args.reference_file)
     view_profile = "top_down_survivor" if args.view in ("topdown", "top_down", "top_down_survivor", "survivor") else "side_platformer"
     if args.direction_model == "auto":
         direction_model = "full_directional" if view_profile == "top_down_survivor" else "none"
@@ -382,7 +541,9 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
         f"view: {args.view}",
         f"view_profile: {view_profile}",
         f"direction_model: {direction_model}",
-        "godot_version: \"4.7\"",
+        "godot_version: \"4.6.2\"",
+        f"style_version: {yaml_quote(str(style_lock.get('style_version', '')))}",
+        f"style_lock_sha256: {yaml_quote(str(style_lock.get('digest', '')))}",
         "actions:",
     ]
 
@@ -434,7 +595,8 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             canvas_size=f"{action.cols * cell_w}x{action.rows * cell_h}",
             cell_size=f"{cell_w}x{cell_h}",
             safe_margin=safe_margin,
-            reference_file=args.reference_file,
+            style_lock=style_lock,
+            reference_file=selected_reference,
         ))
 
         bundle_lines.extend([
@@ -474,6 +636,8 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
             "harness_spec": root_relative(root, harness_spec_path),
             "harness_report": "",
             "source_prompt": root_relative(root, prompt_path),
+            "style_version": style_lock.get("style_version", ""),
+            "style_lock_sha256": style_lock.get("digest", ""),
             "expected_frames": action.expected_frames,
             "frame_size": f"{cell_w}x{cell_h}",
             "anchor": action.anchor,
@@ -519,6 +683,13 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
                 "--duration-ms", str(action.duration_ms),
             ])
             outputs = meta.get("outputs", {})
+            pipeline_meta_path = Path(outputs.get("pipeline_meta", ""))
+            if pipeline_meta_path.is_file():
+                pipeline_data = json.loads(pipeline_meta_path.read_text(encoding="utf-8-sig"))
+                pipeline_data["style_version"] = style_lock.get("style_version", "")
+                pipeline_data["style_lock_sha256"] = style_lock.get("digest", "")
+                pipeline_data["art_bible_sha256"] = style_lock.get("art_bible_sha256", "")
+                write_text(pipeline_meta_path, json.dumps(pipeline_data, indent=2, ensure_ascii=False) + "\n")
             frame_size = meta.get("frame_size", {})
             entry.update({
                 "status": "accepted",
@@ -538,7 +709,7 @@ def action_bundle_command(args: argparse.Namespace) -> dict[str, Any]:
 
     bundle_path = bundle_dir / f"{bundle_id}.yaml"
     write_text(bundle_path, "\n".join(bundle_lines) + "\n")
-    manifest_file = append_asset_manifest(root, manifest_entries)
+    manifest_file = append_asset_manifest(root, manifest_entries, style_lock)
 
     report_path = review_dir / f"action-bundle-{bundle_id}.md"
     report_lines = [
@@ -1023,6 +1194,25 @@ def godot_map_command(args: argparse.Namespace) -> dict[str, Any]:
 
 def reference_variant_command(args: argparse.Namespace) -> dict[str, Any]:
     root = Path(args.root).resolve()
+    style_lock = load_style_lock(root, allow_unlocked_lookdev=bool(args.lookdev))
+    reference_path = (root / args.reference_file).resolve()
+    try:
+        reference_path.relative_to(root)
+    except ValueError as exc:
+        raise RuntimeError("reference file must remain inside the project") from exc
+    if not reference_path.is_file():
+        raise RuntimeError(f"reference file does not exist: {args.reference_file}")
+    if not args.lookdev:
+        locked_references = {
+            (root / str(row.get("path", ""))).resolve()
+            for row in style_lock.get("locked_references", [])
+            if isinstance(row, dict) and row.get("path")
+        }
+        if reference_path not in locked_references:
+            raise RuntimeError(
+                "Production reference variants must use a reference from the sealed style lock; "
+                "use --lookdev for candidates or reseal a new style version first"
+            )
     asset_id = safe_id(args.asset_id)
     actions = parse_actions(args.actions)
     variant_dir = root / "design" / "assets" / "reference-variants"
@@ -1034,6 +1224,11 @@ def reference_variant_command(args: argparse.Namespace) -> dict[str, Any]:
         f"reference_file: {args.reference_file}",
         f"description: {yaml_quote(args.description)}",
         f"key_color: {yaml_quote(key_color)}",
+        "style_lock:",
+        "  path: design/art/style-lock.json",
+        f"  style_version: {yaml_quote(str(style_lock.get('style_version', '')))}",
+        f"  style_lock_sha256: {yaml_quote(str(style_lock.get('digest', '')))}",
+        f"  art_bible_sha256: {yaml_quote(str(style_lock.get('art_bible_sha256', '')))}",
         "identity_lock:",
         "  preserve: silhouette, face shape, costume motifs, color palette, readable proportions",
         "  allowed_variation: pose, limb placement, expression, squash/stretch, motion smear",
@@ -1073,7 +1268,7 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
         "[application]",
         f'config/name="{args.title}"',
         'run/main_scene="res://scenes/main/Main.tscn"',
-        'config/features=PackedStringArray("4.7", "Forward Plus")',
+        'config/features=PackedStringArray("4.6", "Forward Plus")',
         "",
         "[display]",
         "window/size/viewport_width=960",
@@ -1178,7 +1373,7 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
     write_text(project / "README.md", "\n".join([
         f"# {args.title}",
         "",
-        "A Godot 4.7.1 showcase skeleton for validating Codex Game Maker generated assets.",
+        "A Godot 4.6.2 showcase skeleton for validating Codex Game Maker generated assets.",
         "",
         "Expected flow:",
         "",
@@ -1202,7 +1397,7 @@ def showcase_command(args: argparse.Namespace) -> dict[str, Any]:
         "",
         "- style: readable 2D game-ready assets",
         "- background handling: smart chroma key with transparent processed outputs",
-        "- runtime target: Godot 4.7.1",
+        "- runtime target: Godot 4.6.2",
         "",
     ]))
     write_text(project / "scripts" / "main.gd", "\n".join([
@@ -1255,6 +1450,7 @@ def build_parser() -> argparse.ArgumentParser:
     action.add_argument("--actions", default="idle,run,jump,attack,hurt")
     action.add_argument("--key-color", default="suggest")
     action.add_argument("--reference-file", default="")
+    action.add_argument("--lookdev", action="store_true", help="Allow an unlocked style only while generating comparison candidates; output cannot pass player-ready")
     action.add_argument("--cell-width", type=int, default=384)
     action.add_argument("--cell-height", type=int, default=384)
     action.add_argument("--jump-cell-height", type=int, default=512)
@@ -1293,9 +1489,10 @@ def build_parser() -> argparse.ArgumentParser:
     variant.add_argument("--description", required=True)
     variant.add_argument("--actions", default="idle,run,jump")
     variant.add_argument("--key-color", default="suggest")
+    variant.add_argument("--lookdev", action="store_true", help="Allow an unlocked reference only for candidate comparison; output cannot pass player-ready")
     variant.set_defaults(func=reference_variant_command)
 
-    showcase = sub.add_parser("showcase", help="create a Godot 4.7.1 asset pipeline showcase skeleton")
+    showcase = sub.add_parser("showcase", help="create a Godot 4.6.2 asset pipeline showcase skeleton")
     showcase.add_argument("--root", default=".")
     showcase.add_argument("--name", default="asset-pipeline-showcase")
     showcase.add_argument("--title", default="Asset Pipeline Showcase")
@@ -1317,4 +1514,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

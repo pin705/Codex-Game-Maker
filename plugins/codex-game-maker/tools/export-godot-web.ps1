@@ -30,7 +30,7 @@ function Get-GodotTemplateVersion {
     return "$($fallback.Groups[1].Value).stable"
   }
 
-  return "4.7.1.stable"
+  return "4.6.2.stable"
 }
 
 function Ensure-WebPreset {

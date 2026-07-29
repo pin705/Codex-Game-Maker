@@ -11,6 +11,8 @@ Use this for isolated 2D game assets and animated sprite sheets.
 
 Read if present:
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `design/assets/asset-manifest.yaml`
 - `../../references/templates/sprite-asset-spec.yaml`
 - `../../references/templates/asset-harness-spec.yaml`
@@ -24,6 +26,7 @@ Read if present:
 - `../../scripts/assets/cgs_asset_harness.py`
 
 If no art bible exists, use `game-studio-art-assets` first.
+Before production generation, run `python3 ../../scripts/cgm.py style-lock verify --root .`. Every prompt and pipeline metadata file must carry the current `style_version`, style-lock SHA-256, art-bible SHA-256, and locked reference paths. Use candidate/look-dev mode only before a lock; never accept unlocked output as production art.
 
 ## Planning Rules
 
@@ -198,7 +201,7 @@ Expected outputs:
 - optional `direction-strips/*.png`
 - `pipeline-meta.json`
 
-For accepted Godot sprite bundles, create Godot 4.7.1 resources:
+For accepted Godot sprite bundles, create Godot 4.6.2 resources:
 
 ```powershell
 ../../tools/import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
@@ -252,5 +255,4 @@ Block or regenerate when:
 - metadata is missing
 - runtime scale, pivot, or state-machine mapping is missing for playable characters
 - the asset passes extraction but fails in-scene grounding, route readability, or collection/finish behavior
-
 

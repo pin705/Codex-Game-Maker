@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Design"
+  short_description: "Design scoped player-ready games"
+  default_prompt: "Use $game-studio-design to turn this idea into a scoped game concept, systems plan, and player journeys."

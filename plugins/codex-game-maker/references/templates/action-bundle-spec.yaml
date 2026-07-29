@@ -4,7 +4,7 @@ category: characters
 view: side
 view_profile: side_platformer
 direction_model: none
-godot_version: "4.7.1"
+godot_version: "4.6.2"
 actions:
   - action: idle
     asset_id: HERO-000-idle

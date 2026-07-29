@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Architecture"
+  short_description: "Plan commercial Godot architecture"
+  default_prompt: "Use $game-studio-architecture to plan a commercial-grade Godot architecture and verification strategy."

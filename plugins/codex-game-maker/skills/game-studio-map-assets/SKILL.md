@@ -13,6 +13,8 @@ Read if present:
 - `design/gdd/game-concept.md`
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `docs/architecture/architecture.md`
 - `docs/architecture/control-manifest.md`
 - `design/assets/asset-manifest.yaml`
@@ -23,6 +25,8 @@ Read if present:
 - `../../references/rules/playable-showcase-integration.md`
 
 ## Map Is Runtime Data
+
+Run `python3 ../../scripts/cgm.py style-lock verify --root .` before producing map art. Bind foundation, prop, tile, lighting, and UI-map prompts to the current style digest; a later map batch that changes camera, palette, material, or detail density without a versioned style migration is blocked.
 
 Do not treat a playable map as one background image unless the user explicitly asks for a flat visual background. A playable map needs separate runtime objects, collision, triggers, zones, exits, camera bounds, or engine-native map data.
 
@@ -102,7 +106,7 @@ For layered map previews:
 ../../tools/compose-layered-map-preview.ps1 -Base <base.png> -Placements <placements.json> -Out <preview.png>
 ```
 
-For accepted map assets with preview, props, collision, and zones metadata, create an editable Godot 4.7.1 level scene:
+For accepted map assets with preview, props, collision, and zones metadata, create an editable Godot 4.6.2 level scene:
 
 ```powershell
 ../../tools/import-map-to-godot.ps1 -Project . -AssetId <level-id>
@@ -121,7 +125,7 @@ Expected map deliverables:
 
 ## Godot Handoff
 
-Prefer Godot 4.7.1 structures:
+Prefer Godot 4.6.2 structures:
 - `Sprite2D` for separate props and backgrounds
 - `AnimatedSprite2D` for animated objects
 - `TileMapLayer` when the map is tile/editing-first
@@ -142,5 +146,4 @@ Before calling a generated map showcase playable, verify:
 - A visible finish object exists and triggers a clear state.
 - No collision rectangles, guide boxes, or harness marks render in the runtime layer.
 - Web preview preserves the intended 16:9 composition.
-
 

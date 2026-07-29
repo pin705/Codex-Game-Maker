@@ -150,7 +150,7 @@ Acceptance:
 
 Status: alpha implemented.
 
-Goal: turn processed frames into Godot 4.7.1 resources.
+Goal: turn processed frames into Godot 4.6.2 resources.
 
 Add:
 
@@ -181,7 +181,7 @@ Required metadata:
 
 Acceptance:
 
-- Generated `.tres` or `.tscn` loads in Godot 4.7.1.
+- Generated `.tres` or `.tscn` loads in Godot 4.6.2.
 - The review gate can detect the imported resource.
 - If Godot CLI is available, run an import/open validation command.
 
@@ -222,7 +222,7 @@ Godot nodes:
 - `Sprite2D` for placed props.
 - `StaticBody2D` + `CollisionShape2D` for solid collision.
 - `Area2D` for pickups, checkpoints, exits, encounters, triggers.
-- `Parallax2D` or equivalent Godot 4.7.1 parallax setup when needed.
+- `Parallax2D` or equivalent Godot 4.6.2 parallax setup when needed.
 - `TileMapLayer` when tile metadata exists.
 
 Acceptance:
@@ -263,7 +263,7 @@ Acceptance:
 
 ## Phase 6: Showcase Demo
 
-Status: alpha implemented as a generated Godot 4.7.1 showcase skeleton.
+Status: alpha implemented as a generated Godot 4.6.2 showcase skeleton.
 
 Goal: prove the pipeline by shipping a small playable Godot sample.
 
@@ -276,7 +276,7 @@ Demo should include:
 - Generated character action bundle.
 - Generated props.
 - Generated level preview plus editable collision.
-- Godot 4.7.1 Web export.
+- Godot 4.6.2 Web export.
 - Browser preview command.
 - Asset QA report.
 - README with exact reproduction commands.

@@ -1,4 +1,9 @@
 {
+  "style_lock": {
+    "path": "design/art/style-lock.json",
+    "style_version": "",
+    "sha256": ""
+  },
   "checks": {},
   "quality_report": "production/evidence/quality-run.json",
   "visual_contract": "production/reviews/visual-quality-contract.json",

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "score_scale": {"minimum": 0, "maximum": 5},
+  "release_thresholds": {
+    "minimum_total_score": 80,
+    "minimum_dimension_percent": 70,
+    "minimum_runs_per_case": 3,
+    "minimum_blind_baseline_win_rate": 0.7,
+    "minimum_routing_precision": 0.9,
+    "minimum_routing_recall": 0.9,
+    "maximum_blocker_high_false_passes": 0
+  },
+  "dimensions": [
+    {"id": "routing-and-scope", "weight": 10, "description": "Selects the right skills, declares a bounded outcome, and avoids premature completion."},
+    {"id": "workflow-discipline", "weight": 15, "description": "Follows executable production loops and records current, non-self-authored evidence."},
+    {"id": "journey-completeness", "weight": 20, "description": "Implements every game-specific journey, state, recovery path, control, and content boundary."},
+    {"id": "visual-and-style-continuity", "weight": 20, "description": "Maintains an authored identity across world, actors, FX, UI, viewports, and fresh tasks."},
+    {"id": "gameplay-and-player-experience", "weight": 15, "description": "Produces readable goals, responsive feedback, useful game feel, tuning, and playtest clarity."},
+    {"id": "engineering-and-release", "weight": 15, "description": "Builds reliably with performance, accessibility, localization, licensing, and target evidence."},
+    {"id": "efficiency-and-recovery", "weight": 5, "description": "Finishes within the declared budget and recovers cleanly from failed generation or tooling."}
+  ]
+}

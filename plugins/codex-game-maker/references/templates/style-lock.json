@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "style_id": "replace-with-game-style-id",
+  "style_version": "1.0.0",
+  "status": "planned",
+  "source_art_bible": "design/art/art-bible.md",
+  "art_bible_sha256": "",
+  "digest": "",
+  "identity_rule": "",
+  "anchors": {
+    "materials": [],
+    "shape_language": [],
+    "camera_and_view": [],
+    "lighting": [],
+    "palette_roles": [],
+    "typography_roles": [],
+    "detail_density": [],
+    "motion_and_fx": []
+  },
+  "forbidden_drift": [],
+  "approved_families": [],
+  "locked_references": [
+    {
+      "path": "",
+      "sha256": "",
+      "families": []
+    }
+  ],
+  "change_control": {
+    "previous_digest": "",
+    "change_reason": "initial lock",
+    "approved_by": "",
+    "approved_on": ""
+  }
+}

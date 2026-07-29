@@ -182,11 +182,24 @@ $generatedRoot = Join-Path $rootPath "assets/generated"
 $promptsRoot = Join-Path $rootPath "assets/source-prompts"
 $godotProject = Join-Path $rootPath "project.godot"
 $godotImportManifest = Join-Path $rootPath "design/assets/godot-import-manifest.yaml"
+$styleLockPath = Join-Path $rootPath "design/art/style-lock.json"
 $hasGodot = Test-Path -LiteralPath $godotProject
 
 $blockers = [System.Collections.ArrayList]::new()
 $warnings = [System.Collections.ArrayList]::new()
 $evidence = [System.Collections.ArrayList]::new()
+$styleLock = Read-JsonFile $styleLockPath
+$expectedStyleVersion = ""
+$expectedStyleDigest = ""
+if ($null -eq $styleLock) {
+  Add-Item $blockers "style_lock.missing" "Missing or invalid design/art/style-lock.json." $styleLockPath
+} else {
+  $expectedStyleVersion = (Get-JsonValue $styleLock @("style_version") "").ToString()
+  $expectedStyleDigest = (Get-JsonValue $styleLock @("digest") "").ToString()
+  if ([string]::IsNullOrWhiteSpace($expectedStyleVersion) -or $expectedStyleDigest -notmatch '^[0-9a-f]{64}$') {
+    Add-Item $blockers "style_lock.invalid" "Style lock needs a version and SHA-256 digest." $styleLockPath
+  }
+}
 
 $generatedFiles = @()
 if (Test-Path -LiteralPath $generatedRoot) {
@@ -238,6 +251,8 @@ foreach ($item in $manifestItems) {
   $harnessSpec = Get-ItemValue $item "harness_spec"
   $harnessReport = Get-ItemValue $item "harness_report"
   $generationProvider = (Get-ItemValue $item "generation_provider").ToString().ToLowerInvariant()
+  $styleVersion = (Get-ItemValue $item "style_version").ToString()
+  $styleDigest = (Get-ItemValue $item "style_lock_sha256").ToString()
 
   if ([string]::IsNullOrWhiteSpace($assetId)) {
     Add-Item $blockers "manifest.asset_id.missing" "Manifest entry is missing asset_id." $manifestPath
@@ -264,6 +279,9 @@ foreach ($item in $manifestItems) {
   }
 
   if ($isAccepted) {
+    if ($styleVersion -ne $expectedStyleVersion -or $styleDigest -ne $expectedStyleDigest) {
+      Add-Item $blockers "asset.style_binding" "Accepted asset $assetId is not bound to the current style version/digest." $manifestPath
+    }
     $promptPath = ""
     if (![string]::IsNullOrWhiteSpace($sourcePrompt)) {
       $promptPath = Resolve-ProjectPath $rootPath $sourcePrompt
@@ -276,6 +294,10 @@ foreach ($item in $manifestItems) {
     } else {
       [void]$promptRelative.Add((Get-RelativePathSafe $rootPath $promptPath))
       Add-Item $evidence "asset.source_prompt.exists" "Prompt/provenance exists for $assetId." $promptPath
+      $promptText = Get-Content -Raw -LiteralPath $promptPath
+      if ([string]::IsNullOrWhiteSpace($expectedStyleDigest) -or $promptText -notmatch [regex]::Escape($expectedStyleDigest)) {
+        Add-Item $blockers "asset.source_prompt.style_binding" "Prompt/provenance for $assetId does not name the current style digest." $promptPath
+      }
     }
   }
 
@@ -296,6 +318,8 @@ foreach ($item in $manifestItems) {
     $meta = Read-JsonFile $metaPath
     if ($metaPath -and (Test-Path -LiteralPath $metaPath) -and $null -eq $meta) {
       Add-Item $blockers "asset.pipeline_meta.invalid_json" "pipeline_meta for $assetId is not valid JSON." $metaPath
+    } elseif ($null -ne $meta -and ((Get-JsonValue $meta @("style_version") "").ToString() -ne $expectedStyleVersion -or (Get-JsonValue $meta @("style_lock_sha256") "").ToString() -ne $expectedStyleDigest)) {
+      Add-Item $blockers "asset.pipeline_meta.style_binding" "pipeline_meta for $assetId is not bound to the current style version/digest." $metaPath
     }
 
     $isSpriteLike = $assetKind -match '^(sprite|player|enemy|npc|character|creature|projectile|impact|fx|ui_icon)$'

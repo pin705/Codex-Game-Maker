@@ -443,7 +443,7 @@ def build_spec(args: argparse.Namespace) -> dict[str, Any]:
         "kind": args.kind,
         "action": action,
         "view_profile": args.view_profile,
-        "target_engine": "Godot 4.7.1",
+        "target_engine": "Godot 4.6.2",
         "canvas": {"width": canvas_w, "height": canvas_h},
         "grid": {"rows": rows, "cols": cols, "cell_width": cell_w, "cell_height": cell_h},
         "safe_margin": safe_margin,

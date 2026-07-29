@@ -16,7 +16,7 @@ Use this guide when adopting Codex Game Maker into an existing game project or m
 
 Expected direction:
 
-- Recommend Godot 4.7.1.
+- Recommend Godot 4.6.2.
 - Create concept, art bible, architecture notes, and first implementation story.
 - Install Godot only when validation/export/browser preview is needed.
 
@@ -32,7 +32,7 @@ Expected direction:
 
 - Keep `project.godot`, scenes, scripts, resources, and import settings.
 - Add Codex Game Maker design/production/asset metadata around the existing project.
-- Use Godot 4.7.1 guidance unless the project clearly targets another Godot 4.x version.
+- Use Godot 4.6.2 guidance unless the project clearly targets another Godot 4.x version.
 - Use web search for official Godot docs when version-specific APIs or export behavior matter.
 
 First checks:
@@ -78,6 +78,20 @@ Use templates from:
 ```text
 plugins/codex-game-maker/references/templates/
 ```
+
+For a project using older Codex Game Maker contracts, run the migration preview from the plugin root before editing manually:
+
+```bash
+python3 scripts/cgm.py migrate --root /path/to/game --dry-run
+```
+
+After committing or backing up the project, apply the conservative conversion with its own project-local backup:
+
+```bash
+python3 scripts/cgm.py migrate --root /path/to/game --backup
+```
+
+Review `.cgm-backups/` and `production/evidence/migration-report.json`. The command intentionally leaves a `BLOCKED` result when game-specific journeys, style-lock data, or evidence still require real decisions; do not convert those blockers into fabricated PASS values.
 
 ## Adopt Existing Art Assets
 
@@ -142,9 +156,11 @@ Current alpha behavior:
 
 - `design/assets/godot-import-manifest.yaml` records import intent.
 - Asset QA checks that accepted assets have enough metadata for Godot use.
-- Automatic `.tres` / `.tscn` generation is planned, but not implemented yet.
+- `tools/import-sprite-to-godot.ps1` can generate supported `SpriteFrames` resources and character scenes from accepted sprite bundles.
+- `tools/import-map-to-godot.ps1` can generate supported editable level handoff scenes from declared map assets and metadata.
+- Generated `.tres` / `.tscn` files remain reviewable project code: open them in the pinned Godot version, run import/parse checks, and verify the result in gameplay before acceptance.
 
-Recommended manual handoff for now:
+Use manual handoff when an asset type or project architecture is outside those supported import contracts:
 
 - Sprites: import `sheet-transparent.png` or `frames/*.png`.
 - Animated characters: create `SpriteFrames` in Godot and map per-action animations.
@@ -169,7 +185,11 @@ For demos or public builds, also run:
 powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-godot-web.ps1 -Project .
 ```
 
-## What Not To Migrate Yet
+Installing or updating the Codex plugin does not migrate project data automatically. Commit or back up the project before changing schemas, use `cgm.py migrate` plus [UPGRADING.md](../UPGRADING.md) for the current state/visual contract conversion, rerun current quality commands, and start a new Codex task after changing plugin versions.
+
+Migration evidence must remain honest: current project-bound command logs, runtime captures, hashes, and human/independent review may support a PASS. Old screenshots, old hashes, self-authored PASS labels, or a successful template conversion alone do not prove player-ready quality.
+
+## Adopt Only When The Project Needs It
 
 Postpone until the project needs it:
 
@@ -177,6 +197,10 @@ Postpone until the project needs it:
 - Release/store metadata.
 - Audio/narrative/localization/accessibility specialist passes.
 - Heavy regression or soak testing.
-- Marketplace/plugin packaging.
+- Online-service/backend contracts when the game has no online scope.
+- 3D-specific production tooling when the project is a 2D game.
+- Console, store, signing, ratings, legal, tax/payment, and publishing work until a declared target and authorized owner exist.
 
+## Intended 1.0 Migration Boundary
 
+The first-party 1.0 migration target is a Godot-first commercial 2D project. Existing 3D, Unity, Unreal, or browser projects may adopt the planning, evidence, compliance, and review disciplines without claiming full first-party runtime parity. A 3D production pipeline, console SDK/certification, hosted backend, store account, signing authority, legal approval, and irreversible publishing must come from the project's chosen external tools, providers, platform holders, and authorized people.

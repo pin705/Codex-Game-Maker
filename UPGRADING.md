@@ -1,6 +1,6 @@
 ﻿# Upgrading Codex Game Maker
 
-Codex Game Maker is currently a v0.2.0-alpha.3 project. Expect fast iteration around tools, templates, release contracts, and asset metadata. This guide keeps local projects upgradeable without losing game work.
+Codex Game Maker `v1.0.0` stabilizes the Godot-first commercial 2D workflow and its documented contracts. This guide keeps plugin installations and game projects upgradeable without losing game work.
 
 ## Upgrade Principles
 
@@ -24,11 +24,29 @@ If the project is not already under version control, make a copy before changing
 
 ## Upgrade The Plugin Package
 
-The repository now has one canonical implementation. Update this directory or refresh the marketplace; do not maintain a second copied studio tree:
+The repository has one canonical implementation:
 
 ```text
 plugins/codex-game-maker/
 ```
+
+### Marketplace URL Installation
+
+Refresh the Git marketplace, reinstall the refreshed package, and inspect the installed version:
+
+```bash
+codex plugin marketplace upgrade codex-game-maker
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
+```
+
+`marketplace upgrade` updates the repository snapshot; `plugin add` is still required to replace the installed cached package. Confirm the expected version, then start a **new Codex task** so it loads the updated skills.
+
+Do not copy files from the refreshed plugin directly over a game project. Plugin-package update and game-project schema migration are separate operations.
+
+### Source Checkout
+
+If you develop from a clone, update the clone using the version-control workflow appropriate for that checkout, preserve local work, and validate `plugins/codex-game-maker/`. Do not maintain a second copied studio tree.
 
 Do not replace project-specific game folders unless you intend to:
 
@@ -42,7 +60,7 @@ scenes/
 scripts/
 ```
 
-## Upgrade Global Skills
+### Global Skill Copies
 
 If you installed the skills globally, reinstall them after updating this repo:
 
@@ -56,11 +74,51 @@ macOS/Linux:
 pwsh -File plugins/codex-game-maker/tools/install-codex-skills.ps1 -Force
 ```
 
-Restart Codex after reinstalling.
+Global skill copies are not managed by `codex plugin add/remove`. Back up any user-modified skill directories before `-Force`, then restart Codex or start a new task after reinstalling. Prefer the marketplace installation for normal use and avoid enabling both copies unless duplicate routing is intentional.
+
+## Roll Back Or Uninstall
+
+Remove the installed plugin without removing its marketplace:
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+```
+
+Remove the marketplace separately only when it is no longer needed:
+
+```bash
+codex plugin marketplace remove codex-game-maker
+```
+
+To roll back, pin the marketplace to a known-good Git tag or commit containing the marketplace catalog:
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+codex plugin marketplace remove codex-game-maker
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker --ref <known-good-tag-or-commit>
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
+```
+
+Start a new Codex task after uninstall or rollback. These commands change the Codex plugin installation only; they do not delete, downgrade, or migrate files already written into a game. Restore project files from version control or use a documented reverse migration when project contracts changed too.
 
 ## v0.2 State Contract Migration
 
 `design/game-state-matrix.json` schema v1 used a fixed object of conventional state names. Schema v2 is a game-specific directed graph and is required by the player-ready gate.
+
+From the plugin root, preview the conservative migration without writing files:
+
+```bash
+python3 scripts/cgm.py migrate --root /path/to/game --dry-run
+```
+
+When the report is understood and the game is committed or backed up, apply it with an additional project-local backup:
+
+```bash
+python3 scripts/cgm.py migrate --root /path/to/game --backup
+```
+
+The backup is written under `.cgm-backups/` (backup is also the default for non-dry runs), and the applied run writes `production/evidence/migration-report.json`. Use `--no-backup` only when another verified snapshot already exists and the operator intentionally accepts that responsibility. A `BLOCKED` result after conversion is expected when game-specific journeys, style-lock bindings, or reviews still need human/agent work; the migration tool deliberately does not invent approval evidence.
 
 For each game:
 
@@ -149,7 +207,7 @@ Use `-KeyColor auto` only when the raw image exists but the selected key color w
 
 ## Godot Version
 
-Blank projects should use `plugins/codex-game-maker/references/policies/godot-version-policy.json`, currently recommending Godot 4.7.1. Check local Godot availability:
+Blank projects should use `plugins/codex-game-maker/references/policies/godot-version-policy.json`, currently recommending Godot 4.6.2. Check local Godot availability:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot.ps1
@@ -179,7 +237,7 @@ powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-go
 powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
 ```
 
-Expected alpha-state warnings:
+Expected project-setup warnings:
 
 - Godot CLI missing if Godot is not installed.
 - Asset manifest missing if no generated assets have entered the project.
@@ -187,11 +245,14 @@ Expected alpha-state warnings:
 
 ## Breaking Change Policy
 
-Until v1.0:
+For stable 1.x releases:
 
-- Template fields may be added.
-- Gate warnings may become stricter.
+- Backward-compatible template fields may be added, but the changelog and this guide must identify newly required fields.
+- Gate warnings may become stricter; a former PASS is not carried forward without rerunning current evidence.
 - Tool parameters should remain backward compatible whenever practical.
-- Existing accepted assets should not be invalidated without a clear migration path.
+- Existing accepted assets should not be invalidated without a clear migration or documented rollback path.
+- Schema-breaking releases need a dry-run migration tool or a complete manual migration procedure with backup, validation, and failure recovery.
 
-If a future change needs a migration script, it should be added under `plugins/codex-game-maker/tools/` and documented here.
+Migration success means the current project-bound gates pass after conversion; it does not prove taste, fun, market success, certification, or legal approval. Do not use a self-authored PASS or stale screenshot as migration evidence.
+
+The 1.x compatibility promise is for the declared Godot-first commercial 2D workflow. Incompatible plugin, command, or project-schema changes require the next major version. 3D pipelines, console SDK/certification, hosted backends, store accounts, signing credentials, ratings, legal decisions, and publishing remain conditional or externally owned and must not be implied by a successful plugin upgrade.

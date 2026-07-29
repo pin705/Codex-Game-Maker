@@ -6,6 +6,11 @@
   "reviewer_independence": "",
   "build": "",
   "review_method": "actual-runtime-capture-inspection",
+  "style_lock": {
+    "path": "design/art/style-lock.json",
+    "style_version": "",
+    "sha256": ""
+  },
   "required_viewports": [
     {
       "id": "replace-with-target-viewport",

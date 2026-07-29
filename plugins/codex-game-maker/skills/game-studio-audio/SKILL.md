@@ -9,7 +9,7 @@ Treat audio as gameplay feedback and world identity, not a final decorative add-
 
 ## Required Context
 
-Read the concept, art bible, systems GDDs, game-state matrix, UI spec, control manifest, and `design/audio/audio-manifest.json`. Create the manifest from `../../references/templates/audio-manifest.json` if absent.
+Read the concept, art bible, `design/art/style-lock.json`, active session state, systems GDDs, game-state matrix, UI spec, control manifest, and `design/audio/audio-manifest.json`. Create the manifest from `../../references/templates/audio-manifest.json` if absent. Bind the audio identity and manifest to the current style version/digest so later music, SFX, and UI-audio batches cannot drift from the game's material and feedback language unnoticed.
 
 ## Audio Pass
 
@@ -24,6 +24,7 @@ Read the concept, art bible, systems GDDs, game-state matrix, UI spec, control m
 9. Record game-specific coverage IDs, event IDs, integrated assets, provenance, triggers, and evidence in the manifest.
 10. Set `coverage_policy.minimum_distinct_assets` from the actual event inventory and variation strategy; one placeholder tone cannot satisfy a larger declared floor.
 11. Complete `production/reviews/audio-listening.md` from `../../references/templates/audio-listening-review.md` on target output devices, recording reviewer, build/commit, current audio evidence, and its SHA-256. For intentional silence, use a current session video or captured audio track that proves the silent runtime behavior; do not add a fake sound asset merely to satisfy the review.
+12. Run project quality commands, then `python3 ../../scripts/audio_qa.py --root .`; resolve duration, sample-rate, RMS, peak, loop-seam, stale-manifest/hash, and compressed-audio command-binding blockers before listening review. Compressed `qa_metrics` must name the current quality `command_id`, command hash, stdout hash, and asset hash; self-authored measurements do not pass.
 
 ## Player-Ready Coverage
 

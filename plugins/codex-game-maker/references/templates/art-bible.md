@@ -2,6 +2,7 @@
 
 Status: Draft
 Source concept: `design/gdd/game-concept.md`
+Canonical style lock: `design/art/style-lock.json`
 
 ## Visual Identity
 
@@ -18,6 +19,7 @@ Lighting anchors:
 Detail-density anchors:
 Forbidden drift and cheap/generic signals:
 Locked project-local look-dev references:
+Style version and digest:
 
 ## Shape Language
 

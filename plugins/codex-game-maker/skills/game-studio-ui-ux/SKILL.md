@@ -12,6 +12,8 @@ Make the interface feel authored for the game world. Protect gameplay visibility
 Read:
 
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `design/game-state-matrix.json`
 - `design/ui/ui-ux-spec.md`
 - `docs/architecture/control-manifest.md`
@@ -20,6 +22,7 @@ Read:
 - `production/reviews/visual-quality-contract.json`
 
 Create `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md` if absent. Choose and justify `godot-theme`, `diegetic`, `custom-draw`, `hybrid`, or `intentionally-minimal`; reference real project-local implementation resources. A prose-only style description cannot pass player-ready.
+Run `python3 ../../scripts/cgm.py style-lock verify --root .` before implementing production surfaces. Record the current style version and digest in the UI spec; do not silently restyle a later screen or component family.
 Route full barrier/conformance testing to `game-studio-accessibility`; UI focus and contrast alone do not constitute a complete accessibility pass.
 
 ## Visual Direction Contract

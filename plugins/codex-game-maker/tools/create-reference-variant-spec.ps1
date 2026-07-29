@@ -7,7 +7,8 @@ param(
   [Parameter(Mandatory = $true)]
   [string]$Description,
   [string]$Actions = "idle,run,jump",
-  [string]$KeyColor = "suggest"
+  [string]$KeyColor = "suggest",
+  [switch]$Lookdev
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,6 +29,7 @@ $argsList = @(
   "--actions", $Actions,
   "--key-color", $KeyColor
 )
+if ($Lookdev) { $argsList += "--lookdev" }
 
 Invoke-CgsPython -Arguments $argsList
 exit $LASTEXITCODE

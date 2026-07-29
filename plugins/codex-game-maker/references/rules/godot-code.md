@@ -1,6 +1,6 @@
 # Godot Code Rules
 
-- Prefer Godot 4.7.1-compatible patterns for new blank projects.
+- Prefer Godot 4.6.2-compatible patterns for new blank projects.
 - Keep gameplay values data-driven in resources/config files.
 - Use signals or event buses for UI-to-gameplay communication; UI must not own game state.
 - Keep scenes small and composable.

@@ -15,6 +15,8 @@ Run:
 ../../tools/check-asset-qa.ps1 -Root .
 ```
 
+Also run `python3 ../../scripts/cgm.py style-lock verify --root .`. A technically valid asset is blocked when its prompt, manifest entry, pipeline metadata, family contact sheet, or runtime usage is not bound to the current style digest.
+
 For any accepted runtime sprite, platform, large prop, map object, or collision-bearing asset, also run the harness gate against the raw image:
 
 ```powershell
@@ -38,6 +40,9 @@ Apply only deterministic repairs:
 ## Context To Read
 
 Read if present:
+- `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `design/assets/asset-manifest.yaml`
 - `design/assets/godot-import-manifest.yaml`
 - `assets/source-prompts/**`

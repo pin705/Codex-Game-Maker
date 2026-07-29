@@ -4,6 +4,9 @@ Status: Draft
 Implementation mode: [godot-theme | diegetic | custom-draw | hybrid | intentionally-minimal]
 Minimal UI rationale:
 Visual quality contract: `production/reviews/visual-quality-contract.json`
+Style lock: `design/art/style-lock.json`
+Style version:
+Style SHA-256:
 Visual/layout smoke command ID:
 
 Implementation resources:

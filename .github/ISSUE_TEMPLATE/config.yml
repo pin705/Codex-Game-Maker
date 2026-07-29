@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private security report
+    url: https://github.com/pin705/Codex-Game-Maker/security/advisories/new
+    about: Report vulnerabilities privately instead of opening a public issue.

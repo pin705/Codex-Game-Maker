@@ -1,104 +1,129 @@
-﻿# Open Source Installation Plan
+# Open Source Installation
 
-Codex Game Maker should be easy to try before it becomes a formal plugin.
+This repository is both the canonical Codex Game Maker source tree and a Codex plugin marketplace. Installing the plugin from the repository URL is the recommended user path. A source checkout remains useful for contributors and for people who want to run the bundled scripts directly.
 
-## Lessons From Claude Code Game Studios
+## Prerequisites
 
-Claude Code Game Studios keeps the public install path simple:
+- A Codex CLI/App build that provides `codex plugin` commands.
+- Git access to `https://github.com/pin705/Codex-Game-Maker`.
+- Python 3 for `cgm.py`, the cross-platform gates, installation, export, and asset processors.
+- PowerShell on Windows, or PowerShell 7 (`pwsh`) on macOS/Linux, for the detailed legacy asset/import/preview wrappers.
+- Pillow and numpy only when using local 2D asset processing.
+- A policy-supported Godot version when engine import, runtime capture, export, or release evidence is required.
 
-1. Clone or use the repository as a template.
-2. Open the AI coding tool in that folder.
-3. Run the start command.
-4. Optional validation tools are helpful, but missing optional tools should not block the first session.
+The plugin can still help with planning when optional runtime tools are absent, but it must not claim verified builds or runtime evidence until the required tools have actually run.
 
-Codex Game Maker should follow the same shape. The first user experience should not require users to understand plugin internals, marketplace files, global skill paths, or hook systems.
+## Recommended: Install From The Marketplace URL
 
-## Recommended User Paths
+Add the repository once, install the plugin, and inspect the resolved installation:
 
-### 1. GitHub Template Mode
-
-Best for most users.
-
-User flow:
-
-```powershell
-git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
-cd my-game
+```bash
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
 ```
 
-Then in Codex:
+Confirm that `codex-game-maker@codex-game-maker` is installed and enabled. Start a **new Codex task** after installation; an already-open task may keep the previous skill snapshot.
+
+Open Codex in the actual game project directory and ask:
 
 ```text
 Use Codex Game Maker to start this game project.
 ```
 
-Optional setup check:
+For a bounded autonomous build:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1
+```text
+Use Codex Game Maker to build this game player-ready. Go with sensible defaults, continue through the complete declared scope, and do not stop at a one-screen prototype or mock assets.
 ```
 
-macOS/Linux:
+## Update An Installed Plugin
+
+Marketplace upgrade refreshes the repository snapshot. Re-running `plugin add` installs that refreshed package into the Codex cache:
 
 ```bash
-pwsh -File plugins/codex-game-maker/tools/check-install.ps1
+codex plugin marketplace upgrade codex-game-maker
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
 ```
 
-This check may warn that Godot CLI is missing. Run `plugins/codex-game-maker/tools/install-godot.ps1`; it detects the operating system, installs Godot 4.7.1 into the Codex Game Maker folder, creates a `godot` wrapper, and adds it to PATH unless `-NoPath` is provided.
+Check that the installed version changed as expected, then start a new Codex task. Updating the marketplace without reinstalling may leave the installed plugin on its previous cached version.
 
-For browser preview, run this once:
+Plugin update and game-project migration are separate operations. Commit or back up the game before adopting new templates or schema versions, and follow [UPGRADING.md](../UPGRADING.md).
 
-```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-godot.ps1 -WithExportTemplates
-```
+## Uninstall
 
-macOS/Linux:
+Remove the installed plugin while keeping the marketplace configured:
 
 ```bash
-pwsh -File plugins/codex-game-maker/tools/install-godot.ps1 -WithExportTemplates
+codex plugin remove codex-game-maker@codex-game-maker
 ```
 
-Then generated Godot projects can be previewed with:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-godot-web.ps1 -Project .
-```
-
-macOS/Linux:
+Remove the marketplace only when no plugin from this repository is still needed:
 
 ```bash
-pwsh -File plugins/codex-game-maker/tools/preview-godot-web.ps1 -Project .
+codex plugin marketplace remove codex-game-maker
 ```
 
-For game-ready GPT Image 2D assets, users should also install the lightweight Python processor dependencies:
+Start a new Codex task after removal. Uninstalling the plugin removes its Codex installation/cache entry; it does not delete or rewrite files previously created in a game project.
+
+## Roll Back To A Known-Good Ref
+
+Use a Git tag or commit that contains a valid `.agents/plugins/marketplace.json` and plugin package. Make the ref explicit by removing and re-adding the Git marketplace:
+
+```bash
+codex plugin remove codex-game-maker@codex-game-maker
+codex plugin marketplace remove codex-game-maker
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker --ref <known-good-tag-or-commit>
+codex plugin add codex-game-maker@codex-game-maker
+codex plugin list --marketplace codex-game-maker
+```
+
+Start a new Codex task after rollback. Rolling back the plugin does not automatically downgrade project contracts or generated files; restore the game from version control or follow a documented reverse migration when project data also changed.
+
+## Source Checkout For Development
+
+Clone the canonical repository without turning it into the game project itself:
+
+```bash
+git clone https://github.com/pin705/Codex-Game-Maker.git
+cd Codex-Game-Maker
+```
+
+Validate the package on Windows:
 
 ```powershell
-python -m pip install -r plugins/codex-game-maker/requirements-asset-tools.txt
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-tools.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1 -Root plugins\codex-game-maker
 ```
 
-macOS/Linux:
+On macOS/Linux:
+
+```bash
+pwsh -File plugins/codex-game-maker/tools/check-install.ps1 -Root plugins/codex-game-maker
+```
+
+The main cross-platform CLI can be run from the repository checkout root:
+
+```bash
+python3 plugins/codex-game-maker/scripts/cgm.py doctor --root /path/to/game
+python3 plugins/codex-game-maker/scripts/cgm.py quality --root /path/to/game
+python3 plugins/codex-game-maker/scripts/cgm.py player-ready --root /path/to/game
+python3 plugins/codex-game-maker/scripts/cgm.py commercial-release --root /path/to/game
+```
+
+Install local 2D asset-processing dependencies only when needed:
 
 ```bash
 python3 -m pip install -r plugins/codex-game-maker/requirements-asset-tools.txt
-pwsh -File plugins/codex-game-maker/tools/check-asset-tools.ps1
 ```
 
-Why this is the best first experience:
-- The game project and studio workflow live together.
-- Shared references, templates, and scripts always resolve by relative path.
-- Users can inspect and edit the workflow like normal repo files.
-- No global install step is required.
+Use the repository validation commands in [CONTRIBUTING.md](../CONTRIBUTING.md) before proposing plugin changes.
 
-### 2. Global Skills Install
+## Advanced: Global Skill Copies
 
-Best for users who want Codex Game Maker available in every project.
-
-User flow:
+The PowerShell global-skill installer remains available for older setups that cannot use plugins:
 
 ```powershell
-git clone https://github.com/0xnickmortal/Codex-Game-Maker.git
-cd Codex-Game-Maker
 powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-codex-skills.ps1
 ```
 
@@ -108,133 +133,38 @@ macOS/Linux:
 pwsh -File plugins/codex-game-maker/tools/install-codex-skills.ps1
 ```
 
-Then restart Codex.
+This route copies standalone skills into the Codex home and is **not managed by `codex plugin add/remove`**. It can collide with skills of the same name, and updates require rerunning the installer with `-Force` after backing up user-modified skill directories. Prefer the marketplace plugin for normal use and do not combine both installation modes unless duplicate routing is intentional.
 
-The installer copies each `plugins/codex-game-maker/skills/*` directory into:
+## Godot And Asset Tooling
 
-```text
-%USERPROFILE%\.codex\skills\ on Windows
-~/.codex/skills/ on macOS/Linux
-```
-
-It also copies shared `references/` and `scripts/` into each installed skill folder so the skill works outside this repository.
-
-### 3. Plugin Marketplace Mode
-
-This repository is also a Codex marketplace. Add it once, then install the
-plugin from the discovered catalog:
+Install the policy-recommended Godot editor and matching export templates from a source checkout or through the bundled skill workflow:
 
 ```bash
-codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
-codex plugin add codex-game-maker@codex-game-maker
+python3 plugins/codex-game-maker/scripts/cgm.py install-godot --with-export-templates
 ```
 
-The catalog is stored in `.agents/plugins/marketplace.json`, and packaged
-plugins are stored under `plugins/`. After a new plugin or update is pushed,
-refresh the repository snapshot with:
+The installer uses a stable per-user cache rather than a versioned plugin directory, verifies archives against policy-pinned SHA-512 values before extraction, and writes an install manifest into that cache.
+
+Preview the plan without changing the machine:
 
 ```bash
-codex plugin marketplace upgrade codex-game-maker
+python3 plugins/codex-game-maker/scripts/cgm.py install-godot --dry-run
 ```
 
-Keep the template and global-skill installation routes available for users who
-do not want to install through the plugin marketplace.
+Detailed asset, import, and browser-preview commands remain under `plugins/codex-game-maker/tools/`. On macOS/Linux invoke their `.ps1` files through `pwsh`.
 
-## README Quickstart Shape
+## Installation Verification
 
-The eventual README should lead with:
+An installation is healthy when:
 
-```text
-1. Clone or download this repo as your game project.
-2. Run plugins/codex-game-maker/tools/check-install.ps1.
-3. Open it in Codex.
-4. Ask: "Use Codex Game Maker to start."
-5. For blank projects, it recommends Godot 4.7.1 + Web export.
-6. Before demos/exports, run `plugins/codex-game-maker/tools/check-review-gate.ps1`.
-7. Before implementing features, create a story and run `plugins/codex-game-maker/tools/check-story-gate.ps1`.
-8. For GPT Image runtime assets, run `plugins/codex-game-maker/tools/process-sprite-sheet.ps1` or `plugins/codex-game-maker/tools/process-prop-pack.ps1`, then record outputs in `design/assets/asset-manifest.yaml`.
-9. After accepting generated assets, run `plugins/codex-game-maker/tools/check-asset-qa.ps1`.
-10. To preview in browser, run `plugins/codex-game-maker/tools/preview-godot-web.ps1 -Project .`.
-```
+- `codex plugin list --marketplace codex-game-maker` reports the expected installed version and enabled status;
+- a new task exposes the `codex-game-maker:` skills;
+- the plugin package validator and every skill validator pass in the source checkout;
+- required local dependencies are available for the selected workflow;
+- Godot import/export commands run against the exact declared engine version when runtime or release evidence is claimed.
 
-The first Codex response should not immediately create a full game. It should use the lean kickoff from `references/policies/collaboration-policy.md`: summarize the idea, propose defaults, ask at most 3 questions, and offer "go with defaults".
+The repository's validators check structure and contract invariants. They do not prove that every generated game is fun, visually strong, commercially successful, platform-certified, or legally approved. Publish quality claims only with reproducible eval inputs, outputs, scoring rules, current build-bound evidence, and reviewer provenance.
 
-Then include optional global install:
+## Intended 1.0 Boundary
 
-```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-codex-skills.ps1
-```
-
-Use `pwsh -File plugins/codex-game-maker/tools/install-codex-skills.ps1` on macOS/Linux.
-
-## Test Commands For Users
-
-Windows:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-tools.ps1
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-gate.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot-lint.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-production-gate.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-release-gate.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-story-gate.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-godot-web.ps1 -Project .
-```
-
-macOS/Linux:
-
-```bash
-pwsh -File plugins/codex-game-maker/tools/check-install.ps1
-pwsh -File plugins/codex-game-maker/tools/check-asset-tools.ps1
-pwsh -File plugins/codex-game-maker/tools/check-asset-gate.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/check-asset-qa.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/check-godot-lint.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/check-production-gate.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/check-release-gate.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/check-story-gate.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/check-review-gate.ps1 -Root .
-pwsh -File plugins/codex-game-maker/tools/preview-godot-web.ps1 -Project .
-```
-
-## Release Checklist
-
-- `plugin.json` parses as JSON.
-- `UPGRADING.md` explains how to update local template installs and global skills.
-- `docs/PROJECT_MIGRATION.md` explains how existing projects adopt the workflow safely.
-- `docs/ASSET_PIPELINE_COMPLETION_PLAN.md` tracks the game-ready 2D asset pipeline roadmap.
-- Every skill passes `quick_validate.py`.
-- `plugins/codex-game-maker/tools/check-install.ps1` runs without Python on Windows/macOS/Linux.
-- `plugins/codex-game-maker/tools/check-godot.ps1` detects repo-local Godot, `GODOT_BIN`, PATH, and common OS install locations.
-- `plugins/codex-game-maker/tools/install-godot.ps1` detects OS, installs Godot 4.7.1, and creates `godot`/`godot.cmd`.
-- `plugins/codex-game-maker/tools/install-godot-export-templates.ps1` installs matching Godot export templates.
-- `plugins/codex-game-maker/tools/export-godot-web.ps1` exports a Godot Web build when Godot CLI/templates are available.
-- `plugins/codex-game-maker/tools/serve-godot-web.ps1` serves Web builds with `.wasm` MIME and isolation headers.
-- `plugins/codex-game-maker/tools/preview-godot-web.ps1` chains export + local browser preview.
-- `plugins/codex-game-maker/tools/check-asset-tools.ps1` verifies Python, Pillow, numpy, and the local asset processor.
-- `plugins/codex-game-maker/tools/suggest-key-color.ps1` suggests a chroma-key background color from an asset description before image generation.
-- `plugins/codex-game-maker/tools/process-sprite-sheet.ps1` extracts transparent sprite frames, atlas, GIF preview, and `pipeline-meta.json`.
-- `plugins/codex-game-maker/tools/process-prop-pack.ps1` extracts transparent prop pack slices and metadata.
-- `plugins/codex-game-maker/tools/compose-layered-map-preview.ps1` composes map previews from base art and placement metadata.
-- `plugins/codex-game-maker/tools/check-asset-gate.ps1` checks generated asset manifest/provenance consistency and runtime asset metadata.
-- `plugins/codex-game-maker/tools/check-asset-qa.ps1` runs the asset QA gate for accepted runtime assets.
-- `plugins/codex-game-maker/tools/check-godot-lint.ps1` checks common Godot generated-code mistakes.
-- `plugins/codex-game-maker/tools/check-production-gate.ps1` checks lightweight epics/sprints/stories.
-- `plugins/codex-game-maker/tools/check-release-gate.ps1` checks professional-mode release readiness.
-- `plugins/codex-game-maker/tools/check-story-gate.ps1` checks implementation story readiness/done evidence.
-- `plugins/codex-game-maker/tools/check-review-gate.ps1` runs and returns JSON.
-- `plugins/codex-game-maker/tools/install-professional-hooks.ps1` and `plugins/codex-game-maker/tools/uninstall-professional-hooks.ps1` manage optional professional hooks.
-- `plugins/codex-game-maker/tools/install-codex-skills.ps1` installs into a clean Codex home.
-- `game-studio-review` passes `quick_validate.py`.
-- Blank project detection recommends Godot 4.7.1 + Web export.
-- Godot project detection recognizes `project.godot`.
-- Review gate recognizes Godot main scene, export presets, docs, and playtest evidence.
-- Story gate recognizes `production/stories/*.md` and acceptance criteria evidence.
-- Asset gate recognizes accepted generated assets, manifest entries, and prompt/provenance records.
-- Godot lint gate and production gate are wired into review/install checks.
-- Professional command aliases are tracked in `plugins/codex-game-maker/references/commands/catalog.yaml`.
-- README shows both template and global install paths.
-- `docs/CROSS_PLATFORM_PLAN.md` is updated when platform behavior changes.
-
+Codex Game Maker 1.0 is scoped as Godot-first commercial **2D** production tooling. Existing 3D projects may reuse planning and release disciplines, but require external 3D pipelines. Console SDKs/certification, hosted backends, store accounts, signing credentials, ratings, legal approvals, and irreversible publishing remain conditional or external responsibilities owned by authorized people and providers.

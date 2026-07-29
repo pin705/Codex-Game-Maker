@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {"id": "one-screen-prototype", "severity": "blocker", "defect": "Only one playable screen exists while the declared journey requires more states."},
+    {"id": "generic-dashboard-ui", "severity": "high", "defect": "Final UI is flat HTML/SaaS-style chrome without game identity."},
+    {"id": "stretched-art", "severity": "high", "defect": "Runtime assets are non-uniformly scaled or arbitrary crops are used as nine-slices."},
+    {"id": "tiny-unreadable-actors", "severity": "high", "defect": "Actors and feedback do not read at actual runtime scale."},
+    {"id": "style-drift", "severity": "high", "defect": "A later asset batch uses a different palette, camera, material, or detail language without a style-version change."},
+    {"id": "overlap-and-clipping", "severity": "high", "defect": "Text, ornaments, focus rings, or controls overlap or clip at a required viewport."},
+    {"id": "dead-controls", "severity": "blocker", "defect": "A required action, focus path, pause, restart, or recovery control is unreachable."},
+    {"id": "placeholder-audio", "severity": "high", "defect": "Temporary tones or missing mix coverage are presented as final audio."},
+    {"id": "fake-evidence", "severity": "blocker", "defect": "Evidence is stale, outside the project, self-authored, unhashed, or not produced by the declared command."},
+    {"id": "missing-recovery", "severity": "blocker", "defect": "A declared failure/interruption path cannot recover, retry, continue, or exit safely."},
+    {"id": "unlicensed-assets", "severity": "blocker", "defect": "A shipped asset or dependency lacks commercial rights/provenance."},
+    {"id": "performance-regression", "severity": "high", "defect": "A current target build violates its declared frame-time, memory, loading, or stability budget."}
+  ]
+}

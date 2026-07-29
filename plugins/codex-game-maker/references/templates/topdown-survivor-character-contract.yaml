@@ -1,6 +1,6 @@
 character_id: HERO-000
 description: ""
-target_engine: "Godot 4.7.1"
+target_engine: "Godot 4.6.2"
 view_profile: top_down_survivor
 direction_model: side_only_last_horizontal
 scene_scale:

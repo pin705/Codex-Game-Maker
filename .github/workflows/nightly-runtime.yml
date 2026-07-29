@@ -1,0 +1,36 @@
+name: Nightly Godot Runtime
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - name: Reverify pinned hashes against the official checksum asset
+        if: runner.os == 'Linux'
+        run: python tests/verify_godot_policy_source.py
+      - name: Install checksum-verified Godot and templates
+        run: python plugins/codex-game-maker/scripts/install_godot.py --with-export-templates
+      - name: Import, run, and export the real Godot fixture
+        run: python tests/run_godot_smoke.py
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: godot-smoke-${{ matrix.os }}
+          path: tests/fixtures/godot-smoke/build
+          if-no-files-found: warn

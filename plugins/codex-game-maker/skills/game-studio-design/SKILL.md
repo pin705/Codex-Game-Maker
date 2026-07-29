@@ -13,6 +13,7 @@ Read if present:
 - `design/gdd/game-concept.md`
 - `design/gdd/systems-index.md`
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
 - `production/session-state/active.md`
 - repo-local `../../references/agents/core-agent-roster.md` or installed-skill `../../references/agents/core-agent-roster.md`
 - repo-local `../../references/policies/collaboration-policy.md` or installed-skill `../../references/policies/collaboration-policy.md`
@@ -21,7 +22,7 @@ Read if present:
 - repo-local `../../references/templates/kickoff-brief.md` or installed-skill `../../references/templates/kickoff-brief.md`
 - `../../references/contracts/player-journey-schema.md` when defining player journeys and material exclusions
 
-Before engine recommendations, detect existing project files. Blank projects default to Godot 4.7.1 + Web export.
+Before engine recommendations, detect existing project files. Blank projects default to Godot 4.6.2 + Web export.
 
 ## Lean Kickoff Requirement
 
@@ -44,7 +45,8 @@ Proceed after the user answers or explicitly accepts defaults.
 5. Produce `design/gdd/systems-index.md` with MVP systems and dependencies.
 6. For each MVP system, create a system GDD using repo-local `../../references/templates/system-gdd.md` or installed-skill `../../references/templates/system-gdd.md`.
 7. Describe the game-specific player journeys, state transitions, session completion conditions, recovery/return paths, UI surfaces, audio needs, and material exclusions that `game-studio-build` must encode in the schema-v2 state contract. Do not prescribe a universal title/pause/settings/victory list.
-8. Run the six-role review lens:
+8. When a visual direction is accepted, convert it into `design/art/style-lock.json`; do not rely on chat memory or prose-only art direction across tasks.
+9. Run the six-role review lens:
    - Creative: is the fantasy and hook coherent?
    - Game Design: are rules, loops, and MVP boundaries testable?
    - Art: does the concept imply a clear visual identity?

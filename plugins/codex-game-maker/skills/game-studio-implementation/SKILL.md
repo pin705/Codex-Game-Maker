@@ -18,6 +18,7 @@ Read:
 - `docs/architecture/architecture.md`
 - `docs/architecture/control-manifest.md`
 - `design/assets/asset-coverage.json`
+- `design/art/style-lock.json`
 - `design/ui/ui-ux-spec.md`
 - `design/audio/audio-manifest.json`
 - current story and active session state
@@ -28,15 +29,16 @@ Read:
 ## Implementation Loop
 
 1. Create or select one small implementation story with player value and testable acceptance criteria.
-2. Identify the complete runtime path: input -> state/rules -> presentation -> audio/UI feedback -> terminal or persistent result.
-3. Implement engine-native scenes, scripts, resources, and signals with explicit ownership.
-4. Keep tuning in resources/data instead of scattering constants through node scripts.
-5. Integrate accepted runtime assets using their declared presentation usages: preserve uniform aspect, use only tested dedicated nine-slices, respect crop-safe/tile/frame contracts, and retain fallbacks only for resilience rather than intended final presentation.
-6. Add or update a headless test under `tests/` for the changed core path.
-7. Configure argv-only commands for Godot import/parse and focused tests, then run them through `python3 ../../scripts/cgm.py quality --root .`. `godot_import` must invoke `{godot}`; shell snippets, no-op commands, empty logs, unsupported Godot probes, stale command hashes, and external evidence paths are rejected.
-8. Run the scene or build at every affected required viewport, capture evidence for the player-visible result, and update the structured visual contract without hiding open high/blocker findings.
-9. Mark the story done only after acceptance criteria and evidence pass.
-10. Update game-state and asset coverage statuses after integration.
+2. Verify the style lock and active-session digest before touching any player-visible surface; stop if the task is continuing from stale style context.
+3. Identify the complete runtime path: input -> state/rules -> presentation -> audio/UI feedback -> terminal or persistent result.
+4. Implement engine-native scenes, scripts, resources, and signals with explicit ownership.
+5. Keep tuning in resources/data instead of scattering constants through node scripts.
+6. Integrate accepted runtime assets using their declared presentation usages: preserve uniform aspect, use only tested dedicated nine-slices, respect crop-safe/tile/frame contracts, and retain fallbacks only for resilience rather than intended final presentation.
+7. Add or update a headless test under `tests/` for the changed core path.
+8. Configure argv-only commands for Godot import/parse and focused tests, then run them through `python3 ../../scripts/cgm.py quality --root .`. `godot_import` must invoke `{godot}`; shell snippets, no-op commands, empty logs, unsupported Godot probes, stale command hashes, and external evidence paths are rejected.
+9. Run the scene or build at every affected required viewport, capture evidence for the player-visible result, and update the structured visual contract without hiding open high/blocker findings.
+10. Mark the story done only after acceptance criteria and evidence pass.
+11. Update game-state and asset coverage statuses after integration.
 
 ## Required Runtime Coverage
 

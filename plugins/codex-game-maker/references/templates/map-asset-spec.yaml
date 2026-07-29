@@ -1,7 +1,7 @@
 asset_id: MAP-000
 name: ""
 asset_kind: map
-target_engine: "Godot 4.7.1"
+target_engine: "Godot 4.6.2"
 generation_provider: "gpt_image"
 map_mode: "side_scroll_mode"
 visual_model: "parallax_layers"

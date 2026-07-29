@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Studio Map Assets"
+  short_description: "Build editable game-ready 2D maps"
+  default_prompt: "Use $game-studio-map-assets to create and verify an editable game-ready 2D level or map."

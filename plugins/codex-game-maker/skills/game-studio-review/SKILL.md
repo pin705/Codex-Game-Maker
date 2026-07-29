@@ -17,7 +17,7 @@ python3 ../../scripts/cgm.py doctor --root .
 
 PowerShell review/asset/story gates remain legacy detail checks when PowerShell is available; their absence must not prevent the Python player-ready and commercial gates from running.
 
-Do not claim the game was tested, exported, or playable unless there is evidence from a command, editor run, browser run, screenshot, playtest note, or user confirmation.
+Do not claim the game was tested, exported, or playable unless there is evidence from a command, editor run, browser run, screenshot, playtest note, or user confirmation. Run `python3 ../../scripts/cgm.py style-lock verify --root .`; stale style context, unversioned drift, or unbound production assets are release blockers.
 
 If `production/player-ready-contract.md` exists, run executable quality commands and the media-aware player-ready gate before classifying completion:
 
@@ -38,6 +38,8 @@ Read if present:
 - `design/gdd/systems-index.md`
 - `design/gdd/systems/*.md`
 - `design/art/art-bible.md`
+- `design/art/style-lock.json`
+- `production/session-state/active.md`
 - `design/assets/asset-manifest.yaml`
 - `design/assets/asset-coverage.json`
 - `design/game-state-matrix.json`
