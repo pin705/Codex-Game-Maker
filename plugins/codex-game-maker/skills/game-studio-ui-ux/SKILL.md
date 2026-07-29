@@ -18,28 +18,20 @@ Read:
 - `design/assets/asset-coverage.json`
 - relevant system GDDs and current runtime screenshots
 
-Create `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md` if absent. Fill `Theme resource:` with a real project-local Godot `.tres` Theme; a prose-only style description cannot pass player-ready.
+Create `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md` if absent. Choose and justify `godot-theme`, `diegetic`, `custom-draw`, `hybrid`, or `intentionally-minimal`; reference real project-local implementation resources. A prose-only style description cannot pass player-ready.
 Route full barrier/conformance testing to `game-studio-accessibility`; UI focus and contrast alone do not constitute a complete accessibility pass.
 
 ## Visual Direction Contract
 
 - Derive shape language, materials, palette, typography, icon style, borders, depth, motion, and feedback from the art bible.
-- Build a reusable Godot `Theme`, style tokens, component scripts, and shared containers. Avoid per-screen styling drift.
+- Build reusable presentation resources appropriate to the chosen mode: Godot `Theme`, diegetic scenes, custom draw/shader resources, or a deliberate hybrid. Avoid per-surface styling drift.
 - Prefer engine-native `Control` composition, anchors, containers, `StyleBox` resources, nine-slice assets, custom drawing, restrained shaders, and authored texture/icon layers.
 - Reject default gray panels, generic rounded SaaS cards, dashboard grids, neon gradients without narrative purpose, and stock web-form layouts as final presentation.
 - Use generated or authored decorative assets only when they improve identity and remain legible. Do not skin weak hierarchy with ornament.
 
 ## Required Surface Pass
 
-Implement and capture every required state from the game-state matrix, including at minimum:
-
-- title/start and first-time control guidance
-- gameplay HUD and contextual prompts
-- pause/resume
-- settings for audio, display/UI scale, controls, and accessibility
-- failure/defeat and recovery
-- victory/results and replay/continue
-- every modal introduced by gameplay, such as upgrades, inventory, dialogue, or confirmation
+Implement and capture every state marked `ui_surface` in the game-specific state graph. The screen inventory must use the exact state IDs. Derive navigation, guidance, configuration, interruption, results, inventory, dialogue, confirmation, diegetic, and accessibility surfaces from the GDD; conventional screens are neither automatically required nor automatically optional.
 
 ## Interaction Standards
 
@@ -55,7 +47,7 @@ Implement and capture every required state from the game-state matrix, including
 
 ## Visual QA Loop
 
-1. Capture title, gameplay, busiest combat, each modal, pause, settings, victory, and defeat.
+1. Capture every declared `ui_surface`, the busiest visual state, each modal/overlay, and each target aspect/device.
 2. Review hierarchy, art-bible coherence, gameplay obstruction, scale, clipping, safe zones, text contrast, focus, and input prompts.
 3. Reject “technically present” UI that still resembles generic HTML/dashboard composition.
 4. Fix blocker/high findings and recapture the affected states.

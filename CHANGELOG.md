@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Replaced fixed title/onboarding/gameplay/pause/settings/victory/defeat assumptions with a schema-v2, game-specific directed state graph covering custom journeys, completion states, recovery paths, experience requirements, and per-journey commands.
+- Replaced fixed asset groups, Godot Theme-only UI, fixed audio event IDs, and fixed evidence check IDs with game-specific coverage contracts while preserving strict integration/evidence validation.
+- Added adversarial graph tests, including an endless sandbox without conventional state names, an unreachable-state failure case, and rejection of the legacy fixed dictionary; the suite now contains 14 gate tests.
+- Added semantic CI guards that prevent fixed state/group/audio constants from returning and require routing skills to reference the dynamic journey contract.
+- Removed the duplicate `codex-game-studio/`, root `tools/`, and root asset-requirements copies. `plugins/codex-game-maker/` is now the only implementation source of truth.
 - Added an evidence-backed commercial studio workflow spanning product/business planning, platforms, performance, compliance, localization, accessibility, narrative, online services, marketing, telemetry, support, live operations, and rollback.
 - Added 11 commercial specialist skills, bringing the plugin to 23 skills.
 - Added `cgm.py`, a cross-platform CLI for diagnostics, command-backed quality evidence, player-ready validation, commercial release validation, Godot installation, and exports.

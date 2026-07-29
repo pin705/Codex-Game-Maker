@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio Accessibility"
-  short_description: "Implement and test accessible player experiences"
-  default_prompt: "Use $game-studio-accessibility to implement and verify the game accessibility plan."

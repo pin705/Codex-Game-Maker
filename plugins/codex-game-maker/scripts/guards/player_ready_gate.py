@@ -8,15 +8,13 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR.parent / "lib"))
 
 from cgm_validation import (  # noqa: E402
-    AUDIO_EXTENSIONS,
-    MEDIA_EXTENSIONS,
     PASS_STATUSES,
     by_id,
     command_results,
@@ -40,11 +38,8 @@ from cgm_validation import (  # noqa: E402
 )
 
 
-REQUIRED_STATES = {"boot", "title", "onboarding", "gameplay", "pause", "settings", "victory", "defeat"}
-REQUIRED_GROUPS = {"player", "environment", "gameplay-feedback", "ui", "release-branding"}
-REQUIRED_AUDIO = {"ui-confirm", "ui-back", "ui-focus", "ui-invalid", "player-action", "damage-or-failure", "reward", "victory", "defeat", "music-main", "ambience-gameplay"}
-REQUIRED_EVIDENCE = {"core_loop", "long_run", "visual_quality", "controls", "ui_states", "audio", "manual_playtest"}
-REQUIRED_COMMANDS = {"godot_import", "godot_lint", "core_loop", "long_run"}
+REQUIRED_QUALITY_KINDS = {"engine_import", "static_analysis", "reliability"}
+UI_MODES = {"godot-theme", "diegetic", "custom-draw", "hybrid", "intentionally-minimal"}
 MEDIA_PATH_PATTERN = re.compile(r"((?:production|assets|marketing|build)/[A-Za-z0-9_./-]+\.(?:png|jpe?g|gif|webp|wav|ogg|mp3|flac|mp4|mov|webm))", re.IGNORECASE)
 UI_SECTIONS = {
     "Visual Language", "Screen Inventory", "HUD Hierarchy", "Component System",
@@ -69,7 +64,13 @@ def require_file(root: Path, relative: str, blockers: list[dict]) -> None:
         blockers.append(issue("required.missing", f"Missing required file: {relative}", path))
 
 
-def require_pass_review(root: Path, pattern: str, code: str, expected_kind: str, blockers: list[dict]) -> None:
+def require_pass_review(
+    root: Path,
+    pattern: str,
+    code: str,
+    expected_kinds: set[str],
+    blockers: list[dict],
+) -> None:
     review_dir = root / "production/reviews"
     candidates = list(review_dir.glob(pattern)) if review_dir.is_dir() else []
     for path in candidates:
@@ -83,8 +84,8 @@ def require_pass_review(root: Path, pattern: str, code: str, expected_kind: str,
         hash_match = re.search(r"^Evidence SHA-256:\s*([0-9a-f]{64})\s*$", text, re.MULTILINE | re.IGNORECASE)
         valid_media = []
         for media_path in media_paths:
-            errors, _ = validate_media(media_path, expected_kind=expected_kind)
-            if not errors:
+            errors, info = validate_media(media_path)
+            if not errors and info.get("kind") in expected_kinds:
                 valid_media.append(media_path)
         hash_ok = bool(hash_match and valid_media and any(sha256_file(item) == hash_match.group(1).lower() for item in valid_media))
         if status and status.group(1).strip().lower() in PASS_STATUSES and gate_pass and reviewer and build and valid_media and hash_ok and "[path]" not in text:
@@ -92,7 +93,221 @@ def require_pass_review(root: Path, pattern: str, code: str, expected_kind: str,
     blockers.append(issue(code, f"No passing {pattern} review found", review_dir))
 
 
-def validate_quality(root: Path, blockers: list[dict], warnings: list[dict], evidence: list[dict]) -> Optional[dict]:
+def reachable(adjacency: dict[str, set[str]], start: str) -> set[str]:
+    visited: set[str] = set()
+    pending = [start]
+    while pending:
+        current = pending.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+        pending.extend(adjacency.get(current, set()) - visited)
+    return visited
+
+
+def state_evidence_keys(root: Path, rows: Any, valid_paths: list[Path]) -> set[str]:
+    valid = {path.resolve() for path in valid_paths}
+    keys: set[str] = set()
+    for raw in rows if isinstance(rows, list) else []:
+        raw_path = raw.get("path", "") if isinstance(raw, dict) else raw
+        marker = str(raw.get("marker", "")).strip() if isinstance(raw, dict) else ""
+        path = resolve_project_path(root, str(raw_path))
+        if path is None or path.resolve() not in valid or not path.is_file():
+            continue
+        media = sniff_media(path)
+        digest = sha256_file(path)
+        if media.get("kind") == "video" and marker:
+            keys.add(f"{digest}#{marker}")
+        else:
+            keys.add(digest)
+    return keys
+
+
+def validate_state_contract(
+    root: Path,
+    blockers: list[dict],
+    evidence: list[dict],
+) -> tuple[Optional[dict], set[str], set[str], set[str], set[str]]:
+    path = root / "design/game-state-matrix.json"
+    data = load_json(path, blockers, "states")
+    required_commands: set[str] = set()
+    godot_commands: set[str] = set()
+    evidence_checks: set[str] = set()
+    ui_states: set[str] = set()
+    if data is None:
+        return None, required_commands, godot_commands, evidence_checks, ui_states
+    if data.get("schema_version") != 2:
+        blockers.append(issue("states.schema", "game-state-matrix.json must use schema_version 2 with dynamic states, transitions, journeys, and requirements", path))
+        return data, required_commands, godot_commands, evidence_checks, ui_states
+
+    raw_states = data.get("states")
+    if not isinstance(raw_states, list) or not raw_states:
+        blockers.append(issue("states.invalid", "states must be a non-empty array", path))
+        return data, required_commands, godot_commands, evidence_checks, ui_states
+    states = by_id(raw_states)
+    if len(states) != len(raw_states):
+        blockers.append(issue("states.duplicate", "Every state needs a unique non-empty id", path))
+    adjacency: dict[str, set[str]] = {state_id: set() for state_id in states}
+    required_states: set[str] = set()
+    required_state_keys: dict[str, set[str]] = {}
+
+    for state_id, row in states.items():
+        if row.get("required", True):
+            required_states.add(state_id)
+        if not status_ok(row.get("status")):
+            blockers.append(issue("state.incomplete", f"State {state_id} is not verified", path))
+        if not str(row.get("role", "")).strip():
+            blockers.append(issue("state.role_missing", f"State {state_id} needs a game-specific role", path))
+        scene = resolve_project_path(root, str(row.get("scene", "")))
+        if scene is None or not is_within(root, scene) or not scene.is_file():
+            blockers.append(issue("state.scene_missing", f"State {state_id} has no valid project-local scene/path", scene))
+        valid_media = require_artifacts(
+            root,
+            row.get("evidence"),
+            blockers,
+            "state.evidence",
+            f"State {state_id} has no runtime evidence",
+            path,
+            media_only=True,
+            media_minimum=True,
+        )
+        if row.get("required", True):
+            required_state_keys[state_id] = state_evidence_keys(root, row.get("evidence"), valid_media)
+        if row.get("ui_surface"):
+            ui_states.add(state_id)
+        transitions = row.get("transitions")
+        if not isinstance(transitions, list):
+            blockers.append(issue("state.transitions_invalid", f"State {state_id} transitions must be an array", path))
+            continue
+        for transition in transitions:
+            if not isinstance(transition, dict):
+                blockers.append(issue("state.transition_invalid", f"State {state_id} has an invalid transition", path))
+                continue
+            target = str(transition.get("to", "")).strip()
+            trigger = str(transition.get("trigger", "")).strip()
+            if target not in states:
+                blockers.append(issue("state.transition_target", f"State {state_id} points to missing state {target or '<empty>'}", path))
+                continue
+            if not trigger:
+                blockers.append(issue("state.transition_trigger", f"Transition {state_id} -> {target} has no trigger/condition", path))
+            adjacency[state_id].add(target)
+
+    journeys_raw = data.get("journeys")
+    journeys = by_id(journeys_raw)
+    if not isinstance(journeys_raw, list) or not journeys or len(journeys) != len(journeys_raw):
+        blockers.append(issue("journey.invalid", "journeys must be a non-empty array with unique IDs", path))
+    covered_states: set[str] = set()
+    for journey_id, journey in journeys.items():
+        if not journey.get("required", True):
+            continue
+        start = str(journey.get("start_state", "")).strip()
+        journey_states = {str(item) for item in journey.get("required_states", []) if str(item)} if isinstance(journey.get("required_states"), list) else set()
+        completion_states = {str(item) for item in journey.get("completion_states", []) if str(item)} if isinstance(journey.get("completion_states"), list) else set()
+        goal = str(journey.get("goal", "")).strip()
+        if start not in states or not journey_states or not completion_states or not goal:
+            blockers.append(issue("journey.contract_incomplete", f"Journey {journey_id} needs a concrete goal, valid start, required_states, and completion_states", path))
+            continue
+        unknown = (journey_states | completion_states) - set(states)
+        for state_id in sorted(unknown):
+            blockers.append(issue("journey.state_missing", f"Journey {journey_id} references missing state {state_id}", path))
+        if unknown:
+            continue
+        visited = reachable(adjacency, start)
+        for state_id in sorted((journey_states | completion_states) - visited):
+            blockers.append(issue("journey.unreachable", f"Journey {journey_id} cannot reach required state {state_id} from {start}", path))
+        if not completion_states.intersection(visited):
+            blockers.append(issue("journey.no_completion", f"Journey {journey_id} has no reachable completion state", path))
+        covered_states.update(journey_states | completion_states | {start})
+        command_id = str(journey.get("test_command_id", "")).strip()
+        if not command_id:
+            blockers.append(issue("journey.test_missing", f"Journey {journey_id} needs an executable test_command_id", path))
+        else:
+            required_commands.add(command_id)
+        require_artifacts(root, journey.get("evidence"), blockers, "journey.evidence", f"Journey {journey_id} has no end-to-end runtime evidence", path, media_only=True, media_minimum=True)
+        recoveries = journey.get("recovery_paths", [])
+        if not isinstance(recoveries, list):
+            blockers.append(issue("journey.recovery_invalid", f"Journey {journey_id} recovery_paths must be an array", path))
+            recoveries = []
+        for recovery in recoveries:
+            if not isinstance(recovery, dict) or not recovery.get("required", True):
+                continue
+            source = str(recovery.get("from", "")).strip()
+            target = str(recovery.get("to", "")).strip()
+            recovery_reachable = reachable(adjacency, source) if source in states else set()
+            if source not in states or target not in states or source not in visited or target not in recovery_reachable:
+                blockers.append(issue("journey.recovery_unreachable", f"Journey {journey_id} recovery path {source} -> {target} is not reachable", path))
+            elif not completion_states.intersection(reachable(adjacency, target)):
+                blockers.append(issue("journey.recovery_no_completion", f"Journey {journey_id} recovery target {target} cannot return to a declared completion state", path))
+            recovery_command = str(recovery.get("test_command_id", "")).strip()
+            if not recovery_command:
+                blockers.append(issue("journey.recovery_test_missing", f"Journey {journey_id} recovery {source} -> {target} needs test_command_id", path))
+            else:
+                required_commands.add(recovery_command)
+
+    for state_id in sorted(required_states - covered_states):
+        blockers.append(issue("state.uncovered", f"Required state {state_id} is not covered by a required journey", path))
+    evidence_owners: dict[str, set[str]] = {}
+    for state_id, keys in required_state_keys.items():
+        for key in keys:
+            evidence_owners.setdefault(key, set()).add(state_id)
+    for state_id in sorted(required_states):
+        keys = required_state_keys.get(state_id, set())
+        if not any(evidence_owners.get(key) == {state_id} for key in keys):
+            blockers.append(issue("state.evidence_not_distinct", f"Required state {state_id} needs at least one image or marked video segment not reused by another required state", path, state_id=state_id))
+
+    requirements_raw = data.get("experience_requirements")
+    requirements = by_id(requirements_raw)
+    if not isinstance(requirements_raw, list) or not requirements or len(requirements) != len(requirements_raw):
+        blockers.append(issue("experience.invalid", "experience_requirements must be a non-empty array with unique game-specific IDs", path))
+    for requirement_id, requirement in requirements.items():
+        if not requirement.get("required", True):
+            continue
+        fulfilled = {str(item) for item in requirement.get("fulfilled_by", []) if str(item)} if isinstance(requirement.get("fulfilled_by"), list) else set()
+        if not str(requirement.get("rationale", "")).strip() or not fulfilled:
+            blockers.append(issue("experience.contract_incomplete", f"Requirement {requirement_id} needs rationale and fulfilled_by states", path))
+        for state_id in sorted(fulfilled - set(states)):
+            blockers.append(issue("experience.state_missing", f"Requirement {requirement_id} references missing state {state_id}", path))
+        require_artifacts(root, requirement.get("evidence"), blockers, "experience.evidence", f"Requirement {requirement_id} has no evidence", path)
+
+    quality_raw = data.get("quality_requirements")
+    quality = by_id(quality_raw)
+    kinds: set[str] = set()
+    if not isinstance(quality_raw, list) or not quality or len(quality) != len(quality_raw):
+        blockers.append(issue("quality.contract_invalid", "quality_requirements must be a non-empty array with unique IDs", path))
+    for row in quality.values():
+        if not row.get("required", True):
+            continue
+        kind = str(row.get("kind", "")).strip()
+        command_id = str(row.get("command_id", "")).strip()
+        kinds.add(kind)
+        if not command_id:
+            blockers.append(issue("quality.contract_command_missing", f"Quality requirement {row.get('id')} needs command_id", path))
+        else:
+            required_commands.add(command_id)
+            if kind == "engine_import":
+                godot_commands.add(command_id)
+    for kind in sorted(REQUIRED_QUALITY_KINDS - kinds):
+        blockers.append(issue("quality.contract_kind_missing", f"Missing universal quality requirement kind: {kind}", path))
+
+    checks = data.get("required_evidence_checks")
+    if not isinstance(checks, list) or not checks or not all(isinstance(item, str) and item.strip() for item in checks):
+        blockers.append(issue("evidence.contract_invalid", "required_evidence_checks must declare this game's completion evidence", path))
+    elif len(set(checks)) != len(checks):
+        blockers.append(issue("evidence.contract_duplicate", "required_evidence_checks must use unique check IDs", path))
+    else:
+        evidence_checks = {item.strip() for item in checks}
+    evidence.append({"code": "journey.graph", "states": len(states), "required_states": len(required_states), "journeys": len(journeys)})
+    return data, required_commands, godot_commands, evidence_checks, ui_states
+
+
+def validate_quality(
+    root: Path,
+    required_commands: set[str],
+    godot_commands: set[str],
+    blockers: list[dict],
+    warnings: list[dict],
+    evidence: list[dict],
+) -> Optional[dict]:
     manifest_path = root / "production/quality-command-manifest.json"
     report_path = root / "production/evidence/quality-run.json"
     manifest = load_json(manifest_path, blockers, "quality.manifest")
@@ -123,7 +338,7 @@ def validate_quality(root: Path, blockers: list[dict], warnings: list[dict], evi
     if len(manifest_commands) != len(manifest.get("commands", [])):
         blockers.append(issue("quality.command_duplicate", "Quality command IDs must be unique", manifest_path))
     results = command_results(report)
-    for command_id in sorted(REQUIRED_COMMANDS):
+    for command_id in sorted(required_commands):
         command = manifest_commands.get(command_id)
         result = results.get(command_id)
         if not command or not isinstance(command.get("argv"), list) or not command.get("argv"):
@@ -144,7 +359,7 @@ def validate_quality(root: Path, blockers: list[dict], warnings: list[dict], evi
         artifacts = result.get("artifacts") if isinstance(result.get("artifacts"), list) else []
         if output_bytes <= 0 and not artifacts:
             blockers.append(issue("quality.evidence_empty", f"Command {command_id} produced no log or artifact evidence", report_path))
-        if command_id == "godot_import":
+        if command_id in godot_commands:
             raw_argv = command.get("argv") if isinstance(command.get("argv"), list) else []
             if not any("{godot}" in item or "godot" in Path(item).name.lower() for item in raw_argv):
                 blockers.append(issue("quality.godot_command_missing", "godot_import must invoke the configured Godot executable", manifest_path))
@@ -196,43 +411,32 @@ def evaluate(root: Path, strict: bool = False) -> dict:
             else:
                 evidence.append({"code": "godot.main_scene", "path": str(scene)})
 
-    runtime_media: list[Path] = []
-    states = load_json(root / "design/game-state-matrix.json", blockers, "states")
-    if states is not None:
-        rows = states.get("states")
-        if not isinstance(rows, dict):
-            blockers.append(issue("states.invalid", "states must be an object", "design/game-state-matrix.json"))
-        else:
-            for state in sorted(REQUIRED_STATES):
-                row = rows.get(state)
-                if not isinstance(row, dict):
-                    blockers.append(issue("state.missing", f"Missing required state: {state}", "design/game-state-matrix.json"))
-                    continue
-                if not status_ok(row.get("status")):
-                    blockers.append(issue("state.incomplete", f"State {state} is not verified", "design/game-state-matrix.json"))
-                scene = resolve_project_path(root, str(row.get("scene", "")))
-                if scene is None or not is_within(root, scene) or not scene.is_file():
-                    blockers.append(issue("state.scene_missing", f"State {state} has no valid scene/path", scene))
-                runtime_media.extend(require_artifacts(
-                    root, row.get("evidence"), blockers, "state.evidence", f"State {state} has no runtime evidence",
-                    "design/game-state-matrix.json", media_only=True, media_minimum=True,
-                ))
-    unique_runtime = {sha256_file(path) for path in runtime_media if path.is_file()}
-    for path in runtime_media:
-        if sniff_media(path).get("kind") not in {"image", "video"}:
-            blockers.append(issue("state.evidence_not_visual", "State evidence must be an image or video", path))
-    if len(unique_runtime) < 5:
-        blockers.append(issue("state.evidence_not_distinct", "Required states need at least five distinct runtime captures", "design/game-state-matrix.json", distinct=len(unique_runtime)))
+    states, required_commands, godot_commands, evidence_checks, ui_state_ids = validate_state_contract(root, blockers, evidence)
 
     coverage = load_json(root / "design/assets/asset-coverage.json", blockers, "assets")
     integrated_asset_hashes: set[str] = set()
     if coverage is not None:
-        groups = by_id(coverage.get("groups"))
-        for group_id in sorted(REQUIRED_GROUPS):
-            group = groups.get(group_id)
-            if not group:
-                blockers.append(issue("assets.group_missing", f"Missing asset group: {group_id}", "design/assets/asset-coverage.json"))
-                continue
+        raw_groups = coverage.get("groups")
+        groups = by_id(raw_groups)
+        if not isinstance(raw_groups, list) or not groups or len(groups) != len(raw_groups):
+            blockers.append(issue("assets.groups_invalid", "Asset groups must be a non-empty array with unique game-specific IDs", "design/assets/asset-coverage.json"))
+        required_groups = {group_id for group_id, group in groups.items() if group.get("required", True)}
+        if not required_groups:
+            blockers.append(issue("assets.required_groups_missing", "Asset coverage must declare at least one required game-specific group", "design/assets/asset-coverage.json"))
+        policy = coverage.get("coverage_policy") if isinstance(coverage.get("coverage_policy"), dict) else {}
+        try:
+            minimum_distinct = int(policy.get("minimum_distinct_assets", 0))
+        except (TypeError, ValueError):
+            minimum_distinct = 0
+        inventory_sources = policy.get("inventory_sources") if isinstance(policy.get("inventory_sources"), list) else []
+        if minimum_distinct < 1 or not str(policy.get("rationale", "")).strip() or not inventory_sources:
+            blockers.append(issue("assets.policy_invalid", "coverage_policy needs a justified minimum_distinct_assets and inventory_sources derived from this game's design", "design/assets/asset-coverage.json"))
+        for raw_source in inventory_sources:
+            source = resolve_project_path(root, str(raw_source))
+            if source is None or not is_within(root, source) or not source.is_file():
+                blockers.append(issue("assets.inventory_source_missing", f"Asset inventory source is missing: {raw_source}", source))
+        seen_asset_ids: set[str] = set()
+        for group_id, group in sorted(groups.items()):
             if group.get("required", True) and not status_ok(group.get("status")):
                 blockers.append(issue("assets.group_incomplete", f"Asset group {group_id} is not verified", "design/assets/asset-coverage.json"))
             assets = group.get("assets")
@@ -240,6 +444,9 @@ def evaluate(root: Path, strict: bool = False) -> dict:
             if group.get("required", True) and (not required_ids or not str(group.get("coverage_basis", "")).strip()):
                 blockers.append(issue("assets.coverage_contract_missing", f"Asset group {group_id} needs coverage_basis and required_asset_ids", "design/assets/asset-coverage.json"))
             actual_ids = {str(item.get("id")) for item in assets if isinstance(item, dict) and item.get("id")} if isinstance(assets, list) else set()
+            for duplicate in sorted(seen_asset_ids.intersection(actual_ids)):
+                blockers.append(issue("assets.id_duplicate", f"Asset id {duplicate} is reused across groups", "design/assets/asset-coverage.json"))
+            seen_asset_ids.update(actual_ids)
             for missing_id in sorted(required_ids - actual_ids):
                 blockers.append(issue("assets.required_asset_missing", f"Asset group {group_id} is missing required asset {missing_id}", "design/assets/asset-coverage.json"))
             if group.get("required", True) and (not isinstance(assets, list) or not assets):
@@ -272,8 +479,15 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                         runtime_ref = resolve_project_path(root, str(raw_ref))
                         if runtime_ref is None or not is_within(root, runtime_ref) or not runtime_ref.exists():
                             blockers.append(issue("asset.runtime_ref_invalid", f"Missing runtime reference: {raw_ref}", runtime_ref))
-    if coverage is not None and len(integrated_asset_hashes) < 4:
-        blockers.append(issue("assets.not_distinct", "Player-ready asset coverage needs at least four distinct integrated production assets", "design/assets/asset-coverage.json", distinct=len(integrated_asset_hashes)))
+        required_asset_floor = sum(
+            len({str(item) for item in group.get("required_asset_ids", []) if str(item)})
+            for group in groups.values()
+            if group.get("required", True) and isinstance(group.get("required_asset_ids"), list)
+        )
+        if minimum_distinct < required_asset_floor:
+            blockers.append(issue("assets.policy_below_inventory", "minimum_distinct_assets cannot be lower than the declared required asset inventory", "design/assets/asset-coverage.json", minimum=minimum_distinct, required_assets=required_asset_floor))
+        if len(integrated_asset_hashes) < minimum_distinct:
+            blockers.append(issue("assets.not_distinct", "Integrated production assets do not meet this game's declared coverage policy", "design/assets/asset-coverage.json", expected=minimum_distinct, distinct=len(integrated_asset_hashes)))
 
     ui_path = root / "design/ui/ui-ux-spec.md"
     if ui_path.is_file():
@@ -287,16 +501,34 @@ def evaluate(root: Path, strict: bool = False) -> dict:
         remaining = [marker for marker in UI_TEMPLATE_MARKERS if re.search(rf"^{re.escape(marker)}\s*$", ui_text, re.MULTILINE)]
         if remaining:
             blockers.append(issue("ui.placeholder", f"UI spec has {len(remaining)} unfilled template fields", ui_path))
-        for line in ui_text.splitlines():
-            if not line.startswith("|") or re.match(r"^\|[- :|]+\|$", line) or "State |" in line:
+        inventory_ids: set[str] = set()
+        inventory_match = re.search(r"^## Screen Inventory\s*$([\s\S]*?)(?=^##\s|\Z)", ui_text, re.MULTILINE)
+        for line in inventory_match.group(1).splitlines() if inventory_match else []:
+            if not line.startswith("|") or re.match(r"^\|[- :|]+\|$", line) or "State ID" in line:
                 continue
             cells = [cell.strip() for cell in line.strip("|").split("|")]
             if len(cells) >= 5 and any(not cell for cell in cells[:5]):
                 blockers.append(issue("ui.screen_row_incomplete", f"UI inventory row is incomplete: {line}", ui_path))
-        theme_match = re.search(r"^Theme resource:\s*(\S+)\s*$", ui_text, re.MULTILINE | re.IGNORECASE)
-        theme_path = resolve_project_path(root, theme_match.group(1)) if theme_match else None
-        if theme_path is None or not is_within(root, theme_path) or not theme_path.is_file() or "Theme" not in theme_path.read_text(encoding="utf-8-sig"):
-            blockers.append(issue("ui.theme_missing", "UI spec must reference an implemented Godot Theme resource", theme_path or ui_path))
+            elif len(cells) >= 5:
+                inventory_ids.add(cells[0])
+        for state_id in sorted(ui_state_ids - inventory_ids):
+            blockers.append(issue("ui.state_missing", f"UI inventory does not cover declared UI state {state_id}", ui_path))
+        mode_match = re.search(r"^Implementation mode:\s*(\S+)\s*$", ui_text, re.MULTILINE | re.IGNORECASE)
+        mode = mode_match.group(1).strip().lower() if mode_match else ""
+        if mode not in UI_MODES:
+            blockers.append(issue("ui.mode_invalid", f"UI implementation mode must be one of {sorted(UI_MODES)}", ui_path))
+        resource_refs = sorted(set(re.findall(r"res://[A-Za-z0-9_./-]+", ui_text)))
+        resources: list[Path] = []
+        for raw_resource in resource_refs:
+            resource = resolve_project_path(root, raw_resource)
+            if resource is not None and is_within(root, resource) and resource.is_file() and resource.stat().st_size > 0:
+                resources.append(resource)
+        if not resources:
+            blockers.append(issue("ui.resources_missing", "UI spec must reference at least one implemented project-local presentation resource", ui_path))
+        if mode in {"godot-theme", "hybrid"} and not any("Theme" in resource.read_text(encoding="utf-8-sig", errors="ignore") for resource in resources):
+            blockers.append(issue("ui.theme_missing", "godot-theme/hybrid mode needs an implemented Godot Theme resource", ui_path))
+        if mode == "intentionally-minimal" and not re.search(r"^Minimal UI rationale:\s*\S.+$", ui_text, re.MULTILINE | re.IGNORECASE):
+            blockers.append(issue("ui.minimal_unjustified", "Intentionally minimal UI needs a concrete rationale", ui_path))
 
     audio = load_json(root / "design/audio/audio-manifest.json", blockers, "audio")
     audio_hashes: set[str] = set()
@@ -305,11 +537,27 @@ def evaluate(root: Path, strict: bool = False) -> dict:
             if not str(audio.get("silence_rationale", "")).strip():
                 blockers.append(issue("audio.silence_unjustified", "Intentional silence needs a rationale", "design/audio/audio-manifest.json"))
         else:
-            buses = audio.get("buses")
-            if not isinstance(buses, list) or not {"Master", "Music", "SFX", "UI"}.issubset(set(buses)):
-                blockers.append(issue("audio.buses_missing", "Required audio buses are missing", "design/audio/audio-manifest.json"))
-            events = by_id(audio.get("events"))
-            for event_id in sorted(REQUIRED_AUDIO):
+            buses = {str(item) for item in audio.get("buses", []) if str(item)} if isinstance(audio.get("buses"), list) else set()
+            required_buses = {str(item) for item in audio.get("required_buses", []) if str(item)} if isinstance(audio.get("required_buses"), list) else set()
+            if not required_buses or not required_buses.issubset(buses):
+                blockers.append(issue("audio.buses_missing", "Audio manifest buses do not cover this game's declared required_buses", "design/audio/audio-manifest.json"))
+            raw_coverage = audio.get("coverage_requirements")
+            coverage_rows = by_id(raw_coverage)
+            if not isinstance(raw_coverage, list) or not coverage_rows or len(coverage_rows) != len(raw_coverage):
+                blockers.append(issue("audio.coverage_invalid", "coverage_requirements must be a non-empty array with unique game-specific IDs", "design/audio/audio-manifest.json"))
+            required_events: set[str] = set()
+            for coverage_id, coverage_row in coverage_rows.items():
+                if not coverage_row.get("required", True):
+                    continue
+                event_ids = {str(item) for item in coverage_row.get("event_ids", []) if str(item)} if isinstance(coverage_row.get("event_ids"), list) else set()
+                if not str(coverage_row.get("rationale", "")).strip() or not event_ids:
+                    blockers.append(issue("audio.coverage_contract_incomplete", f"Audio coverage {coverage_id} needs rationale and event_ids", "design/audio/audio-manifest.json"))
+                required_events.update(event_ids)
+            raw_events = audio.get("events")
+            events = by_id(raw_events)
+            if not isinstance(raw_events, list) or len(events) != len(raw_events):
+                blockers.append(issue("audio.events_invalid", "Audio events must be an array with unique IDs", "design/audio/audio-manifest.json"))
+            for event_id in sorted(required_events):
                 event = events.get(event_id)
                 if not event or not status_ok(event.get("status")):
                     blockers.append(issue("audio.event_incomplete", f"Audio event {event_id} is not verified", "design/audio/audio-manifest.json"))
@@ -323,11 +571,22 @@ def evaluate(root: Path, strict: bool = False) -> dict:
                         blockers.append(issue("audio.asset_invalid", f"Audio event {event_id}: {error}", path))
                     if not errors:
                         audio_hashes.add(sha256_file(path))
+                provenance = resolve_project_path(root, str(event.get("provenance", "")))
+                if provenance is None or not is_within(root, provenance) or not provenance.is_file() or provenance.stat().st_size == 0:
+                    blockers.append(issue("audio.provenance_missing", f"Audio event {event_id} has no project-local provenance/license record", provenance))
                 if not str(event.get("trigger", "")).strip():
                     blockers.append(issue("audio.trigger_missing", f"Audio event {event_id} has no trigger", "design/audio/audio-manifest.json"))
         require_artifacts(root, audio.get("evidence"), blockers, "audio.evidence", "Audio manifest has no listening/runtime evidence", "design/audio/audio-manifest.json")
-        if not audio.get("intentional_silence") and len(audio_hashes) < 4:
-            blockers.append(issue("audio.not_distinct", "Player-ready audio needs at least four distinct integrated sounds across music, ambience, UI, gameplay, and outcomes", "design/audio/audio-manifest.json", distinct=len(audio_hashes)))
+        if not audio.get("intentional_silence"):
+            policy = audio.get("coverage_policy") if isinstance(audio.get("coverage_policy"), dict) else {}
+            try:
+                minimum_distinct_audio = int(policy.get("minimum_distinct_assets", 0))
+            except (TypeError, ValueError):
+                minimum_distinct_audio = 0
+            if minimum_distinct_audio < 1 or not str(policy.get("rationale", "")).strip():
+                blockers.append(issue("audio.policy_invalid", "Audio coverage_policy needs a game-specific rationale and positive minimum_distinct_assets", "design/audio/audio-manifest.json"))
+            elif len(audio_hashes) < minimum_distinct_audio:
+                blockers.append(issue("audio.not_distinct", "Integrated audio does not meet this game's declared coverage policy", "design/audio/audio-manifest.json", expected=minimum_distinct_audio, distinct=len(audio_hashes)))
 
     test_files = list((root / "tests").glob("**/*.gd")) if (root / "tests").is_dir() else []
     if not test_files:
@@ -353,9 +612,10 @@ def evaluate(root: Path, strict: bool = False) -> dict:
     else:
         evidence.append({"code": "playtests.pass", "count": len(passing_playtests)})
 
-    require_pass_review(root, "*visual*.md", "visual.review_missing", "image", blockers)
-    require_pass_review(root, "*audio*.md", "audio.review_missing", "audio", blockers)
-    validate_quality(root, blockers, warnings, evidence)
+    require_pass_review(root, "*visual*.md", "visual.review_missing", {"image", "video"}, blockers)
+    audio_review_kinds = {"audio", "video"} if audio and audio.get("intentional_silence") else {"audio"}
+    require_pass_review(root, "*audio*.md", "audio.review_missing", audio_review_kinds, blockers)
+    validate_quality(root, required_commands, godot_commands, blockers, warnings, evidence)
 
     report = load_json(root / "production/evidence/player-ready.json", blockers, "evidence")
     if report is not None:
@@ -363,7 +623,7 @@ def evaluate(root: Path, strict: bool = False) -> dict:
         if not isinstance(checks, dict):
             blockers.append(issue("evidence.checks_invalid", "checks must be an object", "production/evidence/player-ready.json"))
         else:
-            for check in sorted(REQUIRED_EVIDENCE):
+            for check in sorted(evidence_checks):
                 if str(checks.get(check, "")).upper() != "PASS":
                     blockers.append(issue("evidence.not_passed", f"Evidence check {check} is not PASS", "production/evidence/player-ready.json"))
         require_artifacts(root, report.get("artifacts"), blockers, "evidence.artifacts", "No player-ready artifacts recorded", "production/evidence/player-ready.json")

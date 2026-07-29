@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio Online Services"
-  short_description: "Design secure backend and multiplayer services"
-  default_prompt: "Use $game-studio-online-services to design and verify the game online-service architecture."

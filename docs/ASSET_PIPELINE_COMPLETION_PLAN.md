@@ -69,10 +69,10 @@ Goal: generate and process a complete character action set rather than one sheet
 
 Add:
 
-- `tools/create-action-bundle.ps1`
-- `codex-game-studio/references/templates/action-bundle-spec.yaml`
-- `codex-game-studio/references/templates/action-bundle-report.md`
-- `codex-game-studio/scripts/assets/cgs_asset_workflows.py action-bundle`
+- `plugins/codex-game-maker/tools/create-action-bundle.ps1`
+- `plugins/codex-game-maker/references/templates/action-bundle-spec.yaml`
+- `plugins/codex-game-maker/references/templates/action-bundle-report.md`
+- `plugins/codex-game-maker/scripts/assets/cgs_asset_workflows.py action-bundle`
 
 Inputs:
 
@@ -137,9 +137,9 @@ Do not auto-repair:
 
 Add:
 
-- `tools/repair-asset-processing.ps1`
+- `plugins/codex-game-maker/tools/repair-asset-processing.ps1`
 - `asset-qa-report.md` section for attempted repair steps.
-- `codex-game-studio/scripts/assets/cgs_asset_workflows.py repair-assets`
+- `plugins/codex-game-maker/scripts/assets/cgs_asset_workflows.py repair-assets`
 
 Acceptance:
 
@@ -154,9 +154,9 @@ Goal: turn processed frames into Godot 4.7.1 resources.
 
 Add:
 
-- `tools/import-sprite-to-godot.ps1`
-- `codex-game-studio/scripts/assets/cgs_asset_workflows.py godot-sprite`
-- `codex-game-studio/references/templates/godot-sprite-import-spec.yaml`
+- `plugins/codex-game-maker/tools/import-sprite-to-godot.ps1`
+- `plugins/codex-game-maker/scripts/assets/cgs_asset_workflows.py godot-sprite`
+- `plugins/codex-game-maker/references/templates/godot-sprite-import-spec.yaml`
 
 Outputs:
 
@@ -193,9 +193,9 @@ Goal: make generated map assets usable as editable Godot scenes.
 
 Add:
 
-- `tools/import-map-to-godot.ps1`
-- `codex-game-studio/references/templates/map-scene-import-spec.yaml`
-- `codex-game-studio/scripts/assets/cgs_asset_workflows.py godot-map`
+- `plugins/codex-game-maker/tools/import-map-to-godot.ps1`
+- `plugins/codex-game-maker/references/templates/map-scene-import-spec.yaml`
+- `plugins/codex-game-maker/scripts/assets/cgs_asset_workflows.py godot-map`
 
 Inputs:
 
@@ -244,8 +244,8 @@ Add workflow rules for:
 - action prompt reuse
 - visual drift review
 - acceptable variation thresholds
-- `tools/create-reference-variant-spec.ps1`
-- `codex-game-studio/references/templates/reference-variant-spec.yaml`
+- `plugins/codex-game-maker/tools/create-reference-variant-spec.ps1`
+- `plugins/codex-game-maker/references/templates/reference-variant-spec.yaml`
 
 Possible metadata:
 
@@ -284,7 +284,7 @@ Demo should include:
 Current tool:
 
 ```powershell
-tools/create-playable-showcase.ps1 -Root . -Name asset-pipeline-showcase
+plugins/codex-game-maker/tools/create-playable-showcase.ps1 -Root . -Name asset-pipeline-showcase
 ```
 
 Acceptance:

@@ -45,15 +45,9 @@ Before generating many assets, use a small representative batch, usually 1-3 ass
 
 ## Coverage Contract
 
-For player-ready work, create `design/assets/asset-coverage.json` before bulk production and inventory every player-visible need. Cover at least:
+For player-ready work, create `design/assets/asset-coverage.json` before bulk production. Derive groups from this game's state graph, system GDDs, art bible, UI inventory, feedback vocabulary, content boundary, and target-platform surfaces. Do not copy character/environment/UI/branding groups into a game where those concepts do not apply, and do not omit custom groups such as cards, vehicles, construction pieces, dialogue portraits, procedural materials, or live-event content when they do.
 
-- player characters and all required actions/states
-- enemies, NPCs, interactables, rewards, projectiles, impacts, and gameplay FX
-- environments, levels, props, backgrounds, transitions, and readable collision affordances
-- HUD, menu, settings, tutorial, modal, cursor/focus, and input-prompt art
-- title, logo, icon, loading/fallback, and release branding surfaces
-
-Every required group records a concrete `coverage_basis` and exhaustive `required_asset_ids`; every listed ID must have a matching asset row. Every required group and asset must move through `planned -> draft -> accepted -> integrated -> verified`. Each asset row records `path`, `provenance`, and one or more `runtime_refs`. Player-ready requires at least four distinct integrated production artifacts across the mandatory groups, so one generic image copied across the manifest cannot pass. `mock`, `placeholder`, `draft`, `generated`, or `accepted` alone never satisfies player-ready coverage. If a deliberately invisible or procedural asset is appropriate, record the rationale, rights/source decision, runtime references, and evidence instead of inventing a raster file requirement.
+Set `coverage_policy.minimum_distinct_assets` to a justified game-specific floor and cite its `inventory_sources`. Every required group records a concrete `coverage_basis` and exhaustive `required_asset_ids`; every listed ID must have a matching asset row. Every required group and asset must move through `planned -> draft -> accepted -> integrated -> verified`. Each asset row records `path`, `provenance`, and one or more `runtime_refs`. `mock`, `placeholder`, `draft`, `generated`, or `accepted` alone never satisfies player-ready coverage. If a deliberately invisible or procedural asset is appropriate, record the rationale, rights/source decision, runtime references, and evidence instead of inventing a raster file requirement.
 
 ## Route Detailed Asset Work
 

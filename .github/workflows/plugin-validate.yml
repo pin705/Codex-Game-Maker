@@ -36,18 +36,14 @@ jobs:
       - name: Run gate tests
         run: python -m unittest -v tests/test_player_ready_gate.py
 
-      - name: Validate repository structure and mirrored package
+      - name: Validate repository structure and single canonical package
         run: python tests/validate_repository.py
 
       - name: Validate every skill
         run: |
-          for root in plugins/codex-game-maker codex-game-studio; do
-            for skill in "$root"/skills/*; do
-              python tests/quick_validate_skill.py "$skill"
-            done
+          for skill in plugins/codex-game-maker/skills/*; do
+            python tests/quick_validate_skill.py "$skill"
           done
 
-      - name: Validate both plugin layouts
-        run: |
-          python tests/validate_plugin_contract.py plugins/codex-game-maker
-          python tests/validate_plugin_contract.py codex-game-studio
+      - name: Validate plugin contract
+        run: python tests/validate_plugin_contract.py plugins/codex-game-maker

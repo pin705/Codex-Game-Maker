@@ -47,17 +47,17 @@ survivor lessons from the vampire-grove-cgm showcase.
 11. Fill `production/smoke-tests/playable-showcase-qa.md`.
 
 For top-down survivor characters, also create a character contract from
-`codex-game-studio/references/templates/topdown-survivor-character-contract.yaml`
+`plugins/codex-game-maker/references/templates/topdown-survivor-character-contract.yaml`
 before generating idle/move sheets.
 
 ## Required Files
 
-- `codex-game-studio/references/rules/playable-showcase-integration.md`
-- `codex-game-studio/references/templates/scene-scale-plan.yaml`
-- `codex-game-studio/references/templates/asset-harness-spec.yaml`
-- `codex-game-studio/references/templates/topdown-survivor-character-contract.yaml`
-- `codex-game-studio/references/templates/playable-showcase-qa.md`
-- `codex-game-studio/references/rules/topdown-survivor-character-assets.md`
+- `plugins/codex-game-maker/references/rules/playable-showcase-integration.md`
+- `plugins/codex-game-maker/references/templates/scene-scale-plan.yaml`
+- `plugins/codex-game-maker/references/templates/asset-harness-spec.yaml`
+- `plugins/codex-game-maker/references/templates/topdown-survivor-character-contract.yaml`
+- `plugins/codex-game-maker/references/templates/playable-showcase-qa.md`
+- `plugins/codex-game-maker/references/rules/topdown-survivor-character-assets.md`
 
 ## Practical Rules
 

@@ -18,7 +18,7 @@ Create `design/localization/localization-manifest.json` from `../../references/t
 3. Select fonts with verified licenses and glyph coverage. Define fallback chains and shaping/RTL behavior.
 4. Run pseudo-localization before translation to expose concatenation, clipping, fixed-width controls, and missing IDs.
 5. Import translations without breaking variables or markup. Validate dialogue, subtitles, tutorials, settings, errors, and store assets.
-6. Capture title, gameplay HUD, busiest modal, settings, results, and long-string cases for every release locale.
+6. Capture every localized `ui_surface` declared by this game's state graph, plus the busiest text surface, dynamic variables, and long-string cases for every release locale.
 7. Require linguistic review by a qualified human for public commercial languages.
 
 Missing translations, tofu glyphs, clipped critical text, broken variables, unsupported RTL, untranslated store claims, or absent linguistic approval block that locale from release.

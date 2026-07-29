@@ -1,6 +1,11 @@
 # UI/UX Spec: [Game Title]
 
 Status: Draft
+Implementation mode: [godot-theme | diegetic | custom-draw | hybrid | intentionally-minimal]
+Minimal UI rationale:
+
+Implementation resources:
+- res://[project-local-theme-scene-script-or-resource]
 
 ## Visual Language
 
@@ -8,15 +13,9 @@ Materials, shape language, palette, typography, iconography, depth and ornament:
 
 ## Screen Inventory
 
-| State | Player goal | Required components | Input modes | Evidence |
+| State ID | Player goal | Required components | Input modes | Evidence |
 |---|---|---|---|---|
-| Title | Start/continue | | | |
-| Onboarding | Learn controls and first objective | | | |
-| Gameplay | Read and act | | | |
-| Pause | Resume or leave | | | |
-| Settings | Configure | | | |
-| Victory | Understand result/replay | | | |
-| Defeat | Recover/retry | | | |
+| [state-id-from-game-state-matrix] | [game-specific goal] | [components] | [inputs] | [runtime path] |
 
 ## HUD Hierarchy
 
@@ -27,7 +26,6 @@ Center-playfield protection:
 ## Component System
 
 Theme/style resources:
-Theme resource: res://[path-to-game-theme.tres]
 Panels and frames:
 Buttons and focus states:
 Meters, cards, tooltips and prompts:

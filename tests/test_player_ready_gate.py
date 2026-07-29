@@ -22,10 +22,13 @@ sys.path.insert(0, str(VALIDATION_LIB))
 from cgm_validation import sha256_path  # noqa: E402
 
 
-STATES = ("boot", "title", "onboarding", "gameplay", "pause", "settings", "victory", "defeat")
-ASSET_GROUPS = ("player", "environment", "gameplay-feedback", "ui", "release-branding")
-AUDIO_EVENTS = ("ui-confirm", "ui-back", "ui-focus", "ui-invalid", "player-action", "damage-or-failure", "reward", "victory", "defeat", "music-main", "ambience-gameplay")
-EVIDENCE_CHECKS = ("core_loop", "long_run", "visual_quality", "controls", "ui_states", "audio", "manual_playtest")
+CLASSIC_STATES = (
+    "launch-pad", "front-door", "guided-first-step", "active-run",
+    "interrupt-layer", "tuning-desk", "success-recap", "recovery-recap",
+)
+ASSET_GROUPS = ("actors-and-actions", "world-and-affordances", "presentation-and-feedback")
+AUDIO_EVENTS = ("navigate-choice", "perform-action", "world-bed", "session-outcome")
+EVIDENCE_CHECKS = ("primary-journey", "presentation", "sound", "manual-playtest")
 COMPLIANCE_ITEMS = (
     "asset-rights", "dependency-licenses", "ai-provenance", "privacy-data-inventory",
     "privacy-policy-decision", "content-rating", "third-party-notices", "platform-terms",
@@ -120,8 +123,8 @@ def create_fake_godot(root: Path) -> str:
     return str(path.relative_to(root))
 
 
-def quality_commands(include_commercial: bool = False) -> list[dict]:
-    command_ids = ["godot_import", "godot_lint", "core_loop", "long_run"]
+def quality_commands(include_commercial: bool = False, journey_commands: tuple[str, ...] = ("core_loop", "recovery_flow")) -> list[dict]:
+    command_ids = ["godot_import", "godot_lint", "long_run", *journey_commands]
     if include_commercial:
         command_ids.extend(["build_web", "smoke_web", "performance_web"])
     return [
@@ -130,7 +133,7 @@ def quality_commands(include_commercial: bool = False) -> list[dict]:
             "argv": (["{godot}", "--headless", "--editor", "--quit"] if command_id == "godot_import" else [sys.executable, "-c", f"print('{command_id}: PASS')"]),
             "cwd": ".",
             "timeout_seconds": 30,
-            "required_for": ["player_ready", "commercial_release"] if command_id in {"godot_import", "godot_lint", "core_loop", "long_run"} else ["commercial_release"],
+            "required_for": ["player_ready", "commercial_release"] if command_id in {"godot_import", "godot_lint", "long_run", *journey_commands} else ["commercial_release"],
             "expected_artifacts": [],
         }
         for command_id in command_ids
@@ -158,23 +161,70 @@ Status: Approved
 """,
     )
 
-    captures: dict[str, str] = {}
+    state_captures: dict[str, str] = {}
     colors = ((200, 20, 20), (20, 200, 20), (100, 180, 240), (20, 20, 200), (200, 200, 20), (200, 20, 200), (20, 200, 200), (120, 80, 220))
-    for state, color in zip(STATES, colors):
+    for state, color in zip(CLASSIC_STATES, colors):
         relative = f"production/evidence/states/{state}.png"
         write_png(root, relative, color)
-        captures[state] = relative
+        state_captures[state] = relative
+    transitions = {
+        "launch-pad": [{"to": "front-door", "trigger": "startup-complete"}],
+        "front-door": [{"to": "guided-first-step", "trigger": "begin-session"}, {"to": "tuning-desk", "trigger": "configure"}],
+        "guided-first-step": [{"to": "active-run", "trigger": "guidance-complete"}],
+        "active-run": [{"to": "interrupt-layer", "trigger": "interrupt-request"}, {"to": "success-recap", "trigger": "goal-met"}, {"to": "recovery-recap", "trigger": "run-ended"}],
+        "interrupt-layer": [{"to": "active-run", "trigger": "resume"}, {"to": "tuning-desk", "trigger": "configure"}],
+        "tuning-desk": [{"to": "front-door", "trigger": "configuration-saved"}],
+        "success-recap": [{"to": "front-door", "trigger": "continue"}],
+        "recovery-recap": [{"to": "active-run", "trigger": "try-again"}],
+    }
     write_json(
         root,
         "design/game-state-matrix.json",
         {
+            "schema_version": 2,
             "release_profile": "web-demo",
-            "states": {
-                state: {"status": "verified", "scene": "res://scenes/main.tscn", "evidence": [captures[state]]}
-                for state in STATES
-            },
+            "states": [
+                {
+                    "id": state,
+                    "role": f"fixture-role-{state}",
+                    "required": True,
+                    "status": "verified",
+                    "ui_surface": True,
+                    "scene": "res://scenes/main.tscn",
+                    "evidence": [state_captures[state]],
+                    "transitions": transitions[state],
+                }
+                for state in CLASSIC_STATES
+            ],
+            "journeys": [{
+                "id": "primary-session", "required": True, "goal": "Complete and recover a fixture run",
+                "start_state": "launch-pad", "required_states": list(CLASSIC_STATES),
+                "completion_states": ["success-recap", "recovery-recap"], "test_command_id": "core_loop",
+                "recovery_paths": [{"from": "recovery-recap", "to": "active-run", "required": True, "test_command_id": "recovery_flow"}],
+                "evidence": [state_captures["active-run"], state_captures["success-recap"]],
+            }],
+            "experience_requirements": [
+                {"id": "first-session-guidance", "required": True, "rationale": "Fixture input needs guided discovery", "fulfilled_by": ["guided-first-step"], "evidence": [state_captures["guided-first-step"]]},
+                {"id": "runtime-configuration", "required": True, "rationale": "Fixture exposes declared preferences", "fulfilled_by": ["tuning-desk"], "evidence": [state_captures["tuning-desk"]]},
+                {"id": "session-recovery", "required": True, "rationale": "A failed fixture run can be retried", "fulfilled_by": ["recovery-recap", "active-run"], "evidence": [state_captures["recovery-recap"]]},
+            ],
+            "quality_requirements": [
+                {"id": "engine-import", "kind": "engine_import", "required": True, "command_id": "godot_import"},
+                {"id": "static-analysis", "kind": "static_analysis", "required": True, "command_id": "godot_lint"},
+                {"id": "soak", "kind": "reliability", "required": True, "command_id": "long_run"},
+            ],
+            "required_evidence_checks": list(EVIDENCE_CHECKS),
         },
     )
+
+    captures = {
+        **state_captures,
+        "title": state_captures["front-door"],
+        "gameplay": state_captures["active-run"],
+        "settings": state_captures["tuning-desk"],
+        "victory": state_captures["success-recap"],
+        "defeat": state_captures["recovery-recap"],
+    }
 
     asset_rows = {}
     for index, group in enumerate(ASSET_GROUPS, start=1):
@@ -188,6 +238,11 @@ Status: Approved
         root,
         "design/assets/asset-coverage.json",
         {
+            "coverage_policy": {
+                "minimum_distinct_assets": len(ASSET_GROUPS),
+                "rationale": "One distinct integrated fixture artifact per declared visible-system group",
+                "inventory_sources": ["design/gdd/game-concept.md", "design/ui/ui-ux-spec.md"],
+            },
             "groups": [
                 {
                     "id": group,
@@ -198,7 +253,7 @@ Status: Approved
                     "assets": [asset_rows[group]],
                     "evidence": [captures[state]],
                 }
-                for group, state in zip(ASSET_GROUPS, STATES)
+                for group, state in zip(ASSET_GROUPS, CLASSIC_STATES)
             ]
         },
     )
@@ -208,26 +263,32 @@ Status: Approved
         "design/ui/ui-ux-spec.md",
         """# UI/UX Spec: Test Game
 Status: Verified
+Implementation mode: godot-theme
+Minimal UI rationale: Not applicable; the fixture uses an authored Godot Theme.
+
+Implementation resources:
+- res://resources/ui/game-theme.tres
 
 ## Visual Language
 Carved warm-metal frames, strong silhouettes, readable serif display type, and restrained amber focus light.
 
 ## Screen Inventory
-| State | Player goal | Required components | Input modes | Evidence |
+| State ID | Player goal | Required components | Input modes | Evidence |
 |---|---|---|---|---|
-| Title | Start | Logo and start action | Keyboard and controller | title.png |
-| Gameplay | Act | HUD and prompts | Keyboard and controller | gameplay.png |
-| Pause | Resume | Pause actions | Keyboard and controller | pause.png |
-| Settings | Configure | Sliders and remapping | Keyboard and controller | settings.png |
-| Victory | Replay | Results and replay | Keyboard and controller | victory.png |
-| Defeat | Retry | Result and retry | Keyboard and controller | defeat.png |
+| launch-pad | Enter | Startup feedback | Keyboard and controller | launch-pad.png |
+| front-door | Start | Identity and start action | Keyboard and controller | front-door.png |
+| guided-first-step | Learn | Guidance and prompts | Keyboard and controller | guided-first-step.png |
+| active-run | Act | HUD and contextual feedback | Keyboard and controller | active-run.png |
+| interrupt-layer | Resume | Interruption actions | Keyboard and controller | interrupt-layer.png |
+| tuning-desk | Configure | Preference controls | Keyboard and controller | tuning-desk.png |
+| success-recap | Continue | Outcome summary | Keyboard and controller | success-recap.png |
+| recovery-recap | Recover | Recovery action | Keyboard and controller | recovery-recap.png |
 
 ## HUD Hierarchy
 Health and objective remain readable inside the title-safe area without covering the action.
 
 ## Component System
 A shared Godot Theme owns panels, nine-slices, buttons, meters, focus rings, and typography tokens.
-Theme resource: res://resources/ui/game-theme.tres
 
 ## Input And Focus
 Input actions drive dynamic keyboard/controller prompts, explicit focus neighbors, and a visible non-color focus ring.
@@ -252,16 +313,24 @@ Runtime captures and full keyboard/controller navigation passed with no open hig
     audio_events = []
     for index, event in enumerate(AUDIO_EVENTS):
         audio_path = f"assets/audio/{event}.wav"
+        provenance_path = f"assets/audio/{event}.provenance.md"
         write_wav(root, audio_path, 220 + index * 37)
+        write(root, provenance_path, "Source: authored fixture tone; license and commercial rights verified.\n")
         audio_paths.append(audio_path)
-        audio_events.append({"id": event, "status": "verified", "asset": audio_path, "trigger": f"signal:{event}"})
+        audio_events.append({"id": event, "status": "verified", "asset": audio_path, "provenance": provenance_path, "trigger": f"signal:{event}"})
     write_json(
         root,
         "design/audio/audio-manifest.json",
         {
             "intentional_silence": False,
             "silence_rationale": "",
-            "buses": ["Master", "Music", "SFX", "UI", "Ambience"],
+            "coverage_policy": {"minimum_distinct_assets": len(AUDIO_EVENTS), "rationale": "Distinct fixture audio for navigation, action, world bed, and outcome"},
+            "required_buses": ["Master", "Feedback", "World"],
+            "buses": ["Master", "Feedback", "World"],
+            "coverage_requirements": [
+                {"id": "interaction-feedback", "required": True, "rationale": "Player choices and actions need distinct confirmation", "event_ids": ["navigate-choice", "perform-action"]},
+                {"id": "world-and-outcome", "required": True, "rationale": "The fixture needs a world bed and session outcome", "event_ids": ["world-bed", "session-outcome"]},
+            ],
             "events": audio_events,
             "evidence": audio_paths + [captures["gameplay"]],
         },
@@ -278,14 +347,14 @@ Build: fixture
 ## Results
 Boot-to-replay journey completed with keyboard and controller.
 ## Media
-Screenshot: production/evidence/states/gameplay.png
+Screenshot: {gameplay_path}
 Media SHA-256: {gameplay_sha}
 ## Verdict
 Gate: PASS
-""".format(gameplay_sha=sha256_path(root / captures["gameplay"])),
+""".format(gameplay_path=captures["gameplay"], gameplay_sha=sha256_path(root / captures["gameplay"])),
     )
-    write(root, "production/reviews/visual-quality.md", f"# Visual Review\nStatus: Verified\nBuild: fixture\nReviewer: Fixture Reviewer\nEvidence: production/evidence/states/gameplay.png\nEvidence SHA-256: {sha256_path(root / captures['gameplay'])}\nGate: PASS\n")
-    write(root, "production/reviews/audio-listening.md", f"# Audio Review\nStatus: Verified\nBuild: fixture\nReviewer: Fixture Reviewer\nEvidence: assets/audio/music-main.wav\nEvidence SHA-256: {sha256_path(root / 'assets/audio/music-main.wav')}\nGate: PASS\n")
+    write(root, "production/reviews/visual-quality.md", f"# Visual Review\nStatus: Verified\nBuild: fixture\nReviewer: Fixture Reviewer\nEvidence: {captures['gameplay']}\nEvidence SHA-256: {sha256_path(root / captures['gameplay'])}\nGate: PASS\n")
+    write(root, "production/reviews/audio-listening.md", f"# Audio Review\nStatus: Verified\nBuild: fixture\nReviewer: Fixture Reviewer\nEvidence: assets/audio/world-bed.wav\nEvidence SHA-256: {sha256_path(root / 'assets/audio/world-bed.wav')}\nGate: PASS\n")
     write_json(
         root,
         "production/evidence/player-ready.json",
@@ -302,6 +371,106 @@ Gate: PASS
         "production/quality-command-manifest.json",
         {"version": 2, "godot_path": create_fake_godot(root), "commands": quality_commands(include_commercial_commands)},
     )
+    return captures
+
+
+def convert_to_endless_sandbox_fixture(root: Path) -> dict[str, str]:
+    state_ids = ("drop-in", "roaming-loop", "pack-overlay", "safe-exit")
+    colors = ((32, 72, 108), (52, 132, 86), (126, 82, 152), (210, 150, 70))
+    captures: dict[str, str] = {}
+    for state_id, color in zip(state_ids, colors):
+        relative = f"production/evidence/states/{state_id}.png"
+        write_png(root, relative, color)
+        captures[state_id] = relative
+    transitions = {
+        "drop-in": [{"to": "roaming-loop", "trigger": "world-ready"}],
+        "roaming-loop": [{"to": "pack-overlay", "trigger": "open-pack"}, {"to": "safe-exit", "trigger": "save-and-leave"}],
+        "pack-overlay": [{"to": "roaming-loop", "trigger": "close-pack"}],
+        "safe-exit": [{"to": "drop-in", "trigger": "start-new-session"}],
+    }
+    evidence_checks = ["sandbox-session", "inventory-return", "intentional-session-exit", "manual-playtest"]
+    write_json(root, "design/game-state-matrix.json", {
+        "schema_version": 2,
+        "release_profile": "endless-sandbox",
+        "states": [
+            {"id": state_id, "role": role, "required": True, "status": "verified", "ui_surface": True, "scene": "res://scenes/main.tscn", "evidence": [captures[state_id]], "transitions": transitions[state_id]}
+            for state_id, role in zip(state_ids, ("session-entry", "open-ended-play", "diegetic-inventory", "save-and-exit"))
+        ],
+        "journeys": [{
+            "id": "open-ended-session", "required": True, "goal": "Enter, roam, inspect inventory, save, and leave safely",
+            "start_state": "drop-in", "required_states": list(state_ids), "completion_states": ["safe-exit"],
+            "test_command_id": "sandbox_session",
+            "recovery_paths": [{"from": "pack-overlay", "to": "roaming-loop", "required": True, "test_command_id": "inventory_return"}],
+            "evidence": [captures["roaming-loop"], captures["safe-exit"]],
+        }],
+        "experience_requirements": [
+            {"id": "nonterminal-session-exit", "required": True, "rationale": "The endless sandbox completes a session by saving and leaving, not by victory or defeat", "fulfilled_by": ["safe-exit"], "evidence": [captures["safe-exit"]]},
+            {"id": "inventory-return", "required": True, "rationale": "The diegetic pack must return to uninterrupted roaming", "fulfilled_by": ["pack-overlay", "roaming-loop"], "evidence": [captures["pack-overlay"]]},
+        ],
+        "quality_requirements": [
+            {"id": "engine-import", "kind": "engine_import", "required": True, "command_id": "godot_import"},
+            {"id": "static-analysis", "kind": "static_analysis", "required": True, "command_id": "godot_lint"},
+            {"id": "soak", "kind": "reliability", "required": True, "command_id": "long_run"},
+        ],
+        "required_evidence_checks": evidence_checks,
+    })
+    write(root, "scripts/ui/sandbox_overlay.gd", "extends Control\n# Custom-drawn diegetic pack overlay.\n")
+    rows = "\n".join(
+        f"| {state_id} | Verify {role} | Authored fixture surface | Keyboard and controller | {Path(captures[state_id]).name} |"
+        for state_id, role in zip(state_ids, ("entry", "roaming", "pack", "save-exit"))
+    )
+    write(root, "design/ui/ui-ux-spec.md", f"""# UI/UX Spec: Endless Sandbox
+Status: Verified
+Implementation mode: custom-draw
+Minimal UI rationale: The sandbox uses a diegetic custom-drawn pack instead of conventional menus.
+
+Implementation resources:
+- res://scripts/ui/sandbox_overlay.gd
+
+## Visual Language
+Diegetic field-journal marks and world-space prompts preserve the open landscape.
+
+## Screen Inventory
+| State ID | Player goal | Required components | Input modes | Evidence |
+|---|---|---|---|---|
+{rows}
+
+## HUD Hierarchy
+Only context-critical survival information appears during roaming.
+
+## Component System
+Custom draw tokens and a shared overlay script own all presentation.
+
+## Input And Focus
+Keyboard and controller bindings expose pack, close, save, and return behavior.
+
+## Responsive Layout
+Safe zones and world prompts were checked at target aspects.
+
+## Accessibility
+Text scaling, non-color prompts, reduced motion, and remapping are verified.
+
+## Motion And Feedback
+Transitions explain pack entry, return to roaming, and safe session exit.
+
+## Evidence
+All declared sandbox UI states have current runtime captures.
+""")
+    play_media = root / captures["roaming-loop"]
+    write(root, "production/playtests/manual-core-loop.md", f"# Manual Sandbox Journey\nStatus: Verified\nTester: Fixture Tester\nBuild: fixture\n## Results\nOpen-ended session and safe exit completed.\n## Media\nScreenshot: {captures['roaming-loop']}\nMedia SHA-256: {sha256_path(play_media)}\n## Verdict\nGate: PASS\n")
+    write(root, "production/reviews/visual-quality.md", f"# Visual Review\nStatus: Verified\nBuild: fixture\nReviewer: Fixture Reviewer\nEvidence: {captures['roaming-loop']}\nEvidence SHA-256: {sha256_path(play_media)}\nGate: PASS\n")
+    write_json(root, "production/evidence/player-ready.json", {
+        "checks": {check: "PASS" for check in evidence_checks},
+        "quality_report": "production/evidence/quality-run.json",
+        "visual_review": "production/reviews/visual-quality.md",
+        "audio_review": "production/reviews/audio-listening.md",
+        "artifacts": list(captures.values()),
+    })
+    write_json(root, "production/quality-command-manifest.json", {
+        "version": 2,
+        "godot_path": create_fake_godot(root),
+        "commands": quality_commands(False, ("sandbox_session", "inventory_return")),
+    })
     return captures
 
 
@@ -479,12 +648,130 @@ class PlayerReadyGateTests(unittest.TestCase):
             write_png(parent, "outside.png", (1, 2, 3))
             matrix_path = root / "design/game-state-matrix.json"
             matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
-            matrix["states"]["title"]["evidence"] = ["../outside.png"]
+            next(row for row in matrix["states"] if row["id"] == "front-door")["evidence"] = ["../outside.png"]
             write_json(root, "design/game-state-matrix.json", matrix)
             run_quality(root, "player_ready")
             result, report = run_json(PLAYER_GATE, root)
         self.assertEqual(result.returncode, 1)
         self.assertTrue(any(row["code"].endswith("outside_root") for row in report["blockers"]))
+
+    def test_endless_sandbox_without_conventional_state_names_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            convert_to_endless_sandbox_fixture(root)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(report["gate"], "PASS")
+
+    def test_start_and_completion_states_do_not_need_redundant_journey_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            matrix_path = root / "design/game-state-matrix.json"
+            matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+            journey = matrix["journeys"][0]
+            journey["required_states"] = [
+                state_id for state_id in journey["required_states"]
+                if state_id not in {journey["start_state"], *journey["completion_states"]}
+            ]
+            write_json(root, "design/game-state-matrix.json", matrix)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(report["gate"], "PASS")
+
+    def test_required_state_needs_its_own_distinct_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            matrix_path = root / "design/game-state-matrix.json"
+            matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+            launch = next(row for row in matrix["states"] if row["id"] == "launch-pad")
+            front_door = next(row for row in matrix["states"] if row["id"] == "front-door")
+            launch_evidence = launch["evidence"][0]
+            launch["evidence"].append(front_door["evidence"][0])
+            front_door["evidence"] = [launch_evidence]
+            write_json(root, "design/game-state-matrix.json", matrix)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "state.evidence_not_distinct" and row.get("state_id") == "front-door" for row in report["blockers"]))
+
+    def test_recovery_source_must_be_reachable_from_its_journey(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            orphan_capture = "production/evidence/states/orphan-recovery.png"
+            write_png(root, orphan_capture, (17, 33, 61))
+            matrix_path = root / "design/game-state-matrix.json"
+            matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+            matrix["states"].append({
+                "id": "orphan-recovery",
+                "role": "unreachable recovery fixture",
+                "required": False,
+                "status": "verified",
+                "ui_surface": False,
+                "scene": "res://scenes/main.tscn",
+                "evidence": [orphan_capture],
+                "transitions": [{"to": "active-run", "trigger": "recover"}],
+            })
+            matrix["journeys"][0]["recovery_paths"].append({
+                "from": "orphan-recovery",
+                "to": "active-run",
+                "required": True,
+                "test_command_id": "recovery_flow",
+            })
+            write_json(root, "design/game-state-matrix.json", matrix)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "journey.recovery_unreachable" for row in report["blockers"]))
+
+    def test_asset_floor_cannot_understate_declared_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            coverage_path = root / "design/assets/asset-coverage.json"
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+            coverage["coverage_policy"]["minimum_distinct_assets"] = 1
+            write_json(root, "design/assets/asset-coverage.json", coverage)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "assets.policy_below_inventory" for row in report["blockers"]))
+
+    def test_unreachable_declared_state_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_player_ready_fixture(root)
+            matrix_path = root / "design/game-state-matrix.json"
+            matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+            active = next(row for row in matrix["states"] if row["id"] == "active-run")
+            active["transitions"] = [row for row in active["transitions"] if row["to"] != "success-recap"]
+            write_json(root, "design/game-state-matrix.json", matrix)
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "journey.unreachable" for row in report["blockers"]))
+
+    def test_legacy_fixed_state_dictionary_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            captures = create_player_ready_fixture(root)
+            write_json(root, "design/game-state-matrix.json", {
+                "release_profile": "legacy",
+                "states": {
+                    "title": {"status": "verified", "scene": "res://scenes/main.tscn", "evidence": [captures["title"]]},
+                    "gameplay": {"status": "verified", "scene": "res://scenes/main.tscn", "evidence": [captures["gameplay"]]},
+                    "victory": {"status": "verified", "scene": "res://scenes/main.tscn", "evidence": [captures["victory"]]},
+                },
+            })
+            run_quality(root, "player_ready")
+            result, report = run_json(PLAYER_GATE, root)
+        self.assertEqual(result.returncode, 1)
+        self.assertTrue(any(row["code"] == "states.schema" for row in report["blockers"]))
 
     def test_quality_runner_rejects_noop_command(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

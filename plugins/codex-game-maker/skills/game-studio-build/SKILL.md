@@ -13,6 +13,7 @@ Create these from the shared templates before broad implementation:
 
 - `production/player-ready-contract.md` from `../../references/templates/player-ready-contract.md`
 - `design/game-state-matrix.json` from `../../references/templates/game-state-matrix.json`
+- `../../references/contracts/player-journey-schema.md`
 - `design/assets/asset-coverage.json` from `../../references/templates/asset-coverage.json`
 - `design/ui/ui-ux-spec.md` from `../../references/templates/ui-ux-spec.md`
 - `design/audio/audio-manifest.json` from `../../references/templates/audio-manifest.json`
@@ -33,15 +34,15 @@ Also read the concept, systems GDDs, art bible, architecture, control manifest, 
 ## Player-Ready Loop
 
 1. Define release profile, target device, core fantasy, core loop, content boundary, and quality bar.
-2. Inventory every player-visible state in `game-state-matrix.json`.
-3. Inventory all required art and audio in coverage manifests before bulk generation.
+2. Derive a schema-v2 state graph from this game's GDD: custom state IDs, transitions, required journeys, completion conditions, recovery paths, experience requirements, and executable journey tests. Never copy a universal title/pause/victory list.
+3. Derive game-specific art and audio coverage policies from the state graph, systems, UI surfaces, and target devices before bulk generation.
 4. Build one representative vertical slice to test the fun hypothesis.
-5. Continue beyond the slice: implement the complete bounded core loop, all required states, controls, settings, feedback, failure, victory, and restart paths.
+5. Continue beyond the slice until every state, transition, completion condition, and recovery path declared by this game's required journeys is implemented.
 6. Route gameplay code to `game-studio-implementation`.
 7. Route visual production to the art, sprite, map, and asset-QA skills.
-8. Route HUD, menus, onboarding, settings, focus, and responsive presentation to `game-studio-ui-ux`.
-9. Route music, ambience, SFX, buses, and trigger integration to `game-studio-audio`.
-10. Configure and execute Godot import, core-loop, and long-run commands through the shell-free quality runner.
+8. Route every state marked `ui_surface`, plus presentation resources and interaction behavior, to `game-studio-ui-ux`.
+9. Route every declared audio coverage requirement, bus, event, provenance record, and trigger to `game-studio-audio`.
+10. Configure and execute the state contract's engine-import, static-analysis, reliability, journey, and recovery commands through the shell-free quality runner.
 11. Capture distinct valid runtime media and complete visual/audio reviews for every required state.
 12. Route accessibility coverage to `game-studio-accessibility`.
 13. Run review, asset, story, runtime, and player-ready gates.
@@ -57,7 +58,7 @@ python3 ../../scripts/cgm.py player-ready --root .
 
 - One scene, one room, one arena, or one screen is not a complete game unless the agreed scope explicitly defines it as the whole experience.
 - Mock, placeholder, draft, or merely generated assets do not satisfy coverage. Required assets must be integrated and visually verified in runtime.
-- A title screen plus gameplay HUD is not complete UI. Cover pause, settings, onboarding/controls, failure, victory/results, and every modal required by the design.
+- Do not infer completeness from conventional menu names. Complete UI means every `ui_surface` and interaction requirement declared by this game's graph is implemented and evidenced; omitted conventional surfaces need an explicit game-specific rationale.
 - Default engine controls, flat gray panels, generic cards, dashboard grids, and unrelated web-app styling are not acceptable final art direction.
 - Code completion is not player readiness. Require hashed command evidence, valid distinct runtime media, input, feedback, audio, readable UI, state transitions, visual/audio reviews, and a manual core-loop playtest.
 - Never claim commercial readiness without a target-platform release profile and release evidence.

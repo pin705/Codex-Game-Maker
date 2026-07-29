@@ -7,7 +7,7 @@ Target resolutions/devices:
 
 ## Runtime Surfaces Reviewed
 
-Title, gameplay, busiest action, HUD, onboarding, pause, settings, victory, defeat, modals, loading/fallback, and release branding:
+List every required state and `ui_surface` from this game's graph, plus the busiest visual condition and each target aspect/device:
 
 ## Findings
 

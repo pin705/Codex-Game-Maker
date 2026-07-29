@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio LiveOps"
-  short_description: "Operate telemetry, crashes, support, and updates"
-  default_prompt: "Use $game-studio-liveops to prepare monitoring, support, incidents, and post-launch operations."

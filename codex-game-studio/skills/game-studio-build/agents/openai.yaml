@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio Build"
-  short_description: "Build a complete player-ready Godot game"
-  default_prompt: "Use $game-studio-build to build this game through player-ready validation."

@@ -23,15 +23,15 @@ Required content:
 Explicitly excluded:
 - [out-of-scope]
 
-## Required Player States
+## Required Player Journeys
 
-- [ ] Boot/title/start
-- [ ] Onboarding or discoverable controls
-- [ ] Complete core gameplay loop
-- [ ] Pause/resume
-- [ ] Settings
-- [ ] Failure/recovery
-- [ ] Victory/results/replay
+Define the game-specific journeys in `design/game-state-matrix.json`. Do not copy a universal menu/state list. Each required journey must declare its own start, required states, completion states, transitions, recovery paths, executable test command, and runtime evidence.
+
+- [ ] Every player-visible state and modal required by this game's GDD is represented in a required journey.
+- [ ] Every required state is reachable from its journey start.
+- [ ] Every journey reaches its declared completion condition.
+- [ ] Every required recovery/retry/continue/return path is reachable and command-tested.
+- [ ] Game-specific guidance, configuration, interruption, save/exit, failure, success, hub, narrative, or live-session needs are explicitly required or explicitly excluded with rationale.
 
 ## Quality Gates
 

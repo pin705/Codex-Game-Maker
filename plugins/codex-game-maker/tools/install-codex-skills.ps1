@@ -10,8 +10,6 @@ $repoPath = $repo.Path
 $pluginRoot = ""
 if ((Test-Path -LiteralPath (Join-Path $repoPath "skills")) -and (Test-Path -LiteralPath (Join-Path $repoPath "references"))) {
   $pluginRoot = $repoPath
-} elseif (Test-Path -LiteralPath (Join-Path $repoPath "codex-game-studio/skills")) {
-  $pluginRoot = Join-Path $repoPath "codex-game-studio"
 } elseif (Test-Path -LiteralPath (Join-Path $repoPath "plugins/codex-game-maker/skills")) {
   $pluginRoot = Join-Path $repoPath "plugins/codex-game-maker"
 } else {
@@ -95,4 +93,3 @@ foreach ($skill in Get-ChildItem -LiteralPath $skillsRoot -Directory) {
 Write-Host ""
 Write-Host "Installed Codex Game Maker skills into: $destSkillsRoot"
 Write-Host "Restart Codex to pick up new skills."
-

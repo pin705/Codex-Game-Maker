@@ -23,7 +23,7 @@ Expected direction:
 First checks:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File codex-game-studio\scripts\guards\detect_engine.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\scripts\guards\detect_engine.ps1 -Root .
 ```
 
 ### Existing Godot Project
@@ -38,8 +38,8 @@ Expected direction:
 First checks:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot-lint.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
 ```
 
 ### Existing Unity, Unreal, Or Web Project
@@ -76,7 +76,7 @@ docs/
 Use templates from:
 
 ```text
-codex-game-studio/references/templates/
+plugins/codex-game-maker/references/templates/
 ```
 
 ## Adopt Existing Art Assets
@@ -92,8 +92,8 @@ For each existing runtime asset:
 Example:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\process-sprite-sheet.ps1 -Input assets\raw\hero-idle.png -OutDir assets\generated\characters\hero-idle -Rows 2 -Cols 3 -AssetId hero-idle -ExpectedFrames 6 -KeyColor auto
-powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\process-sprite-sheet.ps1 -Input assets\raw\hero-idle.png -OutDir assets\generated\characters\hero-idle -Rows 2 -Cols 3 -AssetId hero-idle -ExpectedFrames 6 -KeyColor auto
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
 ```
 
 Use `-KeyColor auto` for old assets only when the original key color is unknown and the raw image has a flat chroma-key border.
@@ -103,7 +103,7 @@ Use `-KeyColor auto` for old assets only when the original key color is unknown 
 Before generating:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\suggest-key-color.ps1 -Description "<asset description>"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\suggest-key-color.ps1 -Description "<asset description>"
 ```
 
 Then use the returned key color in the image prompt and processor command.
@@ -131,9 +131,9 @@ Before changing code:
 4. Run Godot lint and review gate after implementation.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-story-gate.ps1 -Root . -Mode Ready
-powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-story-gate.ps1 -Root . -Mode Ready
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot-lint.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
 ```
 
 ## Godot Import Handoff
@@ -156,17 +156,17 @@ Recommended manual handoff for now:
 Minimum checks before calling a migrated project ready:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
-powershell -ExecutionPolicy Bypass -File tools\check-asset-tools.ps1
-powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-production-gate.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-tools.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-production-gate.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
 ```
 
 For demos or public builds, also run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\preview-godot-web.ps1 -Project .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-godot-web.ps1 -Project .
 ```
 
 ## What Not To Migrate Yet

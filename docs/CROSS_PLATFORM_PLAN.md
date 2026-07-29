@@ -9,14 +9,14 @@ Codex Game Maker supports Windows, macOS, and Linux through the Python `cgm.py` 
 - Windows: Windows PowerShell 5.1 or PowerShell 7.
 - macOS: PowerShell 7 (`pwsh`).
 - Linux: PowerShell 7 (`pwsh`).
-- Godot: Godot 4.7.1 standard editor/CLI, installed manually or through `tools/install-godot.ps1`.
+- Godot: Godot 4.7.1 standard editor/CLI, installed manually or through `plugins/codex-game-maker/tools/install-godot.ps1`.
 
 ## Automatic Detection
 
 All shared scripts should use:
 
 ```text
-codex-game-studio/scripts/lib/cgs_platform.ps1
+plugins/codex-game-maker/scripts/lib/cgs_platform.ps1
 ```
 
 The helper owns:
@@ -32,20 +32,20 @@ The helper owns:
 Windows:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1
 ```
 
 macOS/Linux:
 
 ```bash
-pwsh -File tools/check-install.ps1
+pwsh -File plugins/codex-game-maker/tools/check-install.ps1
 ```
 
 After the first command, wrappers should call nested scripts with the right PowerShell executable automatically.
 
 ## Godot Install Behavior
 
-`tools/install-godot.ps1` should detect OS and download the matching official Godot 4.7.1 asset:
+`plugins/codex-game-maker/tools/install-godot.ps1` should detect OS and download the matching official Godot 4.7.1 asset:
 
 - Windows x86_64: `Godot_v4.7.1-stable_win64.exe.zip`
 - Windows arm64: `Godot_v4.7.1-stable_windows_arm64.exe.zip`
@@ -83,11 +83,10 @@ Professional git hooks remain opt-in. Installed hooks should:
 Required before public release:
 
 - Parse all PowerShell scripts on Windows.
-- Run `tools/check-install.ps1` on Windows.
-- Run `pwsh -File tools/check-install.ps1` on macOS.
-- Run `pwsh -File tools/check-install.ps1` on Linux.
-- Install Godot on at least one machine per OS with `tools/install-godot.ps1 -WithExportTemplates`.
+- Run `plugins/codex-game-maker/tools/check-install.ps1` on Windows.
+- Run `pwsh -File plugins/codex-game-maker/tools/check-install.ps1` on macOS.
+- Run `pwsh -File plugins/codex-game-maker/tools/check-install.ps1` on Linux.
+- Install Godot on at least one machine per OS with `plugins/codex-game-maker/tools/install-godot.ps1 -WithExportTemplates`.
 - Export and serve the sample Godot Web project on each OS.
 
-Current local validation is Windows-only; macOS/Linux behavior is implemented by shared detection logic but still needs real machine testing.
-
+Repository and Python/CLI validation has been run locally on macOS and in Linux CI. Windows, macOS, and Linux release candidates still require native-machine install, Godot export, launch, and smoke-test evidence before public release.

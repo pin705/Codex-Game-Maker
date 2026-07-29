@@ -41,6 +41,7 @@ Read if present:
 - `design/assets/asset-manifest.yaml`
 - `design/assets/asset-coverage.json`
 - `design/game-state-matrix.json`
+- `../../references/contracts/player-journey-schema.md`
 - `design/ui/ui-ux-spec.md`
 - `design/audio/audio-manifest.json`
 - `production/player-ready-contract.md`
@@ -122,7 +123,7 @@ Use templates:
    - Technical: engine/version/API/export risks, scene/resource structure, error-prone code.
    - Production: scope, sequence, dependency risk, smallest useful next step.
    - QA: smoke coverage, regression risk, playtest evidence, blockers.
-   - Player Journey: boot-to-title, onboarding, complete core loop, pause/settings, failure/recovery, victory/results, replay/continue, and clean restart. Every passing manual playtest names its tester and build and binds current media with SHA-256.
+   - Player Journey: validate each schema-v2 journey's declared start, transitions, required states, completion states, and recovery paths; do not impose conventional state names. Every passing manual playtest names its tester and build and binds current media with SHA-256.
    - UI/UX: art-bible coherence, hierarchy, safe zones, responsive layout, focus order, input prompts, accessibility, modal completeness, and runtime captures. The passing review records reviewer/build and hashes the reviewed media.
    - Audio: event coverage, buses, persisted settings, mix readability, provenance, pause/restart cleanup, and listening evidence. The passing review records reviewer/build and hashes the reviewed media.
    - Business: audience, positioning, price/model, scope economics, assumptions, and go/no-go criteria.
@@ -173,11 +174,11 @@ Minimum Godot MVP smoke checklist:
 
 Minimum player-ready evidence adds:
 
-- Runtime captures for title, gameplay, busiest action, pause, settings, victory, defeat, and every required modal.
+- Distinct runtime evidence for every required state in the game-specific graph; shared videos need distinct state markers.
 - Complete asset coverage with accepted assets integrated into current runtime scenes.
 - Keyboard and controller navigation evidence where the target supports both.
-- Audio listening evidence for menu, gameplay, busiest action, pause/restart, victory, and defeat.
-- Automated core-loop and long-run results plus a human/manual core-loop playtest.
+- Audio listening evidence for every required game-specific coverage row, busiest mix, transitions, and persistence/interruption behavior.
+- Passing commands for every required journey/recovery path plus the declared engine-import, static-analysis, and reliability requirements, followed by a human/manual journey playtest.
 
 Generated-asset playable showcase checklist:
 - Scene scale plan exists and defines target runtime size for player, platforms, pickups, and finish.

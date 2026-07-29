@@ -9,7 +9,7 @@
 **Quick links:** [Install](#quick-start) · [Player-Ready Mode](#player-ready-mode) · [Commercial Release Mode](#commercial-release-mode) · [Asset Pipeline](#gpt-image-2d-asset-pipeline) · [Skills](#whats-included) · [Safety Gates](#safety-and-gates) · [Prompts](#suggested-prompts)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-v0.2.0--alpha.1-orange)
+![Status](https://img.shields.io/badge/status-v0.2.0--alpha.2-orange)
 ![Godot](https://img.shields.io/badge/Godot-4.7.1-blue)
 ![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 ![Assets](https://img.shields.io/badge/GPT%20Image-2D%20assets-purple)
@@ -21,7 +21,7 @@ Turn a single Codex session into a Godot-first game making workspace.
 
 Godot-first workflows. Product and game design. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Accessibility and localization. Verified builds. Store and launch readiness.
 
-> Status: `v0.2.0-alpha.1`. The player-ready and commercial workflows are executable, but this remains a pre-release tool. A passing gate means the declared contract has verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, or real-player judgment.
+> Status: `v0.2.0-alpha.2`. The player-ready and commercial workflows are executable, but this remains a pre-release tool. A passing gate means the declared contract has verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, or real-player judgment.
 
 Codex Game Maker turns a Codex session into an end-to-end game studio workspace: product planning, game design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, manual playtesting, performance, builds, compliance, localization, accessibility, store marketing, telemetry, support, and rollback planning.
 
@@ -73,15 +73,29 @@ A broad request such as “make this game,” “finish this prototype,” or �
 The workflow continues through:
 
 1. Concept, systems, art direction, target device, controls, and an explicit player-ready contract.
-2. A complete state matrix: boot, title, onboarding, gameplay, pause, settings, failure, victory/results, restart, and any game-specific modals.
+2. A schema-v2 game-specific state graph: custom states, transitions, required journeys, completion conditions, recovery paths, experience requirements, and executable journey tests. Conventional title/pause/settings/victory screens are included only when the game's GDD requires them.
 3. A representative vertical slice, followed by the rest of the agreed core loop and content boundary.
-4. Full asset coverage for characters, environments, gameplay feedback, UI, and release branding; accepted assets must be integrated and seen in runtime.
-5. A reusable Godot UI theme and authored game-native HUD/menus rather than default controls, HTML-like cards, or dashboard layouts.
-6. Integrated music, ambience, SFX, UI feedback, buses, and persisted audio settings—or a documented, playtested intentional-silence design.
-7. Automated core-loop and long-run checks, captures for every required state, visual/audio review, controls verification, and a manual playtest.
+4. A game-specific asset coverage policy derived from its graph, systems, UI, content boundary, and target surfaces; accepted assets must be integrated and seen in runtime.
+5. Authored presentation through a declared Godot Theme, diegetic, custom-draw, hybrid, or intentionally minimal mode—never generic HTML/dashboard styling presented as final.
+6. A game-specific audio coverage contract for the states/actions/mix that actually exist—or a documented, playtested intentional-silence design.
+7. Executable engine-import, static-analysis, reliability, journey, and recovery checks; distinct evidence for every declared state; visual/audio review and a manual journey playtest.
 8. The cross-platform `player_ready_gate.py`; blockers are fixed and rechecked instead of being relabeled as done.
 
 The gate validates real media signatures, distinct runtime states, integrated asset provenance and runtime references, hashed command results tied to the current project fingerprint, visual/audio reviews, and manual playtest evidence. Taste-level quality still depends on reviewing the running game and testing with real players.
+
+### How The Flow Is Verified
+
+The template suggests examples; the gate never treats their names or counts as universal truth. Each game must declare its own graph and contracts. Validation then checks:
+
+- transition targets, reachability, completion conditions, and recovery paths;
+- exact coverage of every required state by a required journey;
+- a passing executable command for each journey and required recovery path;
+- distinct per-state media, or distinct markers when states share a video;
+- UI inventory coverage for every state marked `ui_surface`;
+- asset/audio groups, minimums, and inventory sources declared for that game;
+- adversarial regression cases, including an endless sandbox with no title/pause/settings/victory/defeat state names, a deliberately unreachable-state failure case, and rejection of the legacy fixed-state dictionary.
+
+This proves internal consistency and evidence coverage. It cannot mathematically prove that a GDD itself is fun, tasteful, or commercially successful, so visual review and real-player testing remain required.
 
 ## Commercial Release Mode
 
@@ -153,21 +167,21 @@ codex plugin marketplace upgrade codex-game-maker
 The marketplace catalog lives at `.agents/plugins/marketplace.json`, and plugin
 packages live under `plugins/`.
 
-### Option 2: Use As A Game Template
+### Option 2: Develop Or Validate The Plugin Source
 
 ```powershell
-git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
-cd my-game
-powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
+git clone https://github.com/pin705/Codex-Game-Maker.git
+cd Codex-Game-Maker
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1 -Root plugins\codex-game-maker
 ```
 
 macOS/Linux:
 
 ```bash
-pwsh -File tools/check-install.ps1
+pwsh -File plugins/codex-game-maker/tools/check-install.ps1 -Root plugins/codex-game-maker
 ```
 
-Open Codex in the folder and ask:
+Install the plugin, then open Codex in the actual game project folder and ask:
 
 ```text
 Use Codex Game Maker to start this game project.
@@ -180,13 +194,13 @@ For long-running projects, use the largest context window your Codex environment
 ### Option 3: Install The Skills Globally
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\install-codex-skills.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-codex-skills.ps1
 ```
 
 macOS/Linux:
 
 ```bash
-pwsh -File tools/install-codex-skills.ps1
+pwsh -File plugins/codex-game-maker/tools/install-codex-skills.ps1
 ```
 
 Restart Codex after installing.
@@ -196,43 +210,43 @@ Restart Codex after installing.
 Install the policy-recommended Godot and matching export templates on Windows, macOS, or Linux:
 
 ```bash
-python3 codex-game-studio/scripts/cgm.py install-godot --with-export-templates
+python3 plugins/codex-game-maker/scripts/cgm.py install-godot --with-export-templates
 ```
 
 Preview the resolved download without changing the machine:
 
 ```bash
-python3 codex-game-studio/scripts/cgm.py install-godot --dry-run
+python3 plugins/codex-game-maker/scripts/cgm.py install-godot --dry-run
 ```
 
 Legacy PowerShell wrapper:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\install-godot.ps1 -WithExportTemplates
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-godot.ps1 -WithExportTemplates
 ```
 
 macOS/Linux:
 
 ```bash
-pwsh -File tools/install-godot.ps1 -WithExportTemplates
+pwsh -File plugins/codex-game-maker/tools/install-godot.ps1 -WithExportTemplates
 ```
 
 If Godot is already installed somewhere else, register it instead:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
 ```
 
 Verify:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-godot.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot.ps1
 ```
 
 Preview a Godot project in browser:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\preview-godot-web.ps1 -Project . -CreatePresetIfMissing
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-godot-web.ps1 -Project . -CreatePresetIfMissing
 ```
 
 ## GPT Image 2D Asset Pipeline
@@ -240,8 +254,8 @@ powershell -ExecutionPolicy Bypass -File tools\preview-godot-web.ps1 -Project . 
 Install local processing dependencies:
 
 ```powershell
-python -m pip install -r requirements-asset-tools.txt
-powershell -ExecutionPolicy Bypass -File tools\check-asset-tools.ps1
+python -m pip install -r plugins/codex-game-maker/requirements-asset-tools.txt
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-tools.ps1
 ```
 
 Pipeline:
@@ -261,7 +275,7 @@ natural language request
 Plan a multi-action character bundle:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt"
 ```
 
 Save GPT Image raw sheets as:
@@ -275,28 +289,28 @@ assets/raw/hero-cat-jump-sheet.png
 Process every available raw sheet:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt" -ProcessExistingRaw
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt" -ProcessExistingRaw
 ```
 
 Run QA and deterministic repair:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\repair-asset-processing.ps1 -Root . -Apply
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\repair-asset-processing.ps1 -Root . -Apply
 ```
 
 Import accepted frames into Godot:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
 ```
 
 For maps:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\process-prop-pack.ps1 -Input .\assets\raw\forest-props.png -OutDir .\assets\generated\props\forest -Rows 3 -Cols 3 -AssetId forest-props -ExpectedProps 9
-powershell -ExecutionPolicy Bypass -File tools\compose-layered-map-preview.ps1 -Base .\assets\raw\map-base.png -Placements .\assets\raw\map-placements.json -Out .\assets\generated\maps\forest\preview.png
-powershell -ExecutionPolicy Bypass -File tools\import-map-to-godot.ps1 -Project . -AssetId forest-level
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\process-prop-pack.ps1 -Input .\assets\raw\forest-props.png -OutDir .\assets\generated\props\forest -Rows 3 -Cols 3 -AssetId forest-props -ExpectedProps 9
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\compose-layered-map-preview.ps1 -Base .\assets\raw\map-base.png -Placements .\assets\raw\map-placements.json -Out .\assets\generated\maps\forest\preview.png
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-map-to-godot.ps1 -Project . -AssetId forest-level
 ```
 
 ## What It Can Generate
@@ -376,14 +390,14 @@ Professional workflows are explicit and opt-in.
 Aliases live in:
 
 ```text
-codex-game-studio/references/commands/catalog.yaml
+plugins/codex-game-maker/references/commands/catalog.yaml
 ```
 
 Optional hooks:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\install-professional-hooks.ps1
-powershell -ExecutionPolicy Bypass -File tools\uninstall-professional-hooks.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-professional-hooks.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\uninstall-professional-hooks.ps1
 ```
 
 ## How It Works
@@ -402,16 +416,16 @@ The user controls scope and can request checkpoints. Once autonomous/default exe
 
 | Gate | Tool | What It Checks |
 |---|---|---|
-| Install | `tools/check-install.ps1` | Skills, scripts, templates, Godot availability, setup health. |
-| Asset tools | `tools/check-asset-tools.ps1` | Python, Pillow, numpy, processor/workflow scripts. |
-| Asset QA | `tools/check-asset-qa.ps1` | Alpha, frame count, GIF, metadata, chroma-key residue, map metadata. |
-| Story | `tools/check-story-gate.ps1` | Acceptance criteria, files to touch, verification plan, done evidence. |
-| Production | `tools/check-production-gate.ps1` | Lightweight epic/sprint/story structure. |
-| Godot lint | `tools/check-godot-lint.ps1` | Missing `res://`, unused `delta`, tuning hardcodes, UI/gameplay coupling. |
-| Review | `tools/check-review-gate.ps1` | Smoke evidence, playtest evidence, project structure, export readiness. |
+| Install | `plugins/codex-game-maker/tools/check-install.ps1` | Skills, scripts, templates, Godot availability, setup health. |
+| Asset tools | `plugins/codex-game-maker/tools/check-asset-tools.ps1` | Python, Pillow, numpy, processor/workflow scripts. |
+| Asset QA | `plugins/codex-game-maker/tools/check-asset-qa.ps1` | Alpha, frame count, GIF, metadata, chroma-key residue, map metadata. |
+| Story | `plugins/codex-game-maker/tools/check-story-gate.ps1` | Acceptance criteria, files to touch, verification plan, done evidence. |
+| Production | `plugins/codex-game-maker/tools/check-production-gate.ps1` | Lightweight epic/sprint/story structure. |
+| Godot lint | `plugins/codex-game-maker/tools/check-godot-lint.ps1` | Missing `res://`, unused `delta`, tuning hardcodes, UI/gameplay coupling. |
+| Review | `plugins/codex-game-maker/tools/check-review-gate.ps1` | Smoke evidence, playtest evidence, project structure, export readiness. |
 | Player-ready | `python3 scripts/guards/player_ready_gate.py --root .` | Complete states, integrated asset coverage, authored UI spec, audio events/buses, tests, runtime artifacts, and manual playtest evidence. |
 | Commercial release | `python3 scripts/cgm.py commercial-release --root .` | Strict player-ready result plus clean/versioned source, builds, hashes, signing/store status, performance, compliance, localization, accessibility, marketing, online/liveops, telemetry, and external approvals. |
-| Release wrapper | `tools/check-release-gate.ps1` | Legacy PowerShell entry point for the cross-platform commercial gate. |
+| Release wrapper | `plugins/codex-game-maker/tools/check-release-gate.ps1` | Legacy PowerShell entry point for the cross-platform commercial gate. |
 
 ## Suggested Prompts
 
@@ -454,17 +468,16 @@ Commercial release mode:
 ## Repository Layout
 
 ```text
-codex-game-studio/
+plugins/codex-game-maker/
   .codex-plugin/
   skills/
   references/
   scripts/
-tools/
+  tools/
+  requirements-asset-tools.txt
 docs/
 assets/
   brand/
-production/
-requirements-asset-tools.txt
 README.md
 README.zh-CN.md
 LICENSE

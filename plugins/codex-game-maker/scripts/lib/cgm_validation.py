@@ -295,20 +295,21 @@ def require_artifacts(
         blockers.append(issue(code, message, source))
         return valid
     for raw in raw_values:
-        path = resolve_project_path(root, str(raw))
+        raw_path = raw.get("path", "") if isinstance(raw, dict) else raw
+        path = resolve_project_path(root, str(raw_path))
         if path is None:
             blockers.append(issue(f"{code}.empty", "Evidence path is empty", source))
             continue
         if not is_within(root, path):
-            blockers.append(issue(f"{code}.outside_root", f"Evidence must remain inside the project: {raw}", path))
+            blockers.append(issue(f"{code}.outside_root", f"Evidence must remain inside the project: {raw_path}", path))
             continue
         if media_only and path.suffix.lower() not in MEDIA_EXTENSIONS:
-            blockers.append(issue(f"{code}.media_required", f"Runtime evidence must be image/video media: {raw}", path))
+            blockers.append(issue(f"{code}.media_required", f"Runtime evidence must be image/video media: {raw_path}", path))
             continue
         errors, _ = validate_artifact(path, media_minimum=media_minimum)
         if errors:
             for error in errors:
-                blockers.append(issue(f"{code}.invalid", f"Invalid artifact {raw}: {error}", path))
+                blockers.append(issue(f"{code}.invalid", f"Invalid artifact {raw_path}: {error}", path))
             continue
         valid.append(path)
     return valid

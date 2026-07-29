@@ -38,7 +38,7 @@ Recommended sequence:
 2. Show generated action bundle files: `idle`, `run`, `jump`, `attack`, `hurt`.
 3. Show GPT Image raw sheets under `assets/raw/`.
 4. Run asset processor and show transparent frames + GIF previews.
-5. Run `tools/import-sprite-to-godot.ps1`.
+5. Run `plugins/codex-game-maker/tools/import-sprite-to-godot.ps1`.
 6. Show `SpriteFrames` and `AnimatedSprite2D` scene in Godot.
 7. Run browser preview.
 
@@ -54,7 +54,7 @@ Recommended badges:
 - Godot 4.7.1
 - GPT Image Ready
 - Windows / macOS / Linux
-- v0.2.0-alpha.1
+- v0.2.0-alpha.2
 
 Recommended counts:
 

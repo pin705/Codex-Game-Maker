@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Repository-level validation for both Codex Game Maker plugin layouts."""
+"""Repository-level validation for the canonical Codex Game Maker plugin."""
 
 from __future__ import annotations
 
-import argparse
 import json
 import re
 from pathlib import Path
@@ -13,7 +12,6 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "plugins" / "codex-game-maker"
-STUDIO = ROOT / "codex-game-studio"
 RELATIVE_RESOURCE = re.compile(
     r"(?P<path>(?:\.\./)+(?:references|scripts|tools)/[^\s`\"')>,]+)"
 )
@@ -24,15 +22,13 @@ def fail(message: str) -> None:
 
 
 def load_json_and_yaml() -> None:
-    roots = (PACKAGE, STUDIO)
     candidates: set[Path] = set()
-    for root in roots:
-        candidates.add(root / ".codex-plugin" / "plugin.json")
-        candidates.update((root / "references" / "templates").glob("*.json"))
-        candidates.update((root / "references" / "policies").glob("*.json"))
-        candidates.update((root / "references" / "commands").glob("*.yaml"))
-        candidates.update((root / "references" / "workflows").glob("*.yaml"))
-        candidates.update((root / "skills").glob("*/agents/openai.yaml"))
+    candidates.add(PACKAGE / ".codex-plugin" / "plugin.json")
+    candidates.update((PACKAGE / "references" / "templates").glob("*.json"))
+    candidates.update((PACKAGE / "references" / "policies").glob("*.json"))
+    candidates.update((PACKAGE / "references" / "commands").glob("*.yaml"))
+    candidates.update((PACKAGE / "references" / "workflows").glob("*.yaml"))
+    candidates.update((PACKAGE / "skills").glob("*/agents/openai.yaml"))
 
     for path in sorted(candidates):
         if not path.is_file():
@@ -48,80 +44,24 @@ def load_json_and_yaml() -> None:
 
 
 def validate_skill_resources() -> None:
-    for root in (PACKAGE, STUDIO):
-        for skill_file in sorted((root / "skills").glob("*/SKILL.md")):
-            text = skill_file.read_text(encoding="utf-8-sig")
-            for match in RELATIVE_RESOURCE.finditer(text):
-                token = match.group("path").rstrip(".;:")
-                if any(marker in token for marker in ("<", ">", "*")):
-                    continue
-                resolved = (skill_file.parent / token).resolve()
-                if not resolved.exists():
-                    fail(
-                        "Broken skill resource reference: "
-                        f"{skill_file.relative_to(ROOT)} -> {token}"
-                    )
+    for skill_file in sorted((PACKAGE / "skills").glob("*/SKILL.md")):
+        text = skill_file.read_text(encoding="utf-8-sig")
+        for match in RELATIVE_RESOURCE.finditer(text):
+            token = match.group("path").rstrip(".;:")
+            if any(marker in token for marker in ("<", ">", "*")):
+                continue
+            resolved = (skill_file.parent / token).resolve()
+            if not resolved.exists():
+                fail(
+                    "Broken skill resource reference: "
+                    f"{skill_file.relative_to(ROOT)} -> {token}"
+                )
 
 
-def directory_files(root: Path) -> dict[str, bytes]:
-    return {
-        str(path.relative_to(root)): path.read_bytes()
-        for path in sorted(root.rglob("*"))
-        if path.is_file() and "__pycache__" not in path.parts
-    }
-
-
-def validate_mirror() -> None:
-    for subdir in ("references", "scripts"):
-        package_files = directory_files(PACKAGE / subdir)
-        studio_files = directory_files(STUDIO / subdir)
-        if package_files != studio_files:
-            fail(f"Package/studio {subdir} trees are not synchronized")
-
-    package_skills = directory_files(PACKAGE / "skills")
-    studio_skills = directory_files(STUDIO / "skills")
-    normalized_studio = {
-        name: data.replace(b"../../../tools/", b"../../tools/")
-        for name, data in studio_skills.items()
-    }
-    if package_skills != normalized_studio:
-        fail("Package/studio skill trees are not semantically synchronized")
-
-    if directory_files(PACKAGE / "tools") != directory_files(ROOT / "tools"):
-        fail("Root tools/ is not synchronized with the plugin package")
-
-    package_manifest = json.loads(
-        (PACKAGE / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
-    )
-    studio_manifest = json.loads(
-        (STUDIO / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
-    )
-    for key in (
-        "name",
-        "version",
-        "description",
-        "author",
-        "homepage",
-        "repository",
-        "license",
-        "keywords",
-        "skills",
-    ):
-        if package_manifest.get(key) != studio_manifest.get(key):
-            fail(f"Plugin manifests disagree on {key}")
-    for key in (
-        "displayName",
-        "shortDescription",
-        "longDescription",
-        "developerName",
-        "category",
-        "capabilities",
-        "websiteURL",
-        "defaultPrompt",
-        "brandColor",
-    ):
-        if package_manifest["interface"].get(key) != studio_manifest["interface"].get(key):
-            fail(f"Plugin interface manifests disagree on {key}")
+def validate_single_source() -> None:
+    for legacy in (ROOT / "codex-game-studio", ROOT / "tools", ROOT / "requirements-asset-tools.txt"):
+        if legacy.exists():
+            fail(f"Duplicate legacy layout must not exist: {legacy.relative_to(ROOT)}")
 
 
 def validate_counts() -> None:
@@ -141,34 +81,73 @@ def validate_counts() -> None:
             fail(f"Expected {wanted} {label}, found {actual}")
 
 
+def validate_dynamic_contracts() -> None:
+    templates = PACKAGE / "references" / "templates"
+    state_contract = json.loads((templates / "game-state-matrix.json").read_text(encoding="utf-8"))
+    if state_contract.get("schema_version") != 2:
+        fail("Game-state template must use dynamic schema_version 2")
+    for field in (
+        "states",
+        "journeys",
+        "experience_requirements",
+        "quality_requirements",
+        "required_evidence_checks",
+    ):
+        if not isinstance(state_contract.get(field), list) or not state_contract[field]:
+            fail(f"Game-state template needs non-empty dynamic field: {field}")
+    quality_kinds = {
+        str(row.get("kind"))
+        for row in state_contract["quality_requirements"]
+        if isinstance(row, dict) and row.get("required", True)
+    }
+    if not {"engine_import", "static_analysis", "reliability"}.issubset(quality_kinds):
+        fail("Game-state template lost universal quality command kinds")
+
+    assets = json.loads((templates / "asset-coverage.json").read_text(encoding="utf-8"))
+    if not isinstance(assets.get("coverage_policy"), dict) or not isinstance(assets.get("groups"), list):
+        fail("Asset coverage must remain game-contract driven")
+    audio = json.loads((templates / "audio-manifest.json").read_text(encoding="utf-8"))
+    for field in ("coverage_policy", "required_buses", "coverage_requirements", "events"):
+        if field not in audio:
+            fail(f"Audio manifest lost dynamic field: {field}")
+
+    gate_text = (PACKAGE / "scripts" / "guards" / "player_ready_gate.py").read_text(encoding="utf-8")
+    for forbidden in ("REQUIRED_STATES", "REQUIRED_GROUPS", "REQUIRED_AUDIO", "REQUIRED_EVIDENCE"):
+        if forbidden in gate_text:
+            fail(f"Player-ready gate regressed to fixed contract constant: {forbidden}")
+
+    contract_ref = "../../references/contracts/player-journey-schema.md"
+    for skill_name in (
+        "game-studio-start",
+        "game-studio-design",
+        "game-studio-build",
+        "game-studio-implementation",
+        "game-studio-review",
+    ):
+        skill_text = (PACKAGE / "skills" / skill_name / "SKILL.md").read_text(encoding="utf-8")
+        if contract_ref not in skill_text:
+            fail(f"{skill_name} no longer routes through the dynamic player-journey contract")
+
+
 def validate_todo_markers() -> None:
-    for root in (PACKAGE, STUDIO):
-        for path in root.rglob("*"):
-            if not path.is_file() or "__pycache__" in path.parts:
-                continue
-            try:
-                text = path.read_text(encoding="utf-8-sig")
-            except UnicodeDecodeError:
-                continue
-            if "[TODO:" in text:
-                fail(f"Unresolved scaffold marker in {path.relative_to(ROOT)}")
+    for path in PACKAGE.rglob("*"):
+        if not path.is_file() or "__pycache__" in path.parts:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8-sig")
+        except UnicodeDecodeError:
+            continue
+        if "[TODO:" in text:
+            fail(f"Unresolved scaffold marker in {path.relative_to(ROOT)}")
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--skip-mirror",
-        action="store_true",
-        help="Run structured/resource checks before the studio mirror is refreshed.",
-    )
-    args = parser.parse_args()
-
     load_json_and_yaml()
     validate_skill_resources()
     validate_counts()
+    validate_dynamic_contracts()
     validate_todo_markers()
-    if not args.skip_mirror:
-        validate_mirror()
+    validate_single_source()
     print("Repository validation passed")
     return 0
 

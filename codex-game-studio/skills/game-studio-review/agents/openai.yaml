@@ -1,6 +1,0 @@
-﻿interface:
-  display_name: "Game Studio Review"
-  short_description: "Review game projects with lean QA gates."
-  default_prompt: "Review this game project with Codex Game Maker."
-
-

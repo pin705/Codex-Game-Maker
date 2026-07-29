@@ -1,13 +1,73 @@
 {
-  "release_profile": "web-demo",
-  "states": {
-    "boot": {"status": "planned", "scene": "", "evidence": []},
-    "title": {"status": "planned", "scene": "", "evidence": []},
-    "onboarding": {"status": "planned", "scene": "", "evidence": []},
-    "gameplay": {"status": "planned", "scene": "", "evidence": []},
-    "pause": {"status": "planned", "scene": "", "evidence": []},
-    "settings": {"status": "planned", "scene": "", "evidence": []},
-    "victory": {"status": "planned", "scene": "", "evidence": []},
-    "defeat": {"status": "planned", "scene": "", "evidence": []}
-  }
+  "schema_version": 2,
+  "release_profile": "custom",
+  "states": [
+    {
+      "id": "entry-surface",
+      "role": "replace-with-this-game-entry-role",
+      "required": true,
+      "status": "planned",
+      "ui_surface": true,
+      "scene": "",
+      "evidence": [],
+      "transitions": [
+        {"to": "primary-play", "trigger": "replace-with-real-player-or-system-trigger"}
+      ]
+    },
+    {
+      "id": "primary-play",
+      "role": "replace-with-this-game-core-role",
+      "required": true,
+      "status": "planned",
+      "ui_surface": true,
+      "scene": "",
+      "evidence": [],
+      "transitions": [
+        {"to": "session-completion", "trigger": "replace-with-real-completion-condition"}
+      ]
+    },
+    {
+      "id": "session-completion",
+      "role": "replace-with-this-game-session-outcome-role",
+      "required": true,
+      "status": "planned",
+      "ui_surface": true,
+      "scene": "",
+      "evidence": [],
+      "transitions": []
+    }
+  ],
+  "journeys": [
+    {
+      "id": "primary-session",
+      "required": true,
+      "goal": "replace-with-the-player-promise-this-journey-proves",
+      "start_state": "entry-surface",
+      "required_states": ["entry-surface", "primary-play", "session-completion"],
+      "completion_states": ["session-completion"],
+      "test_command_id": "primary_session_test",
+      "recovery_paths": [],
+      "evidence": []
+    }
+  ],
+  "experience_requirements": [
+    {
+      "id": "replace-with-game-specific-requirement",
+      "required": true,
+      "rationale": "derive this from the GDD, audience, target device, and player promise",
+      "fulfilled_by": ["primary-play"],
+      "evidence": []
+    }
+  ],
+  "quality_requirements": [
+    {"id": "engine-import", "kind": "engine_import", "required": true, "command_id": "godot_import"},
+    {"id": "static-analysis", "kind": "static_analysis", "required": true, "command_id": "godot_lint"},
+    {"id": "reliability", "kind": "reliability", "required": true, "command_id": "long_run"}
+  ],
+  "required_evidence_checks": [
+    "replace-with-game-specific-player-journey",
+    "visual-quality",
+    "audio-or-intentional-silence",
+    "manual-playtest"
+  ]
 }

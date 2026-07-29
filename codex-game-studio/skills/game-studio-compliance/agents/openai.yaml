@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio Compliance"
-  short_description: "Verify legal, privacy, ratings, and licenses"
-  default_prompt: "Use $game-studio-compliance to close legal, privacy, rating, and licensing blockers."

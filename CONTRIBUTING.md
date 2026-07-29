@@ -1,6 +1,6 @@
 ﻿# Contributing
 
-Codex Game Maker is currently `v0.2.0-alpha.1`. Contributions should keep the project approachable, evidence-backed, cross-platform, and Godot-first.
+Codex Game Maker is currently `v0.2.0-alpha.2`. Contributions should keep the project approachable, evidence-backed, cross-platform, and Godot-first.
 
 ## Priorities
 
@@ -14,16 +14,16 @@ Codex Game Maker is currently `v0.2.0-alpha.1`. Contributions should keep the pr
 Run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
-powershell -ExecutionPolicy Bypass -File tools\check-asset-tools.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-tools.ps1
 ```
 
 For Godot projects, also run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
-python3 codex-game-studio/scripts/cgm.py player-ready --root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot-lint.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
+python3 plugins/codex-game-maker/scripts/cgm.py player-ready --root .
 ```
 
 Plugin changes must also pass the repository CI contract:

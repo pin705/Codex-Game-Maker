@@ -1,10 +1,28 @@
 {
-  "asset_schema": {"id": "", "status": "planned", "path": "", "provenance": "", "runtime_refs": []},
+  "coverage_policy": {
+    "minimum_distinct_assets": 1,
+    "rationale": "replace with a justified floor derived from this game's complete visible inventory",
+    "inventory_sources": [
+      "design/gdd/game-concept.md",
+      "design/ui/ui-ux-spec.md"
+    ]
+  },
+  "asset_schema": {
+    "id": "",
+    "status": "planned",
+    "path": "",
+    "provenance": "",
+    "runtime_refs": []
+  },
   "groups": [
-    {"id": "player", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
-    {"id": "environment", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
-    {"id": "gameplay-feedback", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
-    {"id": "ui", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []},
-    {"id": "release-branding", "required": true, "status": "planned", "coverage_basis": "", "required_asset_ids": [], "assets": [], "evidence": []}
+    {
+      "id": "replace-with-game-specific-visible-system",
+      "required": true,
+      "status": "planned",
+      "coverage_basis": "replace with the GDD/state/UI inventory that makes this group complete",
+      "required_asset_ids": [],
+      "assets": [],
+      "evidence": []
+    }
   ]
 }

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio Implementation"
-  short_description: "Implement complete Godot gameplay systems"
-  default_prompt: "Use $game-studio-implementation to implement and verify this gameplay slice."

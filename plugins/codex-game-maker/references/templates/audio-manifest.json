@@ -1,19 +1,28 @@
 {
   "intentional_silence": false,
   "silence_rationale": "",
-  "buses": ["Master", "Music", "SFX", "UI", "Ambience"],
+  "coverage_policy": {
+    "minimum_distinct_assets": 1,
+    "rationale": "replace with a justified floor derived from this game's actions, states, frequency, and mix"
+  },
+  "required_buses": ["Master"],
+  "buses": ["Master"],
+  "coverage_requirements": [
+    {
+      "id": "replace-with-game-specific-audio-need",
+      "required": true,
+      "rationale": "derive from the state graph, player actions, UI surfaces, and accessibility plan",
+      "event_ids": []
+    }
+  ],
   "events": [
-    {"id": "ui-confirm", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "ui-back", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "ui-focus", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "ui-invalid", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "player-action", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "damage-or-failure", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "reward", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "victory", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "defeat", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "music-main", "status": "planned", "asset": "", "trigger": ""},
-    {"id": "ambience-gameplay", "status": "planned", "asset": "", "trigger": ""}
+    {
+      "id": "replace-with-real-event-id",
+      "status": "planned",
+      "asset": "",
+      "provenance": "",
+      "trigger": ""
+    }
   ],
   "evidence": []
 }

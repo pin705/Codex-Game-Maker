@@ -1,6 +1,6 @@
 ﻿# Codex Game Maker 迁移方向文档
 
-> 历史方向文档。当前已实现的 player-ready 与 commercial workflow 以 `codex-game-studio/references/workflows/` 中的 catalog 和可执行 gate 为准。
+> 历史方向文档。当前已实现的 player-ready 与 commercial workflow 以 `plugins/codex-game-maker/references/workflows/` 中的 catalog 和可执行 gate 为准。
 
 研究对象：`https://github.com/Donchitos/Claude-Code-Game-Studios`  
 本地研究副本：`.research/Claude-Code-Game-Studios`  
@@ -77,10 +77,10 @@ production/
   epics/
   sprints/
   playtests/
-tools/
+plugins/codex-game-maker/tools/
   guards/
   image-pipeline/
-codex-game-studio/
+plugins/codex-game-maker/
   .codex-plugin/plugin.json       # 如果做成本地插件
   skills/
     game-studio-start/
@@ -277,11 +277,11 @@ Godot-first prototype lane：
 Claude 的 `.claude/settings.json` 把 hooks 绑定到工具事件。Codex 版首版更稳的做法：
 
 ```text
-tools/guards/check-design-docs.ps1
-tools/guards/check-json.ps1
-tools/guards/check-hardcoded-gameplay-values.ps1
-tools/guards/check-assets.ps1
-tools/guards/check-story-readiness.ps1
+plugins/codex-game-maker/tools/guards/check-design-docs.ps1
+plugins/codex-game-maker/tools/guards/check-json.ps1
+plugins/codex-game-maker/tools/guards/check-hardcoded-gameplay-values.ps1
+plugins/codex-game-maker/tools/guards/check-assets.ps1
+plugins/codex-game-maker/tools/guards/check-story-readiness.ps1
 ```
 
 然后在对应 skill 里显式调用。
@@ -293,8 +293,8 @@ tools/guards/check-story-readiness.ps1
 ```text
 .githooks/pre-commit
 .githooks/pre-push
-tools/install-git-hooks.ps1
-tools/install-git-hooks.sh
+plugins/codex-game-maker/tools/install-git-hooks.ps1
+plugins/codex-game-maker/tools/install-git-hooks.sh
 ```
 
 但它应是可选安装，不应该成为模板启动门槛。
@@ -304,10 +304,10 @@ tools/install-git-hooks.sh
 源项目的 rules 很有价值，应直接保留并改写成 Codex 可读参考：
 
 ```text
-codex-game-studio/references/rules/gameplay-code.md
-codex-game-studio/references/rules/ui-code.md
-codex-game-studio/references/rules/network-code.md
-codex-game-studio/references/rules/design-docs.md
+plugins/codex-game-maker/references/rules/gameplay-code.md
+plugins/codex-game-maker/references/rules/ui-code.md
+plugins/codex-game-maker/references/rules/network-code.md
+plugins/codex-game-maker/references/rules/design-docs.md
 ...
 ```
 
@@ -353,11 +353,11 @@ Concept
 产出：
 
 ```text
-codex-game-studio/.codex-plugin/plugin.json
-codex-game-studio/skills/game-studio-start/SKILL.md
-codex-game-studio/references/workflows/catalog.yaml
-codex-game-studio/references/templates/*
-codex-game-studio/scripts/guards/detect_engine.ps1
+plugins/codex-game-maker/.codex-plugin/plugin.json
+plugins/codex-game-maker/skills/game-studio-start/SKILL.md
+plugins/codex-game-maker/references/workflows/catalog.yaml
+plugins/codex-game-maker/references/templates/*
+plugins/codex-game-maker/scripts/guards/detect_engine.ps1
 production/session-state/active.md
 ```
 
@@ -392,7 +392,7 @@ game-studio-art-assets
 design/art/art-bible.md
 design/assets/asset-manifest.md
 assets/source-prompts/*.yaml
-tools/image-pipeline/*
+plugins/codex-game-maker/tools/image-pipeline/*
 ```
 
 验收：
@@ -407,7 +407,7 @@ tools/image-pipeline/*
 
 ```text
 game-studio-review
-tools/guards/*
+plugins/codex-game-maker/tools/guards/*
 ```
 
 验收：
@@ -446,12 +446,11 @@ optional team workflow references
 
 建议先不要直接全量移植。第一步应建立一个最小可用 Codex Game Maker：
 
-1. 搭 `codex-game-studio` 插件/技能目录。
+1. 搭 canonical `plugins/codex-game-maker` 插件/技能目录。
 2. 先写 `game-studio-start`、`game-studio-design`、`game-studio-art-assets`、`game-studio-architecture`、`game-studio-review` 五个主流程 skills，再补 `game-studio-sprite-assets`、`game-studio-map-assets`、`game-studio-asset-qa` 三个资产核心 skills。
 3. 从源项目迁移模板：`game-concept.md`、`game-design-document.md`、`art-bible.md`、`asset-spec.md`、`architecture-decision-record.md`。
 4. 把 source agents 压缩成 6 个核心角色视角，写入 `core-agent-roster.md`。
 5. 做一个端到端 demo：从一句游戏想法 -> kickoff brief -> game concept -> art bible -> Godot architecture -> QA gate。
 
 这个 demo 跑通后，再决定是否拆出 production/team workflow。这样能尽快验证 Codex + GPT Image 2 + Godot 4.7.1 的核心优势，而不是先陷入 72 个命令的机械搬运。
-
 

@@ -13,6 +13,7 @@ Read:
 
 - `production/player-ready-contract.md`
 - `design/game-state-matrix.json`
+- `../../references/contracts/player-journey-schema.md`
 - `design/gdd/systems-index.md` and relevant system GDDs
 - `docs/architecture/architecture.md`
 - `docs/architecture/control-manifest.md`
@@ -38,17 +39,16 @@ Read:
 
 ## Required Runtime Coverage
 
-Unless the contract explicitly excludes them, implement:
+Implement the schema-v2 graph in `design/game-state-matrix.json`, not a fixed genre-agnostic checklist:
 
-- boot/title/start
-- onboarding or discoverable controls
-- complete core gameplay loop
-- pause/resume
-- settings with persisted audio/display/input preferences
-- failure and recovery/restart
-- victory/results and replay/continue
-- save/load and versioning when progress outlives a session
-- deterministic cleanup when changing states or restarting
+- every required state and declared transition
+- every required journey from its start to at least one completion state
+- every declared recovery/retry/continue/return/save-exit path
+- every experience requirement mapped to real fulfilling states and evidence
+- every journey and recovery path backed by its declared executable command
+- deterministic cleanup across transitions that reset, unload, reconnect, or resume mutable state
+
+Derive guidance, configuration, interruption, persistence, failure, success, hub, narrative, and live-session behavior from the GDD and target platform. Include only what applies, but record material exclusions with rationale.
 
 ## Godot Quality Rules
 

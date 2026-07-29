@@ -24,6 +24,7 @@ phases:
     recommended_skill: game-studio-design
 
   player-ready-contract:
+    contract: "Schema-v2 states, transitions, journeys, completion/recovery paths, experience requirements, and evidence IDs are derived per game; no fixed screen/state list."
     required:
       - production/player-ready-contract.md
       - design/game-state-matrix.json
@@ -124,6 +125,7 @@ phases:
     recommended_skill: game-studio-review
 
   player-ready:
+    verifies: "Every declared state is journey-covered and distinctly evidenced; graph reachability, completion, recovery, dynamic asset/audio/UI coverage, and all declared commands pass."
     required:
       - production/player-ready-contract.md
       - design/game-state-matrix.json

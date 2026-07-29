@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio Narrative"
-  short_description: "Design and integrate production-ready narrative"
-  default_prompt: "Use $game-studio-narrative to create and verify the game narrative pipeline."

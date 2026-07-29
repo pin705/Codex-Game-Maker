@@ -7,7 +7,7 @@ Output devices:
 
 ## Scenarios Reviewed
 
-Title, UI navigation, normal gameplay, busiest action, damage/failure, reward, pause/resume, restart, scene transition, victory, defeat, and settings persistence:
+List every required audio coverage row and the relevant journey states/transitions from this game's contracts; include the busiest mix and persistence/interruption behavior:
 
 ## Findings
 
@@ -18,7 +18,7 @@ Review missing/duplicate events, masking, loudness jumps, loop seams, variation,
 
 ## Evidence
 
-Capture/recording:
+Capture/recording (audio, or session video for intentional silence):
 Evidence SHA-256:
 Bus/settings test:
 Target-output review:

@@ -1,5 +1,5 @@
 param(
-  [string]$Root = "."
+  [string]$Root = (Join-Path $PSScriptRoot "..")
 )
 
 $ErrorActionPreference = "Stop"
@@ -339,4 +339,3 @@ if ($ok) {
 Write-Host ""
 Report "FAIL" "Codex Game Maker setup has issues to fix."
 exit 1
-

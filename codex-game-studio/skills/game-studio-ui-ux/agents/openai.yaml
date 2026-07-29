@@ -1,4 +1,0 @@
-interface:
-  display_name: "Game Studio UI UX"
-  short_description: "Create premium game-native HUDs and menus"
-  default_prompt: "Use $game-studio-ui-ux to design and verify every player-facing UI state."

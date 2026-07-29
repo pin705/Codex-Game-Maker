@@ -8,7 +8,7 @@
 
 **快速跳转：** [安装](#快速开始) · [Player-Ready 模式](#player-ready-模式) · [商业发布模式](#商业发布模式) · [资产流程](#gpt-image-资产流程) · [Skills](#当前包含) · [安全与门禁](#安全与门禁) · [提示词](#示例提示词)
 
-> 当前状态：`v0.2.0-alpha.1`。Player-ready 与商业发布流程均可执行，但仍是预发布工具。Gate 通过只代表声明范围内已有可验证证据，不能替代平台认证、法律顾问、签名授权、商店审核或真实玩家判断。
+> 当前状态：`v0.2.0-alpha.2`。Player-ready 与商业发布流程均可执行，但仍是预发布工具。Gate 通过只代表声明范围内已有可验证证据，不能替代平台认证、法律顾问、签名授权、商店审核或真实玩家判断。
 
 Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产品与游戏设计、Godot 实现、完整状态、生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图、人工 playtest、性能、构建、合规、本地化、无障碍、商店素材、遥测、客服与回滚计划。
 
@@ -28,9 +28,9 @@ Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产�
 
 “制作这个游戏”“完成这个原型”或“自动从头做到尾”等宽泛请求会进入 `game-studio-build`。除非用户明确只要 prototype，否则默认目标是边界清晰的 `PLAYER_READY` 游戏。
 
-流程会覆盖完整玩家旅程、全部可见状态、角色/环境/反馈/UI/品牌资产、Godot 原生主题与菜单、控制器 focus、音频总线与事件、自动 core-loop/long-run 测试、每个状态的运行证据以及人工 playtest。`player_ready_gate.py` 会阻止 agent 把 mock、空模板或只会启动的场景说成完成。
+流程不会套用固定的 title/pause/victory 清单。每个游戏都要声明自己的 schema-v2 状态图、transition、required journey、completion/recovery path、experience requirement，以及由该游戏实际系统推导出的资产、UI 和音频 coverage。`player_ready_gate.py` 会阻止 agent 把 mock、空模板或只会启动的场景说成完成。
 
-Gate 会验证真实媒体签名、至少五个不同运行状态、资产 provenance/runtime references、绑定当前项目 fingerprint 的命令日志与哈希、视觉/音频 review，以及人工 playtest evidence。真正的审美质量仍必须查看运行中的游戏并让真实玩家测试。
+Gate 会验证 graph reachability、每个 required state 的不同运行证据、每条 journey/recovery 的 executable command、资产 provenance/runtime references、UI surface coverage、动态 audio contract、绑定当前项目 fingerprint 的命令日志与哈希、视觉/音频 review，以及人工 playtest evidence。测试中包含一个没有传统 title/pause/settings/victory/defeat 状态名的 endless sandbox。真正的审美质量仍必须查看运行中的游戏并让真实玩家测试。
 
 ## 商业发布模式
 
@@ -81,16 +81,25 @@ python3 scripts/cgm.py commercial-release --root /path/to/game
 
 ## 快速开始
 
+推荐直接从仓库 URL 安装 plugin：
+
+```bash
+codex plugin marketplace add https://github.com/pin705/Codex-Game-Maker
+codex plugin add codex-game-maker@codex-game-maker
+```
+
+如需开发或验证 plugin source：
+
 ```powershell
-git clone https://github.com/0xnickmortal/Codex-Game-Maker.git my-game
-cd my-game
-powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
+git clone https://github.com/pin705/Codex-Game-Maker.git
+cd Codex-Game-Maker
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1 -Root plugins\codex-game-maker
 ```
 
 macOS/Linux:
 
 ```bash
-pwsh -File tools/check-install.ps1
+pwsh -File plugins/codex-game-maker/tools/check-install.ps1 -Root plugins/codex-game-maker
 ```
 
 然后在 Codex 里说：
@@ -108,31 +117,31 @@ Use Codex Game Maker to start this game project.
 在 Windows、macOS 或 Linux 安装版本策略推荐的 Godot 与对应 export templates：
 
 ```bash
-python3 codex-game-studio/scripts/cgm.py install-godot --with-export-templates
+python3 plugins/codex-game-maker/scripts/cgm.py install-godot --with-export-templates
 ```
 
 只查看下载与安装计划：
 
 ```bash
-python3 codex-game-studio/scripts/cgm.py install-godot --dry-run
+python3 plugins/codex-game-maker/scripts/cgm.py install-godot --dry-run
 ```
 
 兼容 PowerShell 入口：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\install-godot.ps1 -WithExportTemplates
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\install-godot.ps1 -WithExportTemplates
 ```
 
 如果本机已经有 Godot，可以注册已有路径：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\register-godot.ps1 -GodotPath "F:\Godot_v4.7.1-stable_win64.exe"
 ```
 
 浏览器预览：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\preview-godot-web.ps1 -Project . -CreatePresetIfMissing
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-godot-web.ps1 -Project . -CreatePresetIfMissing
 ```
 
 ## GPT Image 资产流程
@@ -151,21 +160,21 @@ powershell -ExecutionPolicy Bypass -File tools\preview-godot-web.ps1 -Project . 
 创建多动作角色：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt"
 ```
 
 处理 raw sheets：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt" -ProcessExistingRaw
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt" -ProcessExistingRaw
 ```
 
 QA、修复、导入 Godot：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\repair-asset-processing.ps1 -Root . -Apply
-powershell -ExecutionPolicy Bypass -File tools\import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\repair-asset-processing.ps1 -Root . -Apply
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
 ```
 
 ## 它能生成什么
@@ -246,12 +255,12 @@ Use Codex Game Maker to create a cute cat platformer hero with idle, run, jump, 
 常用检查：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\check-install.ps1
-powershell -ExecutionPolicy Bypass -File tools\check-asset-qa.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-godot-lint.ps1 -Root .
-powershell -ExecutionPolicy Bypass -File tools\check-review-gate.ps1 -Root .
-python3 codex-game-studio/scripts/guards/player_ready_gate.py --root .
-python3 codex-game-studio/scripts/cgm.py commercial-release --root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-install.ps1
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-godot-lint.ps1 -Root .
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-review-gate.ps1 -Root .
+python3 plugins/codex-game-maker/scripts/guards/player_ready_gate.py --root .
+python3 plugins/codex-game-maker/scripts/cgm.py commercial-release --root .
 ```
 
 这些 gate 用来检查工具完整性、资产可用性、Godot 脚本风险、完整状态、游戏化 UI、音频、自动测试、运行 artifacts、人工 playtest，以及商业发布所需的版本化 build、性能、合规、本地化、无障碍、营销、在线服务与 liveops evidence。
