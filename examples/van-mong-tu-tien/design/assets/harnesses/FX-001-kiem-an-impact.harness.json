@@ -1,0 +1,63 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "FX-001-kiem-an-impact",
+  "kind": "fx",
+  "action": "impact",
+  "view_profile": "neutral",
+  "target_engine": "Godot 4.4",
+  "canvas": {
+    "width": 1536,
+    "height": 768
+  },
+  "grid": {
+    "rows": 2,
+    "cols": 4,
+    "cell_width": 384,
+    "cell_height": 384
+  },
+  "safe_margin": 40,
+  "safe_zone": {
+    "left": 40,
+    "top": 40,
+    "right": 344,
+    "bottom": 344
+  },
+  "edge_guard_px": 16,
+  "key_color": "#FF00FF",
+  "foot_line_y": 0,
+  "acceptance": {
+    "alpha_threshold": 8,
+    "key_tolerance": 24,
+    "min_component_area": 147,
+    "max_scale_drift_ratio": 0.85,
+    "max_foot_drift_px": 18,
+    "min_lower_body_transition_diff": 0.13,
+    "max_weak_motion_transitions": 8,
+    "allow_empty_cells": false,
+    "allow_horizontal_edge_touch": false,
+    "allow_vertical_edge_touch": false,
+    "block_safe_zone_violations": true,
+    "block_neighbor_fragments": true
+  },
+  "runtime_contract": {
+    "pivot": "center",
+    "frame_order": "left-to-right, top-to-bottom",
+    "loop": false,
+    "view_profile": "neutral",
+    "motion_phases": [
+      "pose 1",
+      "pose 2",
+      "pose 3",
+      "pose 4",
+      "pose 5",
+      "pose 6",
+      "pose 7",
+      "pose 8"
+    ]
+  },
+  "outputs": {
+    "harness_guide": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/FX-001-kiem-an-impact.harness.png",
+    "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/FX-001-kiem-an-impact.harness.json",
+    "prompt_contract": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/FX-001-kiem-an-impact.prompt.md"
+  }
+}

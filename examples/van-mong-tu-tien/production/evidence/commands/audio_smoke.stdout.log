@@ -1,0 +1,20 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+PASS: tone stream synthesizes
+PASS: tone contains PCM samples
+PASS: tone PCM is not silent
+PASS: combat score synthesizes
+PASS: score loops seamlessly
+PASS: score has a 32 second anti-repetition loop
+PASS: score PCM is not silent
+PASS: title shipping loop is imported
+PASS: title shipping loop has PCM and loop metadata
+PASS: hub shipping loop is imported
+PASS: hub shipping loop has PCM and loop metadata
+PASS: combat shipping loop is imported
+PASS: combat shipping loop has PCM and loop metadata
+PASS: result shipping loop is imported
+PASS: result shipping loop has PCM and loop metadata
+PASS: title and hub shipping loops are distinct arrangements
+PASS: music and SFX buses exist
+AUDIO RESULT: PASS

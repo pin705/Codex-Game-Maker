@@ -1,0 +1,82 @@
+asset_id: HERO-001-idle-side
+name: "Kiếm tu Vân Mộng — idle side"
+category: characters
+asset_kind: player
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  family_id: "actors"
+  locked_reference_paths: ["production/playtests/overhaul/gameplay-final.png"]
+intended_use: "Playable hero idle_side loop"
+target_engine: "Godot 4.4"
+target_display_size: "76 logical pixels tall"
+runtime_role: "Default no-input visual state"
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  asset_brief: "design/assets/visual-overhaul-batch-01.md"
+web_sources:
+  - url: "https://www.metmuseum.org/art/collection/search/65620"
+    title: "Gong Xian, Landscapes, 1680s — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain under The Met Open Access program; material/brush study only, no tracing or composition reuse."
+generation_plan:
+  generation_provider: gpt_image
+  visual_asset_source: "original reference-informed generation"
+  action: idle
+  view: "right-facing three-quarter top-down"
+  sheet_rows: 2
+  sheet_cols: 3
+  expected_frames: 6
+  bundle: hero_action_bundle
+  anchor: feet
+  safe_padding: "56 px inside each 512 px cell"
+  key_color: "#FF00FF"
+  background_policy: "one flat solid chroma key; no shadow, glow or transparency"
+  postprocess_required: true
+harness:
+  spec_file: "design/assets/harnesses/HERO-001-idle-side.harness.json"
+  guide_file: "design/assets/harnesses/HERO-001-idle-side.harness.png"
+  prompt_contract: "design/assets/harnesses/HERO-001-idle-side.prompt.md"
+  exact_canvas: "1536x1024"
+  exact_grid: "2x3"
+  exact_cell_size: "512x512"
+  safe_zone: "x 56..456, y 56..456"
+  foot_line_y: 440
+  edge_guard_px: 18
+  acceptance: "raw generation must pass the harness gate before processing"
+godot_import:
+  target_node: AnimatedSprite2D
+  import_preset: "2d painted sprite; linear filter; lossless alpha"
+  pivot: feet
+  frame_size: "512x512 normalized"
+  animation_name: idle_side
+  fps: 6
+  loop: true
+  collision_role: visual_only
+prompt: |
+  Original Vân Mộng sword cultivator in a short split warm-ivory travel coat,
+  blue-black inner layer, visible separated boots, tied dark hair, small jade
+  waist talisman and restrained cinnabar knot. Painterly ink-on-silk, crisp
+  alpha-ready silhouette, six quiet idle phases. Follow the matching harness
+  prompt contract exactly. No held weapon or baked secondary FX.
+negative_constraints:
+  - "no text, calligraphy, labels, grid, borders, logo or watermark"
+  - "no plastic 3D, glossy gacha/anime finish, neon or photorealism"
+  - "no long robe, hidden feet, staff, sword, cape, aura, glow or cast shadow"
+  - "no translation, whole-body wobble, scale animation or duplicate limbs"
+output:
+  raw_file: "assets/raw/characters/HERO-001-idle-side-v001.png"
+  selected_file: "assets/raw/characters/HERO-001-idle-side-rectified-v002.png"
+  processed_file: "assets/generated/characters/HERO-001-idle-side/sheet-transparent.png"
+  frames_dir: "assets/generated/characters/HERO-001-idle-side/frames"
+  gif_preview: "assets/generated/characters/HERO-001-idle-side/animation.gif"
+  pipeline_meta: "assets/generated/characters/HERO-001-idle-side/pipeline-meta.json"
+  harness_report: "assets/generated/characters/HERO-001-idle-side/harness-report-v002.json"
+  status: accepted
+  acceptance: pass
+notes: >-
+  Rectified v002 resolves the earlier foot-line drift and passes the harness.
+  Six cropped runtime frames are integrated as player_idle; final in-scene
+  scale/pivot screenshot QA passed.

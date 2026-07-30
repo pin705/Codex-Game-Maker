@@ -1,0 +1,173 @@
+{
+  "style_lock": {
+    "path": "design/art/style-lock.json",
+    "style_version": "2.0.0",
+    "sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  },
+  "intentional_silence": false,
+  "silence_rationale": "",
+  "coverage_policy": {
+    "minimum_distinct_assets": 4,
+    "rationale": "The bounded journey has four state score modes, each backed by a distinct PCM master: title vow, sect hub, combat pressure and result recovery. Event SFX are synthesized at runtime and are inventoried separately because they do not exist as persistent media files."
+  },
+  "required_buses": ["Master", "Music", "SFX"],
+  "buses": ["Master", "Music", "SFX"],
+  "qa_report": "production/evidence/audio-qa.json",
+  "provenance_record": {
+    "source": "Project-authored procedural composition and synthesis implemented in scripts/audio/audio_director.gd; committed PCM masters live under assets/generated/audio/.",
+    "author": "Vân Mộng Tu Tiên project production workflow",
+    "rights": "Original project-generated audio; public commercial rights and project-wide license notices still require compliance sign-off before release.",
+    "license_status": "BLOCKED_FOR_COMMERCIAL_RELEASE_PENDING_COMPLIANCE_SIGN_OFF"
+  },
+  "coverage_requirements": [
+    {
+      "id": "front-door-and-sect-ambience",
+      "required": true,
+      "rationale": "Title and hub are long-lived navigation states and need a calm, non-fatiguing bed that survives repeated transitions without being required for comprehension.",
+      "event_ids": ["music-title", "music-hub"]
+    },
+    {
+      "id": "combat-and-cultivation-pressure",
+      "required": true,
+      "rationale": "The four-minute arena needs a clearly distinct higher-tempo score mode; sword, pickup, hit, pulse, breakthrough and boss feedback are supplied by the runtime procedural events listed below.",
+      "event_ids": ["music-combat"],
+      "procedural_event_ids": [
+        "sfx-sword-fired",
+        "sfx-qi-collected",
+        "sfx-player-hurt",
+        "sfx-qi-pulse",
+        "sfx-breakthrough",
+        "sfx-boss-arrival",
+        "sfx-enemy-defeated"
+      ]
+    },
+    {
+      "id": "terminal-outcome-and-recovery",
+      "required": true,
+      "rationale": "Victory and defeat share a quieter result bed while opposite melodic one-shots distinguish the outcome before the player chooses hub or retry.",
+      "event_ids": ["music-result"],
+      "procedural_event_ids": ["sfx-result-victory", "sfx-result-defeat"]
+    },
+    {
+      "id": "ui-navigation-feedback",
+      "required": true,
+      "rationale": "Every raster command button calls the same short brush-tap cue; focus, text and authored button states remain the non-audio fallback.",
+      "event_ids": ["music-title", "music-hub"],
+      "procedural_event_ids": ["sfx-ui-press"]
+    }
+  ],
+  "events": [
+    {
+      "id": "music-title",
+      "status": "verified",
+      "asset": "assets/generated/audio/music_title.wav",
+      "provenance": "design/audio/audio-manifest.json",
+      "trigger": "AudioDirector._ready() and set_music_mode(&\"title\") when the front door is active."
+    },
+    {
+      "id": "music-hub",
+      "status": "verified",
+      "asset": "assets/generated/audio/music_hub.wav",
+      "provenance": "design/audio/audio-manifest.json",
+      "trigger": "CultivationFrontEnd routes the sect/meta shell to AudioDirector.set_music_mode(&\"hub\")."
+    },
+    {
+      "id": "music-combat",
+      "status": "verified",
+      "asset": "assets/generated/audio/music_combat.wav",
+      "provenance": "design/audio/audio-manifest.json",
+      "trigger": "Events.game_started switches AudioDirector to combat mode."
+    },
+    {
+      "id": "music-result",
+      "status": "verified",
+      "asset": "assets/generated/audio/music_result.wav",
+      "provenance": "design/audio/audio-manifest.json",
+      "trigger": "Events.game_finished switches AudioDirector to result mode for either victory or defeat."
+    }
+  ],
+  "procedural_events": [
+    {
+      "id": "sfx-ui-press",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_ui() → _make_tone_stream()",
+      "trigger": "RasterButton press",
+      "muted_fallback": "Visible focus, pressed scale and caption state"
+    },
+    {
+      "id": "sfx-sword-fired",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector._on_sword_fired() → _make_tone_stream()",
+      "trigger": "Events.sword_fired",
+      "muted_fallback": "Flying-sword sprite, trail and impact VFX"
+    },
+    {
+      "id": "sfx-qi-collected",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_pickup() → _make_tone_stream()",
+      "trigger": "Events.qi_collected",
+      "muted_fallback": "Qi beam, orb disappearance and XP meter change"
+    },
+    {
+      "id": "sfx-player-hurt",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_hit() → _make_tone_stream()",
+      "trigger": "Events.player_health_changed when current health decreases",
+      "muted_fallback": "Cinnabar hurt flash and numeric/health-meter change"
+    },
+    {
+      "id": "sfx-qi-pulse",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_pulse() → two synthesized tone layers",
+      "trigger": "Events.pulse_state_changed when a fresh cooldown begins",
+      "muted_fallback": "Full radial boundary, burst and cooldown feedback"
+    },
+    {
+      "id": "sfx-breakthrough",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_breakthrough() → five-note synthesized ritual",
+      "trigger": "Game start, Events.upgrade_selected, and cultivation/realm banners",
+      "muted_fallback": "Modal folios, ascension reveal, gold rings and banner text"
+    },
+    {
+      "id": "sfx-boss-arrival",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector._on_banner_requested() → low warning tone",
+      "trigger": "Boss arrival banner containing GIÁNG THẾ or HIỆN THẾ",
+      "muted_fallback": "Named boss plaque, health bar, announcement and threat ring"
+    },
+    {
+      "id": "sfx-enemy-defeated",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector._on_enemy_defeated() → synthesized death tap",
+      "trigger": "Events.enemy_defeated for non-boss enemies",
+      "muted_fallback": "Ink burst, disappearing silhouette and qi drop"
+    },
+    {
+      "id": "sfx-result-victory",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_result(true) → ascending synthesized phrase",
+      "trigger": "Events.game_finished with victory=true",
+      "muted_fallback": "Victory title, gold/jade hierarchy and reward summary"
+    },
+    {
+      "id": "sfx-result-defeat",
+      "status": "verified-by-automated-smoke",
+      "runtime_asset": "AudioDirector.play_result(false) → descending synthesized phrase",
+      "trigger": "Events.game_finished with victory=false",
+      "muted_fallback": "Defeat title, cinnabar hierarchy and retained-reward summary"
+    }
+  ],
+  "evidence": [
+    "assets/generated/audio/music_title.wav",
+    "assets/generated/audio/music_hub.wav",
+    "assets/generated/audio/music_combat.wav",
+    "assets/generated/audio/music_result.wav",
+    "tests/smoke_audio.gd",
+    "production/session-state/active.md"
+  ],
+  "listening_gate": {
+    "status": "BLOCKED",
+    "reason": "Automated PCM/loop/bus checks pass, but no human listening session on target outputs has been recorded in production/reviews/audio-listening.md."
+  }
+}

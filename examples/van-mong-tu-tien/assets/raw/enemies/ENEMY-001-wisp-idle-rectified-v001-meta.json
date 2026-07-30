@@ -1,0 +1,159 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "ENEMY-001-wisp-idle",
+  "kind": "sprite",
+  "action": "idle",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-wisp-idle-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-wisp-idle-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/ENEMY-001-wisp-idle.harness.json",
+  "key_color": "#00FF00",
+  "tolerance": 34,
+  "fit_scale": 0.72,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 133,
+        "top": 26,
+        "right": 415,
+        "bottom": 494,
+        "width": 282,
+        "height": 468
+      },
+      "area": 56981,
+      "paste": {
+        "left": 174,
+        "top": 175,
+        "right": 337,
+        "bottom": 440
+      },
+      "scale": 0.5474380165289257,
+      "output_size": {
+        "width": 163,
+        "height": 265
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 624,
+        "top": 52,
+        "right": 886,
+        "bottom": 479,
+        "width": 262,
+        "height": 427
+      },
+      "area": 46451,
+      "paste": {
+        "left": 173,
+        "top": 175,
+        "right": 339,
+        "bottom": 440
+      },
+      "scale": 0.5981038374717832,
+      "output_size": {
+        "width": 166,
+        "height": 265
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 1130,
+        "top": 54,
+        "right": 1393,
+        "bottom": 494,
+        "width": 263,
+        "height": 440
+      },
+      "area": 50936,
+      "paste": {
+        "left": 175,
+        "top": 175,
+        "right": 337,
+        "bottom": 440
+      },
+      "scale": 0.5810526315789473,
+      "output_size": {
+        "width": 162,
+        "height": 265
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 134,
+        "top": 542,
+        "right": 409,
+        "bottom": 996,
+        "width": 275,
+        "height": 454
+      },
+      "area": 52042,
+      "paste": {
+        "left": 174,
+        "top": 175,
+        "right": 338,
+        "bottom": 440
+      },
+      "scale": 0.5637446808510638,
+      "output_size": {
+        "width": 164,
+        "height": 265
+      }
+    },
+    {
+      "index": 4,
+      "method": "components",
+      "source_bbox": {
+        "left": 607,
+        "top": 541,
+        "right": 903,
+        "bottom": 1004,
+        "width": 296,
+        "height": 463
+      },
+      "area": 58296,
+      "paste": {
+        "left": 169,
+        "top": 175,
+        "right": 342,
+        "bottom": 440
+      },
+      "scale": 0.553152400835073,
+      "output_size": {
+        "width": 173,
+        "height": 265
+      }
+    },
+    {
+      "index": 5,
+      "method": "components",
+      "source_bbox": {
+        "left": 1101,
+        "top": 534,
+        "right": 1384,
+        "bottom": 1003,
+        "width": 283,
+        "height": 469
+      },
+      "area": 57125,
+      "paste": {
+        "left": 174,
+        "top": 175,
+        "right": 337,
+        "bottom": 440
+      },
+      "scale": 0.5463092783505155,
+      "output_size": {
+        "width": 163,
+        "height": 265
+      }
+    }
+  ]
+}

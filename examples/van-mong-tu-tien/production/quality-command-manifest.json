@@ -1,0 +1,189 @@
+{
+  "version": 2,
+  "godot_path": "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+  "commands": [
+    {
+      "id": "godot_import",
+      "argv": ["{godot}", "--headless", "--editor", "--path", "{root}", "--quit"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "godot_lint",
+      "argv": ["{godot}", "--headless", "--editor", "--verbose", "--path", "{root}", "--quit"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "runtime_smoke",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_runtime.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "primary_session_test",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_frontend_flow.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "recovery_flow_test",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_runtime.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "meta_navigation_test",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_frontend_flow.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "mobile_orientation_test",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_mobile_support.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "long_run",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_long_run.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "visual_smoke",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_visual_evidence.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": [
+        "production/playtests/frontend/title.png",
+        "production/playtests/frontend/hub.png",
+        "production/playtests/frontend/stages.png",
+        "production/playtests/frontend/loadout.png",
+        "production/playtests/frontend/techniques.png",
+        "production/playtests/frontend/technique-upgrade.png",
+        "production/playtests/frontend/codex.png",
+        "production/playtests/frontend/achievements.png",
+        "production/playtests/frontend/settings.png",
+        "production/playtests/frontend/reset.png",
+        "production/playtests/frontend/results.png",
+        "production/playtests/frontend/results-defeat.png",
+        "production/playtests/overhaul/gameplay-final.png",
+        "production/playtests/overhaul/boss-final.png",
+        "production/playtests/overhaul/upgrade-final.png",
+        "production/playtests/overhaul/pause-final.png",
+        "production/playtests/overhaul/victory-final.png",
+        "production/playtests/overhaul/defeat-final.png",
+        "production/playtests/vfx/sword-rank1.png",
+        "production/playtests/vfx/sword-rank5.png",
+        "production/playtests/vfx/jade-rank1.png",
+        "production/playtests/vfx/jade-rank5.png",
+        "production/playtests/vfx/qi-rank1.png",
+        "production/playtests/vfx/qi-rank5.png",
+        "production/playtests/frontend/title-phone.png",
+        "production/playtests/frontend/hub-phone.png",
+        "production/playtests/frontend/stages-phone.png",
+        "production/playtests/frontend/loadout-phone.png",
+        "production/playtests/frontend/techniques-phone.png",
+        "production/playtests/frontend/technique-upgrade-phone.png",
+        "production/playtests/frontend/codex-phone.png",
+        "production/playtests/frontend/achievements-phone.png",
+        "production/playtests/frontend/settings-phone.png",
+        "production/playtests/frontend/reset-phone.png",
+        "production/playtests/frontend/results-phone.png",
+        "production/playtests/frontend/results-defeat-phone.png",
+        "production/playtests/mobile-support/combat-phone.png",
+        "production/playtests/mobile-support/boss-phone.png",
+        "production/playtests/mobile-support/breakthrough-phone.png",
+        "production/playtests/mobile-support/pause-phone.png",
+        "production/playtests/mobile-support/landscape-controls.png",
+        "production/playtests/mobile-support/portrait-overlay.png",
+        "production/playtests/responsive/hub-wide.png",
+        "production/playtests/responsive/combat-wide-touch.png",
+        "production/playtests/responsive/reset-wide.png"
+      ]
+    },
+    {
+      "id": "meta_profile_smoke",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_meta_profile.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "audio_smoke",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_audio.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": [
+        "assets/generated/audio/music_title.wav",
+        "assets/generated/audio/music_hub.wav",
+        "assets/generated/audio/music_combat.wav",
+        "assets/generated/audio/music_result.wav"
+      ]
+    },
+    {
+      "id": "cultivation_vfx_smoke",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_cultivation_vfx.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "responsive_layout_test",
+      "argv": ["{godot}", "--headless", "--audio-driver", "Dummy", "--path", "{root}", "res://tests/smoke_responsive_layout.tscn"],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": []
+    },
+    {
+      "id": "web_export",
+      "argv": ["{godot}", "--headless", "--path", "{root}", "--export-release", "Web", "build/web/index.html"],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": [
+        "build/web/index.html",
+        "build/web/index.js",
+        "build/web/index.wasm",
+        "build/web/index.pck"
+      ]
+    },
+    {
+      "id": "web_browser_smoke",
+      "argv": ["npm", "run", "test:web"],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "required_for": ["player_ready", "commercial_release"],
+      "expected_artifacts": [
+        "production/evidence/platforms/web-smoke.json",
+        "production/evidence/platforms/web-title.png",
+        "production/evidence/platforms/web-hub.png",
+        "production/evidence/platforms/web-stages.png",
+        "production/evidence/platforms/web-title-phone.png",
+        "production/evidence/platforms/web-hub-phone.png"
+      ]
+    }
+  ]
+}

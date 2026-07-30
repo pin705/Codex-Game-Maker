@@ -1,0 +1,201 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "ENEMY-002-ta-tu-idle",
+  "kind": "sprite",
+  "action": "idle",
+  "method": "grid",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-002-ta-tu-idle-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-002-ta-tu-idle-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/generated/enemies/ENEMY-002-ta-tu-idle/ENEMY-002-ta-tu-idle.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 40,
+  "fit_scale": 0.94,
+  "frames": [
+    {
+      "index": 0,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 0,
+        "left": 0,
+        "top": 0,
+        "width": 512,
+        "height": 512
+      },
+      "source_bbox": {
+        "left": 144,
+        "top": 56,
+        "right": 421,
+        "bottom": 483,
+        "width": 277,
+        "height": 427
+      },
+      "paste": {
+        "left": 138,
+        "top": 87,
+        "right": 373,
+        "bottom": 448
+      },
+      "scale": 0.8374941995359628,
+      "output_size": {
+        "width": 235,
+        "height": 361
+      }
+    },
+    {
+      "index": 1,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 1,
+        "left": 512,
+        "top": 0,
+        "width": 512,
+        "height": 512
+      },
+      "source_bbox": {
+        "left": 65,
+        "top": 48,
+        "right": 395,
+        "bottom": 486,
+        "width": 330,
+        "height": 438
+      },
+      "paste": {
+        "left": 119,
+        "top": 87,
+        "right": 392,
+        "bottom": 448
+      },
+      "scale": 0.8166515837104072,
+      "output_size": {
+        "width": 273,
+        "height": 361
+      }
+    },
+    {
+      "index": 2,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 2,
+        "left": 1024,
+        "top": 0,
+        "width": 512,
+        "height": 512
+      },
+      "source_bbox": {
+        "left": 28,
+        "top": 122,
+        "right": 366,
+        "bottom": 485,
+        "width": 338,
+        "height": 363
+      },
+      "paste": {
+        "left": 88,
+        "top": 87,
+        "right": 424,
+        "bottom": 448
+      },
+      "scale": 0.9835422343324249,
+      "output_size": {
+        "width": 336,
+        "height": 361
+      }
+    },
+    {
+      "index": 3,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 0,
+        "left": 0,
+        "top": 512,
+        "width": 512,
+        "height": 512
+      },
+      "source_bbox": {
+        "left": 105,
+        "top": 36,
+        "right": 429,
+        "bottom": 447,
+        "width": 324,
+        "height": 411
+      },
+      "paste": {
+        "left": 113,
+        "top": 87,
+        "right": 398,
+        "bottom": 448
+      },
+      "scale": 0.8697831325301204,
+      "output_size": {
+        "width": 285,
+        "height": 361
+      }
+    },
+    {
+      "index": 4,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 1,
+        "left": 512,
+        "top": 512,
+        "width": 512,
+        "height": 512
+      },
+      "source_bbox": {
+        "left": 92,
+        "top": 22,
+        "right": 394,
+        "bottom": 450,
+        "width": 302,
+        "height": 428
+      },
+      "paste": {
+        "left": 128,
+        "top": 87,
+        "right": 384,
+        "bottom": 448
+      },
+      "scale": 0.8355555555555555,
+      "output_size": {
+        "width": 256,
+        "height": 361
+      }
+    },
+    {
+      "index": 5,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 2,
+        "left": 1024,
+        "top": 512,
+        "width": 512,
+        "height": 512
+      },
+      "source_bbox": {
+        "left": 61,
+        "top": 24,
+        "right": 338,
+        "bottom": 450,
+        "width": 277,
+        "height": 426
+      },
+      "paste": {
+        "left": 138,
+        "top": 87,
+        "right": 374,
+        "bottom": 448
+      },
+      "scale": 0.8394418604651163,
+      "output_size": {
+        "width": 236,
+        "height": 361
+      }
+    }
+  ]
+}

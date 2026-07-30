@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "gate": "PASS",
+  "manifest": "design/audio/audio-manifest.json",
+  "manifest_sha256": "589bf22b078dadd247eba130661e5f88c105d4b18a9368c4da28f50228f8388d",
+  "results": [
+    {
+      "id": "music-title",
+      "asset": "assets/generated/audio/music_title.wav",
+      "status": "PASS",
+      "sha256": "5230cf379f087d5e88a973c3d49c9ab6f3691db423516f222b70bdbfb92a184a",
+      "metrics": {
+        "format": "wav",
+        "duration_seconds": 32.0,
+        "sample_rate": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "peak_dbfs": -22.298,
+        "rms_dbfs": -32.475,
+        "loop_seam_normalized": 0.031029
+      }
+    },
+    {
+      "id": "music-hub",
+      "asset": "assets/generated/audio/music_hub.wav",
+      "status": "PASS",
+      "sha256": "96ac82baeeb7167140f0287d43761623a673d059c8a71bf4c4b359e6ad77131a",
+      "metrics": {
+        "format": "wav",
+        "duration_seconds": 32.0,
+        "sample_rate": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "peak_dbfs": -23.242,
+        "rms_dbfs": -33.468,
+        "loop_seam_normalized": 0.022954
+      }
+    },
+    {
+      "id": "music-combat",
+      "asset": "assets/generated/audio/music_combat.wav",
+      "status": "PASS",
+      "sha256": "35c726113c5562943199babedcbefde0fbc3d9cc1fce985806ab425688d967fb",
+      "metrics": {
+        "format": "wav",
+        "duration_seconds": 32.0,
+        "sample_rate": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "peak_dbfs": -20.487,
+        "rms_dbfs": -30.714,
+        "loop_seam_normalized": 0.052848
+      }
+    },
+    {
+      "id": "music-result",
+      "asset": "assets/generated/audio/music_result.wav",
+      "status": "PASS",
+      "sha256": "056663719e0ab9aa6d7e9a63e37a2e3b625b9a76ea0301f8ce788f7454341e38",
+      "metrics": {
+        "format": "wav",
+        "duration_seconds": 32.0,
+        "sample_rate": 22050,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "peak_dbfs": -22.965,
+        "rms_dbfs": -32.589,
+        "loop_seam_normalized": 0.029434
+      }
+    }
+  ],
+  "blockers": []
+}

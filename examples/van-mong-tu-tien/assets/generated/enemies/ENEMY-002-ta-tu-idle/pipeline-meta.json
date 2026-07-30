@@ -1,0 +1,143 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.asset-pipeline.v1",
+  "asset_id": "ENEMY-002-ta-tu-idle",
+  "kind": "sprite",
+  "input": "assets/generated/enemies/ENEMY-002-ta-tu-idle/alpha-source.png",
+  "output_dir": "assets/generated/enemies/ENEMY-002-ta-tu-idle",
+  "raw_size": {
+    "width": 1536,
+    "height": 1024
+  },
+  "grid": {
+    "rows": 2,
+    "cols": 3,
+    "expected_frames": 6,
+    "actual_frames": 6
+  },
+  "frame_size": {
+    "width": 512,
+    "height": 512
+  },
+  "anchor": "feet",
+  "shared_scale": true,
+  "chroma_key": {
+    "background": "#FF00FF",
+    "key_color": "#FF00FF",
+    "key_color_source": "explicit",
+    "tolerance": 1,
+    "softness": 1,
+    "transparent_pixels": 1320817,
+    "semi_transparent_pixels": 32731
+  },
+  "outputs": {
+    "clean_sheet": "assets/generated/enemies/ENEMY-002-ta-tu-idle/raw-sheet-clean.png",
+    "transparent_sheet": "assets/generated/enemies/ENEMY-002-ta-tu-idle/sheet-transparent.png",
+    "frames_dir": "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames",
+    "frames": [
+      "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames/frame-000.png",
+      "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames/frame-001.png",
+      "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames/frame-002.png",
+      "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames/frame-003.png",
+      "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames/frame-004.png",
+      "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames/frame-005.png"
+    ],
+    "gif_preview": "assets/generated/enemies/ENEMY-002-ta-tu-idle/animation.gif",
+    "direction_strips": [],
+    "pipeline_meta": "assets/generated/enemies/ENEMY-002-ta-tu-idle/pipeline-meta.json"
+  },
+  "qa": {
+    "has_alpha": true,
+    "opaque_key_pixels": 0,
+    "opaque_magenta_pixels": 0,
+    "edge_touch_frames": [],
+    "empty_frames": [],
+    "frame_count_ok": true
+  },
+  "frames": [
+    {
+      "index": 0,
+      "bbox": {
+        "left": 140,
+        "top": 96,
+        "right": 370,
+        "bottom": 446,
+        "width": 230,
+        "height": 350
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 1,
+      "bbox": {
+        "left": 121,
+        "top": 99,
+        "right": 389,
+        "bottom": 445,
+        "width": 268,
+        "height": 346
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 2,
+      "bbox": {
+        "left": 101,
+        "top": 96,
+        "right": 420,
+        "bottom": 445,
+        "width": 319,
+        "height": 349
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 3,
+      "bbox": {
+        "left": 123,
+        "top": 90,
+        "right": 395,
+        "bottom": 445,
+        "width": 272,
+        "height": 355
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 4,
+      "bbox": {
+        "left": 135,
+        "top": 97,
+        "right": 381,
+        "bottom": 445,
+        "width": 246,
+        "height": 348
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 5,
+      "bbox": {
+        "left": 140,
+        "top": 97,
+        "right": 372,
+        "bottom": 445,
+        "width": 232,
+        "height": 348
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    }
+  ]
+}

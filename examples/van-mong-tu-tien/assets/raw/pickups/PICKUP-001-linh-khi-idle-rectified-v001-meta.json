@@ -1,0 +1,159 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "PICKUP-001-linh-khi-idle",
+  "kind": "sprite",
+  "action": "idle",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/pickups/PICKUP-001-linh-khi-idle-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/pickups/PICKUP-001-linh-khi-idle-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/PICKUP-001-linh-khi-idle.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 34,
+  "fit_scale": 0.72,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 198,
+        "top": 191,
+        "right": 351,
+        "bottom": 357,
+        "width": 153,
+        "height": 166
+      },
+      "area": 18131,
+      "paste": {
+        "left": 66,
+        "top": 62,
+        "right": 189,
+        "bottom": 194
+      },
+      "scale": 0.7442696629213483,
+      "output_size": {
+        "width": 123,
+        "height": 132
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 680,
+        "top": 170,
+        "right": 840,
+        "bottom": 377,
+        "width": 160,
+        "height": 207
+      },
+      "area": 22783,
+      "paste": {
+        "left": 76,
+        "top": 62,
+        "right": 180,
+        "bottom": 194
+      },
+      "scale": 0.604931506849315,
+      "output_size": {
+        "width": 104,
+        "height": 132
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 1197,
+        "top": 192,
+        "right": 1361,
+        "bottom": 384,
+        "width": 164,
+        "height": 192
+      },
+      "area": 18447,
+      "paste": {
+        "left": 71,
+        "top": 62,
+        "right": 185,
+        "bottom": 194
+      },
+      "scale": 0.6494117647058824,
+      "output_size": {
+        "width": 114,
+        "height": 132
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 165,
+        "top": 637,
+        "right": 375,
+        "bottom": 860,
+        "width": 210,
+        "height": 223
+      },
+      "area": 26031,
+      "paste": {
+        "left": 65,
+        "top": 62,
+        "right": 190,
+        "bottom": 194
+      },
+      "scale": 0.5637446808510638,
+      "output_size": {
+        "width": 125,
+        "height": 132
+      }
+    },
+    {
+      "index": 4,
+      "method": "components",
+      "source_bbox": {
+        "left": 665,
+        "top": 640,
+        "right": 866,
+        "bottom": 853,
+        "width": 201,
+        "height": 213
+      },
+      "area": 25289,
+      "paste": {
+        "left": 65,
+        "top": 62,
+        "right": 190,
+        "bottom": 194
+      },
+      "scale": 0.5888,
+      "output_size": {
+        "width": 125,
+        "height": 132
+      }
+    },
+    {
+      "index": 5,
+      "method": "components",
+      "source_bbox": {
+        "left": 1182,
+        "top": 671,
+        "right": 1335,
+        "bottom": 837,
+        "width": 153,
+        "height": 166
+      },
+      "area": 18232,
+      "paste": {
+        "left": 66,
+        "top": 62,
+        "right": 189,
+        "bottom": 194
+      },
+      "scale": 0.7442696629213483,
+      "output_size": {
+        "width": 123,
+        "height": 132
+      }
+    }
+  ]
+}

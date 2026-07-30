@@ -1,0 +1,200 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "HERO-001-idle-side",
+  "kind": "sprite",
+  "action": "idle_side",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-idle-side-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/HERO-001-idle-side.harness.json",
+  "gate": "BLOCKED",
+  "blockers": [
+    {
+      "code": "harness.foot_line_drift",
+      "message": "Frame bottoms drift 35.0px from foot line y=430, limit 18px.",
+      "foot_drift": 35.0
+    }
+  ],
+  "warnings": [],
+  "evidence": [],
+  "frames": [
+    {
+      "index": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": {
+        "left": 166,
+        "top": 117,
+        "right": 346,
+        "bottom": 439,
+        "width": 180,
+        "height": 322
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 31171,
+          "bbox": {
+            "left": 166,
+            "top": 117,
+            "right": 346,
+            "bottom": 439
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "row": 0,
+      "col": 1,
+      "bbox": {
+        "left": 160,
+        "top": 118,
+        "right": 352,
+        "bottom": 439,
+        "width": 192,
+        "height": 321
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 31720,
+          "bbox": {
+            "left": 160,
+            "top": 118,
+            "right": 352,
+            "bottom": 439
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "row": 0,
+      "col": 2,
+      "bbox": {
+        "left": 160,
+        "top": 118,
+        "right": 353,
+        "bottom": 438,
+        "width": 193,
+        "height": 320
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 31485,
+          "bbox": {
+            "left": 160,
+            "top": 118,
+            "right": 353,
+            "bottom": 438
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "row": 1,
+      "col": 0,
+      "bbox": {
+        "left": 232,
+        "top": 117,
+        "right": 391,
+        "bottom": 395,
+        "width": 159,
+        "height": 278
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 23412,
+          "bbox": {
+            "left": 232,
+            "top": 117,
+            "right": 389,
+            "bottom": 395
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "row": 1,
+      "col": 1,
+      "bbox": {
+        "left": 167,
+        "top": 117,
+        "right": 344,
+        "bottom": 439,
+        "width": 177,
+        "height": 322
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 30986,
+          "bbox": {
+            "left": 167,
+            "top": 117,
+            "right": 340,
+            "bottom": 439
+          }
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "row": 1,
+      "col": 2,
+      "bbox": {
+        "left": 164,
+        "top": 118,
+        "right": 347,
+        "bottom": 438,
+        "width": 183,
+        "height": 320
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 31542,
+          "bbox": {
+            "left": 164,
+            "top": 118,
+            "right": 347,
+            "bottom": 438
+          }
+        }
+      ]
+    }
+  ]
+}

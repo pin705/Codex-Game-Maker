@@ -1,0 +1,215 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "PICKUP-001-linh-khi-idle",
+  "kind": "sprite",
+  "action": "idle",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/pickups/PICKUP-001-linh-khi-idle-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/PICKUP-001-linh-khi-idle.harness.json",
+  "gate": "PASS_WITH_WARNINGS",
+  "blockers": [],
+  "warnings": [
+    {
+      "code": "harness.detached_components",
+      "message": "Cell 2 has 2 separated opaque components. Review if these are intentional.",
+      "frame": 2
+    }
+  ],
+  "evidence": [
+    {
+      "code": "harness.geometry.ok",
+      "message": "Canvas, grid, safe zones, edge guards, and drift checks passed.",
+      "path": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/pickups/PICKUP-001-linh-khi-idle-rectified-v001.png"
+    }
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": {
+        "left": 70,
+        "top": 66,
+        "right": 184,
+        "bottom": 189,
+        "width": 114,
+        "height": 123
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 10077,
+          "bbox": {
+            "left": 70,
+            "top": 66,
+            "right": 184,
+            "bottom": 188
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "row": 0,
+      "col": 1,
+      "bbox": {
+        "left": 80,
+        "top": 65,
+        "right": 177,
+        "bottom": 191,
+        "width": 97,
+        "height": 126
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 8389,
+          "bbox": {
+            "left": 80,
+            "top": 65,
+            "right": 177,
+            "bottom": 191
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "row": 0,
+      "col": 2,
+      "bbox": {
+        "left": 71,
+        "top": 62,
+        "right": 181,
+        "bottom": 190,
+        "width": 110,
+        "height": 128
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 7814,
+          "bbox": {
+            "left": 75,
+            "top": 66,
+            "right": 181,
+            "bottom": 190
+          }
+        },
+        {
+          "area": 900,
+          "bbox": {
+            "left": 71,
+            "top": 62,
+            "right": 127,
+            "bottom": 91
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "row": 1,
+      "col": 0,
+      "bbox": {
+        "left": 68,
+        "top": 65,
+        "right": 187,
+        "bottom": 191,
+        "width": 119,
+        "height": 126
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 8402,
+          "bbox": {
+            "left": 68,
+            "top": 65,
+            "right": 187,
+            "bottom": 191
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "row": 1,
+      "col": 1,
+      "bbox": {
+        "left": 67,
+        "top": 66,
+        "right": 187,
+        "bottom": 190,
+        "width": 120,
+        "height": 124
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 8859,
+          "bbox": {
+            "left": 67,
+            "top": 66,
+            "right": 187,
+            "bottom": 190
+          }
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "row": 1,
+      "col": 2,
+      "bbox": {
+        "left": 70,
+        "top": 66,
+        "right": 184,
+        "bottom": 189,
+        "width": 114,
+        "height": 123
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 10131,
+          "bbox": {
+            "left": 70,
+            "top": 66,
+            "right": 184,
+            "bottom": 189
+          }
+        }
+      ]
+    }
+  ]
+}

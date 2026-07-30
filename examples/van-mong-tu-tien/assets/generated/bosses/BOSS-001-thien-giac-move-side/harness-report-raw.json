@@ -1,0 +1,212 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "BOSS-001-thien-giac-move-side",
+  "kind": "sprite",
+  "action": "move",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/bosses/BOSS-001-thien-giac-move-side-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/BOSS-001-thien-giac-move-side.harness.json",
+  "gate": "BLOCKED",
+  "blockers": [
+    {
+      "code": "harness.safe_zone.violation",
+      "message": "Cell 0 exits the safe zone on: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 0
+    },
+    {
+      "code": "harness.cell_edge.touch",
+      "message": "Cell 0 has opaque pixels inside the 24px edge guard: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 0
+    },
+    {
+      "code": "harness.safe_zone.violation",
+      "message": "Cell 1 exits the safe zone on: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 1
+    },
+    {
+      "code": "harness.cell_edge.touch",
+      "message": "Cell 1 has opaque pixels inside the 24px edge guard: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 1
+    },
+    {
+      "code": "harness.safe_zone.violation",
+      "message": "Cell 2 exits the safe zone on: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 2
+    },
+    {
+      "code": "harness.cell_edge.touch",
+      "message": "Cell 2 has opaque pixels inside the 24px edge guard: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 2
+    },
+    {
+      "code": "harness.safe_zone.violation",
+      "message": "Cell 3 exits the safe zone on: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 3
+    },
+    {
+      "code": "harness.cell_edge.touch",
+      "message": "Cell 3 has opaque pixels inside the 24px edge guard: top, bottom.",
+      "sides": [
+        "top",
+        "bottom"
+      ],
+      "frame": 3
+    },
+    {
+      "code": "harness.foot_line_drift",
+      "message": "Frame bottoms drift 68.0px from foot line y=430, limit 18px.",
+      "foot_drift": 68.0
+    }
+  ],
+  "warnings": [],
+  "evidence": [],
+  "frames": [
+    {
+      "index": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": {
+        "left": 177,
+        "top": 8,
+        "right": 661,
+        "bottom": 498,
+        "width": 484,
+        "height": 490
+      },
+      "edge_counts": {
+        "top": 151,
+        "bottom": 1036,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 133917,
+          "bbox": {
+            "left": 177,
+            "top": 8,
+            "right": 661,
+            "bottom": 498
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "row": 0,
+      "col": 1,
+      "bbox": {
+        "left": 157,
+        "top": 6,
+        "right": 646,
+        "bottom": 498,
+        "width": 489,
+        "height": 492
+      },
+      "edge_counts": {
+        "top": 197,
+        "bottom": 615,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 136996,
+          "bbox": {
+            "left": 157,
+            "top": 6,
+            "right": 646,
+            "bottom": 498
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "row": 1,
+      "col": 0,
+      "bbox": {
+        "left": 185,
+        "top": 11,
+        "right": 659,
+        "bottom": 490,
+        "width": 474,
+        "height": 479
+      },
+      "edge_counts": {
+        "top": 121,
+        "bottom": 17,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 131586,
+          "bbox": {
+            "left": 185,
+            "top": 11,
+            "right": 659,
+            "bottom": 490
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "row": 1,
+      "col": 1,
+      "bbox": {
+        "left": 157,
+        "top": 6,
+        "right": 636,
+        "bottom": 495,
+        "width": 479,
+        "height": 489
+      },
+      "edge_counts": {
+        "top": 194,
+        "bottom": 508,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 132857,
+          "bbox": {
+            "left": 157,
+            "top": 6,
+            "right": 636,
+            "bottom": 495
+          }
+        }
+      ]
+    }
+  ]
+}

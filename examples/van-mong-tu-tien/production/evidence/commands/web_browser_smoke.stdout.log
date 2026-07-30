@@ -1,0 +1,11 @@
+
+> van-mong-tu-tien-web-qa@0.0.0 test:web
+> playwright test tests/web_smoke.spec.js --browser chromium --workers 1 --reporter line --timeout 60000
+
+
+Running 1 test using 1 worker
+
+
+
+[1/1] [chromium] › tests/web_smoke.spec.js:31:2 › Vân Mộng Tu Tiên served Web smoke › boots, accepts keyboard/pointer input, transitions, and resizes to phone landscape
+  1 passed (21.9s)

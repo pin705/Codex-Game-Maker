@@ -1,0 +1,111 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "BOSS-001-thien-giac-move-side",
+  "kind": "sprite",
+  "action": "move",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/bosses/BOSS-001-thien-giac-move-side-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/bosses/BOSS-001-thien-giac-move-side-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/BOSS-001-thien-giac-move-side.harness.json",
+  "key_color": "#00FF00",
+  "tolerance": 34,
+  "fit_scale": 0.72,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 177,
+        "top": 8,
+        "right": 661,
+        "bottom": 498,
+        "width": 484,
+        "height": 490
+      },
+      "area": 132337,
+      "paste": {
+        "left": 253,
+        "top": 175,
+        "right": 515,
+        "bottom": 440
+      },
+      "scale": 0.5236363636363637,
+      "output_size": {
+        "width": 262,
+        "height": 265
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 925,
+        "top": 7,
+        "right": 1414,
+        "bottom": 498,
+        "width": 489,
+        "height": 491
+      },
+      "area": 135391,
+      "paste": {
+        "left": 252,
+        "top": 175,
+        "right": 516,
+        "bottom": 440
+      },
+      "scale": 0.5236363636363637,
+      "output_size": {
+        "width": 264,
+        "height": 265
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 185,
+        "top": 524,
+        "right": 659,
+        "bottom": 1002,
+        "width": 474,
+        "height": 478
+      },
+      "area": 130098,
+      "paste": {
+        "left": 252,
+        "top": 175,
+        "right": 515,
+        "bottom": 440
+      },
+      "scale": 0.5363562753036437,
+      "output_size": {
+        "width": 263,
+        "height": 265
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 925,
+        "top": 518,
+        "right": 1404,
+        "bottom": 1007,
+        "width": 479,
+        "height": 489
+      },
+      "area": 131340,
+      "paste": {
+        "left": 254,
+        "top": 175,
+        "right": 514,
+        "bottom": 440
+      },
+      "scale": 0.5246732673267327,
+      "output_size": {
+        "width": 260,
+        "height": 265
+      }
+    }
+  ]
+}

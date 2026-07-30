@@ -1,0 +1,263 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "ENEMY-001-mac-lang-move-side",
+  "kind": "sprite",
+  "action": "move",
+  "method": "grid",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-mac-lang-move-side-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-mac-lang-move-side-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/ENEMY-001-mac-lang-move-side.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 24,
+  "fit_scale": 1.0,
+  "frames": [
+    {
+      "index": 0,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 0,
+        "left": 0,
+        "top": 0,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 31,
+        "top": 102,
+        "right": 409,
+        "bottom": 385,
+        "width": 378,
+        "height": 283
+      },
+      "paste": {
+        "left": 48,
+        "top": 120,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7539267015706806,
+      "output_size": {
+        "width": 288,
+        "height": 216
+      }
+    },
+    {
+      "index": 1,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 1,
+        "left": 443,
+        "top": 0,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 22,
+        "top": 99,
+        "right": 401,
+        "bottom": 386,
+        "width": 379,
+        "height": 287
+      },
+      "paste": {
+        "left": 48,
+        "top": 117,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7519582245430809,
+      "output_size": {
+        "width": 288,
+        "height": 219
+      }
+    },
+    {
+      "index": 2,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 2,
+        "left": 886,
+        "top": 0,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 20,
+        "top": 106,
+        "right": 397,
+        "bottom": 378,
+        "width": 377,
+        "height": 272
+      },
+      "paste": {
+        "left": 48,
+        "top": 127,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7559055118110236,
+      "output_size": {
+        "width": 288,
+        "height": 209
+      }
+    },
+    {
+      "index": 3,
+      "method": "grid",
+      "source_cell": {
+        "row": 0,
+        "col": 3,
+        "left": 1329,
+        "top": 0,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 35,
+        "top": 117,
+        "right": 403,
+        "bottom": 356,
+        "width": 368,
+        "height": 239
+      },
+      "paste": {
+        "left": 48,
+        "top": 148,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7741935483870968,
+      "output_size": {
+        "width": 288,
+        "height": 188
+      }
+    },
+    {
+      "index": 4,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 0,
+        "left": 0,
+        "top": 443,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 29,
+        "top": 83,
+        "right": 409,
+        "bottom": 366,
+        "width": 380,
+        "height": 283
+      },
+      "paste": {
+        "left": 48,
+        "top": 121,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.75,
+      "output_size": {
+        "width": 288,
+        "height": 215
+      }
+    },
+    {
+      "index": 5,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 1,
+        "left": 443,
+        "top": 443,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 34,
+        "top": 84,
+        "right": 402,
+        "bottom": 349,
+        "width": 368,
+        "height": 265
+      },
+      "paste": {
+        "left": 48,
+        "top": 128,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7741935483870968,
+      "output_size": {
+        "width": 288,
+        "height": 208
+      }
+    },
+    {
+      "index": 6,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 2,
+        "left": 886,
+        "top": 443,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 32,
+        "top": 94,
+        "right": 398,
+        "bottom": 372,
+        "width": 366,
+        "height": 278
+      },
+      "paste": {
+        "left": 48,
+        "top": 116,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7783783783783784,
+      "output_size": {
+        "width": 288,
+        "height": 220
+      }
+    },
+    {
+      "index": 7,
+      "method": "grid",
+      "source_cell": {
+        "row": 1,
+        "col": 3,
+        "left": 1329,
+        "top": 443,
+        "width": 443,
+        "height": 443
+      },
+      "source_bbox": {
+        "left": 33,
+        "top": 91,
+        "right": 411,
+        "bottom": 370,
+        "width": 378,
+        "height": 279
+      },
+      "paste": {
+        "left": 48,
+        "top": 123,
+        "right": 336,
+        "bottom": 336
+      },
+      "scale": 0.7539267015706806,
+      "output_size": {
+        "width": 288,
+        "height": 213
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+schema: "codex-game-maker.action-bundle.v1"
+asset_id: HERO-001
+name: "Kiếm tu Vân Mộng"
+status: accepted_native_qa_passed
+target_engine: "Godot 4.4"
+view_profile: top_down_survivor
+direction_model: side_only_last_horizontal
+identity_contract: >-
+  Original young sword cultivator in a short split ivory travel coat over a
+  blue-black inner layer, visible separated dark boots, small jade waist
+  talisman, tied dark hair and one restrained cinnabar knot. No held weapon,
+  aura, trail, cape, long robe or readable text in locomotion frames.
+scene_scale:
+  viewport: "1600x900 logical; 1280x720 presentation"
+  target_in_game_height_px: 76
+  target_collision_radius_px: 25
+  normalized_frame_canvas: "512x512 per frame"
+runtime_state_machine:
+  visual_node_count: 1
+  default_state: idle_side
+  movement_state: move_side
+  horizontal_facing:
+    right: "flip_h=false"
+    left: "flip_h=true"
+  vertical_movement: preserve_last_horizontal_facing
+  moving_condition: "movement input is active"
+  stopped_condition: "movement input is clear"
+  required_smoke_sequence:
+    - instantiate_player
+    - assert_single_visual_node
+    - assert_idle_side_exists
+    - assert_move_side_exists
+    - assert_idle_and_move_same_canvas
+    - assert_initial_idle_side
+    - simulate_movement_input
+    - assert_move_side
+    - clear_movement_input
+    - assert_idle_side
+    - assert_visual_scale_and_foot_pivot_stable
+actions:
+  - action: idle_side
+    asset_id: HERO-001-idle-side
+    rows: 2
+    cols: 3
+    expected_frames: 6
+    fps: 6
+    anchor: feet
+    loop: true
+    key_color: "#FF00FF"
+    canvas: "1536x1024"
+    cell_size: "512x512"
+    foot_line_y: 440
+    harness_spec: "design/assets/harnesses/HERO-001-idle-side.harness.json"
+    prompt_contract: "design/assets/harnesses/HERO-001-idle-side.prompt.md"
+    raw_target: "assets/raw/characters/HERO-001-idle-side-v001.png"
+    processed_dir: "assets/generated/characters/HERO-001-idle-side"
+  - action: move_side
+    asset_id: HERO-001-move-side
+    rows: 2
+    cols: 4
+    expected_frames: 8
+    fps: 7
+    anchor: feet
+    loop: true
+    key_color: "#FF00FF"
+    canvas: "2048x1024"
+    cell_size: "512x512"
+    foot_line_y: 440
+    harness_spec: "design/assets/harnesses/HERO-001-move-side.harness.json"
+    prompt_contract: "design/assets/harnesses/HERO-001-move-side.prompt.md"
+    raw_target: "assets/raw/characters/HERO-001-move-side-v001.png"
+    processed_dir: "assets/generated/characters/HERO-001-move-side"
+cross_action_acceptance:
+  same_identity: true
+  same_costume_and_palette: true
+  same_target_height: true
+  same_normalized_canvas: true
+  same_foot_line: true
+  same_pivot: true
+  max_transparent_bound_height_drift_ratio: 0.06
+  blocker_examples:
+    - scale_pop_between_idle_and_move
+    - hidden_or_duplicated_feet
+    - long_robe_or_prop_blocks_contact_pose
+    - whole_body_wobble_used_as_locomotion
+    - vertical_input_selects_unapproved_north_or_south_art
+qa:
+  harness_required: true
+  gif_preview_required: true
+  runtime_scale_capture_required: true
+  godot_smoke_test_required: true
+  first_pick_requires_human_review: true

@@ -1,0 +1,59 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "UIKIT-001-kim-ngoc-components",
+  "kind": "prop",
+  "action": "components",
+  "view_profile": "neutral",
+  "target_engine": "Godot 4.4",
+  "canvas": { "width": 2048, "height": 1536 },
+  "grid": { "rows": 3, "cols": 4, "cell_width": 512, "cell_height": 512 },
+  "safe_margin": 56,
+  "safe_zone": { "left": 56, "top": 56, "right": 456, "bottom": 456 },
+  "edge_guard_px": 20,
+  "key_color": "#FF00FF",
+  "foot_line_y": 0,
+  "acceptance": {
+    "alpha_threshold": 8,
+    "key_tolerance": 24,
+    "min_component_area": 180,
+    "max_scale_drift_ratio": 0.95,
+    "max_foot_drift_px": 0,
+    "min_lower_body_transition_diff": 0.0,
+    "max_weak_motion_transitions": 12,
+    "allow_empty_cells": false,
+    "allow_horizontal_edge_touch": false,
+    "allow_vertical_edge_touch": false,
+    "block_safe_zone_violations": true,
+    "block_neighbor_fragments": true
+  },
+  "runtime_contract": {
+    "pivot": "center",
+    "frame_order": "left-to-right, top-to-bottom",
+    "loop": false,
+    "view_profile": "neutral",
+    "runtime_state": "source_component_pack",
+    "slot_map": [
+      "combat plaque frame",
+      "modal frame",
+      "meter underlay",
+      "meter overlay",
+      "upgrade card frame",
+      "selected card rim and seal",
+      "realm seal medallion",
+      "skill medallion",
+      "flying sword icon",
+      "sword-ring icon",
+      "qi pearl icon",
+      "vitality knot icon"
+    ],
+    "nine_patch_slots": [0, 1, 4],
+    "texture_progress_slots": [2, 3],
+    "icon_slots": [6, 7, 8, 9, 10, 11]
+  },
+  "outputs": {
+    "harness_guide": "design/assets/harnesses/UIKIT-001-kim-ngoc-components.harness.png",
+    "harness_spec": "design/assets/harnesses/UIKIT-001-kim-ngoc-components.harness.json",
+    "prompt_contract": "design/assets/harnesses/UIKIT-001-kim-ngoc-components.prompt.md",
+    "guide_status": "planned_not_rendered"
+  }
+}

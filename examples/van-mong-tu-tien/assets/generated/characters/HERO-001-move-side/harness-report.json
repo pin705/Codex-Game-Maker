@@ -1,0 +1,260 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "HERO-001-move-side",
+  "kind": "sprite",
+  "action": "move_side",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-move-side-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/HERO-001-move-side.harness.json",
+  "gate": "PASS",
+  "blockers": [],
+  "warnings": [],
+  "evidence": [
+    {
+      "code": "harness.geometry.ok",
+      "message": "Canvas, grid, safe zones, edge guards, and drift checks passed.",
+      "path": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-move-side-rectified-v001.png"
+    }
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": {
+        "left": 99,
+        "top": 118,
+        "right": 285,
+        "bottom": 451,
+        "width": 186,
+        "height": 333
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 35217,
+          "bbox": {
+            "left": 99,
+            "top": 118,
+            "right": 285,
+            "bottom": 451
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "row": 0,
+      "col": 1,
+      "bbox": {
+        "left": 87,
+        "top": 118,
+        "right": 296,
+        "bottom": 451,
+        "width": 209,
+        "height": 333
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 35285,
+          "bbox": {
+            "left": 87,
+            "top": 118,
+            "right": 296,
+            "bottom": 451
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "row": 0,
+      "col": 2,
+      "bbox": {
+        "left": 92,
+        "top": 118,
+        "right": 291,
+        "bottom": 451,
+        "width": 199,
+        "height": 333
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 35367,
+          "bbox": {
+            "left": 92,
+            "top": 118,
+            "right": 291,
+            "bottom": 451
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "row": 0,
+      "col": 3,
+      "bbox": {
+        "left": 98,
+        "top": 118,
+        "right": 286,
+        "bottom": 451,
+        "width": 188,
+        "height": 333
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 34804,
+          "bbox": {
+            "left": 98,
+            "top": 118,
+            "right": 286,
+            "bottom": 451
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "row": 1,
+      "col": 0,
+      "bbox": {
+        "left": 95,
+        "top": 117,
+        "right": 291,
+        "bottom": 451,
+        "width": 196,
+        "height": 334
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 33923,
+          "bbox": {
+            "left": 95,
+            "top": 117,
+            "right": 289,
+            "bottom": 451
+          }
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "row": 1,
+      "col": 1,
+      "bbox": {
+        "left": 83,
+        "top": 118,
+        "right": 301,
+        "bottom": 452,
+        "width": 218,
+        "height": 334
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 34835,
+          "bbox": {
+            "left": 83,
+            "top": 118,
+            "right": 300,
+            "bottom": 452
+          }
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "row": 1,
+      "col": 2,
+      "bbox": {
+        "left": 94,
+        "top": 118,
+        "right": 290,
+        "bottom": 451,
+        "width": 196,
+        "height": 333
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 34758,
+          "bbox": {
+            "left": 94,
+            "top": 118,
+            "right": 286,
+            "bottom": 451
+          }
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "row": 1,
+      "col": 3,
+      "bbox": {
+        "left": 92,
+        "top": 117,
+        "right": 290,
+        "bottom": 451,
+        "width": 198,
+        "height": 334
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 35306,
+          "bbox": {
+            "left": 92,
+            "top": 117,
+            "right": 290,
+            "bottom": 451
+          }
+        }
+      ]
+    }
+  ]
+}

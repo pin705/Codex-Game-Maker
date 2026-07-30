@@ -1,0 +1,47 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "HERO-001-idle-side",
+  "kind": "sprite",
+  "action": "idle",
+  "view_profile": "top_down_survivor",
+  "target_engine": "Godot 4.4",
+  "canvas": { "width": 1536, "height": 1024 },
+  "grid": { "rows": 2, "cols": 3, "cell_width": 512, "cell_height": 512 },
+  "safe_margin": 56,
+  "safe_zone": { "left": 56, "top": 56, "right": 456, "bottom": 456 },
+  "edge_guard_px": 18,
+  "key_color": "#FF00FF",
+  "foot_line_y": 440,
+  "acceptance": {
+    "alpha_threshold": 8,
+    "key_tolerance": 24,
+    "min_component_area": 262,
+    "max_scale_drift_ratio": 0.08,
+    "max_foot_drift_px": 10,
+    "min_lower_body_transition_diff": 0.0,
+    "max_weak_motion_transitions": 6,
+    "allow_empty_cells": false,
+    "allow_horizontal_edge_touch": false,
+    "allow_vertical_edge_touch": false,
+    "block_safe_zone_violations": true,
+    "block_neighbor_fragments": true
+  },
+  "runtime_contract": {
+    "pivot": "feet",
+    "target_in_game_height_px": 76,
+    "normalized_frame_canvas": "512x512",
+    "frame_order": "left-to-right, top-to-bottom",
+    "loop": true,
+    "fps": 6,
+    "view_profile": "top_down_survivor",
+    "direction_model": "side_only_last_horizontal",
+    "runtime_state": "idle_side",
+    "motion_phases": ["neutral", "breath in", "blink hold", "breath out", "talisman settle", "loop bridge"]
+  },
+  "outputs": {
+    "harness_guide": "design/assets/harnesses/HERO-001-idle-side.harness.png",
+    "harness_spec": "design/assets/harnesses/HERO-001-idle-side.harness.json",
+    "prompt_contract": "design/assets/harnesses/HERO-001-idle-side.prompt.md",
+    "guide_status": "planned_not_rendered"
+  }
+}

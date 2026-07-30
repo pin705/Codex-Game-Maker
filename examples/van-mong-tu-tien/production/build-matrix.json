@@ -1,0 +1,40 @@
+{
+  "status": "verified",
+  "targets": [
+    {
+      "id": "web",
+      "platform": "web",
+      "store": "direct",
+      "status": "verified",
+      "artifact": "build/web/index.html",
+      "sha256": "5b175263138c499c41d3139f1c14241b4b25dced00bb9de0c279cf1ecdf32521",
+      "bundle": [
+        {"path": "build/web/index.html", "sha256": "5b175263138c499c41d3139f1c14241b4b25dced00bb9de0c279cf1ecdf32521", "bytes": 5453},
+        {"path": "build/web/index.js", "sha256": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981", "bytes": 315759},
+        {"path": "build/web/index.wasm", "sha256": "cca8bc7c462d348aaa3f318aecf3281d99bf219e182256412711b24f0d086d80", "bytes": 37695054},
+        {"path": "build/web/index.pck", "sha256": "f7fef11e23de434112cbb769a02e5d9dee89691acfb025897fc7087298477fe0", "bytes": 17992588}
+      ],
+      "build_command_id": "web_export",
+      "smoke_command_id": "web_browser_smoke",
+      "official_requirements_source": "https://docs.godotengine.org/en/4.6/tutorials/export/exporting_for_web.html",
+      "requirements_verified_on": "2026-07-29",
+      "devices": [
+        "Chromium 1.62 headless, 1600x900",
+        "Chromium 1.62 headless, 844x390 landscape",
+        "Codex In-app Browser, desktop visual/input smoke"
+      ],
+      "evidence": [
+        "production/evidence/platforms/export.log",
+        "production/evidence/platforms/web-smoke.json",
+        "production/evidence/platforms/web-title.png",
+        "production/evidence/platforms/web-hub.png",
+        "production/evidence/platforms/web-stages.png",
+        "production/evidence/platforms/web-title-phone.png",
+        "production/evidence/platforms/web-hub-phone.png",
+        "production/evidence/platforms/web-browser-review.md"
+      ],
+      "signing": {"required": false, "status": "not_applicable", "evidence": []},
+      "store_review": {"required": false, "status": "not_applicable", "evidence": []}
+    }
+  ]
+}

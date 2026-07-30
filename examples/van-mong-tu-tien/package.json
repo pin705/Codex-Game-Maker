@@ -1,0 +1,11 @@
+{
+  "name": "van-mong-tu-tien-web-qa",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "test:web": "playwright test tests/web_smoke.spec.js --browser chromium --workers 1 --reporter line --timeout 60000"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.0"
+  }
+}

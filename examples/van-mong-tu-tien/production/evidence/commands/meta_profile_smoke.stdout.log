@@ -1,0 +1,43 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+PASS: defaults reset
+PASS: new profile has starter currency
+PASS: first stage starts unlocked
+PASS: second stage starts locked
+PASS: locked stage cannot be selected
+PASS: discipline selection succeeds
+PASS: first result is recorded
+PASS: first victory is a first clear
+PASS: global counters update once
+PASS: Vân Mộng victory unlocks Huyết Vân
+PASS: stage result discovers bestiary
+PASS: run achievement unlocks
+PASS: fast victory achievement unlocks
+PASS: unlocked second stage can be selected
+PASS: second stage becomes current selection
+PASS: selected stage result is recorded without an explicit id
+PASS: Huyết Vân victory unlocks Thiên Môn
+PASS: per-stage record persists
+PASS: upgrade purchase succeeds
+PASS: upgrade rank increments
+PASS: stage modifier is composed
+PASS: discipline modifier is composed
+PASS: permanent technique modifier is composed
+PASS: setting accepts update
+PASS: volume is clamped
+PASS: profile saves as JSON
+PASS: profile loads from JSON
+PASS: loaded counters match
+PASS: loaded selection matches
+PASS: loaded technique rank matches
+PASS: legacy profile migrates
+PASS: legacy aliases migrate
+PASS: legacy discipline migrates
+PASS: legacy rank clamps to max
+PASS: legacy setting sanitizes
+PASS: unknown content is discarded
+PASS: corrupt profile recovers to defaults
+PASS: corrupt recovery is observable
+PASS: corrupt source is backed up
+PASS: corrupt recovery remains playable
+META PROFILE RESULT: PASS

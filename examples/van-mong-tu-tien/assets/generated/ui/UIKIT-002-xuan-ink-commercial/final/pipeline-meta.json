@@ -1,0 +1,188 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.asset-pipeline.v1",
+  "asset_id": "UIKIT-002-xuan-ink-commercial",
+  "kind": "prop_pack",
+  "input": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/alpha-source.png",
+  "output_dir": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final",
+  "raw_size": {
+    "width": 1254,
+    "height": 1254
+  },
+  "grid": {
+    "rows": 3,
+    "cols": 3,
+    "expected_props": 9,
+    "actual_props": 9
+  },
+  "chroma_key": {
+    "background": "#FF00FF",
+    "key_color": "#FF00FF",
+    "key_color_source": "explicit",
+    "tolerance": 12,
+    "softness": 8,
+    "transparent_pixels": 892892,
+    "semi_transparent_pixels": 12611
+  },
+  "outputs": {
+    "clean_pack": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/prop-pack-clean.png",
+    "transparent_pack": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/prop-pack-transparent.png",
+    "props_dir": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props",
+    "props": [
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-00.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-01.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-02.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-03.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-04.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-05.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-06.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-07.png",
+      "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props/UIKIT-002-xuan-ink-commercial-prop-08.png"
+    ],
+    "props_manifest": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/props-manifest.json",
+    "pipeline_meta": "examples/van-mong-tu-tien/assets/generated/ui/UIKIT-002-xuan-ink-commercial/final/pipeline-meta.json"
+  },
+  "qa": {
+    "has_alpha": true,
+    "opaque_key_pixels": 0,
+    "opaque_magenta_pixels": 0,
+    "edge_touch_frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "empty_frames": [],
+    "prop_count_ok": true
+  },
+  "props": [
+    {
+      "index": 0,
+      "bbox": {
+        "left": 50,
+        "top": 88,
+        "right": 418,
+        "bottom": 418,
+        "width": 368,
+        "height": 330
+      },
+      "scale": 1.0,
+      "edge_touch": true,
+      "empty": false
+    },
+    {
+      "index": 1,
+      "bbox": {
+        "left": 0,
+        "top": 104,
+        "right": 418,
+        "bottom": 418,
+        "width": 418,
+        "height": 314
+      },
+      "scale": 0.8995215311004785,
+      "edge_touch": true,
+      "empty": false
+    },
+    {
+      "index": 2,
+      "bbox": {
+        "left": 0,
+        "top": 85,
+        "right": 377,
+        "bottom": 418,
+        "width": 377,
+        "height": 333
+      },
+      "scale": 0.9973474801061007,
+      "edge_touch": true,
+      "empty": false
+    },
+    {
+      "index": 3,
+      "bbox": {
+        "left": 44,
+        "top": 0,
+        "right": 418,
+        "bottom": 389,
+        "width": 374,
+        "height": 389
+      },
+      "scale": 0.9665809768637532,
+      "edge_touch": true,
+      "empty": false
+    },
+    {
+      "index": 4,
+      "bbox": {
+        "left": 0,
+        "top": 0,
+        "right": 418,
+        "bottom": 384,
+        "width": 418,
+        "height": 384
+      },
+      "scale": 0.8995215311004785,
+      "edge_touch": true,
+      "empty": false
+    },
+    {
+      "index": 5,
+      "bbox": {
+        "left": 0,
+        "top": 0,
+        "right": 386,
+        "bottom": 367,
+        "width": 386,
+        "height": 367
+      },
+      "scale": 0.9740932642487047,
+      "edge_touch": true,
+      "empty": false
+    },
+    {
+      "index": 6,
+      "bbox": {
+        "left": 73,
+        "top": 44,
+        "right": 352,
+        "bottom": 327,
+        "width": 279,
+        "height": 283
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 7,
+      "bbox": {
+        "left": 69,
+        "top": 43,
+        "right": 346,
+        "bottom": 330,
+        "width": 277,
+        "height": 287
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 8,
+      "bbox": {
+        "left": 54,
+        "top": 45,
+        "right": 331,
+        "bottom": 329,
+        "width": 277,
+        "height": 284
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "FX-001-kiem-an-impact",
+  "kind": "fx",
+  "action": "impact",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/fx/FX-001-kiem-an-impact-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/fx/FX-001-kiem-an-impact-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/FX-001-kiem-an-impact.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 34,
+  "fit_scale": 0.72,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 167,
+        "top": 179,
+        "right": 286,
+        "bottom": 273,
+        "width": 119,
+        "height": 94
+      },
+      "area": 3164,
+      "paste": {
+        "left": 82,
+        "top": 103,
+        "right": 301,
+        "bottom": 280
+      },
+      "scale": 1.6708396946564883,
+      "output_size": {
+        "width": 219,
+        "height": 177
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 516,
+        "top": 116,
+        "right": 813,
+        "bottom": 346,
+        "width": 297,
+        "height": 230
+      },
+      "area": 11659,
+      "paste": {
+        "left": 82,
+        "top": 106,
+        "right": 301,
+        "bottom": 277
+      },
+      "scale": 0.7083495145631068,
+      "output_size": {
+        "width": 219,
+        "height": 171
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 946,
+        "top": 82,
+        "right": 1271,
+        "bottom": 373,
+        "width": 325,
+        "height": 291
+      },
+      "area": 41983,
+      "paste": {
+        "left": 82,
+        "top": 93,
+        "right": 301,
+        "bottom": 290
+      },
+      "scale": 0.6494955489614243,
+      "output_size": {
+        "width": 219,
+        "height": 197
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 1567,
+        "top": 245,
+        "right": 1690,
+        "bottom": 335,
+        "width": 123,
+        "height": 90
+      },
+      "area": 2735,
+      "paste": {
+        "left": 82,
+        "top": 109,
+        "right": 301,
+        "bottom": 274
+      },
+      "scale": 1.6213333333333333,
+      "output_size": {
+        "width": 219,
+        "height": 165
+      }
+    },
+    {
+      "index": 4,
+      "method": "components",
+      "source_bbox": {
+        "left": 51,
+        "top": 523,
+        "right": 239,
+        "bottom": 779,
+        "width": 188,
+        "height": 256
+      },
+      "area": 11651,
+      "paste": {
+        "left": 110,
+        "top": 82,
+        "right": 273,
+        "bottom": 301
+      },
+      "scale": 0.8167164179104477,
+      "output_size": {
+        "width": 163,
+        "height": 219
+      }
+    },
+    {
+      "index": 5,
+      "method": "components",
+      "source_bbox": {
+        "left": 223,
+        "top": 602,
+        "right": 379,
+        "bottom": 799,
+        "width": 156,
+        "height": 197
+      },
+      "area": 8630,
+      "paste": {
+        "left": 104,
+        "top": 82,
+        "right": 280,
+        "bottom": 301
+      },
+      "scale": 1.0472727272727274,
+      "output_size": {
+        "width": 176,
+        "height": 219
+      }
+    },
+    {
+      "index": 6,
+      "method": "components",
+      "source_bbox": {
+        "left": 230,
+        "top": 528,
+        "right": 375,
+        "bottom": 632,
+        "width": 145,
+        "height": 104
+      },
+      "area": 3673,
+      "paste": {
+        "left": 82,
+        "top": 111,
+        "right": 301,
+        "bottom": 273
+      },
+      "scale": 1.394140127388535,
+      "output_size": {
+        "width": 219,
+        "height": 162
+      }
+    },
+    {
+      "index": 7,
+      "method": "components",
+      "source_bbox": {
+        "left": 1421,
+        "top": 241,
+        "right": 1530,
+        "bottom": 351,
+        "width": 109,
+        "height": 110
+      },
+      "area": 2949,
+      "paste": {
+        "left": 83,
+        "top": 82,
+        "right": 300,
+        "bottom": 301
+      },
+      "scale": 1.7940983606557377,
+      "output_size": {
+        "width": 217,
+        "height": 219
+      }
+    }
+  ]
+}

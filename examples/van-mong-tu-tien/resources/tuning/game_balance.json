@@ -1,0 +1,52 @@
+{
+  "arena": {
+    "width": 1600.0,
+    "height": 900.0,
+    "margin": 54.0
+  },
+  "run": {
+    "duration_seconds": 240.0,
+    "boss_spawn_second": 150.0,
+    "first_event_second": 75.0,
+    "second_event_second": 115.0
+  },
+  "player": {
+    "max_health": 120.0,
+    "move_speed": 305.0,
+    "contact_invulnerability": 0.55,
+    "health_regen": 0.45,
+    "pickup_radius": 22.0,
+    "magnet_radius": 120.0,
+    "target_range": 520.0,
+    "base_damage": 18.0,
+    "attack_interval": 0.70,
+    "projectile_speed": 780.0,
+    "projectile_lifetime": 0.90,
+    "pulse_damage": 42.0,
+    "pulse_radius": 145.0,
+    "pulse_cooldown": 5.5
+  },
+  "enemy": {
+    "spawn_interval_start": 1.05,
+    "spawn_interval_end": 0.34,
+    "base_health": 30.0,
+    "base_speed": 76.0,
+    "base_damage": 12.0,
+    "health_scale_per_minute": 0.42,
+    "damage_scale_per_minute": 0.18,
+    "boss_health": 900.0,
+    "max_living": 120
+  },
+  "xp": {
+    "first_level": 8.0,
+    "growth": 1.0,
+    "linear_step": 3.0
+  },
+  "realms": [
+    {"level": 1, "name": "Phàm Nhân", "subtitle": "Một niệm nhập đạo"},
+    {"level": 3, "name": "Luyện Khí", "subtitle": "Dẫn khí nhập thể"},
+    {"level": 6, "name": "Trúc Cơ", "subtitle": "Đạo cơ sơ thành"},
+    {"level": 10, "name": "Kim Đan", "subtitle": "Kim đan chiếu mệnh"},
+    {"level": 14, "name": "Nguyên Anh", "subtitle": "Thần hồn xuất khiếu"}
+  ]
+}

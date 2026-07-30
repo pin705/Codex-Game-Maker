@@ -1,0 +1,274 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "ENEMY-001-mac-lang-move-side",
+  "kind": "sprite",
+  "action": "move",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-mac-lang-move-side-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/ENEMY-001-mac-lang-move-side.harness.json",
+  "gate": "PASS",
+  "blockers": [],
+  "warnings": [],
+  "evidence": [
+    {
+      "code": "harness.motion_phase.lower_body_ok",
+      "message": "Top-down lower-body transition variation is strong enough for a readable movement loop.",
+      "transition_diffs": [
+        0.2638,
+        0.2919,
+        0.3494,
+        0.3725,
+        0.2983,
+        0.3775,
+        0.3368,
+        0.1043
+      ]
+    },
+    {
+      "code": "harness.geometry.ok",
+      "message": "Canvas, grid, safe zones, edge guards, and drift checks passed.",
+      "path": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-mac-lang-move-side-rectified-v001.png"
+    }
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": {
+        "left": 49,
+        "top": 122,
+        "right": 334,
+        "bottom": 334,
+        "width": 285,
+        "height": 212
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 25942,
+          "bbox": {
+            "left": 49,
+            "top": 124,
+            "right": 334,
+            "bottom": 334
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "row": 0,
+      "col": 1,
+      "bbox": {
+        "left": 50,
+        "top": 119,
+        "right": 334,
+        "bottom": 334,
+        "width": 284,
+        "height": 215
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 25770,
+          "bbox": {
+            "left": 50,
+            "top": 124,
+            "right": 334,
+            "bottom": 334
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "row": 0,
+      "col": 2,
+      "bbox": {
+        "left": 50,
+        "top": 129,
+        "right": 334,
+        "bottom": 334,
+        "width": 284,
+        "height": 205
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 25783,
+          "bbox": {
+            "left": 50,
+            "top": 138,
+            "right": 334,
+            "bottom": 334
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "row": 0,
+      "col": 3,
+      "bbox": {
+        "left": 50,
+        "top": 150,
+        "right": 334,
+        "bottom": 334,
+        "width": 284,
+        "height": 184
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 26593,
+          "bbox": {
+            "left": 50,
+            "top": 154,
+            "right": 334,
+            "bottom": 334
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "row": 1,
+      "col": 0,
+      "bbox": {
+        "left": 50,
+        "top": 122,
+        "right": 334,
+        "bottom": 335,
+        "width": 284,
+        "height": 213
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 26135,
+          "bbox": {
+            "left": 50,
+            "top": 128,
+            "right": 334,
+            "bottom": 335
+          }
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "row": 1,
+      "col": 1,
+      "bbox": {
+        "left": 50,
+        "top": 129,
+        "right": 335,
+        "bottom": 335,
+        "width": 285,
+        "height": 206
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 26777,
+          "bbox": {
+            "left": 50,
+            "top": 132,
+            "right": 335,
+            "bottom": 335
+          }
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "row": 1,
+      "col": 2,
+      "bbox": {
+        "left": 50,
+        "top": 118,
+        "right": 335,
+        "bottom": 335,
+        "width": 285,
+        "height": 217
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 26471,
+          "bbox": {
+            "left": 50,
+            "top": 124,
+            "right": 335,
+            "bottom": 335
+          }
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "row": 1,
+      "col": 3,
+      "bbox": {
+        "left": 50,
+        "top": 125,
+        "right": 335,
+        "bottom": 335,
+        "width": 285,
+        "height": 210
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 25867,
+          "bbox": {
+            "left": 50,
+            "top": 128,
+            "right": 335,
+            "bottom": 335
+          }
+        }
+      ]
+    }
+  ]
+}

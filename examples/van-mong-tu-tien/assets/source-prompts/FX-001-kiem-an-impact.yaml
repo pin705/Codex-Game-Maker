@@ -1,0 +1,79 @@
+asset_id: FX-001-kiem-an-impact
+name: "Kiếm Ấn Vỡ — impact FX"
+category: fx
+asset_kind: impact
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  family_id: "combat-fx"
+  locked_reference_paths: ["production/playtests/overhaul/gameplay-final.png"]
+intended_use: "Auto-sword hit and small damage feedback"
+target_engine: "Godot 4.4"
+target_display_size: "72 logical pixel peak diameter"
+runtime_role: "One-shot impact distinct from Sword Ring pulse"
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  asset_brief: "design/assets/visual-overhaul-batch-01.md"
+web_sources:
+  - url: "https://www.metmuseum.org/art/collection/search/49180"
+    title: "Shitao, Landscapes of the Four Seasons — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain; wet-ink breakup study only, no tracing."
+generation_plan:
+  generation_provider: gpt_image
+  visual_asset_source: "original reference-informed generation"
+  action: impact
+  view: "centered top-down dry-brush seal"
+  sheet_rows: 2
+  sheet_cols: 4
+  expected_frames: 8
+  bundle: single_asset
+  anchor: center
+  safe_padding: "40 px inside each 384 px cell"
+  key_color: "#FF00FF"
+  background_policy: "flat chroma key; opaque shapes only, runtime alpha later"
+  postprocess_required: true
+harness:
+  spec_file: "design/assets/harnesses/FX-001-kiem-an-impact.harness.json"
+  guide_file: "design/assets/harnesses/FX-001-kiem-an-impact.harness.png"
+  prompt_contract: "design/assets/harnesses/FX-001-kiem-an-impact.prompt.md"
+  exact_canvas: "1536x768"
+  exact_grid: "2x4"
+  exact_cell_size: "384x384"
+  safe_zone: "x 40..344, y 40..344"
+  edge_guard_px: 16
+  acceptance: "harness, 2-3 frame peak, decay and GIF review"
+godot_import:
+  target_node: AnimatedSprite2D
+  import_preset: "2d painted FX; linear filter; lossless alpha"
+  pivot: center
+  frame_size: "384x384 normalized"
+  animation_name: impact_one_shot
+  fps: 24
+  loop: false
+  collision_role: none
+prompt: |
+  Original Kiếm Ấn Vỡ sword-hit mark: pinpoint, crossed white/jade seal, hard
+  dry-brush shards, broken blue-black ring and sparse gold/jade flecks. Eight
+  one-shot frames with a clear peak in frames 2-3. Follow the harness exactly.
+negative_constraints:
+  - "no text, calligraphy, labels, grid, border, UI, logo or watermark"
+  - "no generic plus sign, comic word, explosion cloud, lens flare or neon bloom"
+  - "no semi-transparent key residue or edge-crossing shard"
+output:
+  raw_file: "assets/raw/fx/FX-001-kiem-an-impact-v001.png"
+  selected_file: "assets/raw/fx/FX-001-kiem-an-impact-rectified-v001.png"
+  processed_file: "assets/generated/fx/FX-001-kiem-an-impact/sheet-transparent.png"
+  frames_dir: "assets/generated/fx/FX-001-kiem-an-impact/frames"
+  gif_preview: "assets/generated/fx/FX-001-kiem-an-impact/animation.gif"
+  pipeline_meta: "assets/generated/fx/FX-001-kiem-an-impact/pipeline-meta.json"
+  harness_report: "assets/generated/fx/FX-001-kiem-an-impact/harness-report.json"
+  status: accepted
+  acceptance: pass_with_warnings
+notes: >-
+  Harness geometry passes. Detached dry-brush shards in several cells are
+  intentional impact fragments and remain documented warnings. Eight cropped
+  frames are accepted for QA; runtime uses hit/burst textures with lifetime
+  scale/fade while ring/portal telegraphs remain procedural.

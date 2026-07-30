@@ -1,0 +1,173 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.asset-pipeline.v1",
+  "asset_id": "HERO-001-move-side",
+  "kind": "sprite",
+  "input": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/alpha-source.png",
+  "output_dir": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side",
+  "raw_size": {
+    "width": 1536,
+    "height": 1024
+  },
+  "grid": {
+    "rows": 2,
+    "cols": 4,
+    "expected_frames": 8,
+    "actual_frames": 8
+  },
+  "frame_size": {
+    "width": 384,
+    "height": 512
+  },
+  "anchor": "feet",
+  "shared_scale": true,
+  "chroma_key": {
+    "background": "#FF00FF",
+    "key_color": "#FF00FF",
+    "key_color_source": "explicit",
+    "tolerance": 1,
+    "softness": 1,
+    "transparent_pixels": 1309081,
+    "semi_transparent_pixels": 42641
+  },
+  "outputs": {
+    "clean_sheet": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/raw-sheet-clean.png",
+    "transparent_sheet": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/sheet-transparent.png",
+    "frames_dir": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames",
+    "frames": [
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-000.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-001.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-002.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-003.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-004.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-005.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-006.png",
+      "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/frames/frame-007.png"
+    ],
+    "gif_preview": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/animation.gif",
+    "direction_strips": [],
+    "pipeline_meta": "examples/van-mong-tu-tien/assets/generated/characters/HERO-001-move-side/pipeline-meta.json"
+  },
+  "qa": {
+    "has_alpha": true,
+    "opaque_key_pixels": 0,
+    "opaque_magenta_pixels": 0,
+    "edge_touch_frames": [],
+    "empty_frames": [],
+    "frame_count_ok": true
+  },
+  "frames": [
+    {
+      "index": 0,
+      "bbox": {
+        "left": 100,
+        "top": 120,
+        "right": 282,
+        "bottom": 450,
+        "width": 182,
+        "height": 330
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 1,
+      "bbox": {
+        "left": 88,
+        "top": 119,
+        "right": 293,
+        "bottom": 450,
+        "width": 205,
+        "height": 331
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 2,
+      "bbox": {
+        "left": 92,
+        "top": 119,
+        "right": 288,
+        "bottom": 450,
+        "width": 196,
+        "height": 331
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 3,
+      "bbox": {
+        "left": 98,
+        "top": 119,
+        "right": 283,
+        "bottom": 450,
+        "width": 185,
+        "height": 331
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 4,
+      "bbox": {
+        "left": 96,
+        "top": 118,
+        "right": 287,
+        "bottom": 450,
+        "width": 191,
+        "height": 332
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 5,
+      "bbox": {
+        "left": 84,
+        "top": 119,
+        "right": 298,
+        "bottom": 451,
+        "width": 214,
+        "height": 332
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 6,
+      "bbox": {
+        "left": 95,
+        "top": 119,
+        "right": 285,
+        "bottom": 450,
+        "width": 190,
+        "height": 331
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    },
+    {
+      "index": 7,
+      "bbox": {
+        "left": 94,
+        "top": 119,
+        "right": 284,
+        "bottom": 450,
+        "width": 190,
+        "height": 331
+      },
+      "scale": 1.0,
+      "edge_touch": false,
+      "empty": false
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.generated-key-art.v1",
+  "asset_id": "KEYART-001",
+  "generated_at": "2026-07-29",
+  "generation_provider": "gpt_image",
+  "generation_mode": "built_in_image_gen",
+  "source_prompt": "assets/source-prompts/KEYART-001.yaml",
+  "raw": {
+    "path": "assets/raw/KEYART-001-v001.png",
+    "width": 1672,
+    "height": 941,
+    "format": "png",
+    "sha256": "d5055e65ee6ee0af5bc3535626cf8c5619174e39540b96b061be06e75936539a"
+  },
+  "selected": {
+    "path": "assets/generated/key-art/KEYART-001-v001.png",
+    "width": 1672,
+    "height": 941,
+    "format": "png"
+  },
+  "processed": {
+    "path": "assets/generated/key-art/KEYART-001-title-1280x720-v001.webp",
+    "width": 1280,
+    "height": 720,
+    "format": "webp",
+    "bytes": 154912,
+    "sha256": "8c2c528333d379fce1ca3c35ac9f6ecbd2ad53fe98b4c29837a7c5596a3124fd",
+    "operations": [
+      "resample source to 1280x720 with sips",
+      "encode WebP quality 84 with cwebp"
+    ]
+  },
+  "preview": {
+    "path": "assets/generated/key-art/KEYART-001-preview-320x180-v001.png",
+    "width": 320,
+    "height": 180,
+    "format": "png"
+  },
+  "qa": {
+    "status": "pass_with_warning",
+    "text_or_watermark_detected": false,
+    "upper_left_title_safe_zone": true,
+    "thumbnail_readable": true,
+    "palette_matches_art_bible": true,
+    "warning": "Eight swords are visually distinct rather than the requested nine; decorative variation accepted."
+  }
+}

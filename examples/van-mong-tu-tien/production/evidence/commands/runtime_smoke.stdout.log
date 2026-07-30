@@ -1,0 +1,43 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+PASS: scene starts at TITLE/START
+PASS: authored front end opens on TITLE
+PASS: mobile support layer ships in the main scene
+PASS: touch controls stay inactive behind the front end
+PASS: legacy combat title is suppressed behind front end
+PASS: title overlay has art/fallback plus shade
+PASS: start request enters RUNNING
+PASS: player is enabled after start
+PASS: rank VFX follows the player in live combat
+PASS: combat lifecycle enables mobile controls
+PASS: player uses a sprite when runtime art is available
+PASS: player runtime visual starts in idle state
+PASS: player runtime visual changes idle -> move
+PASS: move state swaps to the move texture
+PASS: player runtime visual changes move -> idle
+PASS: idle state restores the idle texture
+PASS: enemy uses a sprite when runtime art is available
+PASS: auto attack triggers the discipline sword fan VFX
+PASS: projectile uses a sprite when runtime art is available
+PASS: auto sword damages the nearest enemy
+PASS: effect uses a sprite when runtime art is available
+PASS: qi pulse damages an enemy inside its radius
+PASS: two enemy deaths increment kills exactly once each
+PASS: each enemy death creates one qi orb
+PASS: qi orb uses a sprite when runtime art is available
+PASS: qi collection triggers a visible gathering beam
+PASS: xp threshold opens breakthrough state
+PASS: breakthrough pauses the world
+PASS: breakthrough presents three cards
+PASS: first breakthrough card is a Button
+PASS: one card selection resumes RUNNING
+PASS: card selection unpauses the world
+PASS: pause enters PAUSED
+PASS: pause freezes the world
+PASS: resume returns to RUNNING
+PASS: resume unpauses the world
+PASS: timeout produces victory without a boss kill
+PASS: player is disabled after timeout victory
+PASS: boss defeat produces immediate victory
+PASS: lethal damage produces defeat
+SMOKE RESULT: PASS

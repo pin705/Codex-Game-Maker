@@ -1,0 +1,271 @@
+schema: "codex-game-maker.asset-prompt-spec.v2"
+asset_id: UIKIT-004-talisman-folios
+name: "Three authored talisman folios"
+category: ui
+asset_kind: ui_component_family
+intended_use: >-
+  Distinct sword, jade-body and spirit-gathering paper silhouettes for the
+  permanent-technique screen and the in-run breakthrough choice cards.
+target_engine: "Godot 4.4"
+target_display_size: >-
+  Uniform/aspect-preserved inside 330x450 breakthrough controls and 366x704
+  permanent-technique bounds.
+runtime_role: "Primary folio silhouettes; runtime text and sigils remain separate."
+
+provenance:
+  record_status: "recovered_from_local_codex_session_log_and_verified_project_files"
+  generation_provider: gpt_image
+  execution_surface: "Codex built-in image_gen"
+  provider_request_id: "unknown_not_exposed"
+  provider_asset_id: "unknown_not_exposed"
+  model_identifier: "unknown_not_exposed"
+  seed: "unknown_not_exposed"
+  codex_session_id: "019fabe5-a06f-77b0-b4e2-fafb415aafb3"
+  session_log_scope: "local Codex session evidence; not a provider receipt"
+  source_note: >-
+    The exact prompts, Codex call IDs, UTC call timestamps and Codex output-hint
+    IDs below were recovered from the local session log. They must not be
+    relabeled as provider request IDs.
+
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  ui_spec: "design/ui/ui-ux-spec.md"
+
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  locked_reference_paths: ["production/playtests/overhaul/upgrade-final.png"]
+  family_id: "talisman-folios"
+  identity_anchors:
+    - "three deliberately different paper silhouettes, never one repeated dashboard card"
+    - "quiet blank center for runtime Vietnamese copy and separate technique sigil"
+    - "small physical binding details rather than decorative fantasy trim"
+  material_anchors:
+    - "tactile xuan paper"
+    - "blue-black dry-brush edge pooling"
+    - "sparse aged bronze or bone stitching"
+  palette_and_lighting_anchors:
+    - "warm ivory paper and restrained upper-left paper light"
+    - "jade variant may carry one celadon seam"
+    - "spirit variant may carry one cold-cyan outer current"
+  forbidden_drift:
+    - "generic mobile RPG card"
+    - "HTML or SaaS rectangle"
+    - "glossy bevel, plastic, gacha ornament or stock-vector UI"
+    - "baked text, pseudo-calligraphy, logo or watermark"
+
+presentation_contract:
+  source_kind: "dedicated-component"
+  render_mode: "uniform"
+  aspect_ratio_policy: "preserve authored aspect ratio; never nine-slice these folios"
+  intended_surface_ids:
+    - techniques
+    - breakthrough
+  rendered_sizes:
+    - [330, 450]
+    - [366, 704]
+  text_policy: "all readable text is rendered by Godot"
+  runtime_composite_evidence:
+    - "production/playtests/frontend/techniques.png"
+    - "production/playtests/overhaul/upgrade-final.png"
+
+generation_plan:
+  generation_provider: gpt_image
+  visual_asset_source: "original generated UI component family"
+  bundle: "three_single_components_plus_one_superseded_candidate"
+  background_policy: "flat chroma key, selected per component palette"
+  postprocess_required: true
+
+operations:
+  - operation_id: sword_initial
+    status: "intermediate_not_retained"
+    action: generate
+    codex_tool_call_id: "call_2wYGIoOv1HI6l1C8nCJPwXfO"
+    called_at_utc: "2026-07-29T10:35:10.029Z"
+    codex_output_hint_id: "exec-032f2c9f-c020-4430-b79a-4ded7b0e9cc9.png"
+    input_images: []
+    prompt: |
+      Use case: stylized-concept
+      Asset type: dedicated production game UI component, one breakthrough talisman folio body for a premium 2D xianxia game
+      Primary request: Create ONE tall blank talisman-folio body whose silhouette can replace a rectangular upgrade card. This is the sword-path variant: a narrow asymmetric xuan-paper slip with a decisive diagonal shoulder cut, one broken lower notch, a subtle folded paper lip, and two very small aged-bronze binding pins placed asymmetrically. The central 68 percent must remain calm and unobstructed for runtime-rendered Vietnamese text and a separate icon.
+      Scene/backdrop: perfectly flat solid #ff00ff chroma-key background for local alpha extraction; one uniform color only, with no gradient, texture, floor, reflection, halo contamination, or lighting variation.
+      Style/medium: high-end hand-painted 2D Chinese ink-wash game UI component; tactile warm xuan paper, restrained blue-black ink pooling at the outer fibers, sparse aged bronze; cinematic and materially believable, not ornate.
+      Composition/framing: portrait 2:3 single isolated component, centered, occupying about 78 percent of canvas height; generous magenta padding; orthographic front view; crisp intact silhouette.
+      Color palette: warm ivory paper #E7DDC4 / #C9B995, deep ink #0B171B / #17292D, sparse aged bronze #8A6730. No cyan, no vermilion, no gold shine.
+      Materials/textures: visible but restrained paper fibers and dry-brush edge breakup; the protected central text area stays low-detail and high-contrast.
+      Text: none.
+      Constraints: opaque component with crisp removable outer edges; no semi-transparent smoke; no cast shadow; no background glow; no letters, numerals, calligraphy, pseudo-characters, runes, logo, watermark, medallion, closed badge, bevel, gem, filigree, fantasy frame, cloud corners, scroll rollers, large clasps, decorative border, or multiple objects. Do not use #ff00ff inside the component.
+      Avoid: generic mobile RPG card, HTML panel, SaaS rectangle, glossy 3D, plastic, gacha ornament, stock vector UI, jewelry, heraldic shield.
+
+  - operation_id: jade_initial
+    status: "intermediate_not_retained"
+    action: generate_with_style_reference
+    codex_tool_call_id: "call_EIXwpUQXhs2IRQzrbPpax7xj"
+    called_at_utc: "2026-07-29T10:36:13.534Z"
+    codex_output_hint_id: "exec-bda25e17-62c9-4b14-8859-05c9c15d5866.png"
+    input_images:
+      - role: "style/material/scale reference"
+        mechanism: "num_last_images_to_include: 1"
+        identity: "sword_initial output"
+    prompt: |
+      Use case: stylized-concept
+      Asset type: dedicated production game UI component, one breakthrough talisman folio body for a premium 2D xianxia game
+      Input images: Image 1 is a style/material/scale reference only. Create a new separate asset; do not edit or repeat its silhouette.
+      Primary request: Create ONE tall blank jade-body talisman folio with a materially distinct silhouette: broad restrained shoulders, two open side cuts around the upper third, a quiet faceted lower point, one narrow celadon mineral seam, and one very small aged-bronze binding pin near the upper-left. The central 68 percent must remain calm and unobstructed for runtime-rendered Vietnamese text and a separate icon.
+      Scene/backdrop: perfectly flat solid #ff00ff chroma-key background; one uniform color only, no gradient, texture, floor, shadow, reflection, halo, or lighting variation.
+      Style/medium: same high-end hand-painted Chinese ink-wash UI material family as Image 1; tactile warm xuan paper, dark nephrite wash held only near the outer fibers, sparse aged bronze; cinematic and restrained.
+      Composition/framing: portrait 2:3 isolated component, centered, about 78 percent of canvas height, generous magenta padding, orthographic front view, crisp silhouette.
+      Color palette: warm ivory paper, deep blue-black ink, desaturated dark nephrite/celadon, sparse aged bronze. No gold shine.
+      Text: none.
+      Constraints: opaque component, crisp removable edges; no semi-transparent smoke, cast shadow, glow, letters, calligraphy, runes, logo, watermark, medallion, closed badge, bevel, gemstone setting, filigree, fantasy frame, cloud corners, scroll rollers, large clasp, decorative border, shield emblem, or multiple objects. Do not use #ff00ff inside the component.
+      Avoid: same diagonal shoulder and same lower notch as Image 1; generic mobile RPG card; HTML panel; SaaS rectangle; glossy 3D; plastic; gacha ornament; stock vector UI.
+
+  - operation_id: spirit_initial
+    status: "intermediate_not_retained"
+    action: generate_with_style_reference
+    codex_tool_call_id: "call_CboN8OSCGLJgnwIToZ2JjqjH"
+    called_at_utc: "2026-07-29T10:37:34.663Z"
+    codex_output_hint_id: "exec-0dfed1a2-3a41-45ab-abe7-8f979bc1fefa.png"
+    input_images:
+      - role: "style/material/scale reference"
+        mechanism: "num_last_images_to_include: 1"
+        identity: "jade_initial output"
+    prompt: |
+      Use case: stylized-concept
+      Asset type: dedicated production game UI component, one breakthrough talisman folio body for a premium 2D xianxia game
+      Input images: Image 1 is a style/material/scale reference only. Create a new separate asset; do not edit or repeat its shield-like silhouette.
+      Primary request: Create ONE tall blank spirit-gathering talisman folio with a distinct flowing silhouette: a narrow offset crown, one shallow inward sweep on the upper-left edge, an opposing long outward brush-tail edge on the lower-right, and two tiny bone-ivory stitching points. A very restrained cold-cyan dry-brush current may follow only the outer edge. The central 68 percent must remain calm and unobstructed for runtime-rendered Vietnamese text and a separate icon.
+      Scene/backdrop: perfectly flat solid #ff00ff chroma-key background; one uniform color only, no gradient, texture, floor, shadow, reflection, halo, or lighting variation.
+      Style/medium: same high-end hand-painted Chinese ink-wash UI material family as Image 1; tactile warm xuan paper, blue-black ink edge pooling, a sparse mineral-cyan current, no ornament.
+      Composition/framing: portrait 2:3 isolated component, centered, about 78 percent of canvas height, generous magenta padding, orthographic front view, crisp silhouette.
+      Color palette: warm ivory paper, deep blue-black ink, one restrained cold mineral cyan edge stroke. No gold shine.
+      Text: none.
+      Constraints: opaque component, crisp removable edges; no semi-transparent smoke, cast shadow, glow, letters, calligraphy, runes, logo, watermark, medallion, closed badge, bevel, gemstone, filigree, fantasy frame, cloud corners, scroll rollers, clasp, decorative border, shield shape, or multiple objects. Do not use #ff00ff inside the component.
+      Avoid: the symmetrical shield silhouette and green seam of Image 1; generic mobile RPG card; HTML panel; SaaS rectangle; glossy 3D; plastic; gacha ornament; stock vector UI.
+
+  - operation_id: sword_broad_edit
+    status: selected_source
+    action: edit
+    codex_tool_call_id: "call_R5PnEu1okEYmdWKYX2b3Uspo"
+    called_at_utc: "2026-07-29T10:39:39.703Z"
+    codex_output_hint_id: "exec-60310d73-2cc4-40d6-a0d3-b8f959f8de92.png"
+    input_images:
+      - role: edit_target
+        identity: "sword_initial output"
+        codex_output_hint_id: "exec-032f2c9f-c020-4430-b79a-4ded7b0e9cc9.png"
+    prompt: |
+      Use case: precise-object-edit
+      Asset type: production game UI talisman folio
+      Input images: Image 1 is the edit target.
+      Primary request: Change ONLY the component proportions so this reads as a usable broad upgrade-card folio rather than a narrow bookmark. Expand the paper body to occupy about 78% of the canvas width and 82% of the canvas height. Preserve its asymmetric diagonal shoulder, folded paper lip, broken lower notch, two tiny bronze pins, paper/ink materials, palette, flat magenta background, and all negative constraints. The protected blank text area must be at least 68% of the component width and remain calm.
+      Constraints: keep a perfectly flat uniform #ff00ff background; keep the full silhouette isolated with at least 8% canvas padding on every side; no shadow, glow, text, calligraphy, runes, logo, border ornament, gem, filigree, extra pins, extra objects, or new decoration. Do not restyle. Change only the width/proportions and re-center the component.
+
+  - operation_id: jade_broad_edit
+    status: selected_source
+    action: edit
+    codex_tool_call_id: "call_WhKMtkD2rGIkbwKmucSeVfP6"
+    called_at_utc: "2026-07-29T10:41:07.252Z"
+    codex_output_hint_id: "exec-ff2a1550-96f5-4791-a0cd-7b1198add60d.png"
+    input_images:
+      - role: edit_target
+        identity: "jade_initial output"
+        codex_output_hint_id: "exec-bda25e17-62c9-4b14-8859-05c9c15d5866.png"
+    prompt: |
+      Use case: precise-object-edit
+      Asset type: production game UI talisman folio
+      Input images: Image 1 is the edit target.
+      Primary request: Change ONLY the component proportions so this is a broad usable upgrade-card folio, not a narrow bookmark. Expand the paper body to about 78% of canvas width and 82% of canvas height. Preserve the broad shoulders, two open side cuts, faceted lower point, one celadon mineral seam, one tiny bronze pin, material family, palette, perfectly flat magenta background, and all negative constraints. The protected blank text area must be at least 68% of component width.
+      Constraints: keep a perfectly flat uniform #ff00ff background; full isolated silhouette with at least 8% canvas padding; no shadow, glow, text, calligraphy, runes, logo, ornament, gem, filigree, extra pins, extra objects, or new decoration. Do not restyle. Change only width/proportions and re-center.
+
+  - operation_id: spirit_broad_edit_v1
+    status: superseded
+    action: edit
+    codex_tool_call_id: "call_fj4StNQbFfV7LDnygezBXEg8"
+    called_at_utc: "2026-07-29T10:42:38.119Z"
+    codex_output_hint_id: "exec-861ba84f-cb25-43f8-b453-eecc8ec382e2.png"
+    input_images:
+      - role: edit_target
+        identity: "spirit_initial output"
+        codex_output_hint_id: "exec-0dfed1a2-3a41-45ab-abe7-8f979bc1fefa.png"
+    prompt: |
+      Use case: precise-object-edit
+      Asset type: production game UI talisman folio
+      Input images: Image 1 is the edit target.
+      Primary request: Change ONLY the component proportions so this is a broad usable upgrade-card folio, not a narrow ribbon. Expand the paper body to about 78% of canvas width and 82% of canvas height. Preserve the offset crown, opposing flowing side contours, lower-right dry-brush tail, two tiny bone stitching points, restrained cyan outer current, paper/ink material, flat magenta background, and all negative constraints. The protected blank text area must be at least 68% of component width.
+      Constraints: keep a perfectly flat uniform #ff00ff background; full isolated silhouette with at least 8% canvas padding; no shadow, glow, text, calligraphy, runes, logo, ornament, gem, filigree, clasp, extra stitches, extra objects, or new decoration. Do not restyle. Change only width/proportions and re-center.
+    rejection_reason: >-
+      Asset QA rejected the source because its magenta background was not flat;
+      chroma cleanup produced holes in the paper body. The failure required
+      regeneration rather than repair. It has no runtime mapping and remains
+      only as rejected provenance.
+
+  - operation_id: spirit_regeneration_v2
+    status: selected_source
+    action: generate
+    codex_tool_call_id: "call_7I2wv7DbJgVutyazqYEW4yH7"
+    called_at_utc: "2026-07-29T11:41:36.739Z"
+    codex_output_hint_id: "exec-1f43190b-2f78-42df-94b2-d2630c1c0042.png"
+    input_images: []
+    prompt: |
+      Use case: stylized-concept
+      Asset type: dedicated production game UI component, broad breakthrough talisman folio for a premium 2D xianxia game
+      Primary request: Create ONE broad blank spirit-gathering talisman folio with a flowing asymmetric silhouette: an offset narrow crown, a shallow inward sweep on the upper-left edge, an opposing outward brush-tail contour on the lower-right, and two tiny bone-ivory stitching points. A restrained cold-cyan dry-brush current follows only the outer-right edge. The protected blank center must occupy at least 68% of the component width for runtime Vietnamese text and a separate icon.
+      Scene/backdrop: perfectly flat solid pure #0000ff chroma-key background for local alpha extraction. It must be one uniform RGB blue with no gradient, texture, floor, shadow, reflection, halo, vignetting, or lighting variation.
+      Style/medium: high-end hand-painted Chinese ink-wash production UI component; tactile warm xuan paper, blue-black ink edge pooling, sparse mineral cyan; cinematic, restrained, materially believable.
+      Composition/framing: portrait 2:3 single isolated component; body occupies about 78% of canvas width and 82% of canvas height; at least 8% pure-blue padding on every side; orthographic front view; full crisp silhouette.
+      Color palette: warm ivory paper, deep blue-black ink, cold pale cyan only. No saturated royal blue inside the component and no gold shine.
+      Text: none.
+      Constraints: opaque component with crisp removable edges; no semi-transparent smoke; no cast shadow; no glow; no letters, numerals, calligraphy, pseudo-characters, runes, logo, watermark, medallion, closed badge, bevel, gem, filigree, fantasy frame, cloud corners, scroll rollers, clasp, decorative border, shield shape, or multiple objects. Do not use pure #0000ff anywhere inside the component.
+      Avoid: generic mobile RPG card, HTML/SaaS rectangle, glossy 3D, plastic, gacha ornament, stock vector UI, narrow bookmark proportions.
+
+postprocess:
+  processor: "/Users/bon/.codex/skills/.system/imagegen/scripts/remove_chroma_key.py"
+  initial_selected_sources:
+    parameters:
+      auto_key: border
+      soft_matte: true
+      transparent_threshold: 12
+      opaque_threshold: 220
+      despill: true
+      edge_contract: 1
+    applies_to:
+      - "source/folio-sword-chroma.png -> runtime/folio_sword.png"
+      - "source/folio-jade-chroma.png -> runtime/folio_jade.png"
+      - "source/folio-spirit-chroma.png -> superseded pre-v2 runtime output"
+  spirit_v2:
+    parameters:
+      auto_key: border
+      soft_matte: true
+      transparent_threshold: 12
+      opaque_threshold: 180
+      despill: true
+      edge_contract: 1
+      force: true
+    mapping: "source/folio-spirit-chroma-v2.png -> runtime/folio_spirit.png"
+  final_trim:
+    command_contract: "ImageMagick: -trim +repage, in place"
+    consequence: >-
+      Runtime folios are tight alpha crops. Their transparent safe margin is
+      therefore zero and their nonzero alpha touches one or more canvas edges.
+
+output:
+  selected_sources:
+    - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-sword-chroma.png"
+    - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-jade-chroma.png"
+    - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-spirit-chroma-v2.png"
+  superseded_sources:
+    - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-spirit-chroma.png"
+  runtime_files:
+    - "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png"
+    - "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png"
+    - "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png"
+  pipeline_meta: "assets/generated/ui/UIKIT-004-talisman-folios/pipeline-meta.json"
+  status: accepted_integrated_verified_native
+
+known_unknowns:
+  - "The built-in image provider request ID, provider asset ID, model identifier and seed were not exposed."
+  - "The three unedited initial outputs were not copied into the project; their Codex output-hint IDs remain recorded above."
+  - "The in-place final trim did not preserve its crop-origin offsets; final dimensions and edge-touch facts are measured in pipeline metadata."

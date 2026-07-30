@@ -1,0 +1,300 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.asset-pipeline.v2",
+  "asset_id": "PREMIUM-001-cultivation-sigils",
+  "kind": "vfx_kit",
+  "recorded_at": "2026-07-29",
+  "provenance": {
+    "generation_provider": "gpt_image",
+    "execution_surface": "Codex built-in image_gen",
+    "provider_request_id": "unknown_not_exposed",
+    "provider_asset_id": "unknown_not_exposed",
+    "model_identifier": "unknown_not_exposed",
+    "seed": "unknown_not_exposed",
+    "codex_session_id": "019facc5-d657-7251-922d-55cd7d52c651",
+    "canonical_prompt": "assets/source-prompts/PREMIUM-001-cultivation-sigils.yaml",
+    "legacy_prompt_copy": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/PROMPTS.md",
+    "provider_receipt_available": false
+  },
+  "generation_operations": [
+    {
+      "id": "phi_kiem_base",
+      "codex_tool_call_id": "call_vWltrdPtu4OnM55vvdsASgw9",
+      "called_at_utc": "2026-07-29T09:07:06.385Z",
+      "status": "superseded_output_not_retained"
+    },
+    {
+      "id": "phi_kiem_weapon_correction",
+      "codex_tool_call_id": "call_rkLLlUoJRuwddJMowC7ZF1tv",
+      "called_at_utc": "2026-07-29T09:09:02.721Z",
+      "codex_output_hint_id": "exec-18d4d119-18ed-4c3b-a0c2-0c5ca1765a68.png",
+      "status": "selected_source"
+    },
+    {
+      "id": "ho_the_ngoc",
+      "codex_tool_call_id": "call_gurfoqr9WujhCk5l9B5wLLuB",
+      "called_at_utc": "2026-07-29T09:10:48.129Z",
+      "codex_output_hint_id": "exec-818c316e-05eb-46bf-807f-c1b37e373d84.png",
+      "status": "selected_source"
+    },
+    {
+      "id": "tu_linh",
+      "codex_tool_call_id": "call_l3EQfr5MTFzVN8nG8cqoWQvX",
+      "called_at_utc": "2026-07-29T09:12:43.260Z",
+      "codex_output_hint_id": "exec-6adf23e7-7ac9-4239-abf9-0fa032c3acf8.png",
+      "status": "selected_source"
+    }
+  ],
+  "processing": {
+    "chroma_key_processor": "/Users/bon/.codex/skills/.system/imagegen/scripts/remove_chroma_key.py",
+    "alpha_pass": {
+      "auto_key": "border",
+      "soft_matte": true,
+      "transparent_threshold": 12,
+      "opaque_threshold": 220,
+      "despill": true,
+      "outputs": "source/*_alpha.png"
+    },
+    "alpha_contract_pass": {
+      "auto_key": "border",
+      "soft_matte": true,
+      "transparent_threshold": 12,
+      "opaque_threshold": 220,
+      "despill": true,
+      "edge_contract": 1,
+      "outputs": "source/*_alpha_contract.png"
+    },
+    "final_cleanup": {
+      "source": "source/*_alpha_contract.png",
+      "output": "source/*_alpha_clean.png",
+      "algorithm": "For alpha > 8, d=min(r,b)-g. If r>35, b>60 and d>12: clear alpha when d>=30, otherwise scale alpha by (30-d)/18, and clamp red to at most g+3. Clear resulting alpha <=8 and zero RGB for transparent pixels."
+    },
+    "runtime_normalization": {
+      "tool": "ImageMagick",
+      "operations": [
+        "trim alpha bounds",
+        "reset virtual page",
+        "Lanczos fit inside 440x440 preserving aspect ratio",
+        "center on transparent 512x512 canvas",
+        "strip metadata and write RGBA PNG"
+      ]
+    },
+    "reproducible_from_project_files": false,
+    "reproducibility_note": "File lineage, final cleanup algorithm and runtime normalization are recorded, but the external helper/Pillow/ImageMagick environment is not vendored or version-locked by this bundle; current SHA-256 hashes bind the accepted bytes."
+  },
+  "lineage": [
+    {
+      "id": "phi_kiem",
+      "prompt_operation": "phi_kiem_weapon_correction",
+      "files": [
+        {
+          "role": "selected_chroma_source",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_phi_kiem_chroma.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGB",
+          "sha256": "7a46d3c180618e1cb767786ffa7af619d2dfc198204eb399e3fd3ff7a9178181"
+        },
+        {
+          "role": "alpha_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_phi_kiem_alpha.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "b299850a25e714b09ee3c5dd5707dcc032e71eae819a5cbfce523bfef89d3a0e"
+        },
+        {
+          "role": "edge_contract_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_phi_kiem_alpha_contract.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "8467e94fb2e1a8fd7dc40c6110475cb31fc7b060a278e405fc400e206d9cf1e1"
+        },
+        {
+          "role": "clean_alpha_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_phi_kiem_alpha_clean.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "c8a09260a5b75a6a579ffad823fedb40b24a699b4aa2741de4093d026d1dd0c0"
+        },
+        {
+          "role": "accepted_runtime",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png",
+          "width": 512,
+          "height": 512,
+          "channels": "RGBA",
+          "sha256": "3be8d6f735f10e7c57d515b3908c15dd79ab6502568cd8779b5973e987bedc13"
+        }
+      ]
+    },
+    {
+      "id": "ho_the_ngoc",
+      "prompt_operation": "ho_the_ngoc",
+      "files": [
+        {
+          "role": "selected_chroma_source",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_ho_the_ngoc_chroma.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGB",
+          "sha256": "82cef3cb31a938b5696c426676994f1a8e76117f373d856557250dee06479ed4"
+        },
+        {
+          "role": "alpha_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_ho_the_ngoc_alpha.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "e237e5e614f6c777c232cbdb9b48d7012319829e4116985ab20b9babc421a155"
+        },
+        {
+          "role": "edge_contract_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_ho_the_ngoc_alpha_contract.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "891c2ea77b48408f3146e0e93381c9f770b5c46935b47ae65881f491d606717d"
+        },
+        {
+          "role": "clean_alpha_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_ho_the_ngoc_alpha_clean.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "dc896605f2bb54285209300858d54bc5ca7de2b0f7e5845d13473e86d2fa86f1"
+        },
+        {
+          "role": "accepted_runtime",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png",
+          "width": 512,
+          "height": 512,
+          "channels": "RGBA",
+          "sha256": "e33aa6d2efb78ba7fca6e58e8a6ef23c088bda162fa412b7737e24f14488befe"
+        }
+      ]
+    },
+    {
+      "id": "tu_linh",
+      "prompt_operation": "tu_linh",
+      "files": [
+        {
+          "role": "selected_chroma_source",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_tu_linh_chroma.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGB",
+          "sha256": "f5188b4bd2e02d07eb9d8c3561a8a0680587133a050675ea3a498241d750afb6"
+        },
+        {
+          "role": "alpha_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_tu_linh_alpha.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "cda6bab89dc2bcc37c7dca3c4805caeb9bd49a067aec6d63f2fba1bab8053975"
+        },
+        {
+          "role": "edge_contract_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_tu_linh_alpha_contract.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "fac201403b2ec7a82d1090e9c131db83cd474bad2f040b2a0bf45f9a30c51aa6"
+        },
+        {
+          "role": "clean_alpha_intermediate",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_tu_linh_alpha_clean.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "c9091d54ee754d84b775b882cb393bc66751acd2c9d29e28c1714f270d9eb829"
+        },
+        {
+          "role": "accepted_runtime",
+          "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png",
+          "width": 512,
+          "height": 512,
+          "channels": "RGBA",
+          "sha256": "7f91de861c4f2e945fe67ca3154acf84974c1f5f5846ced3ead2dde98241373f"
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "runtime_files": [
+      "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png",
+      "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png",
+      "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png"
+    ],
+    "contact_sheet": {
+      "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/premium_001_contact_sheet.png",
+      "width": 1500,
+      "height": 820,
+      "channels": "RGBA_opaque",
+      "sha256": "001f7c3ed5872387cfaf0bee4c6dc8e35edc97ced016185f72a707985f52e1f1",
+      "shipping_role": "qa_only"
+    }
+  },
+  "qa": {
+    "measurement_tool": "ImageMagick 7.1.2-21 Q16-HDRI",
+    "alpha_threshold_for_bounds": "alpha > 0",
+    "key_like_pixel_thresholds": {
+      "magenta": "alpha>0.01, r>0.80, b>0.80, g<0.35",
+      "blue": "alpha>0.01, b>0.80, r<0.25, g<0.25"
+    },
+    "runtime": [
+      {
+        "id": "phi_kiem",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 78, "y": 36, "width": 356, "height": 440},
+        "safe_margin_px": {"left": 78, "top": 36, "right": 78, "bottom": 36, "minimum": 36},
+        "edge_touch": false,
+        "nonzero_alpha_edge_pixels": {"top": 0, "right": 0, "bottom": 0, "left": 0},
+        "alpha_pixels": {"transparent": 216256, "semi_transparent": 8741, "opaque": 37147},
+        "key_like_pixels": {"magenta": 0, "blue": 0}
+      },
+      {
+        "id": "ho_the_ngoc",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 81, "y": 36, "width": 349, "height": 440},
+        "safe_margin_px": {"left": 81, "top": 36, "right": 82, "bottom": 36, "minimum": 36},
+        "edge_touch": false,
+        "nonzero_alpha_edge_pixels": {"top": 0, "right": 0, "bottom": 0, "left": 0},
+        "alpha_pixels": {"transparent": 182057, "semi_transparent": 9386, "opaque": 70701},
+        "key_like_pixels": {"magenta": 0, "blue": 0}
+      },
+      {
+        "id": "tu_linh",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 68, "y": 36, "width": 375, "height": 440},
+        "safe_margin_px": {"left": 68, "top": 36, "right": 69, "bottom": 36, "minimum": 36},
+        "edge_touch": false,
+        "nonzero_alpha_edge_pixels": {"top": 0, "right": 0, "bottom": 0, "left": 0},
+        "alpha_pixels": {"transparent": 168803, "semi_transparent": 11334, "opaque": 82007},
+        "key_like_pixels": {"magenta": 0, "blue": 0}
+      }
+    ],
+    "runtime_import": {
+      "godot_importer": "texture / CompressedTexture2D",
+      "compress_mode": 0,
+      "mipmaps_generate": false,
+      "fix_alpha_border": true,
+      "premult_alpha": false
+    },
+    "runtime_evidence": [
+      "production/playtests/frontend/loadout.png",
+      "production/playtests/frontend/techniques.png",
+      "production/playtests/overhaul/upgrade-final.png",
+      "production/playtests/mobile-support/portrait-overlay.png"
+    ],
+    "status": "accepted_integrated_verified_native"
+  },
+  "known_unknowns": [
+    "Provider request/asset IDs, model identifier and seed were not exposed by the built-in tool.",
+    "The exact paths, hashes, origins and licenses of the two conversation references used by phi_kiem_base were not persisted.",
+    "The pre-correction phi_kiem_base image was not retained as a separate project file.",
+    "Physical-device and Web-export presentation are outside this asset metadata and remain unverified."
+  ]
+}

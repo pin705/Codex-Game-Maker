@@ -1,0 +1,23 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+PASS: Vạn Kiếm starts with authored orbiting blades
+PASS: sword rank adds orbiting blades
+PASS: sword rank expands the attack fan
+PASS: trigger_attack creates a transient fan
+PASS: Ngọc Thể starts with a jade shell
+PASS: vitality rank adds shield facets
+PASS: vitality rank adds ward glyphs
+PASS: trigger_hit creates a jade flare
+PASS: Tụ Linh starts with vortex tendrils
+PASS: magnet rank adds vortex tendrils
+PASS: trigger_pickup creates a gathering beam
+PASS: follow_actor snaps to actor
+PASS: update_actor tracks movement
+PASS: update_actor tracks facing
+PASS: reduced motion can be forced explicitly
+PASS: reduced motion lowers the particle budget
+PASS: reduced motion shortens sword trails
+PASS: transient events obey the shared cap
+PASS: reduced motion uses the mobile-safe transient cap
+PASS: transient effects expire deterministically
+CULTIVATION VFX RESULT: PASS

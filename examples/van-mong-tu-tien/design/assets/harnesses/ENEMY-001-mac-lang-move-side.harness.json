@@ -1,0 +1,47 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "ENEMY-001-mac-lang-move-side",
+  "kind": "sprite",
+  "action": "move",
+  "view_profile": "top_down_survivor",
+  "target_engine": "Godot 4.4",
+  "canvas": { "width": 1536, "height": 768 },
+  "grid": { "rows": 2, "cols": 4, "cell_width": 384, "cell_height": 384 },
+  "safe_margin": 48,
+  "safe_zone": { "left": 48, "top": 48, "right": 336, "bottom": 336 },
+  "edge_guard_px": 16,
+  "key_color": "#FF00FF",
+  "foot_line_y": 326,
+  "acceptance": {
+    "alpha_threshold": 8,
+    "key_tolerance": 24,
+    "min_component_area": 148,
+    "max_scale_drift_ratio": 0.14,
+    "max_foot_drift_px": 16,
+    "min_lower_body_transition_diff": 0.1,
+    "max_weak_motion_transitions": 2,
+    "allow_empty_cells": false,
+    "allow_horizontal_edge_touch": false,
+    "allow_vertical_edge_touch": false,
+    "block_safe_zone_violations": true,
+    "block_neighbor_fragments": true
+  },
+  "runtime_contract": {
+    "pivot": "feet",
+    "target_in_game_height_px": 64,
+    "normalized_frame_canvas": "384x384",
+    "frame_order": "left-to-right, top-to-bottom",
+    "loop": true,
+    "fps": 8,
+    "view_profile": "top_down_survivor",
+    "direction_model": "side_only_target_facing",
+    "runtime_state": "move_side",
+    "motion_phases": ["front-paw contact", "weight forward", "rear-paw pass", "compressed step", "opposite contact", "weight return", "rear-paw return", "loop bridge"]
+  },
+  "outputs": {
+    "harness_guide": "design/assets/harnesses/ENEMY-001-mac-lang-move-side.harness.png",
+    "harness_spec": "design/assets/harnesses/ENEMY-001-mac-lang-move-side.harness.json",
+    "prompt_contract": "design/assets/harnesses/ENEMY-001-mac-lang-move-side.prompt.md",
+    "guide_status": "planned_not_rendered"
+  }
+}

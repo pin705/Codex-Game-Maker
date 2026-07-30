@@ -1,0 +1,48 @@
+{
+  "style_lock": {
+    "path": "design/art/style-lock.json",
+    "style_version": "2.0.0",
+    "sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  },
+  "checks": {
+    "player-journeys-automated": "PASS",
+    "visual-quality-independent": "BLOCKED",
+    "audio-listening": "BLOCKED",
+    "manual-four-minute-playtest": "BLOCKED",
+    "mobile-device-qa": "BLOCKED",
+    "quality-command-evidence": "PASS",
+    "served-web-browser-qa": "BLOCKED"
+  },
+  "check_notes": {
+    "player-journeys-automated": "The current Godot 4.6.2 suite passes title/meta/combat/result, pause, terminal, long-run, mobile-orientation, responsive-layout, VFX, audio and visual-evidence harnesses; the shell-free quality run binds all declared commands to the final manifest and project fingerprint.",
+    "visual-quality-independent": "Current captures and production-authored QA are review inputs only. No clean-context human or independent-agent final review has signed the current capture set.",
+    "audio-listening": "smoke_audio verifies PCM, loop metadata and buses; no human listening session has checked loudness, masking, seams, cleanup or target outputs.",
+    "manual-four-minute-playtest": "No uninterrupted physical-input four-minute run plus boss-kill and death/retry routes has been recorded after the latest build.",
+    "mobile-device-qa": "Simulated safe-area and orientation tests pass, but no physical iOS/Android notch, DPI, thumb-reach, thermal or sustained multi-touch evidence exists.",
+    "quality-command-evidence": "The shell-free quality runner completed all 13 declared commands with PASS on supported Godot 4.6.2 and wrote production/evidence/quality-run.json for project fingerprint 740e418cd08d2d68a753c5dc91e0fd05bc9c8f96d6f5c1b9c9c94cf1eddecd3f.",
+    "served-web-browser-qa": "Godot 4.6.2 Web export and a served Chromium smoke now pass canvas boot, focus, Enter/pointer/Escape transitions, 1600x900 rendering and 844x390 landscape rendering with no console/page/network errors. Full supported-browser (Firefox/Safari), audio-unlock/output and physical-device coverage remain pending."
+  },
+  "quality_report": "production/evidence/quality-run.json",
+  "visual_contract": "production/reviews/visual-quality-contract.json",
+  "visual_review": "production/reviews/visual-quality.md",
+  "audio_review": "production/reviews/audio-listening.md",
+  "artifacts": [
+    "production/quality-command-manifest.json",
+    "production/evidence/quality-run.json",
+    "production/playtests/STORY-0001-evidence.md",
+    "production/playtests/frontend/title.png",
+    "production/playtests/frontend/hub.png",
+    "production/playtests/frontend/technique-upgrade.png",
+    "production/playtests/frontend/results.png",
+    "production/playtests/frontend/results-defeat.png",
+    "production/playtests/overhaul/gameplay-final.png",
+    "production/playtests/overhaul/upgrade-final.png",
+    "production/playtests/overhaul/pause-final.png",
+    "production/playtests/vfx/sword-rank5.png",
+    "production/playtests/vfx/jade-rank5.png",
+    "production/playtests/vfx/qi-rank5.png",
+    "production/playtests/mobile-support/portrait-overlay.png",
+    "production/playtests/responsive/combat-wide-touch.png",
+    "assets/generated/audio/music_combat.wav"
+  ]
+}

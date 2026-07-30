@@ -1,0 +1,81 @@
+asset_id: ARENA-001-cloud-ring
+name: "Vân Mộng Vân Đài — cloud-ring arena"
+category: environments
+asset_kind: arena_plate
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  family_id: "environment"
+  locked_reference_paths: ["production/playtests/overhaul/gameplay-final.png"]
+intended_use: "Full 1600x900 gameplay ground plate behind entities and telegraphs"
+target_engine: "Godot 4.4"
+target_display_size: "1600x900 logical pixels"
+runtime_role: "Optional authored InkBackground plate; procedural fallback remains available"
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  asset_brief: "design/assets/visual-overhaul-batch-01.md"
+web_sources:
+  - url: "https://www.metmuseum.org/art/collection/search/65620"
+    title: "Gong Xian, Landscapes, 1680s — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain; ink density, paper and mountain-edge study only, no tracing or composition reuse."
+  - url: "https://www.metmuseum.org/art/collection/search/41480"
+    title: "Dong Qichang, Landscapes and poems — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain; paper/silk material and restrained gold contrast study only; no calligraphy copied."
+generation_plan:
+  generation_provider: gpt_image
+  generation_mode: built_in_image_gen
+  visual_asset_source: "original reference-informed generation"
+  prompt_record_status: "reconstructed from the accepted delivery and committed art direction; exact tool-call text was not persisted"
+  action: single
+  view: "high top-down arena plate"
+  sheet_rows: 1
+  sheet_cols: 1
+  expected_frames: 1
+  anchor: top_left
+  background_policy: "full illustrated environment; no transparency"
+  postprocess_required: true
+prompt_reconstruction: |
+  Original premium 2D xianxia combat arena painted in Chinese ink wash on warm
+  xuan paper, wide 16:9 and viewed from high top-down. A large calm parchment
+  fighting floor occupies the center, with a restrained circular ward seal;
+  broken blue-black cliff shelves, cloud falls, pine silhouettes, aged bronze
+  ward posts, sparse jade pools and tiny cinnabar foliage frame the perimeter.
+  Keep the central majority light, uncluttered and readable for dense survivor
+  combat. Handmade dry/wet brush edges, mineral pigment and paper grain; no
+  baked characters, enemies, pickups, projectiles, UI, health bars or text.
+negative_constraints:
+  - "no words, calligraphy, labels, logo, watermark, UI or debug grid"
+  - "no characters, monsters, weapons, pickups, spell effects or cast shadows"
+  - "no glossy 3D render, plastic terrain, neon cyberpunk or photoreal scene"
+  - "no perspective corridor, dominant building or clutter across the central combat field"
+postprocess:
+  raw_size: "1672x941"
+  selected_size: "1600x900"
+  operations:
+    - "resample/crop source to exact 1600x900 logical arena"
+    - "encode WebP runtime delivery"
+    - "create 320x180 PNG review preview"
+godot_import:
+  target_node: "InkBackground CanvasItem draw layer"
+  target_script: "scripts/gameplay/ink_background.gd"
+  import_preset: "2d linear Texture2D"
+  runtime_path: "res://assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.webp"
+  fallback: "dark procedural ink arena"
+  collision_role: none
+output:
+  raw_file: "assets/raw/environments/ARENA-001-cloud-ring-v001.png"
+  selected_file: "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.png"
+  processed_file: "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.webp"
+  preview_file: "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-preview-320x180-v001.png"
+  sha256_processed: "64dd8e892e28853fc1ce69b1607f31d5fc68a8e8a0a4f26b98f7a72583c94517"
+  processed_bytes: 346194
+  status: accepted
+  acceptance: source_visual_and_native_screenshot_pass
+notes: >-
+  The WebP is integrated behind a restrained dark glaze; gameplay rings, motes
+  and safe border remain separate draw layers. Final entity-contrast and HUD
+  composition screenshot QA passed. This accepted plate is not by itself a
+  commercial-readiness claim.

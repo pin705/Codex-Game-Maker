@@ -1,0 +1,200 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "ENEMY-001-wisp-idle",
+  "kind": "sprite",
+  "action": "idle",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-wisp-idle-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/ENEMY-001-wisp-idle.harness.json",
+  "gate": "PASS",
+  "blockers": [],
+  "warnings": [],
+  "evidence": [
+    {
+      "code": "harness.geometry.ok",
+      "message": "Canvas, grid, safe zones, edge guards, and drift checks passed.",
+      "path": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/enemies/ENEMY-001-wisp-idle-rectified-v001.png"
+    }
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": {
+        "left": 178,
+        "top": 180,
+        "right": 336,
+        "bottom": 436,
+        "width": 158,
+        "height": 256
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 17210,
+          "bbox": {
+            "left": 178,
+            "top": 180,
+            "right": 332,
+            "bottom": 436
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "row": 0,
+      "col": 1,
+      "bbox": {
+        "left": 178,
+        "top": 180,
+        "right": 338,
+        "bottom": 436,
+        "width": 160,
+        "height": 256
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 16705,
+          "bbox": {
+            "left": 178,
+            "top": 180,
+            "right": 334,
+            "bottom": 436
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "row": 0,
+      "col": 2,
+      "bbox": {
+        "left": 180,
+        "top": 180,
+        "right": 336,
+        "bottom": 435,
+        "width": 156,
+        "height": 255
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 17287,
+          "bbox": {
+            "left": 180,
+            "top": 180,
+            "right": 332,
+            "bottom": 435
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "row": 1,
+      "col": 0,
+      "bbox": {
+        "left": 178,
+        "top": 179,
+        "right": 337,
+        "bottom": 436,
+        "width": 159,
+        "height": 257
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 16639,
+          "bbox": {
+            "left": 178,
+            "top": 179,
+            "right": 334,
+            "bottom": 436
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "row": 1,
+      "col": 1,
+      "bbox": {
+        "left": 172,
+        "top": 179,
+        "right": 342,
+        "bottom": 436,
+        "width": 170,
+        "height": 257
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 18013,
+          "bbox": {
+            "left": 173,
+            "top": 179,
+            "right": 338,
+            "bottom": 436
+          }
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "row": 1,
+      "col": 2,
+      "bbox": {
+        "left": 178,
+        "top": 180,
+        "right": 337,
+        "bottom": 436,
+        "width": 159,
+        "height": 256
+      },
+      "edge_counts": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "components": [
+        {
+          "area": 17144,
+          "bbox": {
+            "left": 179,
+            "top": 180,
+            "right": 333,
+            "bottom": 436
+          }
+        }
+      ]
+    }
+  ]
+}

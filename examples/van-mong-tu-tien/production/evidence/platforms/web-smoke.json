@@ -1,0 +1,54 @@
+{
+  "url": "http://127.0.0.1:8765/",
+  "viewport_desktop": {
+    "width": 1600,
+    "height": 900
+  },
+  "viewport_phone": {
+    "width": 844,
+    "height": 390
+  },
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "captures": [
+    {
+      "path": "production/evidence/platforms/web-title.png",
+      "sha256": "c0e0a90f86e725aad42043b14a5bfe0a4b8475407b66cefc52ff71cb6a29a2aa",
+      "bytes": 2046043
+    },
+    {
+      "path": "production/evidence/platforms/web-hub.png",
+      "sha256": "f3058fd7a4f2e126b4a5935c691529a9460e1e2ee3c7f9e3689150b7a1efba33",
+      "bytes": 2179674
+    },
+    {
+      "path": "production/evidence/platforms/web-stages.png",
+      "sha256": "0e21b1888279d1a238a2b6d63f44219b1b048a5c45968de3b4f6d75752663f37",
+      "bytes": 2139208
+    },
+    {
+      "path": "production/evidence/platforms/web-hub-back.png",
+      "sha256": "5359d268afcb244b678926594453ba5f311864210967f1f8394d5aeef1167e5c",
+      "bytes": 2179690
+    },
+    {
+      "path": "production/evidence/platforms/web-title-phone.png",
+      "sha256": "79475dfc7779bb9c706301b3eaa69c74555053dd2f63fa92f54d2d67aa9aab9a",
+      "bytes": 526270
+    },
+    {
+      "path": "production/evidence/platforms/web-hub-phone.png",
+      "sha256": "1ce5a4bbd4938b76e9e5f10793c3675d79120f4ee947d43abe4309c045e7af48",
+      "bytes": 551660
+    }
+  ],
+  "input_checks": [
+    "canvas-focus",
+    "Enter-title-to-hub",
+    "pointer-hub-to-stages",
+    "Escape-stages-to-hub",
+    "phone-landscape-resize"
+  ],
+  "status": "PASS"
+}

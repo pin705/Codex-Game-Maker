@@ -1,0 +1,230 @@
+schema: "codex-game-maker.asset-prompt-spec.v2"
+asset_id: PREMIUM-001-cultivation-sigils
+name: "Phi Kiếm, Hộ Thể Ngọc and Tụ Linh gameplay sigils"
+category: vfx
+asset_kind: ui_icon_family
+intended_use: >-
+  Three standalone painted discipline marks used by loadout, permanent
+  techniques, breakthrough choices, touch skill control and portrait guard.
+target_engine: "Godot 4.4"
+target_display_size: "approximately 40x40 through 200x200 logical pixels"
+runtime_role: "Primary technique identity art; never a frame, badge or button."
+
+provenance:
+  record_status: "recovered_from_local_codex_session_log_and_verified_project_files"
+  generation_provider: gpt_image
+  execution_surface: "Codex built-in image_gen"
+  provider_request_id: "unknown_not_exposed"
+  provider_asset_id: "unknown_not_exposed"
+  model_identifier: "unknown_not_exposed"
+  seed: "unknown_not_exposed"
+  codex_session_id: "019facc5-d657-7251-922d-55cd7d52c651"
+  session_log_scope: "local Codex session evidence; not a provider receipt"
+  legacy_prompt_copy: "assets/generated/vfx/PREMIUM-001-cultivation-sigils/PROMPTS.md"
+  source_note: >-
+    Prompt text was checked against both the committed PROMPTS.md and the local
+    session calls. Codex call IDs and output-hint IDs are recorded separately
+    from provider IDs, which were not exposed.
+
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  ui_spec: "design/ui/ui-ux-spec.md"
+
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  locked_reference_paths: ["production/playtests/overhaul/upgrade-final.png"]
+  family_id: "cultivation-sigils"
+  identity_anchors:
+    - "one strong standalone silhouette per discipline"
+    - "cinematic xianxia ink mark rather than inventory badge"
+    - "readable at 40, 64 and 128 pixels"
+  material_anchors:
+    - "opaque mineral-pigment brushwork"
+    - "confident dry-brush edges"
+    - "no UI furniture baked into the art"
+  palette_and_lighting_anchors:
+    - "steel white and cold cyan for Phi Kiếm"
+    - "nephrite, celadon and bone ivory for Hộ Thể Ngọc"
+    - "celadon, cold cyan, bone ivory and blue-black for Tụ Linh"
+  forbidden_drift:
+    - "frame, medallion, closed badge, bevel, clasp, plaque or filigree"
+    - "generic mobile-game spell icon"
+    - "text, pseudo-calligraphy, logo or watermark"
+    - "soft background glow or chroma-contaminated fringe"
+
+presentation_contract:
+  source_kind: "dedicated-component"
+  render_mode: "uniform"
+  aspect_ratio_policy: "512x512 canvas; preserve square canvas and internal safe margin"
+  intended_surface_ids:
+    - loadout
+    - techniques
+    - breakthrough
+    - combat
+    - portrait-guard
+  rendered_size_range: [40, 200]
+  runtime_composite_evidence:
+    - "production/playtests/frontend/loadout.png"
+    - "production/playtests/frontend/techniques.png"
+    - "production/playtests/overhaul/upgrade-final.png"
+    - "production/playtests/mobile-support/portrait-overlay.png"
+
+generation_plan:
+  generation_provider: gpt_image
+  visual_asset_source: "original generated discipline marks"
+  bundle: "three_single_components"
+  key_color: "#FF00FF"
+  background_policy: "flat chroma key; each sigil isolated; no text"
+  postprocess_required: true
+
+operations:
+  - operation_id: phi_kiem_base
+    status: "superseded_by_weapon_correction; output_not_retained"
+    action: generate_with_references
+    codex_tool_call_id: "call_vWltrdPtu4OnM55vvdsASgw9"
+    called_at_utc: "2026-07-29T09:07:06.385Z"
+    input_images:
+      mechanism: "num_last_images_to_include: 2"
+      identities: "unknown_not_recorded"
+      note: >-
+        The prompt labels their visual roles, but the built-in call/session did
+        not persist project paths, hashes, origins or license records for them.
+    prompt: |
+      Use case: stylized-concept
+      Asset type: standalone cultivation-technique gameplay sigil, 512x512 runtime icon source
+      Input images: Image 1: visual-direction reference for restrained cinematic xianxia ink painting and cyan sword energy; Image 2: palette/character-world reference only. Do not copy composition or make UI furniture.
+      Primary request: Create ONE authored painted sigil for the Phi Kiem (flying sword) cultivation discipline. It must feel like a cinematic xianxia combat mark, not an inventory icon and not a fantasy UI badge.
+      Scene/backdrop: perfectly flat solid #ff00ff chroma-key background for local alpha extraction. One uniform color only: no gradient, texture, floor, reflection, halo contamination, or lighting variation.
+      Subject: a single long spectral jian thrusting diagonally from lower-left toward upper-right, its narrow steel-white blade emerging from one decisive crescent calligraphy stroke of cold cyan qi. The blade and energy stroke interlock into one strong, instantly readable asymmetric silhouette. Minimal dark ink counterstroke near the hilt; simple undecorated grip.
+      Style/medium: high-end hand-painted 2D game VFX sigil; restrained Chinese ink wash translated into crisp gameplay art; confident dry-brush edges, selective luminous cyan core, tactile pigment, cinematic rather than ornate.
+      Composition/framing: centered single asset occupying roughly 68% of square canvas; generous magenta isolation; strong shape readable at 48–64 px; orthographic graphic presentation.
+      Color palette: steel white, pale celadon-cyan, one deep blue-black ink accent. No gold.
+      Text: none.
+      Constraints: opaque painted strokes with crisp removable outer edges; no semi-transparent smoke, dust, floating particles, soft shadow, glow leaking into background, text, Chinese characters, runes, logo, frame, circle badge, medallion, bevel, clasp, border, plaque, gem, gold trim, filigree, decorative cloud corners, or multiple icons. Do not use #ff00ff anywhere in the sigil.
+      Avoid: generic mobile-game icon, fantasy RPG ornament, heraldic crest, realistic product render, 3D bevel, stock vector look, UI card, watermark.
+
+  - operation_id: phi_kiem_weapon_correction
+    status: selected_source
+    action: edit
+    codex_tool_call_id: "call_rkLLlUoJRuwddJMowC7ZF1tv"
+    called_at_utc: "2026-07-29T09:09:02.721Z"
+    codex_output_hint_id: "exec-18d4d119-18ed-4c3b-a0c2-0c5ca1765a68.png"
+    input_images:
+      mechanism: "num_last_images_to_include: 1"
+      identity: "phi_kiem_base output"
+      retained_project_path: "not_retained_separately"
+    prompt: |
+      Use case: precise-object-edit
+      Asset type: standalone cultivation-technique gameplay sigil
+      Input images: Image 1: edit target, the newly generated flying-sword sigil
+      Primary request: Change ONLY the weapon morphology from a Japanese-looking sword into an unmistakable classical Chinese jian. Preserve the crescent cyan calligraphy energy, overall diagonal thrust, strong silhouette, painterly ink style, scale, palette, flat magenta background, and all negative constraints.
+      Weapon correction: a straight narrow symmetrical double-edged blade with a crisp central ridge; short understated Chinese jian guard shaped as two restrained downward wings, not a circular tsuba; straight dark cord-wrapped grip; compact faceted pommel. The sword must remain elegant and undecorated, with no ornate fittings.
+      Scene/backdrop: preserve perfectly flat solid #ff00ff chroma-key background with generous isolation.
+      Constraints: no katana, saber, curved blade, circular Japanese guard, text, Chinese characters, runes, logo, frame, badge, medallion, bevel, border, gem, gold, filigree, particles, soft shadow, or background glow. Keep the subject opaque with crisp removable edges; do not use #ff00ff inside the subject. Change only the sword morphology.
+
+  - operation_id: ho_the_ngoc
+    status: selected_source
+    action: generate_with_style_reference
+    codex_tool_call_id: "call_gurfoqr9WujhCk5l9B5wLLuB"
+    called_at_utc: "2026-07-29T09:10:48.129Z"
+    codex_output_hint_id: "exec-818c316e-05eb-46bf-807f-c1b37e373d84.png"
+    input_images:
+      mechanism: "num_last_images_to_include: 1"
+      identity: "selected Phi Kiếm correction output, style reference only"
+    prompt: |
+      Use case: stylized-concept
+      Asset type: standalone cultivation-technique gameplay sigil, 512x512 runtime icon source
+      Input images: Image 1: style reference only for brushwork density, cinematic xianxia restraint, crisp magenta isolation, scale, and limited palette. Do not reuse its sword, crescent composition, or exact silhouette.
+      Primary request: Create ONE authored painted sigil for the Ho The Ngoc (jade body protection) cultivation discipline. It must communicate resilient cultivated body and jade warding through an iconic magical object, not through a UI badge.
+      Scene/backdrop: perfectly flat solid #ff00ff chroma-key background for local alpha extraction. One uniform color only: no gradient, texture, floor, reflection, halo contamination, or lighting variation.
+      Subject: one irregular vertical nephrite jade shard/plate suspended upright, slightly faceted and visibly weighty, with a single restrained white fracture vein. Two broad celadon-and-ivory ink strokes embrace it from opposite sides like an OPEN protective shell; they do not connect into a ring. A short deep blue-black grounding brush mark anchors the lower silhouette. No writing or carved symbol on the jade.
+      Style/medium: high-end hand-painted 2D game VFX sigil; restrained cinematic Chinese ink wash with opaque mineral pigment; confident dry-brush edges, selective pale inner light, tactile stone, strong graphic silhouette rather than ornate decoration.
+      Composition/framing: centered single asset occupying roughly 66% of square canvas; generous magenta isolation; compact near-diamond silhouette readable at 48–64 px; orthographic graphic presentation.
+      Color palette: dark forest-nephrite, desaturated celadon, bone ivory, small blue-black ink accent. No gold.
+      Text: none.
+      Constraints: opaque painted strokes with crisp removable outer edges; no transparent glass, haze, smoke, loose particles, soft shadow, background glow, text, Chinese characters, runes, logo, humanoid figure, frame, closed circle, shield badge, medallion, bevel, clasp, border, plaque, gem setting, gold trim, filigree, decorative corners, or multiple icons. Do not use #ff00ff anywhere in the sigil.
+      Avoid: generic mobile-game icon, fantasy RPG amulet, heraldic shield, jewelry, inventory item render, stock vector look, UI card, watermark.
+
+  - operation_id: tu_linh
+    status: selected_source
+    action: generate_with_style_reference
+    codex_tool_call_id: "call_l3EQfr5MTFzVN8nG8cqoWQvX"
+    called_at_utc: "2026-07-29T09:12:43.260Z"
+    codex_output_hint_id: "exec-6adf23e7-7ac9-4239-abf9-0fa032c3acf8.png"
+    input_images:
+      mechanism: "num_last_images_to_include: 1"
+      identity: "selected Hộ Thể Ngọc output, style reference only"
+    prompt: |
+      Use case: stylized-concept
+      Asset type: standalone cultivation-technique gameplay sigil, 512x512 runtime icon source
+      Input images: Image 1: style reference only for opaque mineral-pigment brushwork, cinematic xianxia restraint, crisp magenta isolation, visual weight, and limited celadon/ink palette. Do not reuse its jade shard, protective crescents, or composition.
+      Primary request: Create ONE authored painted sigil for the Tu Linh (gathering qi) cultivation discipline: a concentrated spiritual-energy vortex that feels ancient, controlled, and powerful rather than decorative.
+      Scene/backdrop: perfectly flat solid #ff00ff chroma-key background for local alpha extraction. One uniform color only: no gradient, texture, floor, reflection, halo contamination, or lighting variation.
+      Subject: three broad tapered streams of celadon, cold cyan, and bone-ivory qi coil clockwise into one off-center deep blue-black ink hollow. The streams overlap like decisive calligraphic brush sweeps, compressing toward the core; one short outer tail implies suction and rotation. The vortex is an OPEN spiral, never a closed ring, medallion, yin-yang, or orb. No object sits in the center.
+      Style/medium: high-end hand-painted 2D game VFX sigil; restrained cinematic Chinese ink wash rendered as opaque gameplay art; bold dry-brush edges, subtle pigment breakup inside the strokes, selective pale energy core, no decorative UI treatment.
+      Composition/framing: centered single asset occupying roughly 65% of square canvas; generous magenta isolation; compact circular-but-open silhouette readable at 48–64 px; orthographic graphic presentation.
+      Color palette: pale celadon, cold mineral cyan, bone ivory, deep blue-black ink. No gold.
+      Text: none.
+      Constraints: opaque painted strokes with crisp removable outer edges; no transparent smoke, haze, scattered particles, soft shadow, background glow, text, Chinese characters, runes, logo, sword, stone, human figure, frame, closed circle badge, medallion, bevel, clasp, border, plaque, gemstone, gold trim, filigree, decorative corners, yin-yang symbol, or multiple icons. Do not use #ff00ff anywhere in the sigil.
+      Avoid: generic mobile-game spell icon, fantasy RPG magic badge, galaxy/space nebula, stock vector swirl, UI card, watermark.
+
+postprocess:
+  processor: "/Users/bon/.codex/skills/.system/imagegen/scripts/remove_chroma_key.py"
+  alpha_pass:
+    parameters:
+      auto_key: border
+      soft_matte: true
+      transparent_threshold: 12
+      opaque_threshold: 220
+      despill: true
+    outputs: "source/*_alpha.png"
+  alpha_contract_pass:
+    parameters:
+      auto_key: border
+      soft_matte: true
+      transparent_threshold: 12
+      opaque_threshold: 220
+      despill: true
+      edge_contract: 1
+    outputs: "source/*_alpha_contract.png"
+  final_cleanup_pass:
+    source: "source/*_alpha_contract.png"
+    output: "source/*_alpha_clean.png"
+    algorithm: >-
+      For alpha > 8, compute d=min(r,b)-g. When r>35, b>60 and d>12,
+      clear alpha for d>=30; otherwise scale alpha by (30-d)/18; clamp red
+      to at most g+3; clear any resulting alpha <=8. Fully transparent pixels
+      are written as RGBA 0,0,0,0.
+  runtime_normalization:
+    command_contract: >-
+      ImageMagick: trim alpha, reset page, Lanczos fit inside 440x440,
+      center on transparent 512x512 canvas, strip metadata, RGBA PNG.
+    mapping:
+      - "source/sigil_phi_kiem_alpha_clean.png -> runtime/sigil_phi_kiem.png"
+      - "source/sigil_ho_the_ngoc_alpha_clean.png -> runtime/sigil_ho_the_ngoc.png"
+      - "source/sigil_tu_linh_alpha_clean.png -> runtime/sigil_tu_linh.png"
+  contact_sheet:
+    output: "runtime/premium_001_contact_sheet.png"
+    purpose: "QA-only split-matte and 128/64/40 px readability evidence"
+
+output:
+  raw_files:
+    - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_phi_kiem_chroma.png"
+    - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_ho_the_ngoc_chroma.png"
+    - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_tu_linh_chroma.png"
+  runtime_files:
+    - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png"
+    - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png"
+    - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png"
+  preview_file: "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/premium_001_contact_sheet.png"
+  pipeline_meta: "assets/generated/vfx/PREMIUM-001-cultivation-sigils/pipeline-meta.json"
+  status: accepted_integrated_verified_native
+
+known_unknowns:
+  - "The built-in image provider request ID, provider asset ID, model identifier and seed were not exposed."
+  - "The two references used for the first Phi Kiếm call were conversation images whose exact paths, hashes, origins and licenses were not persisted."
+  - "The pre-correction Phi Kiếm output was not copied into the project as a separate file."

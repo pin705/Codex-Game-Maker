@@ -1,0 +1,30 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+PASS: main scene loads
+PASS: front end exists
+PASS: flow begins at title
+PASS: title enters hub
+PASS: hub exposes focusable navigation
+PASS: hub targets meet 48px minimum
+PASS: stage select presents three stages
+PASS: locked second stage cannot be selected
+PASS: loadout changes discipline
+PASS: discipline selection persists
+PASS: permanent technique can be purchased
+PASS: purchase increments rank
+PASS: codex screen has authored content
+PASS: achievements screen has authored content
+PASS: settings screen has authored content
+PASS: profile reset uses a guarded accessible confirmation
+PASS: reset confirmation can be canceled safely
+PASS: loadout starts combat
+PASS: front end clears the combat playfield
+PASS: selected discipline modifies combat
+PASS: combat ends on results
+PASS: results grant a structured reward
+PASS: run is recorded exactly once
+PASS: first victory unlocks second stage
+PASS: reload 1 restores hub
+PASS: reload 2 restores hub
+PASS: reload 3 restores hub
+FRONTEND FLOW RESULT: PASS

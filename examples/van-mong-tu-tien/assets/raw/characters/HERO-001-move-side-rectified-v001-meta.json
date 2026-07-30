@@ -1,0 +1,207 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "HERO-001-move-side",
+  "kind": "sprite",
+  "action": "move_side",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-move-side-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-move-side-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/HERO-001-move-side.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 34,
+  "fit_scale": 0.86,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 133,
+        "top": 72,
+        "right": 351,
+        "bottom": 463,
+        "width": 218,
+        "height": 391
+      },
+      "area": 48329,
+      "paste": {
+        "left": 92,
+        "top": 111,
+        "right": 292,
+        "bottom": 458
+      },
+      "scale": 0.8536609336609337,
+      "output_size": {
+        "width": 200,
+        "height": 347
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 466,
+        "top": 78,
+        "right": 713,
+        "bottom": 471,
+        "width": 247,
+        "height": 393
+      },
+      "area": 49040,
+      "paste": {
+        "left": 80,
+        "top": 111,
+        "right": 303,
+        "bottom": 458
+      },
+      "scale": 0.8494865525672372,
+      "output_size": {
+        "width": 223,
+        "height": 347
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 868,
+        "top": 76,
+        "right": 1100,
+        "bottom": 465,
+        "width": 232,
+        "height": 389
+      },
+      "area": 48038,
+      "paste": {
+        "left": 85,
+        "top": 111,
+        "right": 298,
+        "bottom": 458
+      },
+      "scale": 0.8578765432098766,
+      "output_size": {
+        "width": 213,
+        "height": 347
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 1215,
+        "top": 77,
+        "right": 1435,
+        "bottom": 467,
+        "width": 220,
+        "height": 390
+      },
+      "area": 47566,
+      "paste": {
+        "left": 91,
+        "top": 111,
+        "right": 293,
+        "bottom": 458
+      },
+      "scale": 0.8557635467980296,
+      "output_size": {
+        "width": 202,
+        "height": 347
+      }
+    },
+    {
+      "index": 4,
+      "method": "components",
+      "source_bbox": {
+        "left": 116,
+        "top": 554,
+        "right": 346,
+        "bottom": 952,
+        "width": 230,
+        "height": 398
+      },
+      "area": 48300,
+      "paste": {
+        "left": 89,
+        "top": 111,
+        "right": 295,
+        "bottom": 458
+      },
+      "scale": 0.8392270531400966,
+      "output_size": {
+        "width": 206,
+        "height": 347
+      }
+    },
+    {
+      "index": 5,
+      "method": "components",
+      "source_bbox": {
+        "left": 454,
+        "top": 557,
+        "right": 713,
+        "bottom": 952,
+        "width": 259,
+        "height": 395
+      },
+      "area": 48896,
+      "paste": {
+        "left": 76,
+        "top": 111,
+        "right": 308,
+        "bottom": 458
+      },
+      "scale": 0.845352798053528,
+      "output_size": {
+        "width": 232,
+        "height": 347
+      }
+    },
+    {
+      "index": 6,
+      "method": "components",
+      "source_bbox": {
+        "left": 854,
+        "top": 558,
+        "right": 1086,
+        "bottom": 952,
+        "width": 232,
+        "height": 394
+      },
+      "area": 48489,
+      "paste": {
+        "left": 87,
+        "top": 111,
+        "right": 297,
+        "bottom": 458
+      },
+      "scale": 0.8474146341463414,
+      "output_size": {
+        "width": 210,
+        "height": 347
+      }
+    },
+    {
+      "index": 7,
+      "method": "components",
+      "source_bbox": {
+        "left": 1210,
+        "top": 557,
+        "right": 1445,
+        "bottom": 955,
+        "width": 235,
+        "height": 398
+      },
+      "area": 50032,
+      "paste": {
+        "left": 86,
+        "top": 111,
+        "right": 297,
+        "bottom": 458
+      },
+      "scale": 0.8392270531400966,
+      "output_size": {
+        "width": 211,
+        "height": 347
+      }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "HERO-001-idle-side",
+  "kind": "sprite",
+  "action": "idle_side",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-idle-side-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/characters/HERO-001-idle-side-rectified-v002.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/HERO-001-idle-side.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 34,
+  "fit_scale": 0.88,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 167,
+        "top": 72,
+        "right": 397,
+        "bottom": 479,
+        "width": 230,
+        "height": 407
+      },
+      "area": 50169,
+      "paste": {
+        "left": 162,
+        "top": 116,
+        "right": 350,
+        "bottom": 440
+      },
+      "scale": 0.7655791962174942,
+      "output_size": {
+        "width": 188,
+        "height": 324
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 667,
+        "top": 77,
+        "right": 909,
+        "bottom": 479,
+        "width": 242,
+        "height": 402
+      },
+      "area": 49702,
+      "paste": {
+        "left": 156,
+        "top": 116,
+        "right": 356,
+        "bottom": 440
+      },
+      "scale": 0.7747368421052632,
+      "output_size": {
+        "width": 200,
+        "height": 324
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 1170,
+        "top": 77,
+        "right": 1412,
+        "bottom": 479,
+        "width": 242,
+        "height": 402
+      },
+      "area": 49386,
+      "paste": {
+        "left": 156,
+        "top": 116,
+        "right": 356,
+        "bottom": 440
+      },
+      "scale": 0.7747368421052632,
+      "output_size": {
+        "width": 200,
+        "height": 324
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 163,
+        "top": 553,
+        "right": 392,
+        "bottom": 959,
+        "width": 229,
+        "height": 406
+      },
+      "area": 49651,
+      "paste": {
+        "left": 162,
+        "top": 116,
+        "right": 350,
+        "bottom": 440
+      },
+      "scale": 0.76739336492891,
+      "output_size": {
+        "width": 188,
+        "height": 324
+      }
+    },
+    {
+      "index": 4,
+      "method": "components",
+      "source_bbox": {
+        "left": 670,
+        "top": 556,
+        "right": 894,
+        "bottom": 960,
+        "width": 224,
+        "height": 404
+      },
+      "area": 49015,
+      "paste": {
+        "left": 163,
+        "top": 116,
+        "right": 348,
+        "bottom": 440
+      },
+      "scale": 0.7710476190476191,
+      "output_size": {
+        "width": 185,
+        "height": 324
+      }
+    },
+    {
+      "index": 5,
+      "method": "components",
+      "source_bbox": {
+        "left": 1170,
+        "top": 557,
+        "right": 1400,
+        "bottom": 961,
+        "width": 230,
+        "height": 404
+      },
+      "area": 49829,
+      "paste": {
+        "left": 161,
+        "top": 116,
+        "right": 351,
+        "bottom": 440
+      },
+      "scale": 0.7710476190476191,
+      "output_size": {
+        "width": 190,
+        "height": 324
+      }
+    }
+  ]
+}

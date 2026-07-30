@@ -1,0 +1,159 @@
+{
+  "schema": "codex-game-maker.asset-harness.v1",
+  "asset_id": "PROJECTILE-001-ngoc-phi-kiem-flight",
+  "kind": "sprite",
+  "action": "projectile",
+  "method": "components",
+  "input": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/projectiles/PROJECTILE-001-ngoc-phi-kiem-flight-v001.png",
+  "output": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/assets/raw/projectiles/PROJECTILE-001-ngoc-phi-kiem-flight-rectified-v001.png",
+  "harness_spec": "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien/design/assets/harnesses/PROJECTILE-001-ngoc-phi-kiem-flight.harness.json",
+  "key_color": "#FF00FF",
+  "tolerance": 34,
+  "fit_scale": 0.72,
+  "frames": [
+    {
+      "index": 0,
+      "method": "components",
+      "source_bbox": {
+        "left": 132,
+        "top": 176,
+        "right": 533,
+        "bottom": 261,
+        "width": 401,
+        "height": 85
+      },
+      "area": 10696,
+      "paste": {
+        "left": 79,
+        "top": 101,
+        "right": 304,
+        "bottom": 154
+      },
+      "scale": 0.5439225181598063,
+      "output_size": {
+        "width": 225,
+        "height": 53
+      }
+    },
+    {
+      "index": 1,
+      "method": "components",
+      "source_bbox": {
+        "left": 752,
+        "top": 176,
+        "right": 1154,
+        "bottom": 261,
+        "width": 402,
+        "height": 85
+      },
+      "area": 10724,
+      "paste": {
+        "left": 79,
+        "top": 101,
+        "right": 304,
+        "bottom": 154
+      },
+      "scale": 0.542608695652174,
+      "output_size": {
+        "width": 225,
+        "height": 53
+      }
+    },
+    {
+      "index": 2,
+      "method": "components",
+      "source_bbox": {
+        "left": 1363,
+        "top": 176,
+        "right": 1760,
+        "bottom": 261,
+        "width": 397,
+        "height": 85
+      },
+      "area": 10560,
+      "paste": {
+        "left": 79,
+        "top": 101,
+        "right": 304,
+        "bottom": 154
+      },
+      "scale": 0.549242053789731,
+      "output_size": {
+        "width": 225,
+        "height": 53
+      }
+    },
+    {
+      "index": 3,
+      "method": "components",
+      "source_bbox": {
+        "left": 131,
+        "top": 577,
+        "right": 533,
+        "bottom": 662,
+        "width": 402,
+        "height": 85
+      },
+      "area": 10677,
+      "paste": {
+        "left": 79,
+        "top": 101,
+        "right": 304,
+        "bottom": 154
+      },
+      "scale": 0.542608695652174,
+      "output_size": {
+        "width": 225,
+        "height": 53
+      }
+    },
+    {
+      "index": 4,
+      "method": "components",
+      "source_bbox": {
+        "left": 752,
+        "top": 578,
+        "right": 1153,
+        "bottom": 662,
+        "width": 401,
+        "height": 84
+      },
+      "area": 10681,
+      "paste": {
+        "left": 79,
+        "top": 102,
+        "right": 304,
+        "bottom": 154
+      },
+      "scale": 0.5439225181598063,
+      "output_size": {
+        "width": 225,
+        "height": 52
+      }
+    },
+    {
+      "index": 5,
+      "method": "components",
+      "source_bbox": {
+        "left": 1359,
+        "top": 578,
+        "right": 1758,
+        "bottom": 662,
+        "width": 399,
+        "height": 84
+      },
+      "area": 10656,
+      "paste": {
+        "left": 79,
+        "top": 102,
+        "right": 304,
+        "bottom": 154
+      },
+      "scale": 0.5465693430656934,
+      "output_size": {
+        "width": 225,
+        "height": 52
+      }
+    }
+  ]
+}

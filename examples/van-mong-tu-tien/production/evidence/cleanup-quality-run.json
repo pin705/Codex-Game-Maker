@@ -1,0 +1,85 @@
+{
+  "schema_version": 2,
+  "profile": "all",
+  "started_at": "2026-07-30T02:47:12.740156+00:00",
+  "finished_at": "2026-07-30T02:47:17.859711+00:00",
+  "manifest": "production/quality-command-manifest.json",
+  "manifest_sha256": "eb7112f0f5b6dc93af8a36d8c7a3a01073fc3aa5de59f012b80db8a9c02eb327",
+  "project_fingerprint": "f27d609bdf01fdc89e5ebffcad1a44c5f9347e11c5100fa6be85daa92ac74fd3",
+  "git_commit": "c5e90f9acc8ba4fc5edd3591459fb0d2af775569",
+  "git_dirty": false,
+  "godot": {
+    "path": "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+    "status": "PASS",
+    "version": "4.6.2.stable.official.71f334935",
+    "returncode": 0
+  },
+  "results": [
+    {
+      "id": "primary_session_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 2.191,
+      "stdout": "production/evidence/commands/primary_session_test.stdout.log",
+      "stderr": "production/evidence/commands/primary_session_test.stderr.log",
+      "stdout_sha256": "cc37ee0ea4b19149ea41e80886518d23ea7765cf9b8a2e55f42618148fd13213",
+      "stderr_sha256": "544e38cf7a52acb4154b429f1ede8b3f880574951b1af1ca08cddb3da9119784",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_frontend_flow.tscn"
+      ],
+      "command_sha256": "1de81a9619b2f272b9d31c19ae532b5abf40f1c9da2ee13d1a4e6f97c49fc9e6",
+      "output_bytes": 1324
+    },
+    {
+      "id": "meta_navigation_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.5,
+      "stdout": "production/evidence/commands/meta_navigation_test.stdout.log",
+      "stderr": "production/evidence/commands/meta_navigation_test.stderr.log",
+      "stdout_sha256": "cc37ee0ea4b19149ea41e80886518d23ea7765cf9b8a2e55f42618148fd13213",
+      "stderr_sha256": "544e38cf7a52acb4154b429f1ede8b3f880574951b1af1ca08cddb3da9119784",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_frontend_flow.tscn"
+      ],
+      "command_sha256": "5c7402af238a449b1a7907d0c5b506071246c12082435c1ed218390e625bc83d",
+      "output_bytes": 1324
+    },
+    {
+      "id": "responsive_layout_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.316,
+      "stdout": "production/evidence/commands/responsive_layout_test.stdout.log",
+      "stderr": "production/evidence/commands/responsive_layout_test.stderr.log",
+      "stdout_sha256": "eec3b09401cb0e8c748ebb0d4b3cb5ee3b244f12cf421cc68c520ad158258ad0",
+      "stderr_sha256": "61ac16523469d8174c94be2de359c617e495d191645562ff40078bf412b698fd",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_responsive_layout.tscn"
+      ],
+      "command_sha256": "befb0c4dedb3af2f5446e6024ed5919bc5d23b8a823774389647ad2b6c236a9d",
+      "output_bytes": 6272
+    }
+  ]
+}

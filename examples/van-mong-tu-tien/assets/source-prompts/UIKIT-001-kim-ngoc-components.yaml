@@ -1,0 +1,88 @@
+asset_id: UIKIT-001-kim-ngoc-components
+name: "Kim Ngọc Pháp Điển — UI component source pack"
+category: ui
+asset_kind: prop_pack
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  family_id: "meta-ui"
+  locked_reference_paths: ["production/playtests/frontend/contact-sheet-current-desktop.png"]
+intended_use: "Authored HUD, meter, breakthrough card and icon textures"
+target_engine: "Godot 4.4"
+target_display_size: "slot-dependent; icons 48–64 px, cards 330x390 logical"
+runtime_role: "Replacement for default StyleBoxFlat/ProgressBar chrome"
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  asset_brief: "design/assets/visual-overhaul-batch-01.md"
+web_sources:
+  - url: "https://www.metmuseum.org/art/collection/search/41480"
+    title: "Dong Qichang, Landscapes and poems — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain; study ink/gold-flecked paper/satin material contrast only; do not copy calligraphy."
+  - url: "https://docs.godotengine.org/en/4.4/classes/class_ninepatchrect.html"
+    title: "Godot 4.4 NinePatchRect documentation"
+    license_or_usage_note: "Official engine documentation; implementation reference for atlas regions and nine-slice margins, not an art source."
+  - url: "https://docs.godotengine.org/en/4.4/classes/class_textureprogressbar.html"
+    title: "Godot 4.4 TextureProgressBar documentation"
+    license_or_usage_note: "Official engine documentation; implementation reference for under/progress/over textures."
+generation_plan:
+  generation_provider: gpt_image
+  visual_asset_source: "original reference-informed component generation"
+  action: components
+  view: ui
+  sheet_rows: 3
+  sheet_cols: 4
+  expected_frames: 12
+  bundle: single_asset
+  anchor: center
+  safe_padding: "56 px inside each 512 px cell"
+  key_color: "#FF00FF"
+  background_policy: "flat chroma key; each component isolated, no text"
+  postprocess_required: true
+harness:
+  spec_file: "design/assets/harnesses/UIKIT-001-kim-ngoc-components.harness.json"
+  guide_file: "design/assets/harnesses/UIKIT-001-kim-ngoc-components.harness.png"
+  prompt_contract: "design/assets/harnesses/UIKIT-001-kim-ngoc-components.prompt.md"
+  exact_canvas: "2048x1536"
+  exact_grid: "3x4"
+  exact_cell_size: "512x512"
+  safe_zone: "x 56..456, y 56..456"
+  edge_guard_px: 20
+  acceptance: "12 non-empty isolated components; nine-slice corners and icon silhouettes pass runtime-size review"
+godot_import:
+  target_node: NinePatchRect/TextureProgressBar/Sprite2D
+  import_preset: "2d UI texture; linear filter; lossless alpha"
+  pivot: center
+  frame_size: "512x512 source cells; cropped components for runtime"
+  nine_patch_slots: [0, 1, 4]
+  texture_progress_slots: [2, 3]
+  icon_slots: [6, 7, 8, 9, 10, 11]
+  collision_role: none
+prompt: |
+  Original authored UI material kit for Vân Mộng: fibrous xuan paper, blue-black
+  lacquer/ink, aged bronze brackets, sparse gold, jade and cinnabar accents.
+  Generate the exact 12-slot component atlas in the harness order; no text or
+  pseudo-calligraphy. Frames must be nine-slice-safe and icons must read at
+  48–64 logical pixels. Follow the harness prompt exactly.
+negative_constraints:
+  - "no words, letters, numerals, characters, pseudo-calligraphy or labels"
+  - "no visible grid, frame numbers, screenshot, cursor, logo or watermark"
+  - "no rounded HTML dashboard cards, glassmorphism, glossy bevel, plastic 3D or neon gradient"
+  - "no shadows/corners crossing safe zones or components touching neighboring cells"
+output:
+  raw_file: "assets/raw/ui/UIKIT-001-kim-ngoc-components-v001.png"
+  selected_file: ""
+  processed_file: "assets/generated/ui/UIKIT-001-kim-ngoc-components/prop-pack-transparent.png"
+  frames_dir: "assets/generated/ui/UIKIT-001-kim-ngoc-components/props"
+  gif_preview: ""
+  pipeline_meta: "assets/generated/ui/UIKIT-001-kim-ngoc-components/pipeline-meta.json"
+  harness_report: "assets/generated/ui/UIKIT-001-kim-ngoc-components/harness-report.json"
+  status: deferred_not_generated
+  acceptance: not_run
+notes: >-
+  Raster atlas generation is deliberately deferred. The current commercial-style
+  direction is implemented with authored Godot UI drawing/layout plus accepted
+  sword, qi and hit textures as upgrade-card icons; do not display this empty
+  planned atlas or call it shipped. Keep the slot contract for a later pass.

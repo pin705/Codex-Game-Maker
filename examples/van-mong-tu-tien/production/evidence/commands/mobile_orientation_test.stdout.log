@@ -1,0 +1,44 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+PASS: joystick stays inside title/device safe area
+PASS: pulse stays inside title/device safe area
+PASS: pause stays inside title/device safe area
+PASS: joystick target is at least 64x64
+PASS: pulse target is at least 64x64
+PASS: pause target is at least 64x64
+PASS: pause remains in the upper-right reach zone instead of blocking center sightline
+PASS: pause and pulse targets never overlap
+PASS: touch direction resolves up-right
+PASS: joystick mirrors move_right InputMap strength
+PASS: joystick mirrors move_up InputMap strength
+PASS: second touch presses pulse exactly once
+PASS: pulse mirrors qi_pulse InputMap state
+PASS: pulse dispatch reaches existing _unhandled_input consumers
+PASS: pulse multi-touch preserves joystick direction
+PASS: drag updates joystick direction deterministically
+PASS: pulse release clears action exactly once
+PASS: joystick release returns to neutral
+PASS: movement actions clear on release
+PASS: pause target dispatches once
+PASS: pause dispatch reaches existing _unhandled_input consumers
+PASS: pause action auto-releases after dispatch
+PASS: phone landscape preserves every 64 px touch target
+PASS: phone landscape keeps all controls inside notch-safe bounds
+PASS: phone landscape touch zones remain disjoint
+PASS: joystick survives asymmetric safe-area relayout
+PASS: pulse survives asymmetric safe-area relayout
+PASS: pause survives asymmetric safe-area relayout
+PASS: portrait device orientation shows rotate-device overlay
+PASS: rotate message stays inside safe area
+PASS: real portrait message is centered in the 900x1600 safe composition
+PASS: real portrait message remains inside notch and home-indicator safe area
+PASS: landscape device orientation hides rotate-device overlay
+PASS: drop-in layer starts with combat controls disabled
+PASS: game_started enables drop-in combat controls
+PASS: pause lifecycle disables drop-in combat controls
+PASS: resume lifecycle restores drop-in combat controls
+PASS: breakthrough modal disables drop-in combat controls
+PASS: upgrade selection restores drop-in combat controls
+PASS: portrait guard prevents touches reaching combat
+PASS: game result leaves drop-in controls disabled
+MOBILE SUPPORT RESULT: PASS

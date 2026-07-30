@@ -1,0 +1,111 @@
+{
+  "schema_version": 2,
+  "profile": "all",
+  "started_at": "2026-07-30T02:35:37.953025+00:00",
+  "finished_at": "2026-07-30T02:36:09.205893+00:00",
+  "manifest": "production/quality-command-manifest.json",
+  "manifest_sha256": "eb7112f0f5b6dc93af8a36d8c7a3a01073fc3aa5de59f012b80db8a9c02eb327",
+  "project_fingerprint": "fad372c5a3771e23fce32b12a64f9e9037f311112c2ebfd9ec3d4d84576fa210",
+  "git_commit": "c1f63be25324913141e36d7500daf33a454a770d",
+  "git_dirty": true,
+  "godot": {
+    "path": "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+    "status": "PASS",
+    "version": "4.6.2.stable.official.71f334935",
+    "returncode": 0
+  },
+  "results": [
+    {
+      "id": "web_export",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 7.406,
+      "stdout": "production/evidence/platforms/commands/web_export.stdout.log",
+      "stderr": "production/evidence/platforms/commands/web_export.stderr.log",
+      "stdout_sha256": "2b41a820d5f8626569c7c0e82f8a557820eddaaf360fdb69e1ea4dd7c014193f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [
+        {
+          "path": "build/web/index.html",
+          "sha256": "5b175263138c499c41d3139f1c14241b4b25dced00bb9de0c279cf1ecdf32521",
+          "size": 5453
+        },
+        {
+          "path": "build/web/index.js",
+          "sha256": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981",
+          "size": 315759
+        },
+        {
+          "path": "build/web/index.wasm",
+          "sha256": "cca8bc7c462d348aaa3f318aecf3281d99bf219e182256412711b24f0d086d80",
+          "size": 37695054
+        },
+        {
+          "path": "build/web/index.pck",
+          "sha256": "5160b6a7e28e3c0be84f0746d555f9bd5f1982e49bc63c230f31dd27405dde86",
+          "size": 17992588
+        }
+      ],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "--export-release",
+        "Web",
+        "build/web/index.html"
+      ],
+      "command_sha256": "67b31576fd5c5e96afc284b641b6af6028cfb2c11197c24892d9bf4e20fd40f2",
+      "output_bytes": 33455
+    },
+    {
+      "id": "web_browser_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 23.47,
+      "stdout": "production/evidence/platforms/commands/web_browser_smoke.stdout.log",
+      "stderr": "production/evidence/platforms/commands/web_browser_smoke.stderr.log",
+      "stdout_sha256": "85b6d96fcb1ba6a571cbaa6ffd0ac0cf48cae1428aa3eaa6f53a29bc29c94320",
+      "stderr_sha256": "1a2df195861b040edf517651f54e0a7458efec03c4f537efad2ac6742f468e3a",
+      "artifacts": [
+        {
+          "path": "production/evidence/platforms/web-smoke.json",
+          "sha256": "431057827ddcd5b3381649c7ae804972a8ae703cd11848c563139101b8626a9f",
+          "size": 1530
+        },
+        {
+          "path": "production/evidence/platforms/web-title.png",
+          "sha256": "c0e0a90f86e725aad42043b14a5bfe0a4b8475407b66cefc52ff71cb6a29a2aa",
+          "size": 2046043
+        },
+        {
+          "path": "production/evidence/platforms/web-hub.png",
+          "sha256": "52a9794f8eee60522050e536e1b525c80f9fefaaeba63a0768741e9c09ecb6ea",
+          "size": 2180162
+        },
+        {
+          "path": "production/evidence/platforms/web-stages.png",
+          "sha256": "26b396025d4c211cc13eacf9371862955ed7769beb705c815f407c37cf6487c6",
+          "size": 2136786
+        },
+        {
+          "path": "production/evidence/platforms/web-title-phone.png",
+          "sha256": "79475dfc7779bb9c706301b3eaa69c74555053dd2f63fa92f54d2d67aa9aab9a",
+          "size": 526270
+        },
+        {
+          "path": "production/evidence/platforms/web-hub-phone.png",
+          "sha256": "ea64428d0dd8b078437dd7472390318a56c08a480568d09ce1b08a0eed61dd87",
+          "size": 552024
+        }
+      ],
+      "argv": [
+        "npm",
+        "run",
+        "test:web"
+      ],
+      "command_sha256": "0930ac8f44745a8e0f81087f29167241977b2eed10fbdbec46eb58083b2ecada",
+      "output_bytes": 1817
+    }
+  ]
+}

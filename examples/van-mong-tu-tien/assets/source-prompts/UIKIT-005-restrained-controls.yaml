@@ -1,0 +1,255 @@
+schema: "codex-game-maker.asset-prompt-spec.v2"
+asset_id: UIKIT-005-restrained-controls
+name: "Restrained ink-lacquer controls"
+category: ui
+asset_kind: ui_component_family
+intended_use: >-
+  A matte command plaque and matching scalable lacquer panel that replace the
+  glossy UIKIT-003 command family and the glossy UIKIT-002 lacquer shell while
+  preserving runtime-rendered Vietnamese text, native focus and input behavior.
+target_engine: "Godot 4.4"
+target_display_size: >-
+  Command plaque nine-sliced from 184x64 through 390x66 logical pixels; panel
+  nine-sliced across compact notices, meta rails, records, modals and large
+  1004x744 result shells.
+runtime_role: >-
+  Primary matte raster material for full-size RasterButton controls and dark
+  lacquer meta/modal surfaces. Compact minus/plus controls remain native drawn.
+
+provenance:
+  record_status: "recovered_from_local_codex_session_log_and_verified_project_files"
+  generation_provider: gpt_image
+  execution_surface: "Codex built-in image_gen"
+  provider_request_id: "unknown_not_exposed"
+  provider_asset_id: "unknown_not_exposed"
+  model_identifier: "unknown_not_exposed"
+  seed: "unknown_not_exposed"
+  codex_session_id: "019fabe5-a06f-77b0-b4e2-fafb415aafb3"
+  session_log_scope: "local Codex session evidence; not a provider receipt"
+  legacy_prompt_copy: "assets/generated/ui/UIKIT-005-restrained-controls/PROMPTS.md"
+  source_note: >-
+    Exact prompts, Codex tool-call IDs, UTC timestamps, output-hint IDs and
+    project-local source copies were recovered from the local session log. The
+    tool did not expose provider request/asset IDs, model identifier or seed.
+
+source_design:
+  concept: "design/gdd/game-concept.md"
+  art_bible: "design/art/art-bible.md"
+  ui_spec: "design/ui/ui-ux-spec.md"
+  visual_review: "production/reviews/visual-quality.md"
+
+web_sources: []
+reference_images: []
+
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  locked_reference_paths: ["production/playtests/frontend/contact-sheet-current-desktop.png", "production/playtests/frontend/contact-sheet-current-phone.png"]
+  family_id: "meta-ui"
+  identity_anchors:
+    - "matte blue-black lacquer or inked silk with a broad quiet caption/content field"
+    - "thin aged-bronze structure and clipped asymmetric corners"
+    - "one restrained jade accent rather than repeated ornamental clasps"
+  material_anchors:
+    - "low-specularity ink lacquer and visible dry-brush wear"
+    - "oxidized brown bronze, never bright polished gold"
+    - "hand-made chipped edges without glossy bevel depth"
+  palette_and_lighting_anchors:
+    - "deep blue-black ink under soft diffuse paper light"
+    - "dark aged bronze and one small jade note"
+    - "runtime text supplies the warm paper highlight"
+  forbidden_drift:
+    - "glossy mobile-game bevel, plastic 3D or bright gold slab"
+    - "pill button, generic HTML/SaaS rectangle or glassmorphism"
+    - "baked text, letters, numerals, pseudo-calligraphy, logo or watermark"
+    - "ornate clasps, flowers, cloud curls, filigree or repeated decorative furniture"
+
+presentation_contract:
+  source_kind: "dedicated-component"
+  aspect_ratio_policy: "nine-slice only; preserve authored corner and rim pixels"
+  text_policy: "all readable text and state wording are rendered by Godot"
+  components:
+    - id: UIKIT-005-command-ink
+      runtime_file: "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png"
+      render_mode: "nine-slice"
+      native_size: [656, 160]
+      content_bbox: [8, 8, 640, 144]
+      nine_slice_margins: [56, 30, 56, 30]
+      minimum_tested_size: [184, 64]
+      maximum_tested_size: [390, 66]
+      intended_surface_ids:
+        - title
+        - hub
+        - stages
+        - loadout
+        - techniques
+        - codex
+        - achievements
+        - settings
+        - reset-confirmation
+        - combat-upgrade
+        - combat-paused
+        - results-victory
+        - results-defeat
+      runtime_refs:
+        - "scripts/ui/raster_button.gd"
+        - "scripts/ui/frontend.gd"
+        - "scripts/ui/hud.gd"
+    - id: UIKIT-005-lacquer-panel
+      runtime_file: "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
+      render_mode: "nine-slice"
+      native_size: [784, 784]
+      content_bbox: [8, 8, 768, 768]
+      runtime_margin_range_px: [34, 78]
+      intended_surface_ids:
+        - title
+        - hub
+        - codex
+        - achievements
+        - reset-confirmation
+        - results-victory
+        - results-defeat
+        - portrait-guard
+      runtime_refs:
+        - "scripts/ui/frontend.gd"
+        - "scripts/ui/rotate_device_overlay.gd"
+  runtime_composite_evidence:
+    - "production/playtests/frontend/title.png"
+    - "production/playtests/frontend/hub.png"
+    - "production/playtests/frontend/stages.png"
+    - "production/playtests/frontend/codex.png"
+    - "production/playtests/frontend/achievements.png"
+    - "production/playtests/frontend/settings.png"
+    - "production/playtests/frontend/reset.png"
+    - "production/playtests/frontend/results.png"
+    - "production/playtests/frontend/results-defeat.png"
+    - "production/playtests/mobile-support/portrait-overlay.png"
+
+generation_plan:
+  generation_provider: gpt_image
+  visual_asset_source: "original generated UI component family"
+  bundle: "two command look-dev candidates plus one selected matching panel"
+  background_policy: "flat #FF00FF chroma key, locally removed"
+  postprocess_required: true
+
+operations:
+  - operation_id: command_candidate_a
+    status: selected_source
+    action: generate
+    codex_tool_call_id: "call_P5pG2S357U67SxLcDZyUf5ln"
+    called_at_utc: "2026-07-29T13:50:36.605Z"
+    completed_at_utc: "2026-07-29T13:51:19.923Z"
+    codex_output_hint_id: "exec-bdd805fa-ba7a-4ba5-bb2b-83f7b6611c04.png"
+    source_copy: "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-a-chroma.png"
+    input_images: []
+    prompt: |
+      Use case: stylized-concept
+      Asset type: production game UI command-button component for a Vietnamese xianxia cultivation game
+      Primary request: one single wide blank command plaque, designed as a scalable 5:1 horizontal control with a perfectly quiet empty center for runtime-rendered text
+      Subject: matte blue-black lacquered wood, a very thin aged-bronze structural rim, clipped asymmetric corners, one tiny restrained jade knot on only one side, sparse dry-brush wear and chipped hand-made edges
+      Style/medium: premium hand-painted 2D game UI asset, restrained ink-and-silk material language, refined commercial production quality
+      Composition/framing: exactly one isolated horizontal plaque centered on canvas, straight front view, generous padding on all sides, no perspective, no cast shadow
+      Lighting/mood: soft diffuse paper light, low specularity, elegant and sober
+      Color palette: blue-black ink, oxidized dark bronze, a tiny jade accent, warm paper highlight only on edge wear
+      Scene/backdrop: perfectly flat solid #FF00FF chroma-key background for local background removal
+      Constraints: blank center; no text; no letters; no numbers; no pseudo-calligraphy; no watermark; no logo; no flowers; no ornate clasps; no cloud curls; no glossy bevel; no plastic 3D; no pill shape; no gold slab; no gradient or texture in the background; no floor; no reflection; background must be uniform #FF00FF and absent from the plaque; crisp separated silhouette; at least 12% empty padding around the plaque
+    selection_reason: >-
+      Selected in the source look-development comparison, then verified at
+      runtime scale because its matte blue-black field, thin bronze rim and
+      single jade knot remain quiet behind Vietnamese captions and remove the
+      former glossy gold/plastic button signal.
+
+  - operation_id: command_candidate_b
+    status: rejected_source_retained
+    action: generate
+    codex_tool_call_id: "call_hKlaNYAJzDrxuySTLMMGuNpm"
+    called_at_utc: "2026-07-29T13:51:54.530Z"
+    completed_at_utc: "2026-07-29T13:53:33.618Z"
+    codex_output_hint_id: "exec-cb9f20ab-4e1b-4464-9d12-d64973fbd41f.png"
+    source_copy: "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-b-rejected-chroma.png"
+    input_images: []
+    prompt: |
+      Use case: stylized-concept
+      Asset type: second look-development candidate for a production game UI command-button component in a Vietnamese xianxia cultivation game
+      Primary request: one single wide blank command tablet, designed as a scalable 5:1 horizontal control with a quiet empty center for runtime-rendered text
+      Subject: layered blackened silk and charcoal ink-wash paper held by only four minimal aged-bronze corner brackets, one small asymmetrical cinnabar maker seal near the far left edge, subtle stitched edge and dry-brush fibers
+      Style/medium: premium hand-painted 2D game UI asset, understated museum-like xuan-paper and ink material, commercial-quality but sober
+      Composition/framing: exactly one isolated horizontal plaque centered on canvas, straight front view, generous padding on all sides, no perspective, no cast shadow
+      Lighting/mood: diffuse natural paper light, completely matte, quiet ritual seriousness
+      Color palette: charcoal ink, faded black silk, tarnished brown bronze, tiny cinnabar accent, no bright gold
+      Scene/backdrop: perfectly flat solid #FF00FF chroma-key background for local background removal
+      Constraints: blank center; no text; no letters; no numbers; no pseudo-calligraphy; no watermark; no logo; no flowers; no cloud curls; no ornate clasps; no glossy bevel; no plastic 3D; no pill shape; no bright gold; no gray UI rectangle; no gradient or texture in background; no floor; no reflection; background uniform #FF00FF and absent from tablet; crisp separated silhouette; at least 12% empty padding around tablet
+    rejection_reason: >-
+      Hard-rejected because the cinnabar seal contains visible pseudo-calligraphy,
+      violating the no-text contract and competing with runtime captions. It has
+      no alpha/runtime derivative and no runtime mapping.
+
+  - operation_id: lacquer_panel
+    status: selected_source
+    action: generate
+    codex_tool_call_id: "call_2PM0sZPMfJ5eZl7zkfwrJQBJ"
+    called_at_utc: "2026-07-29T14:00:25.154Z"
+    completed_at_utc: "2026-07-29T14:01:11.011Z"
+    codex_output_hint_id: "exec-f2c2c58e-2915-4a7b-9942-0f9da5edab4b.png"
+    source_copy: "assets/generated/ui/UIKIT-005-restrained-controls/source/panel-chroma.png"
+    input_images: []
+    prompt: |
+      Use case: stylized-concept
+      Asset type: production game UI scalable nine-slice panel for a Vietnamese xianxia cultivation game
+      Primary request: one single large blank near-square ritual panel with a broad quiet center for runtime-rendered text and nested content
+      Subject: matte blue-black inked silk stretched over a thin dark wood backing, a very narrow aged-bronze structural rim, clipped asymmetric corners, only one tiny restrained jade inlay at the upper-right corner, sparse dry-brush wear
+      Style/medium: premium hand-painted 2D game UI asset matching a sober ink-and-silk command plaque, commercial production quality, understated museum display material
+      Composition/framing: exactly one isolated near-square panel centered on canvas, straight front view, generous padding on all sides, no perspective, no cast shadow
+      Lighting/mood: soft diffuse paper light, low specularity, elegant and quiet
+      Color palette: blue-black ink, oxidized brown bronze, tiny dark jade accent, no bright gold
+      Scene/backdrop: perfectly flat solid #FF00FF chroma-key background for local background removal
+      Constraints: blank center covering at least 72% of panel width and height; no text; no letters; no numbers; no pseudo-calligraphy; no watermark; no logo; no flowers; no cloud curls; no ornate clasps; no glossy bevel; no plastic 3D; no gold slab; no thick decorative furniture; no gradient or texture in background; no floor; no reflection; background uniform #FF00FF and absent from panel; crisp separated silhouette; at least 10% empty padding around panel; corners and rim must be suitable for nine-slice scaling
+    selection_reason: >-
+      Selected because it matches candidate A's matte ink/bronze language and
+      keeps a sufficiently quiet center for title, rail, record, result, reset
+      and portrait-guard compositions.
+
+postprocess:
+  processor: "/Users/bon/.codex/skills/.system/imagegen/scripts/remove_chroma_key.py"
+  python_runtime: "/Users/bon/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3"
+  python_version: "3.12.13"
+  chroma_parameters:
+    auto_key: border
+    soft_matte: true
+    transparent_threshold: 12
+    opaque_threshold: 220
+    despill: true
+  mappings:
+    - "source/candidate-a-chroma.png -> source/candidate-a-alpha.png"
+    - "source/panel-chroma.png -> source/panel-alpha.png"
+  runtime_normalization:
+    tool: "ImageMagick 7.1.2-21 Q16-HDRI"
+    command:
+      - "command: trim alpha, reset virtual page, Lanczos resize to exactly 640x144, add 8 px transparent border -> runtime/ui_command_ink.png"
+      - "panel: trim alpha, reset virtual page, Lanczos resize to exactly 768x768, add 8 px transparent border -> runtime/ui_lacquer_panel.png"
+    note: >-
+      Runtime resizing is deliberately non-uniform inside each dedicated
+      nine-slice source; the authored corners/rims are then protected by Godot
+      patch margins. Neither output is displayed with uniform sprite scaling.
+
+output:
+  selected_sources:
+    - "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-a-chroma.png"
+    - "assets/generated/ui/UIKIT-005-restrained-controls/source/panel-chroma.png"
+  retained_alpha_intermediates:
+    - "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-a-alpha.png"
+    - "assets/generated/ui/UIKIT-005-restrained-controls/source/panel-alpha.png"
+  rejected_sources:
+    - "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-b-rejected-chroma.png"
+  runtime_files:
+    - "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png"
+    - "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
+  pipeline_meta: "assets/generated/ui/UIKIT-005-restrained-controls/pipeline-meta.json"
+  status: accepted_integrated_verified_native
+
+known_unknowns:
+  - "The built-in image provider request ID, provider asset ID, model identifier and seed were not exposed."
+  - "The external chroma helper and ImageMagick runtime are not vendored or version-locked by this asset bundle; hashes bind the accepted bytes."
+  - "Served-Web and physical iOS/Android presentation remain project-level release blockers."

@@ -1,0 +1,178 @@
+schema: "codex-game-maker.scene-scale-plan.v1"
+project: van-mong-tu-tien
+revision: 3
+status: "visual-overhaul-preproduction"
+viewport:
+  aspect_ratio: "16:9"
+  design_width: 1600
+  design_height: 900
+  presentation_width: 1280
+  presentation_height: 720
+  presentation_scale: 0.8
+  stretch_mode: canvas_items
+  stretch_aspect: expand
+  screenshot_target: "1280x720"
+world:
+  width: 1600
+  height: 900
+  camera_rule: "fixed full-arena view"
+  player_bounds: [54, 54, 1492, 792]
+  combat_focus_safe_rect: [220, 130, 1160, 650]
+  visual_density_rule: >-
+    Keep the central 55 percent of the arena lower-detail than the perimeter;
+    authored props and dark wash clusters may frame the edges but cannot fake
+    collision or obscure target silhouettes.
+layer_contract:
+  - { layer: 0, name: "paper_ground", role: "baked paper/silk grain and quiet wash" }
+  - { layer: 1, name: "arena_marks", role: "subtle authored seals, paths and edge props" }
+  - { layer: 2, name: "ground_fx", role: "shadows, skill radii and boss telegraphs" }
+  - { layer: 3, name: "pickups", role: "qi orbs and reward accents" }
+  - { layer: 4, name: "actors", role: "player, enemies and boss, y-sorted when needed" }
+  - { layer: 5, name: "projectiles", role: "flying swords and trails" }
+  - { layer: 6, name: "impact_fx", role: "hits, deaths and breakthrough effects" }
+  - { layer: 10, name: "hud", role: "authored UI islands and overlays" }
+runtime_asset_scale:
+  player:
+    asset_bundle: HERO-001
+    target_height_px: 76
+    max_height_percent_of_viewport: 0.085
+    normalized_frame_canvas: "512x512"
+    pivot: feet
+    foot_alignment: "visual foot baseline aligns to gameplay origin plus one intentional 2 px sink"
+    collision_radius_px: 25
+    aura_diameter_px: 92
+    aura_policy: "separate runtime FX; never baked into locomotion alpha"
+  ordinary_enemy:
+    asset: ENEMY-001-mac-lang-move-side
+    target_height_px: 64
+    max_height_percent_of_viewport: 0.075
+    normalized_frame_canvas: "384x384"
+    pivot: feet
+    collision_radius_px: 20
+    contact_radius_px: 38
+  boss:
+    asset: BOSS-001-thien-giac-move-side
+    target_height_px: 156
+    max_height_percent_of_viewport: 0.175
+    normalized_frame_canvas: "512x512"
+    pivot: feet
+    collision_radius_px: 52
+    contact_radius_px: 70
+    health_bar_offset_y_px: -96
+    telegraph_radius_px: 230
+    telegraph_policy: "separate ground FX; never baked into body frames"
+  qi_orb:
+    asset: PICKUP-001-linh-khi-idle
+    target_core_height_px: 26
+    target_readable_extent_px: 38
+    max_height_percent_of_viewport: 0.045
+    pivot: center
+    collection_radius_source: gameplay
+  projectile:
+    asset: PROJECTILE-001-ngoc-phi-kiem-flight
+    target_width_px: 58
+    target_height_px: 20
+    pivot: center
+    hit_radius_px: 13
+    orientation: "source faces right; rotate whole sprite to velocity angle"
+    trail_policy: "separate runtime trail behind the blade"
+  impact:
+    asset: FX-001-kiem-an-impact
+    target_peak_diameter_px: 72
+    pivot: center
+    duration_seconds: 0.32
+    loop: false
+  key_art:
+    source: "res://assets/generated/key-art/KEYART-001-title-1280x720-v001.webp"
+    target: "title TextureRect only"
+    scaling: "aspect-covered; never used for collision"
+ui:
+  safe_margin_logical_px: 24
+  normal_combat:
+    persistent_max_height_px: 94
+    max_opaque_coverage_percent: 16
+    realm_island:
+      rect: [24, 20, 236, 76]
+      component: "UIKIT-001 slot 0 plus slot 6"
+    health_qi_island:
+      rect: [286, 24, 520, 68]
+      meter_width_px: 390
+      meter_height_px: 22
+      components: "UIKIT-001 slots 2 and 3 plus runtime progress texture"
+    timer_skill_island:
+      rect: [1296, 20, 280, 76]
+      alignment: "top-right; rect x is right edge minus width"
+      components: "UIKIT-001 slots 0 and 7"
+    wave_notice:
+      rect: [500, 116, 600, 84]
+      lifetime_seconds_max: 2.4
+      rule: "temporary narrow silk banner; no persistent center panel"
+  breakthrough:
+    veil_opacity: 0.68
+    heading_rect: [420, 132, 760, 112]
+    card_count: 3
+    card_size: [330, 390]
+    card_gap_px: 30
+    row_origin: [275, 282]
+    icon_max_size: [96, 96]
+    text_inner_margin: [30, 28, 30, 26]
+    component_mapping: "UIKIT-001 slots 4, 5 and 8..11"
+    clipping_required: true
+  title:
+    key_art_rect: [0, 0, 1600, 900]
+    scroll_panel_max_rect: [74, 126, 660, 610]
+    rule: "narrow hanging-scroll/bronze composition; no full dashboard card"
+  pause_end:
+    max_panel_size: [620, 430]
+    component: "UIKIT-001 slot 1"
+ui_texture_contract:
+  asset: UIKIT-001-kim-ngoc-components
+  source_cell_size: "512x512"
+  extraction: "split 3x4 and crop transparent bounds; retain pipeline metadata"
+  nine_patch:
+    source_border_rule: "authored corners occupy no more than 22 percent of cropped width/height"
+    axis_stretch_mode: tile_fit
+    atlas_region_required: true
+  progress_bar:
+    node: TextureProgressBar
+    layers: [texture_under, texture_progress, texture_over]
+    default_progress_style_forbidden: true
+  generated_text_forbidden: true
+sprite_runtime_contract:
+  hero_direction_model: side_only_last_horizontal
+  hero_states: [idle_side, move_side]
+  enemy_direction_model: side_only_target_facing
+  state_transition_smoke: [idle_side, move_side, idle_side]
+  frame_scaling: "proportional from processed transparent bounds"
+  raw_source_scale_forbidden: true
+  collision_art_separation_required: true
+  shadows_and_glows_separate: true
+import_rules:
+  target_engine: "Godot 4.4 Compatibility"
+  painted_sprite_filter: linear
+  sprite_mipmaps: false
+  ui_filter: linear
+  lossless_png_for_alpha: true
+  web_texture_max_dimension_px: 2048
+  oversized_raw_policy: "process and split before import; do not import raw harness sheets into runtime"
+  animated_node: AnimatedSprite2D
+  animation_resource: SpriteFrames
+  ui_panel_node: NinePatchRect
+  ui_meter_node: TextureProgressBar
+rules:
+  - "Do not place generated sprites at raw source-sheet scale."
+  - "Every accepted asset must be reviewed at its target logical size and at 1280x720 presentation scale."
+  - "Idle and movement hero frames share one target height, pivot, foot line and normalized canvas."
+  - "Procedural fallback shapes may not remain visible in final-quality screenshots unless they are deliberate telegraphs or gameplay radii."
+  - "Authored UI art replaces default rounded panels and default progress-bar chrome rather than sitting on top of them."
+  - "Icons, card art and meter frames must clip inside their Control rects."
+  - "Background and edge props must not imply collision unless collision metadata exists."
+qa:
+  - "Player, Mặc Lang, boss, qi orb and sword remain distinguishable at 640x360 thumbnail scale."
+  - "Player idle -> move -> idle shows no target-height, pivot or foot-line pop."
+  - "Boss horns, enemy tail, projectile and impact never touch processed frame edges."
+  - "Normal combat HUD leaves the top-center sight line and central combat focus open."
+  - "Three breakthrough cards fit inside 1280x720 without overflow; icons are capped and card contents clip."
+  - "Nine-patch corners stay undistorted at smallest and largest planned panel sizes."
+  - "TextureProgressBar layers align at 0, 50 and 100 percent values."
+  - "Title, combat, boss, breakthrough, pause, victory and defeat captures share one material family."

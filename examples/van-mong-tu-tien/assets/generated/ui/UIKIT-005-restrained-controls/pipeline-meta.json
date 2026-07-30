@@ -1,0 +1,234 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.asset-pipeline.v2",
+  "asset_id": "UIKIT-005-restrained-controls",
+  "kind": "ui_kit",
+  "recorded_at": "2026-07-29",
+  "provenance": {
+    "generation_provider": "gpt_image",
+    "execution_surface": "Codex built-in image_gen",
+    "provider_request_id": "unknown_not_exposed",
+    "provider_asset_id": "unknown_not_exposed",
+    "model_identifier": "unknown_not_exposed",
+    "seed": "unknown_not_exposed",
+    "codex_session_id": "019fabe5-a06f-77b0-b4e2-fafb415aafb3",
+    "canonical_prompt": "assets/source-prompts/UIKIT-005-restrained-controls.yaml",
+    "legacy_prompt_copy": "assets/generated/ui/UIKIT-005-restrained-controls/PROMPTS.md",
+    "provider_receipt_available": false
+  },
+  "generation_operations": [
+    {
+      "id": "command_candidate_a",
+      "codex_tool_call_id": "call_P5pG2S357U67SxLcDZyUf5ln",
+      "called_at_utc": "2026-07-29T13:50:36.605Z",
+      "completed_at_utc": "2026-07-29T13:51:19.923Z",
+      "codex_output_hint_id": "exec-bdd805fa-ba7a-4ba5-bb2b-83f7b6611c04.png",
+      "status": "selected_source"
+    },
+    {
+      "id": "command_candidate_b",
+      "codex_tool_call_id": "call_hKlaNYAJzDrxuySTLMMGuNpm",
+      "called_at_utc": "2026-07-29T13:51:54.530Z",
+      "completed_at_utc": "2026-07-29T13:53:33.618Z",
+      "codex_output_hint_id": "exec-cb9f20ab-4e1b-4464-9d12-d64973fbd41f.png",
+      "status": "rejected_source_retained"
+    },
+    {
+      "id": "lacquer_panel",
+      "codex_tool_call_id": "call_2PM0sZPMfJ5eZl7zkfwrJQBJ",
+      "called_at_utc": "2026-07-29T14:00:25.154Z",
+      "completed_at_utc": "2026-07-29T14:01:11.011Z",
+      "codex_output_hint_id": "exec-f2c2c58e-2915-4a7b-9942-0f9da5edab4b.png",
+      "status": "selected_source"
+    }
+  ],
+  "processing": {
+    "chroma_key_processor": "/Users/bon/.codex/skills/.system/imagegen/scripts/remove_chroma_key.py",
+    "python_runtime": "/Users/bon/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "python_version": "3.12.13",
+    "alpha_pass": {
+      "auto_key": "border",
+      "soft_matte": true,
+      "transparent_threshold": 12,
+      "opaque_threshold": 220,
+      "despill": true,
+      "outputs": [
+        "source/candidate-a-alpha.png",
+        "source/panel-alpha.png"
+      ]
+    },
+    "runtime_normalization": {
+      "tool": "ImageMagick 7.1.2-21 Q16-HDRI",
+      "command": [
+        "candidate-a-alpha.png: -trim +repage -filter Lanczos -resize 640x144! -bordercolor none -border 8x8 -> runtime/ui_command_ink.png",
+        "panel-alpha.png: -trim +repage -filter Lanczos -resize 768x768! -bordercolor none -border 8x8 -> runtime/ui_lacquer_panel.png"
+      ],
+      "rendering_contract": "The deliberate component normalization is consumed only by Godot NinePatchRect controls whose margins protect authored corners and rims."
+    },
+    "reproducible_from_project_files": false,
+    "reproducibility_note": "Selected chroma sources, alpha intermediates, exact parameters and final hashes are retained, but the external helper and ImageMagick environment are not vendored or version-locked by this bundle."
+  },
+  "lineage": [
+    {
+      "id": "command_candidate_a",
+      "prompt_operation": "command_candidate_a",
+      "status": "selected",
+      "files": [
+        {
+          "role": "selected_chroma_source",
+          "path": "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-a-chroma.png",
+          "width": 1983,
+          "height": 793,
+          "channels": "RGB",
+          "sha256": "0a2b5a7d78ddb2048bfc43e5ad51b63078f7ff8c9e4969c2f3aeb79fadea1132"
+        },
+        {
+          "role": "alpha_intermediate",
+          "path": "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-a-alpha.png",
+          "width": 1983,
+          "height": 793,
+          "channels": "RGBA",
+          "sha256": "65a15237e6216a7bdaa6f17f6aad6862a63ae94e2d2520219f4b9a780941c493"
+        },
+        {
+          "role": "accepted_runtime",
+          "path": "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png",
+          "width": 656,
+          "height": 160,
+          "channels": "RGBA",
+          "sha256": "24f93c65fa918de97eb03b7aa8ac0166323586c87c14520613a97edb48c1e9a3"
+        }
+      ]
+    },
+    {
+      "id": "command_candidate_b",
+      "prompt_operation": "command_candidate_b",
+      "status": "rejected_no_runtime_mapping",
+      "source": {
+        "path": "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-b-rejected-chroma.png",
+        "width": 1774,
+        "height": 887,
+        "channels": "RGB",
+        "sha256": "9e46bbc459ce5122e9ec78250f1649f45a62c99af6d70a078dc75669dafb4d8b"
+      },
+      "rejection_reason": "The cinnabar maker seal contains visible pseudo-calligraphy, a hard failure of the generated-text prohibition."
+    },
+    {
+      "id": "lacquer_panel",
+      "prompt_operation": "lacquer_panel",
+      "status": "selected",
+      "files": [
+        {
+          "role": "selected_chroma_source",
+          "path": "assets/generated/ui/UIKIT-005-restrained-controls/source/panel-chroma.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGB",
+          "sha256": "58b770fb0bbe33ad40d3094c6f05ef4b81b9f176488fc318a3d9fd3fb9d1ef10"
+        },
+        {
+          "role": "alpha_intermediate",
+          "path": "assets/generated/ui/UIKIT-005-restrained-controls/source/panel-alpha.png",
+          "width": 1254,
+          "height": 1254,
+          "channels": "RGBA",
+          "sha256": "460ee00b7a4a8404b5c1fe7fc33f4ce9cbf0841658965e5824f61da8391d3d55"
+        },
+        {
+          "role": "accepted_runtime",
+          "path": "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png",
+          "width": 784,
+          "height": 784,
+          "channels": "RGBA",
+          "sha256": "c6d4993730d2ce2707a40045e5816c15509ae35c6c8487300a94cac2247afb50"
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "runtime_files": [
+      "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png",
+      "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
+    ],
+    "rejected_sources": [
+      "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-b-rejected-chroma.png"
+    ],
+    "runtime_composite_evidence": [
+      "production/playtests/frontend/title.png",
+      "production/playtests/frontend/hub.png",
+      "production/playtests/frontend/stages.png",
+      "production/playtests/frontend/codex.png",
+      "production/playtests/frontend/achievements.png",
+      "production/playtests/frontend/settings.png",
+      "production/playtests/frontend/reset.png",
+      "production/playtests/frontend/results.png",
+      "production/playtests/frontend/results-defeat.png",
+      "production/playtests/mobile-support/portrait-overlay.png"
+    ]
+  },
+  "qa": {
+    "measurement_tool": "ImageMagick 7.1.2-21 Q16-HDRI",
+    "alpha_threshold_for_bounds": "alpha > 0",
+    "key_like_pixel_threshold": "alpha>0.01, r>0.80, b>0.80, g<0.35",
+    "selection_review": {
+      "candidate_a": "selected: matte field, quiet center, restrained structural rim and no generated text",
+      "candidate_b": "rejected: pseudo-calligraphy in the cinnabar seal",
+      "panel": "selected: same matte ink/bronze family and broad quiet nine-slice center"
+    },
+    "alpha_intermediates": [
+      {
+        "id": "command_candidate_a",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 105, "y": 195, "width": 1780, "height": 400},
+        "safe_margin_px": {"left": 105, "top": 195, "right": 98, "bottom": 198, "minimum": 98},
+        "alpha_pixels": {"transparent": 881230, "semi_transparent": 6373, "opaque": 684916},
+        "key_like_magenta_pixels": 0
+      },
+      {
+        "id": "lacquer_panel",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 78, "y": 73, "width": 1097, "height": 1109},
+        "safe_margin_px": {"left": 78, "top": 73, "right": 79, "bottom": 72, "minimum": 72},
+        "alpha_pixels": {"transparent": 366623, "semi_transparent": 5314, "opaque": 1200579},
+        "key_like_magenta_pixels": 0
+      }
+    ],
+    "runtime": [
+      {
+        "id": "ui_command_ink",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 8, "y": 8, "width": 640, "height": 144},
+        "safe_margin_px": {"left": 8, "top": 8, "right": 8, "bottom": 8, "minimum": 8},
+        "edge_touch": false,
+        "alpha_pixels": {"transparent": 14914, "semi_transparent": 3245, "opaque": 86801},
+        "key_like_magenta_pixels": 0
+      },
+      {
+        "id": "ui_lacquer_panel",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 8, "y": 8, "width": 768, "height": 768},
+        "safe_margin_px": {"left": 8, "top": 8, "right": 8, "bottom": 8, "minimum": 8},
+        "edge_touch": false,
+        "alpha_pixels": {"transparent": 29344, "semi_transparent": 7168, "opaque": 578144},
+        "key_like_magenta_pixels": 0
+      }
+    ],
+    "runtime_import": {
+      "godot_importer": "texture / CompressedTexture2D",
+      "compress_mode": 0,
+      "mipmaps_generate": false,
+      "fix_alpha_border": true,
+      "premult_alpha": false
+    },
+    "status": "accepted_integrated_verified_native"
+  },
+  "supersedes": {
+    "UIKIT-003-commercial-buttons": "all command-button runtime components",
+    "UIKIT-002-xuan-ink-commercial": "ui_lacquer_panel.png and compact button crops only; ui_scroll_panel.png and ui_talisman_card.png remain active"
+  },
+  "known_unknowns": [
+    "Provider request/asset IDs, model identifier and seed were not exposed by the built-in tool.",
+    "The processing tools are local dependencies rather than vendored/version-locked project dependencies.",
+    "Served-Web and physical iOS/Android presentation remain outside this asset record and unverified."
+  ]
+}

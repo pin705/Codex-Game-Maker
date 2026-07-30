@@ -1,0 +1,252 @@
+{
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "schema": "codex-game-maker.asset-pipeline.v2",
+  "asset_id": "UIKIT-004-talisman-folios",
+  "kind": "ui_kit",
+  "recorded_at": "2026-07-29",
+  "provenance": {
+    "generation_provider": "gpt_image",
+    "execution_surface": "Codex built-in image_gen",
+    "provider_request_id": "unknown_not_exposed",
+    "provider_asset_id": "unknown_not_exposed",
+    "model_identifier": "unknown_not_exposed",
+    "seed": "unknown_not_exposed",
+    "codex_session_id": "019fabe5-a06f-77b0-b4e2-fafb415aafb3",
+    "canonical_prompt": "assets/source-prompts/UIKIT-004-talisman-folios.yaml",
+    "provider_receipt_available": false
+  },
+  "generation_operations": [
+    {
+      "id": "sword_initial",
+      "codex_tool_call_id": "call_2wYGIoOv1HI6l1C8nCJPwXfO",
+      "called_at_utc": "2026-07-29T10:35:10.029Z",
+      "codex_output_hint_id": "exec-032f2c9f-c020-4430-b79a-4ded7b0e9cc9.png",
+      "status": "intermediate_not_retained"
+    },
+    {
+      "id": "jade_initial",
+      "codex_tool_call_id": "call_EIXwpUQXhs2IRQzrbPpax7xj",
+      "called_at_utc": "2026-07-29T10:36:13.534Z",
+      "codex_output_hint_id": "exec-bda25e17-62c9-4b14-8859-05c9c15d5866.png",
+      "status": "intermediate_not_retained"
+    },
+    {
+      "id": "spirit_initial",
+      "codex_tool_call_id": "call_CboN8OSCGLJgnwIToZ2JjqjH",
+      "called_at_utc": "2026-07-29T10:37:34.663Z",
+      "codex_output_hint_id": "exec-0dfed1a2-3a41-45ab-abe7-8f979bc1fefa.png",
+      "status": "intermediate_not_retained"
+    },
+    {
+      "id": "sword_broad_edit",
+      "codex_tool_call_id": "call_R5PnEu1okEYmdWKYX2b3Uspo",
+      "called_at_utc": "2026-07-29T10:39:39.703Z",
+      "codex_output_hint_id": "exec-60310d73-2cc4-40d6-a0d3-b8f959f8de92.png",
+      "status": "selected_source"
+    },
+    {
+      "id": "jade_broad_edit",
+      "codex_tool_call_id": "call_WhKMtkD2rGIkbwKmucSeVfP6",
+      "called_at_utc": "2026-07-29T10:41:07.252Z",
+      "codex_output_hint_id": "exec-ff2a1550-96f5-4791-a0cd-7b1198add60d.png",
+      "status": "selected_source"
+    },
+    {
+      "id": "spirit_broad_edit_v1",
+      "codex_tool_call_id": "call_fj4StNQbFfV7LDnygezBXEg8",
+      "called_at_utc": "2026-07-29T10:42:38.119Z",
+      "codex_output_hint_id": "exec-861ba84f-cb25-43f8-b453-eecc8ec382e2.png",
+      "status": "superseded"
+    },
+    {
+      "id": "spirit_regeneration_v2",
+      "codex_tool_call_id": "call_7I2wv7DbJgVutyazqYEW4yH7",
+      "called_at_utc": "2026-07-29T11:41:36.739Z",
+      "codex_output_hint_id": "exec-1f43190b-2f78-42df-94b2-d2630c1c0042.png",
+      "status": "selected_source"
+    }
+  ],
+  "processing": {
+    "chroma_key_processor": "/Users/bon/.codex/skills/.system/imagegen/scripts/remove_chroma_key.py",
+    "sword_and_jade": {
+      "auto_key": "border",
+      "soft_matte": true,
+      "transparent_threshold": 12,
+      "opaque_threshold": 220,
+      "despill": true,
+      "edge_contract": 1
+    },
+    "spirit_v1_superseded": {
+      "auto_key": "border",
+      "soft_matte": true,
+      "transparent_threshold": 12,
+      "opaque_threshold": 220,
+      "despill": true,
+      "edge_contract": 1,
+      "runtime_output_retained": false
+    },
+    "spirit_v2_selected": {
+      "auto_key": "border",
+      "soft_matte": true,
+      "transparent_threshold": 12,
+      "opaque_threshold": 180,
+      "despill": true,
+      "edge_contract": 1,
+      "force": true
+    },
+    "final_trim": {
+      "tool": "ImageMagick",
+      "operations": ["trim alpha bounds", "reset virtual page"],
+      "run_in_place": true,
+      "crop_origin_offsets": "unknown_not_recorded_after_in_place_trim",
+      "consequence": "Every runtime folio is a tight alpha crop with zero transparent safe margin."
+    },
+    "reproducible_from_project_files": false,
+    "reproducibility_note": "Command parameters are recovered, but the external helper environment is not vendored/version-locked and the in-place trim did not retain crop-origin offsets; current SHA-256 hashes bind the accepted bytes."
+  },
+  "lineage": [
+    {
+      "id": "folio_sword",
+      "prompt_operation": "sword_broad_edit",
+      "source": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-sword-chroma.png",
+        "width": 1024,
+        "height": 1536,
+        "channels": "RGB",
+        "sha256": "f0fd471c0a70a946e90783cf6ba6046ede05c356d338e168d70680da8cdc82a3"
+      },
+      "runtime": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png",
+        "width": 759,
+        "height": 1342,
+        "channels": "RGBA",
+        "sha256": "b3b6d411f6f7c17997e040037ec9f920da8b0f75aa0a6f645edd29310f2cdb49"
+      }
+    },
+    {
+      "id": "folio_jade",
+      "prompt_operation": "jade_broad_edit",
+      "source": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-jade-chroma.png",
+        "width": 1024,
+        "height": 1536,
+        "channels": "RGB",
+        "sha256": "e3f885dcd6330ec39e22df01165bf33577ad59342bc55a2820ae4652ff7d00d1"
+      },
+      "runtime": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png",
+        "width": 703,
+        "height": 1399,
+        "channels": "RGBA",
+        "sha256": "b79ab0e647a3ef734c43f0d9a26d58e0535e8927cb5c4874ea7444dd5128d18c"
+      }
+    },
+    {
+      "id": "folio_spirit_v1",
+      "prompt_operation": "spirit_broad_edit_v1",
+      "status": "superseded_no_runtime_mapping",
+      "qa_rejection_recorded_at_utc": "2026-07-29T11:41:26.463Z",
+      "source": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-spirit-chroma.png",
+        "width": 1024,
+        "height": 1536,
+        "channels": "RGB",
+        "sha256": "d12e1f44a03196de03ca434060847defda5edb5b9288d16868bf07777bed432b"
+      },
+      "rejection_reason": "Asset QA rejected the non-flat magenta background because chroma cleanup produced holes in the paper body; regeneration was required instead of repair."
+    },
+    {
+      "id": "folio_spirit_v2",
+      "prompt_operation": "spirit_regeneration_v2",
+      "status": "selected",
+      "source": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-spirit-chroma-v2.png",
+        "width": 1024,
+        "height": 1536,
+        "channels": "RGB",
+        "sha256": "d052d546d1788b25c9b3798a9033459e9b780715f2d27573bbb20f578064c645"
+      },
+      "runtime": {
+        "path": "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png",
+        "width": 917,
+        "height": 1458,
+        "channels": "RGBA",
+        "sha256": "3241707b0e60735413a7f838a91936c268c277cc31e1fc15ccdbaba8c3e319aa"
+      }
+    }
+  ],
+  "outputs": {
+    "runtime_files": [
+      "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png",
+      "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png",
+      "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png"
+    ],
+    "contact_sheet": "not_created",
+    "runtime_composite_evidence": [
+      "production/playtests/frontend/techniques.png",
+      "production/playtests/overhaul/upgrade-final.png"
+    ]
+  },
+  "qa": {
+    "measurement_tool": "ImageMagick 7.1.2-21 Q16-HDRI",
+    "alpha_threshold_for_bounds": "alpha > 0",
+    "key_like_pixel_thresholds": {
+      "magenta": "alpha>0.01, r>0.80, b>0.80, g<0.35",
+      "blue": "alpha>0.01, b>0.80, r<0.25, g<0.25"
+    },
+    "runtime": [
+      {
+        "id": "folio_sword",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 0, "y": 0, "width": 759, "height": 1342},
+        "safe_margin_px": {"left": 0, "top": 0, "right": 0, "bottom": 0, "minimum": 0},
+        "edge_touch": true,
+        "nonzero_alpha_edge_pixels": {"top": 2, "right": 37, "bottom": 6, "left": 4},
+        "alpha_pixels": {"transparent": 179973, "semi_transparent": 5074, "opaque": 833531},
+        "key_like_pixels": {"magenta": 0, "blue": 0},
+        "edge_touch_disposition": "accepted_for_uniform UI component only; never sprite-frame or nine-slice"
+      },
+      {
+        "id": "folio_jade",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 0, "y": 0, "width": 703, "height": 1399},
+        "safe_margin_px": {"left": 0, "top": 0, "right": 0, "bottom": 0, "minimum": 0},
+        "edge_touch": true,
+        "nonzero_alpha_edge_pixels": {"top": 18, "right": 8, "bottom": 4, "left": 2},
+        "alpha_pixels": {"transparent": 164333, "semi_transparent": 4682, "opaque": 814482},
+        "key_like_pixels": {"magenta": 0, "blue": 0},
+        "edge_touch_disposition": "accepted_for_uniform UI component only; never sprite-frame or nine-slice"
+      },
+      {
+        "id": "folio_spirit",
+        "has_alpha": true,
+        "alpha_bbox": {"x": 0, "y": 0, "width": 917, "height": 1458},
+        "safe_margin_px": {"left": 0, "top": 0, "right": 0, "bottom": 0, "minimum": 0},
+        "edge_touch": true,
+        "nonzero_alpha_edge_pixels": {"top": 1, "right": 9, "bottom": 4, "left": 22},
+        "alpha_pixels": {"transparent": 283350, "semi_transparent": 35218, "opaque": 1018418},
+        "key_like_pixels": {"magenta": 0, "blue": 0},
+        "edge_touch_disposition": "accepted_for_uniform UI component only; never sprite-frame or nine-slice"
+      }
+    ],
+    "runtime_import": {
+      "godot_importer": "texture / CompressedTexture2D",
+      "compress_mode": 0,
+      "mipmaps_generate": false,
+      "fix_alpha_border": true,
+      "premult_alpha": false
+    },
+    "runtime_evidence": [
+      "production/playtests/frontend/techniques.png",
+      "production/playtests/overhaul/upgrade-final.png"
+    ],
+    "status": "accepted_integrated_verified_native_with_documented_edge_touch"
+  },
+  "known_unknowns": [
+    "Provider request/asset IDs, model identifier and seed were not exposed by the built-in tool.",
+    "The three unedited initial outputs were not retained as project files; their Codex output-hint IDs are recorded.",
+    "The in-place final trim did not preserve crop-origin offsets.",
+    "No standalone UIKIT-004 contact sheet was created; current verification is from the three source/runtime files and native runtime composites.",
+    "Physical-device and Web-export presentation are outside this asset metadata and remain unverified."
+  ]
+}

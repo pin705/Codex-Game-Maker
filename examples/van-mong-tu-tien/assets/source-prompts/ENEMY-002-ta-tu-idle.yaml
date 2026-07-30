@@ -1,0 +1,100 @@
+asset_id: ENEMY-002-ta-tu-idle
+name: "Tà Tu — corrupted cultivator pursuit/idle loop"
+category: enemies
+asset_kind: enemy
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "2.0.0"
+  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  family_id: "actors"
+  locked_reference_paths: ["production/playtests/overhaul/gameplay-final.png"]
+intended_use: "Unique upright identity for DEMON and ELITE enemies, replacing tinted wisp silhouettes"
+target_engine: "Godot 4.4"
+target_display_size: "82 logical pixels tall for DEMON; 106 logical pixels tall for ELITE"
+runtime_role: "Hostile humanoid silhouette, flipped toward target; ELITE receives the existing aged-gold runtime tint"
+source_design:
+  art_bible: "design/art/art-bible.md"
+  visual_direction: "Premium 2D Chinese ink on xuan paper; blue-black corruption, pale mask, cinnabar threat, sparse aged bronze"
+reference_sources:
+  - url: "https://www.metmuseum.org/art/collection/search/65620"
+    title: "Gong Xian, Landscapes — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain; ink-density and translucency study only, with no tracing or composition reuse."
+  - url: "https://www.metmuseum.org/art/collection/search/49180"
+    title: "Shitao, Landscapes of the Four Seasons — The Metropolitan Museum of Art"
+    license_or_usage_note: "Official object page marks the image Public Domain; wet/dry ink-edge study only, with no figure or inscription reuse."
+generation_plan:
+  generation_provider: "Codex built-in image_gen"
+  generation_mode: "built-in default path; no CLI fallback"
+  visual_asset_source: "original reference-informed generation"
+  action: "pursuit_idle"
+  view: "screen-right-facing three-quarter top-down humanoid"
+  sheet_rows: 2
+  sheet_cols: 3
+  expected_frames: 6
+  anchor: feet
+  safe_padding: "64 px inside each 512 px cell after deterministic rectification"
+  key_color: "#FF00FF"
+  background_policy: "flat chroma key; no shadow, aura, text or baked floor"
+  postprocess_required: true
+harness:
+  spec_file: "assets/generated/enemies/ENEMY-002-ta-tu-idle/ENEMY-002-ta-tu-idle.harness.json"
+  exact_canvas: "1536x1024"
+  exact_grid: "2x3"
+  exact_cell_size: "512x512"
+  safe_zone: "x 64..448, y 64..448"
+  foot_line_y: 440
+  edge_guard_px: 24
+  acceptance: "PASS; no edge-touch, empty frame, or key residue. Width variation up to 27.2% is intentional opaque brush-smoke motion; visible body height drift is below 2.7%."
+godot_import:
+  target_node: Sprite2D
+  import_preset: "2d painted sprite; linear filter; lossless alpha"
+  pivot: feet
+  animation_name: "idle_pursuit"
+  fps: 7
+  loop: true
+  collision_role: visual_only
+prompt: |
+  Use case: stylized-concept
+  Asset type: production-ready animated enemy sprite sheet for a top-down arena action game
+  Primary request: Create ONE original hostile corrupted cultivator called “Tà Tu” as a six-frame looping pursuit/idle animation, arranged as an exact 2-row by 3-column sprite sheet. The same character and costume must be preserved in every frame.
+  Scene/backdrop: perfectly flat, uniform solid #FF00FF chroma-key background across the entire canvas and every cell; no floor, no cast shadow, no paper texture in the background, no gradient, no border, no grid lines, no separators.
+  Subject: an upright but predatory forward-leaning corrupted cultivator, clearly non-player and humanoid. Angular narrow silhouette, hunched shoulders, split short robe hem with two visible grounded feet, elongated blue-black sleeves, ragged dry-brush ink smoke growing from the upper back and robe edges. A simple pale xuan-paper mask plane with two tiny cinnabar-red slit eyes; one small broken cinnabar seal patch on the chest with NO glyph or writing; one sparse aged-bronze belt clasp and bronze thread accents. No weapon. The silhouette must be different from a round spirit/wisp and from the heroic player.
+  Style/medium: premium 2D Chinese ink-wash and mineral-pigment game sprite painted on xuan paper, then cleanly isolated; wet blue-black pooling, dry-brush frayed edges, restrained pale paper planes, sparse cinnabar and aged bronze. Authored hand-painted commercial indie quality, not vector art, not 3D, not anime-gacha, not glossy.
+  Camera/view: three-quarter top-down arena view, character generally facing toward screen-right with the mask still readable. Full body visible in every frame.
+  Animation/layout: exact 2x3 layout, left-to-right then top-to-bottom. Six distinct but subtle connected phases: (1) grounded hostile neutral lean, (2) inhale/robe lift and left-foot weight, (3) mask dip and right sleeve pull, (4) opposite-foot weight with ink tails curling back, (5) brief cinnabar eye/seal pressure pulse without glow, (6) settle returning cleanly to frame 1. Real cloth/smoke motion, stable torso size and stable foot baseline; no whole-body wobble or scale popping.
+  Composition/framing: six equal large cells with very generous padding. Each complete character stays centered on a common bottom/feet anchor, occupies roughly 55–65% of cell height, and stays at least 14% of cell size away from every cell edge. No body part, brush tail, sleeve, smoke, or ornament may cross a cell boundary. Keep neighboring silhouettes clearly separated.
+  Color palette: deep ink #0B171B, #17292D and desaturated blue-black #314248; pale mask #E7DDC4; cinnabar #B43D35/#E06B52 only for eyes and seal patch; aged bronze #8A6730/#C69A48 used sparingly. Do not use magenta or hot pink anywhere in the subject.
+  Technical constraints: opaque sprite shapes suitable for chroma-key removal; crisp readable alpha silhouette; internal brush texture must survive at 64–80 logical pixels tall; consistent baked soft upper-left light; no translucent glow or semi-transparent smoke; no motion blur; no shadow; no detached debris; no labels; no text; no calligraphy; no pseudo-Chinese characters; no watermark; no logo.
+  Avoid: generic ghost blob, round wisp, cute mascot, heroic posture, long floor-length robe hiding both feet, extra limbs, duplicated face, anatomy drift, changing mask shape, costume drift, scale drift, cropped parts, visible grid, poster composition, plastic rendering.
+negative_constraints:
+  - "no text, calligraphy, pseudo-Chinese characters, labels, borders, grid, logo or watermark"
+  - "no glossy 3D, neon, generic anime-gacha finish, vector dashboard art or plastic shading"
+  - "no aura, glow, floor shadow, translucent smoke, dust or motion blur baked into the body sheet"
+  - "no round wisp silhouette, heroic posture, extra limbs, duplicate face, scale pop or cell crossing"
+postprocess:
+  rectification: "Codex Game Maker harness rectifier; 2x3 grid, feet anchor, 0.94 fit scale"
+  chroma_cleanup: "imagegen remove_chroma_key.py; auto-key border, soft matte 12..220, despill, edge-contract 1"
+  sprite_processing: "Codex Game Maker cgs_asset_processor.py; shared scale, feet anchor, 143 ms/frame"
+  runtime_crop: "ImageMagick alpha trim per accepted frame"
+output:
+  raw_file: "assets/raw/enemies/ENEMY-002-ta-tu-idle-v001.png"
+  rectified_file: "assets/raw/enemies/ENEMY-002-ta-tu-idle-rectified-v001.png"
+  rectification_meta: "assets/raw/enemies/ENEMY-002-ta-tu-idle-rectified-v001-meta.json"
+  alpha_source: "assets/generated/enemies/ENEMY-002-ta-tu-idle/alpha-source.png"
+  processed_file: "assets/generated/enemies/ENEMY-002-ta-tu-idle/sheet-transparent.png"
+  frames_dir: "assets/generated/enemies/ENEMY-002-ta-tu-idle/frames"
+  gif_preview: "assets/generated/enemies/ENEMY-002-ta-tu-idle/animation.gif"
+  pipeline_meta: "assets/generated/enemies/ENEMY-002-ta-tu-idle/pipeline-meta.json"
+  harness_report: "assets/generated/enemies/ENEMY-002-ta-tu-idle/harness-report.json"
+  demon_runtime_frames: "assets/generated/runtime/enemy_demon_frames"
+  elite_runtime_frames: "assets/generated/runtime/enemy_elite_frames"
+  demon_runtime_fallback: "assets/generated/runtime/enemy_demon.png"
+  elite_runtime_fallback: "assets/generated/runtime/enemy_elite.png"
+  status: accepted
+  acceptance: pass
+notes: >-
+  ELITE reuses the accepted Tà Tu identity and is differentiated by the existing
+  aged-gold modulate plus its larger 106 px presentation; DEMON keeps the violet
+  corruption modulate at 82 px. Harness/runtime-QA and Godot import pass;
+  refreshed candidate captures exist, with final human composition QA pending.

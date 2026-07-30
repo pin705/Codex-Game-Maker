@@ -1,0 +1,536 @@
+schema: "codex-game-maker.godot-import-manifest.v1"
+project: van-mong-tu-tien
+engine: "Godot 4.4"
+updated: "2026-07-29"
+runtime_bridge: "scripts/gameplay/runtime_visuals.gd"
+export_filter_reference: "https://docs.godotengine.org/en/4.4/tutorials/export/exporting_projects.html#resource-options"
+verification_note: >-
+  Accepted textures/audio have native import/runtime evidence. Front-end and
+  combat captures plus smoke suites pass. PREMIUM-001 sigils, UIKIT-004 folios
+  and UIKIT-005 restrained controls are mapped to their actual scripts and
+  native capture evidence. UIKIT-003 and the superseded UIKIT-002 components
+  are retained only as legacy files; Web/manual/physical-device QA remains
+  required.
+
+imports:
+  - asset_id: KEYART-001
+    status: integrated
+    source_prompt: "assets/source-prompts/KEYART-001.yaml"
+    accepted_source: "assets/generated/key-art/KEYART-001-v001.png"
+    runtime_file: "assets/generated/key-art/KEYART-001-title-1280x720-v001.webp"
+    runtime_path: "res://assets/generated/key-art/KEYART-001-title-1280x720-v001.webp"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/ui/hud.gd"
+    target_node: "TextureRect"
+    load_policy: "ResourceLoader.exists + runtime load; presentation fallback when absent"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_COVERED"
+    target_display_size: "1280x720 title background"
+    collision_role: none
+    import_verified: true
+    verification: "Godot 4.4 imported the WebP and rendered native title evidence"
+
+  - asset_id: HERO-001-idle-side
+    status: integrated
+    source_prompt: "assets/source-prompts/HERO-001-idle-side.yaml"
+    harness_spec: "design/assets/harnesses/HERO-001-idle-side.harness.json"
+    harness_report: "assets/generated/characters/HERO-001-idle-side/harness-report-v002.json"
+    accepted_source: "assets/raw/characters/HERO-001-idle-side-rectified-v002.png"
+    processed_source: "assets/generated/characters/HERO-001-idle-side/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/player_idle.png"
+    runtime_path: "res://assets/generated/runtime/player_idle.png"
+    runtime_frames_dir: "res://assets/generated/runtime/player_idle_frames"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/player.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "6-frame idle texture swap, 6 FPS loop"
+    load_policy: "runtime bridge cache; procedural player body only when texture unavailable"
+    texture_filter: linear
+    target_display_size: "76 logical px tall; bottom/feet pivot"
+    collision_role: visual_only
+    import_verified: true
+    verification: "Harness PASS; six cropped frames imported and exercised by native runtime smoke"
+
+  - asset_id: HERO-001-move-side
+    status: integrated
+    source_prompt: "assets/source-prompts/HERO-001-move-side.yaml"
+    harness_spec: "design/assets/harnesses/HERO-001-move-side.harness.json"
+    harness_report: "assets/generated/characters/HERO-001-move-side/harness-report.json"
+    accepted_source: "assets/raw/characters/HERO-001-move-side-rectified-v001.png"
+    processed_source: "assets/generated/characters/HERO-001-move-side/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/player_move.png"
+    runtime_path: "res://assets/generated/runtime/player_move.png"
+    runtime_frames_dir: "res://assets/generated/runtime/player_move_frames"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/player.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "8-frame move texture swap, 7 FPS loop; flip_h from last horizontal input"
+    load_policy: "runtime bridge cache; idle/procedural fallback when move texture unavailable"
+    texture_filter: linear
+    target_display_size: "76 logical px tall; bottom/feet pivot"
+    collision_role: visual_only
+    import_verified: true
+    verification: "Harness PASS; eight cropped frames imported and exercised by native runtime smoke"
+
+  - asset_id: ENEMY-001-wisp-idle
+    status: integrated
+    source_prompt: "assets/source-prompts/ENEMY-001-wisp-idle.yaml"
+    harness_spec: "design/assets/harnesses/ENEMY-001-wisp-idle.harness.json"
+    harness_report: "assets/generated/enemies/ENEMY-001-wisp-idle/harness-report.json"
+    accepted_source: "assets/raw/enemies/ENEMY-001-wisp-idle-rectified-v001.png"
+    processed_source: "assets/generated/enemies/ENEMY-001-wisp-idle/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/enemy_wisp.png"
+    runtime_path: "res://assets/generated/runtime/enemy_wisp.png"
+    runtime_frames_dir: "res://assets/generated/runtime/enemy_wisp_frames"
+    runtime_roles:
+      enemy_wisp: "48 px current runtime; enemy_wisp_frames"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/enemy.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "6-frame texture swap; role-dependent 6–8 FPS; target-facing flip"
+    load_policy: "runtime bridge cache; procedural per-kind body only when role texture unavailable"
+    texture_filter: linear
+    collision_role: visual_only
+    import_verified: true
+    verification: "Harness PASS; wisp frames imported and exercised by native smoke"
+    known_gap: "Distinct beast and demon/elite source bundles are recorded below and passed native screenshot review"
+
+  - asset_id: ENEMY-001-mac-lang-move-side
+    status: integrated_native_qa_passed
+    source_prompt: "assets/source-prompts/ENEMY-001-mac-lang-move-side.yaml"
+    harness_spec: "design/assets/harnesses/ENEMY-001-mac-lang-move-side.harness.json"
+    harness_report: "assets/generated/enemies/ENEMY-001-mac-lang-move-side/harness-report.json"
+    accepted_source: "assets/raw/enemies/ENEMY-001-mac-lang-move-side-rectified-v001.png"
+    processed_source: "assets/generated/enemies/ENEMY-001-mac-lang-move-side/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/enemy_beast.png"
+    runtime_path: "res://assets/generated/runtime/enemy_beast.png"
+    runtime_frames_dir: "res://assets/generated/runtime/enemy_beast_frames"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/enemy.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "8-frame texture swap, 8 FPS loop; target-facing flip"
+    load_policy: "runtime bridge cache; procedural beast body only when texture unavailable"
+    texture_filter: linear
+    collision_role: visual_only
+    target_display_size: "64 logical px tall; feet pivot"
+    import_verified: true
+    verification: "Harness PASS; eight runtime frames imported and refreshed native captures completed"
+
+  - asset_id: ENEMY-002-ta-tu-idle
+    status: integrated_native_qa_passed
+    source_prompt: "assets/source-prompts/ENEMY-002-ta-tu-idle.yaml"
+    harness_spec: "assets/generated/enemies/ENEMY-002-ta-tu-idle/ENEMY-002-ta-tu-idle.harness.json"
+    harness_report: "assets/generated/enemies/ENEMY-002-ta-tu-idle/harness-report.json"
+    runtime_qa: "assets/generated/enemies/ENEMY-002-ta-tu-idle/runtime-qa.json"
+    accepted_source: "assets/raw/enemies/ENEMY-002-ta-tu-idle-rectified-v001.png"
+    processed_source: "assets/generated/enemies/ENEMY-002-ta-tu-idle/sheet-transparent.png"
+    runtime_roles:
+      enemy_demon:
+        runtime_file: "assets/generated/runtime/enemy_demon.png"
+        runtime_path: "res://assets/generated/runtime/enemy_demon.png"
+        frames_dir: "res://assets/generated/runtime/enemy_demon_frames"
+        target_display_size: "82 logical px"
+      enemy_elite:
+        runtime_file: "assets/generated/runtime/enemy_elite.png"
+        runtime_path: "res://assets/generated/runtime/enemy_elite.png"
+        frames_dir: "res://assets/generated/runtime/enemy_elite_frames"
+        target_display_size: "106 logical px; existing aged-gold modulate"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/enemy.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "6-frame texture swap, 7 FPS loop; target-facing flip"
+    load_policy: "runtime bridge cache; procedural demon/elite body only when role texture unavailable"
+    texture_filter: linear
+    target_display_size: "82 px DEMON; 106 px ELITE; feet pivot"
+    collision_role: visual_only
+    import_verified: true
+    verification: "Harness/runtime-QA PASS; demon/elite frames imported and refreshed native captures completed"
+
+  - asset_id: BOSS-001-thien-giac-move-side
+    status: integrated
+    source_prompt: "assets/source-prompts/BOSS-001-thien-giac-move-side.yaml"
+    harness_spec: "design/assets/harnesses/BOSS-001-thien-giac-move-side.harness.json"
+    harness_report: "assets/generated/bosses/BOSS-001-thien-giac-move-side/harness-report.json"
+    accepted_source: "assets/raw/bosses/BOSS-001-thien-giac-move-side-rectified-v001.png"
+    processed_source: "assets/generated/bosses/BOSS-001-thien-giac-move-side/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/enemy_boss.png"
+    runtime_path: "res://assets/generated/runtime/enemy_boss.png"
+    runtime_frames_dir: "res://assets/generated/runtime/enemy_boss_frames"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/enemy.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "4-frame texture swap, 5 FPS loop; target-facing flip"
+    load_policy: "runtime bridge cache; procedural boss body only when texture unavailable"
+    texture_filter: linear
+    target_display_size: "150 logical px tall; bottom/feet pivot"
+    collision_role: visual_only
+    import_verified: true
+    verification: "Harness PASS; boss frames imported and boss-spawn long-run smoke passed"
+    separate_layers: "Procedural aura, health bar and slam telegraph remain authoritative feedback"
+
+  - asset_id: PICKUP-001-linh-khi-idle
+    status: integrated
+    source_prompt: "assets/source-prompts/PICKUP-001-linh-khi-idle.yaml"
+    harness_spec: "design/assets/harnesses/PICKUP-001-linh-khi-idle.harness.json"
+    harness_report: "assets/generated/pickups/PICKUP-001-linh-khi-idle/harness-report.json"
+    accepted_source: "assets/raw/pickups/PICKUP-001-linh-khi-idle-rectified-v001.png"
+    processed_source: "assets/generated/pickups/PICKUP-001-linh-khi-idle/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/qi_orb.png"
+    runtime_path: "res://assets/generated/runtime/qi_orb.png"
+    runtime_frames_dir: "res://assets/generated/runtime/qi_orb_frames"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/qi_orb.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "6-frame texture swap, 8 FPS loop; runtime bob/rotation"
+    load_policy: "runtime bridge cache; procedural orb body only when texture unavailable"
+    texture_filter: linear
+    target_display_size: "24 px normal, 29 px high-value; center pivot"
+    collision_role: pickup
+    import_verified: true
+    verification: "PASS_WITH_WARNINGS; intentional detached comma reviewed, frames imported and smoke exercised"
+
+  - asset_id: PROJECTILE-001-ngoc-phi-kiem-flight
+    status: integrated_with_empowered_derivative
+    source_prompt: "assets/source-prompts/PROJECTILE-001-ngoc-phi-kiem-flight.yaml"
+    harness_spec: "design/assets/harnesses/PROJECTILE-001-ngoc-phi-kiem-flight.harness.json"
+    harness_report: "assets/generated/projectiles/PROJECTILE-001-ngoc-phi-kiem-flight/harness-report.json"
+    accepted_source: "assets/raw/projectiles/PROJECTILE-001-ngoc-phi-kiem-flight-rectified-v001.png"
+    processed_source: "assets/generated/projectiles/PROJECTILE-001-ngoc-phi-kiem-flight/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/projectile_sword.png"
+    runtime_path: "res://assets/generated/runtime/projectile_sword.png"
+    runtime_frames_dir: "res://assets/generated/runtime/projectile_sword_frames"
+    runtime_roles:
+      projectile_sword: "20 px texture height; six accepted frames"
+      projectile_phoenix: "24 px texture height; derived warm-gold variant and frame folder"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/projectile.gd"
+    target_node: "runtime-created Sprite2D under rotating projectile parent"
+    animation: "6-frame texture swap, 12 FPS loop; parent rotates to velocity"
+    load_policy: "runtime bridge cache; procedural blade body only when texture unavailable"
+    texture_filter: linear
+    target_display_size: "approximately 58x20 px normal; center pivot"
+    collision_role: projectile
+    import_verified: true
+    verification: "Harness PASS; normal and empowered frame folders imported and runtime smoke exercised"
+    separate_layers: "Trail and empowered feedback remain procedural"
+
+  - asset_id: FX-001-kiem-an-impact
+    status: integrated_as_runtime_hit_and_burst
+    source_prompt: "assets/source-prompts/FX-001-kiem-an-impact.yaml"
+    harness_spec: "design/assets/harnesses/FX-001-kiem-an-impact.harness.json"
+    harness_report: "assets/generated/fx/FX-001-kiem-an-impact/harness-report.json"
+    accepted_source: "assets/raw/fx/FX-001-kiem-an-impact-rectified-v001.png"
+    processed_source: "assets/generated/fx/FX-001-kiem-an-impact/sheet-transparent.png"
+    runtime_file: "assets/generated/runtime/effect_hit.png"
+    runtime_path: "res://assets/generated/runtime/effect_hit.png"
+    runtime_roles:
+      effect_hit: "accepted impact art"
+      effect_burst: "derived runtime burst texture"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/game_effect.gd"
+    target_node: "runtime-created Sprite2D"
+    animation: "lifetime-driven scale/fade; source eight-frame GIF retained for asset QA"
+    load_policy: "runtime bridge cache; procedural per-kind effect only when role texture unavailable"
+    texture_filter: linear
+    target_display_size: "effect radius-driven; center pivot"
+    collision_role: none
+    import_verified: true
+    verification: "PASS_WITH_WARNINGS; detached shards reviewed as intentional, hit/burst imports exercised by smoke"
+    separate_layers: "Ring and portal retain procedural arcs/telegraphs by design"
+
+  - asset_id: ARENA-001-cloud-ring
+    status: integrated_native_qa_passed
+    source_prompt: "assets/source-prompts/ARENA-001-cloud-ring.yaml"
+    accepted_source: "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.png"
+    runtime_file: "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.webp"
+    runtime_path: "res://assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.webp"
+    preview_file: "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-preview-320x180-v001.png"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/gameplay/ink_background.gd"
+    target_node: "InkBackground CanvasItem draw layer"
+    load_policy: "ResourceLoader.exists + runtime load; dark procedural arena fallback when absent"
+    texture_filter: linear
+    stretch_mode: "draw_texture_rect to logical arena size"
+    target_display_size: "1600x900 logical arena"
+    collision_role: none
+    import_verified: true
+    verification: "Godot imported the WebP; gameplay/boss captures passed final native contrast review"
+    separate_layers: "Restrained dark glaze, gameplay rings, motes and safe border remain runtime draw layers"
+
+  - asset_id: UIKIT-001-kim-ngoc-components
+    status: deferred_not_generated
+    source_prompt: "assets/source-prompts/UIKIT-001-kim-ngoc-components.yaml"
+    harness_spec: "design/assets/harnesses/UIKIT-001-kim-ngoc-components.harness.json"
+    accepted_source: ""
+    runtime_file: ""
+    runtime_path: ""
+    target_scene: "scenes/main.tscn"
+    target_script: ""
+    target_node: ""
+    load_policy: "No import; superseded by PREMIUM-001 sigils, UIKIT-004 folios and authored Control structure"
+    texture_filter: linear
+    collision_role: none
+    import_verified: false
+    verification: "Atlas was not generated and is not displayed"
+
+  - asset_id: UIKIT-002-xuan-ink-commercial
+    status: integrated_partial_active_with_legacy_components
+    pipeline_meta: "assets/generated/ui/UIKIT-002-xuan-ink-commercial/pipeline-meta.json"
+    accepted_source: "assets/generated/ui/UIKIT-002-xuan-ink-commercial/alpha-source.png"
+    runtime_files:
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png"
+    runtime_paths:
+      - "res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png"
+      - "res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png"
+    superseded_runtime_files:
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_lacquer_panel.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_button_gold.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_button_jade.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_tab_ink.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_icon_sword.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_icon_qi.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_icon_vitality.png"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/cultivation_panel.gd"
+    target_nodes:
+      - "FrontEnd stage/loadout/codex talisman NinePatchRect"
+      - "FrontEnd settings/results scroll NinePatchRect"
+      - "CultivationPanel pause scroll NinePatchRect"
+    load_policy: >-
+      Only ui_scroll_panel.png and ui_talisman_card.png remain referenced.
+      UIKIT-005 replaces ui_lacquer_panel.png and command chrome; PREMIUM-001
+      replaces all three old medallion icons.
+    texture_filter: linear
+    stretch_mode: "NinePatchRect for active scroll/talisman components"
+    collision_role: none
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/frontend/stages.png"
+      - "production/playtests/frontend/settings.png"
+    verification: "Godot imports resolve for the two active files; every listed superseded file is absent from current script references"
+
+  - asset_id: UIKIT-003-commercial-buttons
+    status: superseded_legacy_unreferenced
+    runtime_files:
+      - "assets/generated/ui/UIKIT-003-commercial-buttons/runtime/ui_button_gold.png"
+      - "assets/generated/ui/UIKIT-003-commercial-buttons/runtime/ui_button_jade.png"
+      - "assets/generated/ui/UIKIT-003-commercial-buttons/runtime/ui_tab_ink.png"
+    superseded_by: "UIKIT-005-restrained-controls"
+    target_scene: ""
+    target_script: ""
+    target_node: ""
+    load_policy: "No runtime load; retained as legacy look-development output only"
+    texture_filter: linear
+    collision_role: none
+    import_verified: true
+    verification: "Imported legacy textures exist, but no current script references the UIKIT-003 directory"
+
+  - asset_id: UIKIT-005-restrained-controls
+    status: integrated_native_qa_passed
+    source_prompt: "assets/source-prompts/UIKIT-005-restrained-controls.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-005-restrained-controls/pipeline-meta.json"
+    accepted_sources:
+      - "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-a-chroma.png"
+      - "assets/generated/ui/UIKIT-005-restrained-controls/source/panel-chroma.png"
+    rejected_source: "assets/generated/ui/UIKIT-005-restrained-controls/source/candidate-b-rejected-chroma.png"
+    runtime_files:
+      - "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png"
+      - "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
+    runtime_paths:
+      - "res://assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png"
+      - "res://assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/raster_button.gd"
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/rotate_device_overlay.gd"
+    target_nodes:
+      - "RasterButton AuthoredCommandFrame NinePatchRect"
+      - "FrontEnd AuthoredChrome/Shadow NinePatchRect"
+      - "RotateDeviceOverlay authored panel NinePatchRect"
+    load_policy: >-
+      Hard path constants resolved through ResourceLoader/load in RasterButton,
+      FrontEnd and RotateDeviceOverlay. Compact controls deliberately skip the
+      command texture and use native material drawing.
+    texture_filter: linear
+    stretch_mode: >-
+      NinePatchRect only: command margins 56/30/56/30; panel margins vary from
+      34 through 78 logical pixels by surface class.
+    target_display_size: "184x64 through 390x66 commands; 600x76 transient notice; 408x286 through 1048x710 meta panels plus 1004x744 result shell"
+    collision_role: none
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
+    alpha_verification: "656x160 and 784x784 RGBA; 8 px minimum transparent safe margin; zero edge touch and zero measured magenta-like visible pixels"
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/stages.png"
+      - "production/playtests/frontend/codex.png"
+      - "production/playtests/frontend/achievements.png"
+      - "production/playtests/frontend/settings.png"
+      - "production/playtests/frontend/reset.png"
+      - "production/playtests/frontend/results.png"
+      - "production/playtests/frontend/results-defeat.png"
+      - "production/playtests/mobile-support/portrait-overlay.png"
+    verification: "Godot import resources resolve and post-generation native captures show the selected command and panel components"
+
+  - asset_id: PREMIUM-001-cultivation-sigils
+    status: integrated_native_qa_passed
+    source_prompt: "assets/source-prompts/PREMIUM-001-cultivation-sigils.yaml"
+    pipeline_meta: "assets/generated/vfx/PREMIUM-001-cultivation-sigils/pipeline-meta.json"
+    accepted_sources:
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_phi_kiem_chroma.png"
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_ho_the_ngoc_chroma.png"
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/source/sigil_tu_linh_chroma.png"
+    runtime_files:
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png"
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png"
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png"
+    runtime_paths:
+      - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png"
+      - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png"
+      - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png"
+    qa_preview: "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/premium_001_contact_sheet.png"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/mobile_touch_controls.gd"
+      - "scripts/ui/rotate_device_overlay.gd"
+    target_nodes:
+      - "FrontEnd TextureRect and TechniquePreview"
+      - "CultivationChoiceButton icon TextureRect"
+      - "MobileTouchControls custom draw texture"
+      - "RotateDeviceOverlay TextureRect"
+    load_policy: >-
+      Dynamic ResourceLoader/load in frontend, HUD and portrait guard; hard
+      preload for the mobile pulse texture. Missing dynamic textures fall back
+      to procedural glyph/drawing where supported.
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED / uniform square icon canvas"
+    target_display_size: "approximately 40x40 through 200x200 logical pixels"
+    collision_role: none
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
+    alpha_verification: "512x512 RGBA; minimum 36 px transparent safe margin; zero edge touch and zero measured key-like pixels"
+    verification_evidence:
+      - "production/playtests/frontend/loadout.png"
+      - "production/playtests/frontend/techniques.png"
+      - "production/playtests/overhaul/upgrade-final.png"
+      - "production/playtests/mobile-support/portrait-overlay.png"
+    verification: "Godot imports resolve and current native captures show the selected sigils on all declared UI families"
+
+  - asset_id: UIKIT-004-talisman-folios
+    status: integrated_native_qa_passed_with_documented_edge_touch
+    source_prompt: "assets/source-prompts/UIKIT-004-talisman-folios.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-004-talisman-folios/pipeline-meta.json"
+    accepted_sources:
+      - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-sword-chroma.png"
+      - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-jade-chroma.png"
+      - "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-spirit-chroma-v2.png"
+    superseded_source: "assets/generated/ui/UIKIT-004-talisman-folios/source/folio-spirit-chroma.png"
+    runtime_files:
+      - "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png"
+      - "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png"
+      - "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png"
+    runtime_paths:
+      - "res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png"
+      - "res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png"
+      - "res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/cultivation_choice_button.gd"
+    target_nodes:
+      - "FrontEnd permanent-technique TextureRects"
+      - "CultivationChoiceButton folio/shadow TextureRects"
+    load_policy: >-
+      Hard preload for in-run breakthrough cards; ResourceLoader/load for the
+      permanent-technique screen. Runtime text and PREMIUM-001 sigils are
+      separate child nodes.
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED; uniform only; nine-slice forbidden"
+    target_display_size: "330x450 breakthrough bounds and 366x704 permanent-technique bounds"
+    collision_role: none
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
+    alpha_verification: >-
+      RGBA tight crops: 759x1342 sword, 703x1399 jade and 917x1458
+      selected Spirit v2. All have zero safe margin and measured alpha edge
+      touch; accepted only because they render uniformly inside padded Control
+      layouts, never as sprite frames or nine-slices.
+    verification_evidence:
+      - "production/playtests/frontend/techniques.png"
+      - "production/playtests/overhaul/upgrade-final.png"
+    verification: "Godot imports resolve and current native captures show all three selected folio silhouettes without aspect distortion"
+
+  - asset_id: UI-RUNTIME-001
+    status: implemented_native_qa_passed
+    source_prompt: ""
+    accepted_source: >-
+      Authored Control scripts plus PREMIUM-001 primary sigils, UIKIT-004
+      primary folios, UIKIT-005 restrained controls and selective UIKIT-002
+      scroll/talisman chrome
+    runtime_files:
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/cultivation_panel.gd"
+      - "scripts/ui/cultivation_choice_button.gd"
+      - "scripts/ui/cultivation_action_button.gd"
+      - "scripts/ui/cultivation_meter.gd"
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/raster_button.gd"
+    runtime_icon_paths:
+      - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png"
+      - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png"
+      - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png"
+    runtime_folio_paths:
+      - "res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png"
+      - "res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png"
+      - "res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png"
+    runtime_control_paths:
+      - "res://assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png"
+      - "res://assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
+      - "res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png"
+      - "res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/ui/frontend.gd and scripts/ui/hud.gd"
+    target_node: "NinePatchRect, TextureRect and custom Control subclasses"
+    load_policy: >-
+      Primary sigils/folios, UIKIT-005 matte lacquer/command chrome and active
+      UIKIT-002 scroll/talisman surfaces. UIKIT-003 and the old UIKIT-002
+      medallions/lacquer/compact crops are legacy and unreferenced; procedural
+      drawing remains the actual missing-texture fallback.
+    texture_filter: linear
+    target_display_size: "logical 1600x900; current primary captures are 1600x900"
+    collision_role: none
+    import_verified: true
+    verification: "Current front-end, combat, breakthrough, responsive and portrait captures exercise the declared primary asset paths"
+
+  - asset_id: META-ENV-UI-AUDIO-002
+    status: integrated_native_qa_passed
+    accepted_source: >-
+      HUB-001, STAGE-002/003, PREMIUM-001, UIKIT-004, UIKIT-005, selective
+      UIKIT-002 scroll/talisman support chrome and AUDIO-001
+    runtime_files:
+      - "assets/generated/environments/HUB-001-van-mong-sect/hub-background-1600x900-v001.webp"
+      - "assets/generated/environments/STAGE-002-huyet-van-dai/stage-huyet-van-dai-1600x900-v001.webp"
+      - "assets/generated/environments/STAGE-003-thien-mon-tan-canh/stage-thien-mon-tan-canh-1600x900-v001.webp"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png"
+      - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png"
+      - "assets/generated/ui/UIKIT-005-restrained-controls/runtime"
+      - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime"
+      - "assets/generated/ui/UIKIT-004-talisman-folios/runtime"
+      - "assets/generated/audio"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/ui/frontend.gd; scripts/gameplay/ink_background.gd; scripts/audio/audio_director.gd"
+    target_node: "FrontEnd CanvasLayer, InkBackground, AudioDirector autoload"
+    load_policy: "ResourceLoader/load with gameplay-safe fallbacks"
+    texture_filter: linear
+    target_display_size: "1600x900 UI/environment; aspect-preserved sigils/folios; 656x160 source command plaque"
+    collision_role: none
+    import_verified: true
+    verification: "Native screenshots plus frontend/meta/audio/runtime/long-run smoke suites PASS"
