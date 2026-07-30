@@ -1,11 +1,12 @@
 class_name CultivationActionButton
 extends Button
 
-const INK := Color("#17130a")
-const PAPER := Color("#fff0b2")
-const GOLD := Color("#c99b43")
-const GOLD_LIT := Color("#e1bc64")
-const JADE := Color("#55ad91")
+const INK := Color("#091719")
+const INK_LIT := Color("#14292b")
+const PAPER := Color("#e7ddc4")
+const GOLD := Color("#8a6730")
+const GOLD_LIT := Color("#c69a48")
+const JADE := Color("#55c9a6")
 
 func _init() -> void:
 	flat = true
@@ -29,14 +30,14 @@ func _draw() -> void:
 		return
 	var active := is_hovered() or has_focus()
 	var down := is_pressed()
-	var y_offset := -2.0 if active and not down else 0.0
-	var shape := _shape(Rect2(Vector2(0.0, y_offset), Vector2(size.x, size.y - y_offset)), 10.0)
-	draw_colored_polygon(_offset(shape, Vector2(5.0, 7.0)), Color(0.0, 0.0, 0.0, 0.42))
-	var fill := JADE if down else (GOLD_LIT if active else GOLD)
+	var y_offset := -1.0 if active and not down else 1.0 if down else 0.0
+	var shape := _shape(Rect2(Vector2(0.0, y_offset), Vector2(size.x, size.y - y_offset)), clampf(size.y * 0.18, 7.0, 11.0))
+	draw_colored_polygon(_offset(shape, Vector2(3.0, 4.0)), Color(0.0, 0.0, 0.0, 0.38))
+	var fill := Color(JADE.darkened(0.48), 0.98) if down else (INK_LIT if active else INK)
 	draw_colored_polygon(shape, fill)
-	draw_polyline(_closed(shape), Color("#fff0b2", 0.98 if active else 0.74), 2.0 if active else 1.35, true)
+	draw_polyline(_closed(shape), Color(JADE if active or down else GOLD_LIT, 0.98 if active else 0.78), 2.0 if active else 1.2, true)
 	var inner := _shape(Rect2(Vector2(5.0, 5.0 + y_offset), Vector2(size.x - 10.0, size.y - 10.0 - y_offset)), 6.0)
-	draw_polyline(_closed(inner), Color(PAPER, 0.38), 1.0, true)
+	draw_polyline(_closed(inner), Color(PAPER, 0.18), 1.0, true)
 	# Small jade/ink talisman marks make a CTA feel authored rather than a
 	# stock rounded button, while leaving the label's center uncluttered.
 	var center := Vector2(16.0, size.y * 0.5 + y_offset)
@@ -44,11 +45,11 @@ func _draw() -> void:
 		center + Vector2(0.0, -5.0), center + Vector2(5.0, 0.0),
 		center + Vector2(0.0, 5.0), center + Vector2(-5.0, 0.0),
 	])
-	draw_colored_polygon(diamond, Color(INK, 0.78))
-	draw_polyline(_closed(diamond), Color(PAPER, 0.70), 1.0, true)
+	draw_colored_polygon(diamond, Color(JADE if active else GOLD_LIT, 0.82))
+	draw_polyline(_closed(diamond), Color(PAPER, 0.58), 1.0, true)
 	var right := Vector2(size.x - 16.0, size.y * 0.5 + y_offset)
-	draw_line(right + Vector2(-5.0, 0.0), right + Vector2(5.0, 0.0), Color(INK, 0.68), 1.0, true)
-	draw_line(right + Vector2(0.0, -5.0), right + Vector2(0.0, 5.0), Color(INK, 0.68), 1.0, true)
+	draw_line(right + Vector2(-5.0, 0.0), right + Vector2(5.0, 0.0), Color(GOLD_LIT, 0.62), 1.0, true)
+	draw_line(right + Vector2(0.0, -5.0), right + Vector2(0.0, 5.0), Color(GOLD_LIT, 0.62), 1.0, true)
 	# Button's built-in renderer is replaced because an empty StyleBox suppresses
 	# the parent draw pass. Draw the localized label ourselves while retaining
 	# Button.text for accessibility and keyboard automation.

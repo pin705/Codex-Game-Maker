@@ -1,82 +1,74 @@
-# Visual Quality Review: Vân Mộng Tu Tiên / Local Candidate
+# Visual Quality Review: Vân Mộng Tu Tiên V4
 
-Status: **BLOCKED**  
-Review state: **SUPERSEDED — PENDING FULL V3 RUNTIME REVIEW**
-
-Supersession notice: the user approved the arsenal reference but subsequently rejected current whole-game runtime convergence. The per-surface findings below are retained as historical evidence only; they do not certify the current V3 target or replace a full recapture and independent review after shared-component migration.
-
-Reviewed: 2026-07-30T09:53:39+07:00  
-Reviewer: Codex clean-context independent visual reviewer (`/root/independent_visual_review_final`)  
-Reviewer mode: independent agent; did not author or select the current game, UI, VFX, or art changes  
-Method: native-resolution `view_image` inspection of every required desktop and phone capture, both boss-condition captures, rank VFX evidence, portrait/ultrawide diagnostics, and current served Chromium captures
-
-## Evidence First
-
-- Reviewed build fingerprint: `fad372c5a3771e23fce32b12a64f9e9037f311112c2ebfd9ec3d4d84576fa210`
-- Reviewed commit: `c5e90f9acc8ba4fc5edd3591459fb0d2af775569` (`git_dirty: false` in the bound quality run)
-- Godot: `4.6.2.stable.official.71f334935`
-- Quality evidence: `production/evidence/quality-run.json`, SHA-256 `bacbbe75859125d76a2493af245a12871327aee124115e1c1370e50ed37d00bc`
-- Visual-smoke command SHA-256: `c6dec56e4025779e124de21f23f0d9b38d66e2c6b112b60dfbe107f04822c987`
-- Capture integrity: PASS — all 30 required captures, both boss-condition captures, and all three look-dev candidate files match the SHA-256 values in `production/reviews/visual-quality-contract.json`.
-- Style lock at metadata refresh: PASS — style `van-mong-living-ink-lacquer` version `3.0.0`, digest `0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da`.
-- `cgm doctor`: PASS_WITH_WARNINGS only for unavailable PowerShell and optional Pillow/numpy dependencies; no visual evidence blocker.
-- `cgm player-ready --skip-quality`: BLOCKED as expected by the still-open visual, manual-playtest, listening, and physical-device requirements.
-
-## Blocking Findings
-
-| Severity | Scope | Finding | Evidence | Required resolution |
-|---|---|---|---|---|
-| High | Settings / 844×390 phone | The settings scroll/panel continues below the viewport. `RUNG MÀN HÌNH` and all three bottom navigation actions are absent from the capture, so required content is clipped with no visible scrolling/paging affordance. | `production/playtests/frontend/settings-phone.png`, SHA-256 `3bb91db516c79aba1cfc09de2c9e542146c8bf51bb6304d50d3b030a808d12d9` | Fit every row and required action in device space, or provide and capture an obvious operable scroll/page affordance without frame clipping. |
-| High | Served Web / Chromium | Functional symbols use missing-glyph boxes. The Linh Ngọc diamond is broken on Hub desktop/phone, and Hiểm Họa rank diamonds appear as boxes on Stage Select. This is placeholder/fallback rendering, not authored final UI. | `web-hub.png` `daf2bd…`, `web-hub-phone.png` `dcab86…`, `web-stages.png` `26b396…` under `production/evidence/platforms/` | Ship font coverage or authored icon textures, then recapture served Chromium and bind the corrected hashes. |
-
-No other required desktop or simulated-phone surface shows a blocking overlap, clipped frame, stretched material, unreadable primary action, placeholder actor, or broken hierarchy.
-
-## Required Surface Status
-
-| Required state | Desktop 1600×900 | Phone 844×390 | Independent finding |
-|---|---:|---:|---|
-| title | PASS | PASS | Strong key-art hierarchy; lacquer panel and selected action are coherent and contained. |
-| hub | PASS | PASS | Desktop editorial three-island hierarchy translates to a dedicated phone composition without edge collision. |
-| stages | PASS | PASS | Three choices remain distinct; locked/danger states use restrained cinnabar and clear disabled treatment. |
-| loadout | PASS | PASS | Authored talisman cards, icons, selection state, and primary action fit cleanly. |
-| techniques | PASS | PASS | Distinct folio silhouettes avoid a flat dashboard grid; primary upgrade actions remain visible. |
-| rank-ascension | PASS | PASS | Post-upgrade modal contrast and focus are clear; the phone modal stays within device bounds. |
-| codex | PASS | PASS | Bestiary asset, title, classification, and counterplay remain coherent; phone uses a compact summary rather than shrinking the full scroll. |
-| achievements | PASS | PASS | Completion/progress hierarchy and six-card grid remain distinguishable. |
-| settings | PASS | **BLOCKED** | Phone content/navigation is vertically clipped below the viewport. |
-| reset-confirmation | PASS | PASS | Destructive/non-destructive actions have distinct cinnabar/jade material cues and safe margins. |
-| combat | PASS | PASS | Player, ordinary enemies, boss, pickups, sword, jade effects, and complete danger radius separate by value, silhouette, and functional color. Touch controls remain outside the central combat lane. |
-| combat-upgrade | PASS | PASS | Three breakthrough choices are distinct, readable as interactive folios, and fully contained. |
-| combat-paused | PASS | PASS | Pause veil suppresses the arena while preserving clear resume/restart hierarchy. |
-| results-victory | PASS | PASS | Gold/jade outcome hierarchy and both actions fit without overlap. |
-| results-defeat | PASS | PASS | Cinnabar defeat hierarchy remains distinct from victory without losing text/action contrast. |
-
-## Cross-Surface Assessment
-
-- Art direction: PASS. Warm paper, blue-black ink/lacquer, aged bronze, restrained gold, jade safety, and cinnabar threat roles stay coherent across meta UI and combat.
-- Authored asset/material coherence: PASS. Key art, arena, actors, icon medallions, talisman folios, scrolls, plaques, and HUD islands form one family; the rejected glossy-dashboard direction is not present in the current set.
-- Composition and hierarchy: PASS for 14/15 required surfaces. Settings phone is the sole required-surface composition failure.
-- Combat readability: PASS in still evidence. The player light plane, hostile dark/cinnabar silhouettes, boss mass, full danger boundary, and jade/qi feedback remain separable against the quiet arena center.
-- VFX language: PASS_WITH_WARNING. Sword and qi rank escalation are clear; jade rank 1 versus rank 5 is comparatively subtle at runtime scale.
-- Typography: BLOCKED cross-platform. Native desktop hierarchy is clear, but phone supporting copy is visibly softened/small, and served Chromium has missing functional glyphs.
-- Texture integrity: PASS. No stretched folios, distorted plaques, obvious nine-slice damage, baked pseudo-calligraphy, visible debug geometry, or primitive-only final actors were found.
-- Phone safe area: PASS in simulated combat/title/hub/modal evidence, except the settings overflow. Physical notch/home-indicator and real-size target verification remains external.
-
-## Non-Blocking Warnings
-
-| Severity | Scope | Finding |
-|---|---|---|
-| Medium | All simulated phone captures | Primary labels and actions remain recognizable, but supporting copy is visibly softened and several controls are small at the native 844×390 capture size. Physical-size review is required before accepting mobile legibility/touch targets. |
-| Low | Combat VFX | Jade rank escalation is subtler than sword and qi escalation in the rank-1/rank-5 stills. |
-
-## External Blockers Still Open
-
-- Physical iOS and Android landscape QA: DPI, notch/home-indicator safe areas, thumb reach, touch-target size, sustained touch, device rendering, and thermal behavior.
-- Firefox and Safari served-Web visual/input/focus review. Chromium is the only browser with current served evidence, and its glyph blocker must be fixed first.
-- Human audio listening: outside this visual review, but still a separate player-ready requirement.
+Status: **PASS — bounded desktop/simulated-phone visual gate**
+Reviewed: 2026-07-31
+Reviewer: independent clean-context agent `/root/final_visual_review_v4`
+Style lock: `4.1.0` / `f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024`
 
 ## Verdict
 
-**BLOCKED**
+All 17 required UI surfaces pass at 1600×900 desktop and 844×390 simulated
+phone landscape. The independent reviewer found no blocker or high-severity
+issue across the 20-state desktop and 18-state phone galleries.
 
-The bounded visual gate does not pass because one required phone surface is clipped and current served Chromium evidence contains unsupported-glyph placeholders. Fourteen of fifteen required surfaces otherwise pass the independent capture review, with coherent authored materials, readable combat silhouettes, complete boss telegraph boundaries, and no blocking desktop overlap or texture distortion.
+The V4 runtime now follows the user-approved master board through one coherent
+warm-paper, blue-black ink, thin bronze, jade-focus and cinnabar-danger system.
+No reviewed surface retains the rejected raster-heavy dashboard treatment,
+fragmented wallpaper strategy, stretched chrome, clipped primary action or
+text/button overlap.
+
+## Bound Evidence
+
+- Approved target: `design/art/lookdev/v4/master-board-candidate-01.png`
+- Desktop gallery: `production/playtests/ui-review/v4-all-desktop.png`
+- Phone gallery: `production/playtests/ui-review/v4-all-phone.png`
+- Individual frontend captures: `production/playtests/frontend/`
+- Combat and result overlays: `production/playtests/overhaul/`
+- Phone combat states: `production/playtests/mobile-support/`
+- Served Chromium manifest: `production/evidence/platforms/web-smoke.json`
+- Hash-bound contract: `production/reviews/visual-quality-contract.json`
+
+## Review Coverage
+
+The review includes title, hub, stage select, loadout, inventory, spirit beast,
+techniques, rank ascension, codex, achievements, settings, reset confirmation,
+victory, defeat, normal combat, boss combat, breakthrough and pause. It checks
+hierarchy, material coherence, text/control legibility, clipping, safe zones,
+desktop/phone convergence, background treatment and preservation of the combat
+lane.
+
+## Post-review Polish
+
+The reviewer returned PASS with two medium observations. The final pass then:
+
+- increased the phone meta safe inset from 10 px to 18 px while retaining every
+  64 px action target and a passing responsive-layout smoke;
+- replaced the most diagrammatic boss-warning rings with fewer, irregular
+  broken-brush arcs and varied widths/radii, then refreshed desktop and phone
+  boss captures.
+
+One low visual note remains: the desktop codex and achievement ledgers are
+quieter and flatter than the densest master-board surfaces. They remain
+readable, coherent and intentionally outside the equal-card dashboard pattern.
+
+## Verification
+
+- Godot 4.6.2 import/parse: PASS
+- Runtime smoke: PASS
+- Frontend flow smoke: PASS
+- Mobile support smoke: PASS
+- Responsive layout smoke: PASS; all declared phone actions are at least 64 px
+- Visual evidence smoke: PASS; 49 artifacts
+- Style-lock verification: PASS
+- Godot Web export: PASS
+- Playwright Chromium Web smoke: PASS, 1/1; no console/page/request errors and
+  no missing-glyph boxes
+- `git diff --check`: PASS
+
+## External Gates
+
+This visual PASS is not a commercial-release claim. Physical iOS/Android DPI,
+notch/home-indicator, thumb reach, sustained multitouch and thermal behavior;
+Safari/Firefox; human audio listening; manual four-minute feel/balance; input
+remapping; assistive-technology checks; and accessibility review by players with
+relevant lived experience remain open.

@@ -15,8 +15,10 @@ signal controls_visibility_changed(is_visible: bool)
 signal layout_changed(safe_area: Rect2)
 
 const SafeArea := preload("res://scripts/ui/mobile_safe_area.gd")
-const ComponentKit := preload("res://scripts/ui/van_mong_component_kit.gd")
 const PULSE_TEXTURE: Texture2D = preload("res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png")
+const JOYSTICK_FRAME_TEXTURE: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/joystick_medallion.png")
+const ATTACK_FRAME_TEXTURE: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/attack_medallion.png")
+const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
 
 const MOVE_LEFT := &"move_left"
 const MOVE_RIGHT := &"move_right"
@@ -28,16 +30,16 @@ const PAUSE_ACTION := &"pause_game"
 const MIN_TARGET_SIZE := 64.0
 const REFERENCE_HEIGHT := 900.0
 const JOYSTICK_TARGET_SIZE := 192.0
-const PULSE_TARGET_SIZE := 144.0
-const PAUSE_TARGET_SIZE := 72.0
-const JOYSTICK_VISUAL_RADIUS_RATIO := 0.43
-const KNOB_RADIUS_RATIO := 0.22
+const PULSE_TARGET_SIZE := 128.0
+const PAUSE_TARGET_SIZE := 64.0
+const JOYSTICK_VISUAL_RADIUS_RATIO := 0.30
+const KNOB_RADIUS_RATIO := 0.15
 
-const INK := Color("#10262a")
-const JADE := Color("#68dfb8")
-const JADE_LIGHT := Color("#c8ffea")
-const GOLD := Color("#e8bc55")
-const PAPER := Color("#fff1bd")
+const INK := Color("#0b171b")
+const JADE := Color("#55c9a6")
+const JADE_LIGHT := Color("#dffff2")
+const GOLD := Color("#c69a48")
+const PAPER := Color("#e7ddc4")
 
 @export var touchscreen_only := true
 @export_range(0.0, 0.20, 0.005) var title_safe_margin_ratio := 0.05
@@ -67,8 +69,10 @@ var _joystick_frame: Texture2D
 
 
 func _ready() -> void:
-	_attack_frame = ComponentKit.ritual_texture("touch_attack")
-	_joystick_frame = ComponentKit.ritual_texture("touch_skill")
+	# Authored medallions sit inside the independently tested hit rectangles.
+	# Input geometry remains native and larger than the visible ornament.
+	_attack_frame = ATTACK_FRAME_TEXTURE
+	_joystick_frame = JOYSTICK_FRAME_TEXTURE
 	set_process_input(true)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -361,53 +365,64 @@ func _draw() -> void:
 
 
 func _draw_joystick() -> void:
-	draw_circle(_joystick_center + Vector2(4.0, 6.0), _joystick_radius + 8.0, Color(0.0, 0.0, 0.0, 0.34))
+	draw_circle(_joystick_center + Vector2(3.0, 5.0), _joystick_radius + 5.0, Color(0.0, 0.0, 0.0, 0.28))
 	if _joystick_frame != null:
-		var frame_extent := (_joystick_radius + 12.0) * 2.0
-		draw_texture_rect(_joystick_frame, Rect2(_joystick_center - Vector2.ONE * frame_extent * 0.5, Vector2.ONE * frame_extent), false, Color(0.86, 1.0, 0.96, 0.88))
+		var frame_size := Vector2.ONE * (_joystick_radius + 9.0) * 2.0
+		draw_texture_rect(_joystick_frame, _fit_texture_at_center(_joystick_frame, _joystick_center, frame_size), false, Color(1.0, 1.0, 1.0, 0.92))
 	else:
-		draw_circle(_joystick_center, _joystick_radius + 6.0, Color(INK, 0.58))
-	draw_arc(_joystick_center, _joystick_radius, 0.0, TAU, 64, Color(JADE, 0.72), 3.0, true)
-	draw_arc(_joystick_center, _joystick_radius * 0.76, 0.0, TAU, 64, Color(PAPER, 0.18), 1.5, true)
+		draw_circle(_joystick_center, _joystick_radius + 3.0, Color(INK, 0.54))
+		draw_arc(_joystick_center, _joystick_radius + 1.0, 0.0, TAU, 56, Color(GOLD, 0.72), 2.0, true)
+		draw_arc(_joystick_center, _joystick_radius * 0.72, 0.0, TAU, 48, Color(JADE, 0.34), 1.2, true)
 	for direction: Vector2 in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
 		var start := _joystick_center + direction * _joystick_radius * 0.76
 		var finish := _joystick_center + direction * _joystick_radius * 0.91
-		draw_line(start, finish, Color(JADE_LIGHT, 0.56), 3.0, true)
-	var knob_travel := maxf(0.0, _joystick_radius - _knob_radius - 8.0)
+		draw_line(start, finish, Color(PAPER, 0.42), 2.0, true)
+	var knob_travel := maxf(0.0, _joystick_radius - _knob_radius - 6.0)
 	var knob_center := _joystick_center + movement_vector * knob_travel
-	draw_circle(knob_center + Vector2(3.0, 5.0), _knob_radius + 3.0, Color(0.0, 0.0, 0.0, 0.42))
-	draw_circle(knob_center, _knob_radius, Color(JADE, 0.82 if _joystick_touch >= 0 else 0.64))
-	draw_arc(knob_center, _knob_radius - 3.0, 0.0, TAU, 40, Color(JADE_LIGHT, 0.82), 2.0, true)
+	draw_circle(knob_center + Vector2(2.0, 3.0), _knob_radius + 2.0, Color(0.0, 0.0, 0.0, 0.36))
+	draw_circle(knob_center, _knob_radius, Color(JADE.darkened(0.24), 0.92 if _joystick_touch >= 0 else 0.76))
+	draw_arc(knob_center, _knob_radius - 2.0, 0.0, TAU, 36, Color(JADE_LIGHT, 0.70), 1.5, true)
 
 
 func _draw_pulse_button() -> void:
 	var center := _pulse_hit_rect.get_center()
-	# Keep a protected caption band below the disc at phone scale.
-	var radius := minf(_pulse_hit_rect.size.x, _pulse_hit_rect.size.y) * 0.32
+	var radius := minf(_pulse_hit_rect.size.x, _pulse_hit_rect.size.y) * 0.30
 	var pressed := _pulse_touch >= 0
-	draw_circle(center + Vector2(4.0, 6.0), radius + 7.0, Color(0.0, 0.0, 0.0, 0.38))
+	draw_circle(center + Vector2(3.0, 5.0), radius + 5.0, Color(0.0, 0.0, 0.0, 0.34))
 	if _attack_frame != null:
-		var frame_extent := (radius + 11.0) * 2.0
-		draw_texture_rect(_attack_frame, Rect2(center - Vector2.ONE * frame_extent * 0.5, Vector2.ONE * frame_extent), false, Color(1.0, 0.94, 0.88, 0.92 if pressed else 1.0))
+		var frame_size := Vector2.ONE * (radius + 9.0) * 2.0
+		var frame_tint := Color(0.82, 1.0, 0.91, 0.98) if pressed else Color(1.0, 1.0, 1.0, 0.96)
+		draw_texture_rect(_attack_frame, _fit_texture_at_center(_attack_frame, center, frame_size), false, frame_tint)
 	else:
-		draw_circle(center, radius + 5.0, Color(INK, 0.78))
-		draw_arc(center, radius + 1.0, 0.0, TAU, 64, Color(GOLD, 0.96), 4.0, true)
-	var icon_extent := radius * (1.48 if pressed else 1.58)
+		draw_circle(center, radius + 3.0, Color("#30191a", 0.92))
+		draw_arc(center, radius + 1.0, 0.0, TAU, 56, Color(GOLD if not pressed else JADE, 0.94), 2.5, true)
+		draw_arc(center, radius - 5.0, 0.2, 4.5, 44, Color(PAPER, 0.22), 1.0, true)
+	var icon_extent := radius * (1.28 if pressed else 1.42)
 	var icon_rect := Rect2(center - Vector2.ONE * icon_extent * 0.5, Vector2.ONE * icon_extent)
-	draw_texture_rect(PULSE_TEXTURE, icon_rect, false, Color(1.0, 1.0, 1.0, 0.82 if pressed else 1.0))
-	var font := get_theme_default_font()
-	var label_size := maxi(16, int(round(18.0 * _device_pixel_scale * clampf((_pulse_hit_rect.size.y / _device_pixel_scale) / PULSE_TARGET_SIZE, 0.8, 1.2))))
+	draw_texture_rect(PULSE_TEXTURE, icon_rect, false, Color(1.0, 1.0, 1.0, 0.78 if pressed else 0.94))
+	var label_size := maxi(15, int(round(16.0 * _device_pixel_scale * clampf((_pulse_hit_rect.size.y / _device_pixel_scale) / PULSE_TARGET_SIZE, 0.8, 1.15))))
 	var label_width := _pulse_hit_rect.size.x
-	var label_position := Vector2(_pulse_hit_rect.position.x, _pulse_hit_rect.end.y - 6.0)
-	draw_string(font, label_position, "BẠO", HORIZONTAL_ALIGNMENT_CENTER, label_width, label_size, PAPER)
+	var label_position := Vector2(_pulse_hit_rect.position.x, _pulse_hit_rect.end.y - 4.0)
+	draw_string(ACTION_FONT, label_position, "KIẾM", HORIZONTAL_ALIGNMENT_CENTER, label_width, label_size, PAPER)
+
+
+func _fit_texture_at_center(texture_value: Texture2D, center: Vector2, maximum_size: Vector2) -> Rect2:
+	if texture_value == null:
+		return Rect2(center - maximum_size * 0.5, maximum_size)
+	var source := Vector2(texture_value.get_size())
+	if source.x <= 1.0 or source.y <= 1.0:
+		return Rect2(center - maximum_size * 0.5, maximum_size)
+	var scale_value := minf(maximum_size.x / source.x, maximum_size.y / source.y)
+	var fitted := source * scale_value
+	return Rect2(center - fitted * 0.5, fitted)
 
 
 func _draw_pause_button() -> void:
 	var center := _pause_hit_rect.get_center()
-	var radius := minf(_pause_hit_rect.size.x, _pause_hit_rect.size.y) * 0.40
-	draw_circle(center + Vector2(3.0, 4.0), radius + 4.0, Color(0.0, 0.0, 0.0, 0.34))
-	draw_circle(center, radius + 2.0, Color(INK, 0.78))
-	draw_arc(center, radius, 0.0, TAU, 40, Color(GOLD, 0.88), 2.5, true)
+	var radius := minf(_pause_hit_rect.size.x, _pause_hit_rect.size.y) * 0.36
+	draw_circle(center + Vector2(2.0, 3.0), radius + 3.0, Color(0.0, 0.0, 0.0, 0.28))
+	draw_circle(center, radius + 1.0, Color(INK, 0.82))
+	draw_arc(center, radius, 0.0, TAU, 40, Color(GOLD, 0.82), 2.0, true)
 	var bar_width := maxf(5.0, radius * 0.18)
 	var bar_height := radius * 0.90
 	for offset_x: float in [-radius * 0.25, radius * 0.25]:

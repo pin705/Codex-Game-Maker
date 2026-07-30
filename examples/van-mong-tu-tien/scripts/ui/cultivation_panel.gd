@@ -1,12 +1,13 @@
 class_name CultivationPanel
 extends PanelContainer
 
-## V3 material frame used by the combat HUD and its ritual overlays.
+## V4 scalable presentation surface.
 ##
-## The frame is intentionally presentation-only. All labels, values, buttons,
-## focus and cooldown state remain ordinary runtime Controls owned by the caller.
-## UIKIT-007 supplies the physical paper/lacquer/bronze response; the quiet
-## centre is the only part allowed to stretch.
+## The approved direction uses matte lacquer, quiet paper and thin bronze
+## structure.  This component intentionally draws those materials natively so
+## compact HUD islands and large modal plates never inherit a stretched raster
+## frame.  `material_root`, `authored_chrome` and `authored_emblem` remain public
+## for callers that attach portraits or isolated emblems.
 
 enum FrameKind {
 	HUD,
@@ -16,21 +17,10 @@ enum FrameKind {
 	SEAL,
 }
 
-const RITUAL_ATLAS: Texture2D = preload("res://assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png")
-
-const RITUAL_REGIONS := {
-	"wide_header": Rect2(456.0, 68.0, 596.0, 164.0),
-	"status_plaque": Rect2(1092.0, 48.0, 404.0, 168.0),
-	"touch_skill": Rect2(1312.0, 788.0, 168.0, 160.0),
-	"modal_guard": Rect2(60.0, 716.0, 472.0, 268.0),
-	"result_plate": Rect2(560.0, 716.0, 708.0, 256.0),
-}
-
-const PATCH_MARGINS := {
-	"wide_header": Vector4(76.0, 38.0, 76.0, 38.0),
-	"modal_guard": Vector4(66.0, 52.0, 66.0, 52.0),
-	"result_plate": Vector4(86.0, 52.0, 86.0, 52.0),
-}
+const DEEP_INK := Color("#091517")
+const BRONZE := Color("#8a6730")
+const BRONZE_LIGHT := Color("#c39a54")
+const PAPER_FIBRE := Color("#d8caa7")
 
 var frame_kind: FrameKind = FrameKind.HUD
 var fill_color := Color("#0a1718")
@@ -41,8 +31,9 @@ var ornament_seed := 1
 var material_root: Control
 var authored_chrome: NinePatchRect
 var authored_emblem: TextureRect
+var authored_fixed: TextureRect
 var lacquer_veil: ColorRect
-var _active_region := ""
+var suppress_native_material := false
 
 
 func _init() -> void:
@@ -50,40 +41,38 @@ func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	clip_contents = false
 
-	# Keep authored material in one non-layout root so its source dimensions can
-	# never force a minimum size on compact HUD containers.
 	material_root = Control.new()
-	material_root.name = "V3MaterialRoot"
+	material_root.name = "V4MaterialRoot"
 	material_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	material_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(material_root)
 
+	# Compatibility presentation handles. V4 draws scalable chrome in `_draw`;
+	# these remain available to callers without introducing raster distortion.
 	authored_chrome = NinePatchRect.new()
-	authored_chrome.name = "RitualNinePatch"
-	authored_chrome.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	authored_chrome.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	authored_chrome.name = "V4NativeChromeHandle"
+	authored_chrome.visible = false
 	authored_chrome.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	authored_chrome.draw_center = true
-	authored_chrome.custom_minimum_size = Vector2.ZERO
 	material_root.add_child(authored_chrome)
-
-	# HUD and banner text is light. A contained lacquer wash converts only the
-	# protected paper field to a readable dark material while leaving the bronze
-	# silhouette and jade hardware visible at full value.
+	authored_fixed = TextureRect.new()
+	authored_fixed.name = "V4AuthoredFixedArt"
+	authored_fixed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	authored_fixed.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	authored_fixed.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	authored_fixed.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	authored_fixed.visible = false
+	authored_fixed.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	material_root.add_child(authored_fixed)
+	authored_emblem = TextureRect.new()
+	authored_emblem.name = "V4EmblemHandle"
+	authored_emblem.visible = false
+	authored_emblem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	material_root.add_child(authored_emblem)
 	lacquer_veil = ColorRect.new()
-	lacquer_veil.name = "LacquerContentField"
+	lacquer_veil.name = "V4ContentFieldHandle"
+	lacquer_veil.visible = false
 	lacquer_veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	material_root.add_child(lacquer_veil)
-
-	# Fixed medallions are never nine-sliced. This layer is used only by SEAL.
-	authored_emblem = TextureRect.new()
-	authored_emblem.name = "RitualSeal"
-	authored_emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	authored_emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	authored_emblem.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	authored_emblem.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	authored_emblem.custom_minimum_size = Vector2.ZERO
-	material_root.add_child(authored_emblem)
 
 
 func configure(kind: FrameKind, fill: Color, accent: Color, seed: int = 1) -> CultivationPanel:
@@ -91,128 +80,162 @@ func configure(kind: FrameKind, fill: Color, accent: Color, seed: int = 1) -> Cu
 	fill_color = fill
 	accent_color = accent
 	ornament_seed = seed
-	_active_region = ""
-	_layout_material()
+	queue_redraw()
+	return self
+
+
+func use_authored_fixed(texture_value: Texture2D) -> CultivationPanel:
+	if texture_value == null:
+		return self
+	suppress_native_material = true
+	authored_fixed.texture = texture_value
+	authored_fixed.visible = true
+	authored_fixed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	authored_chrome.visible = false
+	queue_redraw()
+	return self
+
+
+func use_authored_nine_patch(texture_value: Texture2D, margins: Vector4) -> CultivationPanel:
+	if texture_value == null:
+		return self
+	suppress_native_material = true
+	authored_chrome.texture = texture_value
+	authored_chrome.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	authored_chrome.set_patch_margin(SIDE_LEFT, roundi(margins.x))
+	authored_chrome.set_patch_margin(SIDE_TOP, roundi(margins.y))
+	authored_chrome.set_patch_margin(SIDE_RIGHT, roundi(margins.z))
+	authored_chrome.set_patch_margin(SIDE_BOTTOM, roundi(margins.w))
+	authored_chrome.draw_center = true
+	authored_chrome.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	authored_chrome.visible = true
+	authored_fixed.visible = false
+	queue_redraw()
 	return self
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED or what == NOTIFICATION_THEME_CHANGED:
-		_layout_material()
+		queue_redraw()
 
 
-func _layout_material() -> void:
-	if material_root == null or authored_chrome == null:
-		return
+func _draw() -> void:
 	if size.x < 8.0 or size.y < 8.0:
-		material_root.hide()
 		return
-	material_root.show()
-
-	if frame_kind == FrameKind.SEAL:
-		_layout_seal()
+	if suppress_native_material:
 		return
-
-	authored_emblem.hide()
-	authored_chrome.show()
-	var region_name := _region_for_current_shape()
-	if _active_region != region_name:
-		_active_region = region_name
-		var atlas_region: Rect2 = RITUAL_REGIONS[region_name]
-		authored_chrome.texture = _atlas_region(atlas_region)
-	var authored_margins: Vector4 = PATCH_MARGINS[region_name]
-	_apply_patch_margins(authored_margins)
-	# PanelContainer notifications can propagate a full-rect anchor preset while
-	# the material is being initialized. Pin this non-layout visual before an
-	# explicit size assignment to avoid resize warnings and one-frame drift.
-	authored_chrome.anchor_left = 0.0
-	authored_chrome.anchor_top = 0.0
-	authored_chrome.anchor_right = 0.0
-	authored_chrome.anchor_bottom = 0.0
-	authored_chrome.position = Vector2.ZERO
-	authored_chrome.size = size
-	authored_chrome.modulate = Color(1.0, 1.0, 1.0, 0.98)
-
-	var dark_surface := frame_kind == FrameKind.HUD or frame_kind == FrameKind.BANNER
-	lacquer_veil.visible = dark_surface
-	if dark_surface:
-		var inset := _content_inset(region_name)
-		lacquer_veil.position = Vector2(inset.x, inset.y)
-		lacquer_veil.size = Vector2(
-			maxf(1.0, size.x - inset.x - inset.z),
-			maxf(1.0, size.y - inset.y - inset.w)
-		)
-		var veil_alpha := clampf(fill_color.a * 0.94, 0.76, 0.92)
-		lacquer_veil.color = Color(fill_color.r, fill_color.g, fill_color.b, veil_alpha)
-
-
-func _layout_seal() -> void:
-	authored_chrome.hide()
-	lacquer_veil.hide()
-	authored_emblem.show()
-	if _active_region != "touch_skill":
-		_active_region = "touch_skill"
-		var seal_region: Rect2 = RITUAL_REGIONS["touch_skill"]
-		authored_emblem.texture = _atlas_region(seal_region)
-	var diameter := minf(minf(size.x, size.y) * 0.54, 360.0)
-	authored_emblem.position = (size - Vector2.ONE * diameter) * 0.5
-	authored_emblem.size = Vector2.ONE * diameter
-	# The medallion is a quiet ritual halo, not a second focal control.
-	authored_emblem.modulate = Color(1.0, 1.0, 1.0, clampf(accent_color.a * 0.30, 0.12, 0.24))
-
-
-func _region_for_current_shape() -> String:
 	match frame_kind:
-		FrameKind.SCROLL:
-			return "modal_guard"
+		FrameKind.SEAL:
+			_draw_seal()
 		FrameKind.PAPER:
-			return "result_plate"
+			_draw_plate(true)
+		FrameKind.SCROLL:
+			_draw_plate(fill_color.get_luminance() > 0.42)
 		FrameKind.BANNER:
-			return "wide_header"
-		FrameKind.HUD:
-			# The compact timer island needs a guarded silhouette; the long life
-			# island uses the broader result plate whose quiet field is tall enough
-			# for identity plus two meters. This prevents a one-frame-fits-all HUD.
-			return "modal_guard" if size.x / maxf(size.y, 1.0) < 2.35 else "result_plate"
-	return "modal_guard"
+			_draw_banner()
+		_:
+			_draw_hud_island()
 
 
-func _content_inset(region_name: String) -> Vector4:
-	if region_name == "wide_header":
-		return Vector4(
-			clampf(size.x * 0.055, 18.0, 34.0),
-			clampf(size.y * 0.17, 7.0, 24.0),
-			clampf(size.x * 0.055, 18.0, 34.0),
-			clampf(size.y * 0.22, 9.0, 29.0)
-		)
-	if region_name == "result_plate":
-		return Vector4(
-			clampf(size.x * 0.048, 20.0, 34.0),
-			clampf(size.y * 0.07, 7.0, 14.0),
-			clampf(size.x * 0.048, 20.0, 34.0),
-			clampf(size.y * 0.09, 8.0, 18.0)
-		)
-	return Vector4(
-		clampf(size.x * 0.075, 12.0, 28.0),
-		clampf(size.y * 0.12, 9.0, 24.0),
-		clampf(size.x * 0.075, 12.0, 28.0),
-		clampf(size.y * 0.12, 9.0, 24.0)
-	)
+func _draw_hud_island() -> void:
+	var cut := clampf(minf(size.x, size.y) * 0.13, 7.0, 15.0)
+	var outer := _clipped_rect(Rect2(Vector2.ZERO, size), cut)
+	draw_colored_polygon(_offset(outer, Vector2(3.0, 5.0)), Color(0.0, 0.0, 0.0, 0.36))
+	draw_colored_polygon(outer, Color(fill_color.r, fill_color.g, fill_color.b, clampf(fill_color.a, 0.84, 0.96)))
+	draw_polyline(_closed(outer), Color(BRONZE, 0.86), 1.4, true)
+	var inner_rect := Rect2(Vector2(5.0, 5.0), size - Vector2(10.0, 10.0))
+	var inner := _clipped_rect(inner_rect, maxf(3.0, cut - 4.0))
+	draw_polyline(_closed(inner), Color(accent_color, 0.26), 1.0, true)
+	_draw_corner_hardware(cut, false)
 
 
-func _apply_patch_margins(authored: Vector4) -> void:
-	# Preserve hardware while still allowing the 52 px objective strip and the
-	# 128 px timer plaque to use the same accepted source family safely.
-	var horizontal_cap := maxf(8.0, size.x * 0.23)
-	var vertical_cap := maxf(5.0, size.y * 0.34)
-	authored_chrome.set_patch_margin(SIDE_LEFT, int(round(minf(authored.x, horizontal_cap))))
-	authored_chrome.set_patch_margin(SIDE_TOP, int(round(minf(authored.y, vertical_cap))))
-	authored_chrome.set_patch_margin(SIDE_RIGHT, int(round(minf(authored.z, horizontal_cap))))
-	authored_chrome.set_patch_margin(SIDE_BOTTOM, int(round(minf(authored.w, vertical_cap))))
+func _draw_banner() -> void:
+	var cut := clampf(size.y * 0.28, 8.0, 19.0)
+	var outer := _banner_shape(Rect2(Vector2.ZERO, size), cut)
+	draw_colored_polygon(_offset(outer, Vector2(2.0, 4.0)), Color(0.0, 0.0, 0.0, 0.34))
+	draw_colored_polygon(outer, Color(fill_color.r, fill_color.g, fill_color.b, clampf(fill_color.a, 0.80, 0.94)))
+	draw_polyline(_closed(outer), Color(BRONZE, 0.80), 1.25, true)
+	var y := size.y - clampf(size.y * 0.19, 5.0, 10.0)
+	draw_line(Vector2(cut * 1.6, y), Vector2(size.x - cut * 1.6, y), Color(accent_color, 0.42), 1.0, true)
 
 
-func _atlas_region(region: Rect2) -> AtlasTexture:
-	var texture := AtlasTexture.new()
-	texture.atlas = RITUAL_ATLAS
-	texture.region = region
-	return texture
+func _draw_plate(light_surface: bool) -> void:
+	var cut := clampf(minf(size.x, size.y) * 0.055, 10.0, 24.0)
+	var outer := _clipped_rect(Rect2(Vector2.ZERO, size), cut)
+	draw_colored_polygon(_offset(outer, Vector2(7.0, 9.0)), Color(0.0, 0.0, 0.0, 0.42))
+	var surface := Color(fill_color.r, fill_color.g, fill_color.b, clampf(fill_color.a, 0.94, 1.0))
+	if light_surface:
+		surface = Color(PAPER_FIBRE, clampf(fill_color.a, 0.94, 1.0))
+	draw_colored_polygon(outer, surface)
+	draw_polyline(_closed(outer), Color(DEEP_INK, 0.92), 4.0, true)
+	draw_polyline(_closed(outer), Color(BRONZE_LIGHT, 0.78), 1.35, true)
+	var inset := clampf(cut * 0.62, 7.0, 13.0)
+	var inner_rect := Rect2(Vector2.ONE * inset, size - Vector2.ONE * inset * 2.0)
+	var inner := _clipped_rect(inner_rect, maxf(4.0, cut - inset))
+	draw_polyline(_closed(inner), Color(BRONZE if light_surface else accent_color, 0.34), 1.0, true)
+	_draw_corner_hardware(cut, light_surface)
+
+
+func _draw_seal() -> void:
+	var radius := minf(size.x, size.y) * 0.28
+	var center := size * 0.5
+	draw_circle(center, radius + 8.0, Color(0.0, 0.0, 0.0, 0.12))
+	draw_arc(center, radius, -2.75, 1.05, 56, Color(accent_color, 0.24), 2.0, true)
+	draw_arc(center, radius - 11.0, 0.25, 4.35, 48, Color(BRONZE_LIGHT, 0.18), 1.0, true)
+	for index in 4:
+		var angle := PI * 0.25 + float(index) * PI * 0.5
+		var point := center + Vector2.from_angle(angle) * radius
+		var diamond := PackedVector2Array([
+			point + Vector2(0.0, -4.0), point + Vector2(4.0, 0.0),
+			point + Vector2(0.0, 4.0), point + Vector2(-4.0, 0.0),
+		])
+		draw_colored_polygon(diamond, Color(accent_color, 0.34))
+
+
+func _draw_corner_hardware(cut: float, light_surface: bool) -> void:
+	var hardware := Color(BRONZE_LIGHT if not light_surface else BRONZE, 0.72)
+	var arm := clampf(cut * 0.82, 7.0, 13.0)
+	var inset := 3.0
+	var corners := [
+		[Vector2(inset, inset + arm), Vector2(inset, inset), Vector2(inset + arm, inset)],
+		[Vector2(size.x - inset - arm, inset), Vector2(size.x - inset, inset), Vector2(size.x - inset, inset + arm)],
+		[Vector2(inset, size.y - inset - arm), Vector2(inset, size.y - inset), Vector2(inset + arm, size.y - inset)],
+		[Vector2(size.x - inset - arm, size.y - inset), Vector2(size.x - inset, size.y - inset), Vector2(size.x - inset, size.y - inset - arm)],
+	]
+	for path: Array in corners:
+		draw_polyline(PackedVector2Array(path), hardware, 2.0, true)
+
+
+func _clipped_rect(rect: Rect2, cut: float) -> PackedVector2Array:
+	var p := rect.position
+	var e := rect.end
+	return PackedVector2Array([
+		Vector2(p.x + cut, p.y), Vector2(e.x - cut * 0.65, p.y),
+		Vector2(e.x, p.y + cut * 0.65), Vector2(e.x, e.y - cut),
+		Vector2(e.x - cut, e.y), Vector2(p.x + cut * 0.65, e.y),
+		Vector2(p.x, e.y - cut * 0.65), Vector2(p.x, p.y + cut),
+	])
+
+
+func _banner_shape(rect: Rect2, cut: float) -> PackedVector2Array:
+	var p := rect.position
+	var e := rect.end
+	return PackedVector2Array([
+		Vector2(p.x, p.y + cut * 0.52), Vector2(p.x + cut, p.y),
+		Vector2(e.x - cut, p.y), Vector2(e.x, p.y + cut * 0.52),
+		Vector2(e.x - cut * 0.72, e.y), Vector2(p.x + cut * 0.72, e.y),
+	])
+
+
+func _offset(points: PackedVector2Array, delta: Vector2) -> PackedVector2Array:
+	var result := PackedVector2Array()
+	for point in points:
+		result.append(point + delta)
+	return result
+
+
+func _closed(points: PackedVector2Array) -> PackedVector2Array:
+	var result := points.duplicate()
+	if not result.is_empty():
+		result.append(result[0])
+	return result

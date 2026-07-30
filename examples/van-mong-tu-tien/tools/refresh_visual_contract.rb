@@ -32,28 +32,28 @@ expected_paths.each { |path| digest_for(path) }
 
 contract = JSON.parse(File.read(CONTRACT_PATH))
 style_lock = JSON.parse(File.read(STYLE_LOCK_PATH))
-contract["status"] = "blocked"
-contract["review_state"] = "superseded-pending-full-v3-runtime-review"
+contract["status"] = "pending_independent_review"
+contract["review_state"] = "v4-captures-refreshed-pending-independent-review"
 review_summary = contract.fetch("review_summary")
 review_summary["historical_required_surfaces_verified"] ||= review_summary["required_surfaces_verified"]
 review_summary["historical_required_surfaces_blocked"] ||= review_summary["required_surfaces_blocked"]
-review_summary["verdict"] = "BLOCKED"
+review_summary["verdict"] = "PENDING"
 review_summary["required_surface_count"] = contract.fetch("surfaces").length
 review_summary["required_surfaces_verified"] = 0
 review_summary["required_surfaces_blocked"] = contract.fetch("surfaces").length
-review_summary["reason"] = "The user approved the arsenal reference but explicitly rejected current whole-game runtime convergence. Prior per-surface pass flags are historical and cannot certify V3 until the shared-component migration, full recapture and independent review are complete."
+review_summary["reason"] = "The user-approved V4 master board has been implemented and the complete desktop/phone capture matrix refreshed. Independent clean-context review must bind the final verdict."
 contract["style_lock"] = {
   "path" => "design/art/style-lock.json",
   "style_version" => style_lock.fetch("style_version"),
   "sha256" => style_lock.fetch("digest")
 }
-contract["build"] = "local ignored showcase output; final project fingerprint pending refreshed quality run"
+contract["build"] = "V4 local candidate; final project fingerprint pending refreshed quality run"
 contract["required_viewports"] = [
   {
     "id" => "desktop-1600x900",
     "width" => 1600,
     "height" => 900,
-    "device" => "Native desktop reference canvas; matching served Chromium V3 captures are recorded under production/evidence/platforms"
+    "device" => "Native desktop V4 reference canvas; matching served Chromium captures are recorded under production/evidence/platforms"
   },
   {
     "id" => "phone-844x390-simulated",
@@ -68,33 +68,39 @@ contract["auxiliary_viewports"] = [
 ]
 
 lookdev = contract.fetch("lookdev")
-lookdev["status"] = "approved-reference-runtime-convergence-blocked"
+lookdev["status"] = "v4-approved-reference-runtime-candidate"
 lookdev["representative_asset_ids"] = [
   "KEYART-001", "HUB-001-van-mong-sect", "HERO-001-idle-side",
   "UIKIT-002-scroll-talisman", "UIKIT-004-talisman-folios",
-  "UIKIT-005-restrained-controls", "UIKIT-006-arsenal-plates",
+  "RitualSurface", "RasterButton", "VanMongComponentKit",
   "UIICON-001-relics", "SKILLICON-001-five-formation",
   "PREMIUM-001-cultivation-sigils"
 ]
-lookdev["candidate_ids"] = ["lookdev-v3-user-approved-arsenal-reference", "lookdev-v3-restrained-runtime", "lookdev-v3-phone-device-space", "lookdev-v2-glossy-dashboard"]
-lookdev["accepted_candidate_ids"] = ["lookdev-v3-user-approved-arsenal-reference"]
-lookdev["pending_candidate_ids"] = ["lookdev-v3-restrained-runtime", "lookdev-v3-phone-device-space"]
+lookdev["candidate_ids"] = ["lookdev-v4-user-commercial-reference", "lookdev-v4-approved-master-board", "lookdev-v4-runtime-desktop", "lookdev-v4-runtime-phone", "lookdev-v2-glossy-dashboard"]
+lookdev["accepted_candidate_ids"] = ["lookdev-v4-user-commercial-reference", "lookdev-v4-approved-master-board"]
+lookdev["pending_candidate_ids"] = ["lookdev-v4-runtime-desktop", "lookdev-v4-runtime-phone"]
 lookdev["rejected_candidate_ids"] = ["lookdev-v2-glossy-dashboard"]
 lookdev["candidate_evidence"] = [
   {
-    "id" => "lookdev-v3-user-approved-arsenal-reference",
+    "id" => "lookdev-v4-user-commercial-reference",
     "outcome" => "accepted",
-    "path" => "design/art/lookdev/v3/arsenal-reference-approved.png",
-    "sha256" => digest_for("design/art/lookdev/v3/arsenal-reference-approved.png")
+    "path" => "design/art/lookdev/v4/user-commercial-ui-reference.png",
+    "sha256" => digest_for("design/art/lookdev/v4/user-commercial-ui-reference.png")
   },
   {
-    "id" => "lookdev-v3-restrained-runtime",
+    "id" => "lookdev-v4-approved-master-board",
+    "outcome" => "accepted",
+    "path" => "design/art/lookdev/v4/master-board-candidate-01.png",
+    "sha256" => digest_for("design/art/lookdev/v4/master-board-candidate-01.png")
+  },
+  {
+    "id" => "lookdev-v4-runtime-desktop",
     "outcome" => "pending-runtime-convergence",
     "path" => "production/playtests/frontend/contact-sheet-current-desktop.png",
     "sha256" => digest_for("production/playtests/frontend/contact-sheet-current-desktop.png")
   },
   {
-    "id" => "lookdev-v3-phone-device-space",
+    "id" => "lookdev-v4-runtime-phone",
     "outcome" => "pending-runtime-convergence",
     "path" => "production/playtests/frontend/contact-sheet-current-phone.png",
     "sha256" => digest_for("production/playtests/frontend/contact-sheet-current-phone.png")
@@ -107,7 +113,8 @@ lookdev["candidate_evidence"] = [
   }
 ]
 lookdev["locked_reference_paths"] = [
-  "design/art/lookdev/v3/arsenal-reference-approved.png"
+  "design/art/lookdev/v4/user-commercial-ui-reference.png",
+  "design/art/lookdev/v4/master-board-candidate-01.png"
 ]
 lookdev["runtime_evidence_paths"] = [
   "production/playtests/frontend/contact-sheet-current-desktop.png",
@@ -119,7 +126,7 @@ lookdev["runtime_evidence_paths"] = [
   "production/playtests/overhaul/gameplay-final.png",
   "production/playtests/overhaul/upgrade-final.png"
 ]
-lookdev["decision_rationale"] = "The arsenal image is the approved target for materials, silhouette and hierarchy. Current desktop/phone captures remain implementation evidence only and are not accepted look-dev candidates after the user's whole-game convergence rejection; the V2 composite remains rejected comparison evidence."
+lookdev["decision_rationale"] = "The user approved the V4 master board as the complete hierarchy, material and responsive target. Current desktop/phone matrices are the runtime convergence candidates; the V2 composite remains rejected comparison evidence."
 lookdev["evidence"] = lookdev["locked_reference_paths"] + lookdev["runtime_evidence_paths"]
 
 surface_paths = {

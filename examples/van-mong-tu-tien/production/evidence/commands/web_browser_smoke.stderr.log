@@ -1,1 +1,13 @@
-sh: playwright: command not found
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:43] "GET / HTTP/1.1" 200 -
+(node:68211) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:44] "GET / HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:44] "GET /index.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:44] "GET /index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:44] "GET /index.wasm HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:44] "GET /index.pck HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:45] "GET /index.audio.position.worklet.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:45] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:58] "GET / HTTP/1.1" 304 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:58] "GET /index.wasm HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [31/Jul/2026 00:15:58] "GET /index.pck HTTP/1.1" 200 -

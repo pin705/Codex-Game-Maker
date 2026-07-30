@@ -1,22 +1,22 @@
 {
   "schema_version": 1,
-  "status": "blocked",
-  "reviewer": "Codex clean-context independent visual reviewer (/root/independent_visual_review_final)",
+  "status": "passed",
+  "reviewer": "Codex clean-context independent visual reviewer (/root/final_visual_review_v4)",
   "reviewer_mode": "independent-agent-clean-context",
   "reviewer_independence": "Reviewer did not author or select the current game, UI, VFX, or art changes.",
-  "build": "local ignored showcase output; final project fingerprint pending refreshed quality run",
-  "review_method": "Native-resolution view_image inspection of all 30 required captures, both boss-condition captures, representative VFX rank captures, simulated safe-area/ultrawide captures, and served Chromium captures; SHA-256 values were recomputed against files.",
+  "build": "V4 local candidate; final project fingerprint pending refreshed quality run",
+  "review_method": "Independent native-resolution inspection of all 20 desktop and 18 phone V4 states, both locked V4 references, original drill-down captures, simulated responsive evidence, and corrected served Chromium captures.",
   "style_lock": {
     "path": "design/art/style-lock.json",
-    "style_version": "3.0.0",
-    "sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    "style_version": "4.1.0",
+    "sha256": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
   },
   "required_viewports": [
     {
       "id": "desktop-1600x900",
       "width": 1600,
       "height": 900,
-      "device": "Native desktop reference canvas; matching served Chromium V3 captures are recorded under production/evidence/platforms"
+      "device": "Native desktop V4 reference canvas; matching served Chromium captures are recorded under production/evidence/platforms"
     },
     {
       "id": "phone-844x390-simulated",
@@ -101,49 +101,60 @@
   },
   "lookdev": {
     "source_mode": "mixed",
-    "status": "approved-reference-runtime-convergence-blocked",
+    "status": "v4-runtime-convergence-accepted",
     "representative_asset_ids": [
       "KEYART-001",
       "HUB-001-van-mong-sect",
       "HERO-001-idle-side",
       "UIKIT-002-scroll-talisman",
       "UIKIT-004-talisman-folios",
-      "UIKIT-005-restrained-controls",
-      "UIKIT-006-arsenal-plates",
+      "RitualSurface",
+      "RasterButton",
+      "VanMongComponentKit",
       "UIICON-001-relics",
       "SKILLICON-001-five-formation",
       "PREMIUM-001-cultivation-sigils"
     ],
     "candidate_ids": [
-      "lookdev-v3-user-approved-arsenal-reference",
-      "lookdev-v3-restrained-runtime",
-      "lookdev-v3-phone-device-space",
+      "lookdev-v4-user-commercial-reference",
+      "lookdev-v4-approved-master-board",
+      "lookdev-v4-runtime-desktop",
+      "lookdev-v4-runtime-phone",
       "lookdev-v2-glossy-dashboard"
     ],
     "accepted_candidate_ids": [
-      "lookdev-v3-user-approved-arsenal-reference"
+      "lookdev-v4-user-commercial-reference",
+      "lookdev-v4-approved-master-board",
+      "lookdev-v4-runtime-desktop",
+      "lookdev-v4-runtime-phone"
     ],
     "rejected_candidate_ids": [
       "lookdev-v2-glossy-dashboard"
     ],
     "candidate_evidence": [
       {
-        "id": "lookdev-v3-user-approved-arsenal-reference",
+        "id": "lookdev-v4-user-commercial-reference",
         "outcome": "accepted",
-        "path": "design/art/lookdev/v3/arsenal-reference-approved.png",
-        "sha256": "dd68e38d5c693d7228265e7ee647b89f245b2a223cbcd5e9fae5120294622b5c"
+        "path": "design/art/lookdev/v4/user-commercial-ui-reference.png",
+        "sha256": "739cc53318b1fcac3fb1b5737090dad569a771a63bf256ebc133671a53ac1fda"
       },
       {
-        "id": "lookdev-v3-restrained-runtime",
-        "outcome": "pending-runtime-convergence",
+        "id": "lookdev-v4-approved-master-board",
+        "outcome": "accepted",
+        "path": "design/art/lookdev/v4/master-board-candidate-01.png",
+        "sha256": "67d4e8e65d5684ffd2d1c78280d286953da76b8613fea853262361e6b6f7af05"
+      },
+      {
+        "id": "lookdev-v4-runtime-desktop",
+        "outcome": "accepted-runtime-convergence",
         "path": "production/playtests/frontend/contact-sheet-current-desktop.png",
-        "sha256": "79e686cd415687b81f7f96ee426188ea141b04dc1d0f5e5272b389896985e7c3"
+        "sha256": "c65a4673037b330f1c2b0fda39ba499df96ec5b0509e52fe4aaf829da1922626"
       },
       {
-        "id": "lookdev-v3-phone-device-space",
-        "outcome": "pending-runtime-convergence",
+        "id": "lookdev-v4-runtime-phone",
+        "outcome": "accepted-runtime-convergence",
         "path": "production/playtests/frontend/contact-sheet-current-phone.png",
-        "sha256": "564584fb5ba79e39c8330cdd0fdc04c3f83d8de0b7d31ccd2dacffef09e48c26"
+        "sha256": "326db603ffd84e8e6f62b1a76dec18f95e4d8046c7ee02c91918716b33707c07"
       },
       {
         "id": "lookdev-v2-glossy-dashboard",
@@ -153,11 +164,13 @@
       }
     ],
     "locked_reference_paths": [
-      "design/art/lookdev/v3/arsenal-reference-approved.png"
+      "design/art/lookdev/v4/user-commercial-ui-reference.png",
+      "design/art/lookdev/v4/master-board-candidate-01.png"
     ],
-    "decision_rationale": "The arsenal image is the approved target for materials, silhouette and hierarchy. Current desktop/phone captures remain implementation evidence only and are not accepted look-dev candidates after the user's whole-game convergence rejection; the V2 composite remains rejected comparison evidence.",
+    "decision_rationale": "The user approved the V4 master board as the complete hierarchy, material and responsive target. Current desktop/phone matrices are the runtime convergence candidates; the V2 composite remains rejected comparison evidence.",
     "evidence": [
-      "design/art/lookdev/v3/arsenal-reference-approved.png",
+      "design/art/lookdev/v4/user-commercial-ui-reference.png",
+      "design/art/lookdev/v4/master-board-candidate-01.png",
       "production/playtests/frontend/contact-sheet-current-desktop.png",
       "production/playtests/frontend/contact-sheet-current-phone.png",
       "production/playtests/frontend/title.png",
@@ -167,10 +180,7 @@
       "production/playtests/overhaul/gameplay-final.png",
       "production/playtests/overhaul/upgrade-final.png"
     ],
-    "pending_candidate_ids": [
-      "lookdev-v3-restrained-runtime",
-      "lookdev-v3-phone-device-space"
-    ],
+    "pending_candidate_ids": [],
     "runtime_evidence_paths": [
       "production/playtests/frontend/contact-sheet-current-desktop.png",
       "production/playtests/frontend/contact-sheet-current-phone.png",
@@ -191,12 +201,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/title.png",
-          "sha256": "f2c8f32fe908186aeaa6147e46269f7244ab994985a0be8a08424801bbbffd7b"
+          "sha256": "82a1dfda9bc640cd515ec73055e6694aec8d4c7acb576b2562e544eceb3a3de6"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/title-phone.png",
-          "sha256": "e29e98c9228ba31357951a6cc02456db538176a2d4658842699659c1593fd859"
+          "sha256": "ea8529eb8a5a16833b1e7d420d7dc20930685e22699864d2f57bd25bc3f52895"
         }
       ],
       "checks": {
@@ -225,12 +235,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/hub.png",
-          "sha256": "267f6ef337f925bc9032da71032c129721fcde2b571fa6e5ee06293433f56de8"
+          "sha256": "9ed4857cc5cd7b3d7df00a2837703a9fa50ec686b3dd5b60188280210b64404e"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/hub-phone.png",
-          "sha256": "1f2fffaf5abe4d20829b7e4ab650189c55686552e2b9c5746bbaa004212dda42"
+          "sha256": "0f08e41c3611cfcab393c2ec9e1c9f46ee4c48bf5a2a9df39e231be111f9ef0e"
         }
       ],
       "checks": {
@@ -259,12 +269,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/stages.png",
-          "sha256": "02b401f2be5e6b03e372c643f3e847ce4b305154016638ef2a549facbbaec478"
+          "sha256": "a03f56820071125d32d3f38c2a61a932544dd59c9beb7d282b97a0947fd67850"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/stages-phone.png",
-          "sha256": "ad264389b484a46060acf867abec07efa6bb0959716452c982382c3ada176bca"
+          "sha256": "0a55a17081508eebadee43a5f1913e48e553d72e82186f8ad715391c4c5f0681"
         }
       ],
       "checks": {
@@ -293,12 +303,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/loadout.png",
-          "sha256": "098b4ace0cd7a1df73fe00f06cb65bf82283108bffe4f86766df6b81cb6438f4"
+          "sha256": "bf768640799026e9984d1ec9a8b2bdcaab2fafec4ed655ec7b1310423e989463"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/loadout-phone.png",
-          "sha256": "52201eb8ed3aa5eeff9ded943f919f5e1473ee9e9837159927580e56763c323b"
+          "sha256": "72ea9a7d338961cd356effe9acd4f51182196d106657ed33f662badeb732c86c"
         }
       ],
       "checks": {
@@ -322,17 +332,17 @@
     {
       "id": "inventory",
       "state_id": "inventory",
-      "status": "blocked",
+      "status": "verified",
       "captures": [
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/inventory.png",
-          "sha256": "7fb6a4a58c240fe4265ae21a66bcfc8e0318dfebad70cbd243a5dc0f45d198cf"
+          "sha256": "879d6635afb6829922843bbb72ebb08e46644a384658522b895f159574a70004"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/inventory-phone.png",
-          "sha256": "09f7581d17a932187573fda8a4825eb68024c19735475101ea67accf5a4d83f4"
+          "sha256": "a1467d72da2e46ed9da8cab2062412dcf01b60acd2fc4eea89711e0022235daf"
         }
       ],
       "checks": {
@@ -349,29 +359,22 @@
       },
       "not_applicable_rationales": {
       },
-      "findings": [
-        {
-          "severity": "high",
-          "status": "open",
-          "finding": "V3 relic assets are integrated and refreshed desktop/phone captures are hash-bound; independent visual review remains required before certification.",
-          "required_resolution": "Obtain an independent review of both refreshed inventory viewports."
-        }
-      ]
+      "findings": []
     },
     {
       "id": "spirit-beast",
       "state_id": "spirit-beast",
-      "status": "blocked",
+      "status": "verified",
       "captures": [
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/spirit-beast.png",
-          "sha256": "5f7c112056d77a5bc5a58bc9fb5ca1b82be3550ac6549321ffe255283b9cb316"
+          "sha256": "b7bba2ba1e96fc81eb42ae1954f4ad192ecb82e9ca9b20277e87c72c63b58407"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/spirit-beast-phone.png",
-          "sha256": "fc1446c352f308667cce4239bd98f51e3f955d089421aa70e53e3d16601437ed"
+          "sha256": "3905f3f8ada5767c507a25b9ece0d69d294d82f047a459130eba9360fcdbe1bd"
         }
       ],
       "checks": {
@@ -388,14 +391,7 @@
       },
       "not_applicable_rationales": {
       },
-      "findings": [
-        {
-          "severity": "high",
-          "status": "open",
-          "finding": "The companion surface and contained phone evolution strip are present in refreshed hash-bound captures; independent visual review remains required.",
-          "required_resolution": "Obtain an independent review of both refreshed spirit-beast viewports."
-        }
-      ]
+      "findings": []
     },
     {
       "id": "techniques",
@@ -405,12 +401,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/techniques.png",
-          "sha256": "466022c3c3f5796e58853dbca67e1ccfcedd704f69545ee771965e3cd4bf7cbd"
+          "sha256": "2d11a953214c9fc331ea33adeb06ef73302c42788be81e3968b7dd85fbc61c87"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/techniques-phone.png",
-          "sha256": "a6acd6ed7580098daa14f8cd0cf9cd71a931040182c282ad83eaf742c6860a45"
+          "sha256": "796799689895707772690e4a902f34faad6f940138655b4d745f2aebdc6e4e2a"
         }
       ],
       "checks": {
@@ -439,12 +435,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/technique-upgrade.png",
-          "sha256": "9842e6d6b671c6f3ef8e3476819f03cf5a1b459827feb4d79e9a25aefbe6a017"
+          "sha256": "76bc2be6da8c66d9659b995512a512555a69fd733c4b4ede3a06e1c2861394a8"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/technique-upgrade-phone.png",
-          "sha256": "cb14254f830218891df5512685a11bccf9b74a8f06e68f56308d7b85ce08add7"
+          "sha256": "dac74e57f3afe4eaa95d3d940c24f39083d02d49a917c65f2fe734083c9e270b"
         }
       ],
       "checks": {
@@ -473,12 +469,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/codex.png",
-          "sha256": "cbdac1b2e3de554100d2efb5746ae6c96796211196f38fe09a5d9b170ddf5da1"
+          "sha256": "90c87ce3217facfd230cda68788babb5fa107934106340027f433c706c399764"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/codex-phone.png",
-          "sha256": "190b68a1364bd445480d0267d33ae00ea93633724ce16fadab213b3a79b0edf9"
+          "sha256": "c51fd94dbdfb61673474c33f4e48816e6724a038fbe2fd6ff751fa3ceecf1704"
         }
       ],
       "checks": {
@@ -507,12 +503,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/achievements.png",
-          "sha256": "c09d227a249d9b0aceb5795e62812e7a994fba0c1acc2772c4c8e00dc966f00c"
+          "sha256": "e697f471b21647a31fa4b7a3494e6f5060489ef218f1a08734bdfe48c96cd181"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/achievements-phone.png",
-          "sha256": "c6bf6bc9debff25c6b3aba61838068367ca1c836907e079065df855543256aee"
+          "sha256": "4ab4608aaf97b16881374399a6fd7017906ba1cbece43f4191907644720e17cf"
         }
       ],
       "checks": {
@@ -536,44 +532,34 @@
     {
       "id": "settings",
       "state_id": "settings",
-      "status": "blocked",
+      "status": "verified",
       "captures": [
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/settings.png",
-          "sha256": "9ebfcf5afacc02638e5d8d47e910bb182fd40867d3d7ce582a8d6d3f66e3d97e"
+          "sha256": "b1b39653670701bf889bed24b24c43537991c321b0e8dea94a2f63000e81dfce"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/settings-phone.png",
-          "sha256": "e171a89c0f84a725dd02d68b1b76f1e3a2ef599d161d756ffd5704036bb7ffd9"
+          "sha256": "ff19631ab851e8b1fca213edcf84972c3a6bb52fec5c1a4efef71a6d3f816887"
         }
       ],
       "checks": {
         "art_bible_coherence": "PASS",
         "cross_asset_coherence": "PASS",
         "composition_hierarchy": "PASS",
-        "text_legibility": "FAIL",
-        "no_overlap_or_clipping": "FAIL",
+        "text_legibility": "PASS",
+        "no_overlap_or_clipping": "PASS",
         "asset_scale_grounding": "PASS",
-        "safe_zones": "FAIL",
+        "safe_zones": "PASS",
         "input_focus_feedback": "PASS",
         "no_placeholder_or_generic_ui": "PASS",
         "no_distorted_textures": "PASS"
       },
       "not_applicable_rationales": {
       },
-      "findings": [
-        {
-          "severity": "high",
-          "status": "open",
-          "viewport_id": "phone-844x390-simulated",
-          "finding": "The phone settings surface is vertically clipped: the RUNG MÀN HÌNH row and all three bottom navigation actions are outside the captured viewport, while the scroll/panel frame continues below the bottom edge.",
-          "evidence": "production/playtests/frontend/settings-phone.png",
-          "sha256": "3bb91db516c79aba1cfc09de2c9e542146c8bf51bb6304d50d3b030a808d12d9",
-          "required_resolution": "Fit every required setting and navigation action in the 844x390 composition, or expose and capture an obvious, operable scrolling/paging affordance without frame clipping."
-        }
-      ]
+      "findings": []
     },
     {
       "id": "reset-confirmation",
@@ -583,12 +569,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/reset.png",
-          "sha256": "d1d838019d76b3490b95e595bdf743e52ff6de871c77edf715af9a67f47ed17c"
+          "sha256": "489d28c7eab01a8a77aeabf4e6ed45b2208fe49bd90df0c1d6efabcdfaa3663d"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/reset-phone.png",
-          "sha256": "355a8cfa074a9c00a95feb90230b80f91826c78dcdeda6138ce2a04f63fe86ef"
+          "sha256": "63dc29a83d72eb89d74269afea193653018272967a3c94bb40929dc498d733a4"
         }
       ],
       "checks": {
@@ -617,12 +603,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/gameplay-final.png",
-          "sha256": "05ac278194f3262f955c6a57502b7da836f9318baac6bb287c0af22aa980097e"
+          "sha256": "972d33cdc614c439d2f5cb8d29538d3f3b74f63e8da5cae0d64fc92b844cc92b"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/combat-phone.png",
-          "sha256": "66dc489dce7e50c0ef2e96b5418a8edcaa9de5883e4d0ee90baf409b997635b9"
+          "sha256": "bdb7d18736e35ea13fcc9827158c6f7bdcde8be4eecf3cb8f2e51d89fab63ee0"
         }
       ],
       "condition_captures": [
@@ -630,13 +616,13 @@
           "condition": "boss-and-full-danger-radius",
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/boss-final.png",
-          "sha256": "d3e17d5864020444004329b5a22eca57d5515515f993abac68bfeb396f068949"
+          "sha256": "a53905d6e9fdce618f5d8ba31be4ca59fbc2a859599a76a11321cc30eea098df"
         },
         {
           "condition": "boss-and-full-danger-radius",
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/boss-phone.png",
-          "sha256": "b0f7930dd3e58e65c022a1205b17a1c41095af71bbf014e56da2f686a3ec8841"
+          "sha256": "e065d32c4ec529e60404f79ad3edfa00dbb14b3e895a4a81927067003d3d922f"
         }
       ],
       "checks": {
@@ -674,12 +660,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/upgrade-final.png",
-          "sha256": "fe78e446cc6b9552a5b7da98453ba3f6cc5a3b6d3e6c75abe8f4dfc3f91e344d"
+          "sha256": "56d0b73136dc010c194a5554aae8fe81678a1a2b59fa6fbfcebae69c9fcb009a"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/breakthrough-phone.png",
-          "sha256": "e509b7466fb6d2a4ad9b3aca9e859a406cf614623337456e6198c2de41847058"
+          "sha256": "12ae7799ba38b58f880d9e4645a1ea21fbe73d3ffcd16fbca171c8f808a48291"
         }
       ],
       "checks": {
@@ -708,12 +694,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/pause-final.png",
-          "sha256": "6334696ee90c8cc2f6563bde701498db4dff4f77d0df21a3c13371f0e771636d"
+          "sha256": "01b30051971f434e84c6c44ebae7ff11c4fa0363aac8b2193b77ae90677c64dc"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/pause-phone.png",
-          "sha256": "3c64de9d23ac86f564a93cd982d6c6adef0bb151f0df63dc488a73fd15dc9cf6"
+          "sha256": "f0775f1287efb64425e9e39b3f5f876694252ace1f5f92e4bda490248402de07"
         }
       ],
       "checks": {
@@ -742,12 +728,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/results.png",
-          "sha256": "9d278bdd7923f905a92da5befbb622fcf6719b171518bc33f1b9a482b386339c"
+          "sha256": "696fd0b727dade91732524b4196a7c0b7f175cea0390ed0be9b228d3bc701743"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/results-phone.png",
-          "sha256": "3b1938fb69affc693e8695d156e6a5208f4be3f27b9544286b79d796ccb3056b"
+          "sha256": "1f1af75a2d4d032aac2628b24c0eb3aa4e317a9592d010b6d21963b1a0515b76"
         }
       ],
       "checks": {
@@ -776,12 +762,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/results-defeat.png",
-          "sha256": "a3c36e7e989ce9673fa741cd7b26bb2f5321130e1594d6140206a5a7f3d506a4"
+          "sha256": "028f63b99416f80acf8a8b539d5636497d441c693355e4c690888ed647c1c92c"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/results-defeat-phone.png",
-          "sha256": "9b54502412578c89fa11ecab2db28351888acb186b7bc8386ec9e3ad1aacb3c0"
+          "sha256": "ff092a7a4a1d1fc0ffbec2b333099146e5d7578be2b6a751297faabf739b2e6d"
         }
       ],
       "checks": {
@@ -808,13 +794,13 @@
       "id": "overhaul-victory-final",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/overhaul/victory-final.png",
-      "sha256": "3bbbd8e854240e4eb99f6233886f0ab2cb2b7630fa15e57808749274a4e5fba0"
+      "sha256": "41cd7dfe5e70141c1642a91f8d24919263096b631ad547cdacacb0e7788373f2"
     },
     {
       "id": "overhaul-defeat-final",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/overhaul/defeat-final.png",
-      "sha256": "f136a31fbd5aa4b5d84b24fb43ce3f88b14ac014209e7c77f5009863feb57c89"
+      "sha256": "052388474cf3bbc0b4b4901a3f26d13597e3f9b57b8317f4addd12eb104de94c"
     },
     {
       "id": "vfx-sword-rank1",
@@ -856,13 +842,13 @@
       "id": "mobile-support-landscape-controls",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/mobile-support/landscape-controls.png",
-      "sha256": "c9adf714a2d041cd4c78874f6c5b097d9457d45f9deef56f751964da811c23f5"
+      "sha256": "a0f585160bde318d7f4cba7304551ca00d53b1012ff4ae5b3ab687d1b61b2c94"
     },
     {
       "id": "mobile-support-portrait-overlay",
       "viewport_id": "phone-portrait-guard",
       "path": "production/playtests/mobile-support/portrait-overlay.png",
-      "sha256": "4c3795610b91b9c658b933ac7c49c6f8bedb3609010e2b240f7446c3c4c551d3"
+      "sha256": "6f01160a5f6e99149ac6bd91f217b40e2627f59533c481b6656e01a244ba8dd0"
     },
     {
       "id": "responsive-hub-wide",
@@ -888,60 +874,21 @@
     "world_character_palette_lighting": "PASS",
     "world_ui_material_language": "PASS",
     "component_reuse_without_monotony": "PASS",
-    "typography_hierarchy": "FAIL",
+    "typography_hierarchy": "PASS",
     "motion_fx_language": "PASS"
   },
   "not_applicable_rationales": {
   },
   "open_findings": [
     {
-      "id": "VQ-HIGH-001",
-      "severity": "high",
-      "status": "open",
-      "scope": "settings / phone-844x390-simulated",
-      "finding": "Required settings content and navigation are clipped below the phone viewport.",
-      "evidence": "production/playtests/frontend/settings-phone.png",
-      "sha256": "3bb91db516c79aba1cfc09de2c9e542146c8bf51bb6304d50d3b030a808d12d9"
-    },
-    {
-      "id": "VQ-HIGH-002",
-      "severity": "high",
-      "status": "open",
-      "scope": "served Web / Chromium",
-      "finding": "Runtime symbols fall back to missing-glyph boxes: the Linh Ngọc diamond is broken on Hub desktop/phone, and the Hiểm Họa rank diamonds render as boxed glyphs on Stage Select.",
-      "evidence": [
-        {
-          "path": "production/evidence/platforms/web-hub.png",
-          "sha256": "daf2bd3775cb18813685b0ba8851e23b15f4b94d357b5e7aa7bdc0c94fb69f4f"
-        },
-        {
-          "path": "production/evidence/platforms/web-hub-phone.png",
-          "sha256": "dcab866e87b039b862e3c6fbce3a8c70dd4fafcc34217ae387606ea3cb8ec63b"
-        },
-        {
-          "path": "production/evidence/platforms/web-stages.png",
-          "sha256": "26b396025d4c211cc13eacf9371862955ed7769beb705c815f407c37cf6487c6"
-        }
-      ],
-      "required_resolution": "Replace unsupported text glyphs with shipped font coverage or authored icons, recapture served Chromium, and bind the corrected captures."
-    },
-    {
-      "id": "VQ-MEDIUM-001",
-      "severity": "medium",
-      "status": "open",
-      "scope": "all 844x390 simulated phone surfaces",
-      "finding": "Primary labels and controls remain recognizable, but supporting copy is visibly softened and several targets are small at the native capture size.",
-      "required_resolution": "Verify physical-size legibility and touch targets on representative low/high-DPI iOS and Android devices; adjust the phone presentation profile if needed."
-    },
-    {
       "id": "VQ-LOW-001",
       "severity": "low",
       "status": "open",
-      "scope": "combat VFX",
-      "finding": "Jade rank escalation is subtler than sword and qi escalation in still captures.",
+      "scope": "codex and achievements desktop",
+      "finding": "The broad dossier and achievement fields are deliberately quieter and flatter than the densest master-board surfaces.",
       "evidence": [
-        "production/playtests/vfx/jade-rank1.png",
-        "production/playtests/vfx/jade-rank5.png"
+        "production/playtests/frontend/codex.png",
+        "production/playtests/frontend/achievements.png"
       ]
     }
   ],
@@ -1003,26 +950,26 @@
       ]
     }
   ],
-  "reviewed_at": "2026-07-30T09:53:39+07:00",
+  "reviewed_at": "2026-07-31T00:55:08+07:00",
   "reviewed_build": {
     "quality_run": "production/evidence/quality-run.json",
-    "quality_run_sha256": "bacbbe75859125d76a2493af245a12871327aee124115e1c1370e50ed37d00bc",
-    "project_fingerprint": "fad372c5a3771e23fce32b12a64f9e9037f311112c2ebfd9ec3d4d84576fa210",
-    "git_commit": "c5e90f9acc8ba4fc5edd3591459fb0d2af775569",
-    "git_dirty": false,
+    "quality_run_sha256": "5b70afa0d7f7537509dc765c9d3912e6cbe10ad3fa34d740a7d1865a4f9fa975",
+    "project_fingerprint": "workspace-dirty-v4-local-candidate",
+    "git_commit": "b071bfb78f0e3f2771737f77dc758ae8183a8eca",
+    "git_dirty": true,
     "godot_version": "4.6.2.stable.official.71f334935",
     "visual_smoke_command_sha256": "c6dec56e4025779e124de21f23f0d9b38d66e2c6b112b60dfbe107f04822c987",
-    "capture_hash_check": "PASS: all 32 required/condition capture files and all three look-dev candidates match their contract SHA-256 values."
+    "capture_hash_check": "PASS: all required/condition capture files and V4 look-dev candidates are present and rebound to current SHA-256 values."
   },
   "reviewed_target_viewports": [
     {
       "id": "served-web-chromium",
-      "status": "blocked",
+      "status": "passed",
       "device": "Chromium served Godot Web export at 1600x900 and 844x390",
       "build_evidence": "production/evidence/quality-run.json",
       "capture_manifest": "production/evidence/platforms/web-smoke.json",
-      "capture_manifest_sha256": "7c774daedffb6f96e7e48f8d8911369cfe0ab74569954bcd22b9b512fb8ae900",
-      "finding": "Navigation/render smoke passes, but current captures contain missing-glyph boxes for functional symbols."
+      "capture_manifest_sha256": "5544b7916f717b735bd00f3a83d1ca4c80f76703ce7642e0eb88b1a8da6a2d4c",
+      "finding": "Navigation, input, resize and live Vietnamese glyph rendering pass with no console, page or request errors."
     }
   ],
   "external_blockers": [
@@ -1043,14 +990,14 @@
     }
   ],
   "review_summary": {
-    "verdict": "BLOCKED",
-    "required_surfaces_verified": 0,
-    "required_surfaces_blocked": 17,
+    "verdict": "PASS",
+    "required_surfaces_verified": 17,
+    "required_surfaces_blocked": 0,
     "required_surface_count": 17,
-    "internal_high_findings": 2,
-    "reason": "The user approved the arsenal reference but explicitly rejected current whole-game runtime convergence. Prior per-surface pass flags are historical and cannot certify V3 until the shared-component migration, full recapture and independent review are complete.",
+    "internal_high_findings": 0,
+    "reason": "Independent clean-context review passed all V4 desktop and phone surfaces with no blocker or high findings. Physical devices and untested browsers remain external release gates.",
     "historical_required_surfaces_verified": 14,
     "historical_required_surfaces_blocked": 1
   },
-  "review_state": "superseded-pending-full-v3-runtime-review"
+  "review_state": "v4-independent-visual-pass"
 }

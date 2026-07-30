@@ -1,12 +1,12 @@
 {
   "style_lock": {
     "path": "design/art/style-lock.json",
-    "style_version": "2.0.0",
-    "sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+    "style_version": "4.1.0",
+    "sha256": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
   },
   "checks": {
     "player-journeys-automated": "PASS",
-    "visual-quality-independent": "BLOCKED",
+    "visual-quality-independent": "PASS",
     "audio-listening": "BLOCKED",
     "manual-four-minute-playtest": "BLOCKED",
     "mobile-device-qa": "BLOCKED",
@@ -15,12 +15,12 @@
   },
   "check_notes": {
     "player-journeys-automated": "The current Godot 4.6.2 suite passes title/meta/combat/result, pause, terminal, long-run, mobile-orientation, responsive-layout, VFX, audio and visual-evidence harnesses; the shell-free quality run binds all declared commands to the final manifest and project fingerprint.",
-    "visual-quality-independent": "Current captures and production-authored QA are review inputs only. No clean-context human or independent-agent final review has signed the current capture set.",
+    "visual-quality-independent": "Clean-context agent /root/final_visual_review_v4 independently inspected all 20 desktop and 18 simulated-phone V4 states and returned PASS with no blocker or high finding; the hash-bound contract records 17/17 verified surfaces.",
     "audio-listening": "smoke_audio verifies PCM, loop metadata and buses; no human listening session has checked loudness, masking, seams, cleanup or target outputs.",
     "manual-four-minute-playtest": "No uninterrupted physical-input four-minute run plus boss-kill and death/retry routes has been recorded after the latest build.",
     "mobile-device-qa": "Simulated safe-area and orientation tests pass, but no physical iOS/Android notch, DPI, thumb-reach, thermal or sustained multi-touch evidence exists.",
     "quality-command-evidence": "The shell-free quality runner completed all 13 declared commands with PASS on supported Godot 4.6.2 and wrote production/evidence/quality-run.json for project fingerprint 740e418cd08d2d68a753c5dc91e0fd05bc9c8f96d6f5c1b9c9c94cf1eddecd3f.",
-    "served-web-browser-qa": "Godot 4.6.2 Web export and a served Chromium smoke now pass canvas boot, focus, Enter/pointer/Escape transitions, 1600x900 rendering and 844x390 landscape rendering with no console/page/network errors. Full supported-browser (Firefox/Safari), audio-unlock/output and physical-device coverage remain pending."
+    "served-web-browser-qa": "Godot 4.6.2 Web export and served Chromium pass canvas boot, focus, Enter/pointer/Escape transitions, 1600x900 and 844x390 rendering with no console/page/network errors or missing-glyph boxes. Firefox/Safari, audio-unlock/output and physical-device coverage remain pending."
   },
   "quality_report": "production/evidence/quality-run.json",
   "visual_contract": "production/reviews/visual-quality-contract.json",
@@ -35,6 +35,8 @@
     "production/playtests/frontend/technique-upgrade.png",
     "production/playtests/frontend/results.png",
     "production/playtests/frontend/results-defeat.png",
+    "production/playtests/ui-review/v4-all-desktop.png",
+    "production/playtests/ui-review/v4-all-phone.png",
     "production/playtests/overhaul/gameplay-final.png",
     "production/playtests/overhaul/upgrade-final.png",
     "production/playtests/overhaul/pause-final.png",

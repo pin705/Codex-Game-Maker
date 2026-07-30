@@ -1,6 +1,29 @@
 class_name CultivationHUD
 extends CanvasLayer
 
+
+class SkillMedallion:
+	extends Control
+
+	var active := true
+
+	func configure(is_active: bool) -> void:
+		active = is_active
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		queue_redraw()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_RESIZED:
+			queue_redraw()
+
+	func _draw() -> void:
+		var radius := minf(size.x, size.y) * 0.44
+		var center := size * 0.5
+		draw_circle(center + Vector2(2.0, 3.0), radius + 2.0, Color(0.0, 0.0, 0.0, 0.34))
+		draw_circle(center, radius, Color("#071416", 0.94))
+		draw_arc(center, radius - 1.0, 0.0, TAU, 48, Color("#c69a48", 0.82 if active else 0.38), 1.6, true)
+		draw_arc(center, radius - 6.0, 0.18, 4.4, 40, Color("#55c9a6", 0.34 if active else 0.12), 1.0, true)
+
 const INK := Color("#0b171c")
 const PAPER := Color("#e9e2c7")
 const PAPER_DIM := Color("#aaa991")
@@ -19,6 +42,9 @@ const RASTER_BUTTON := preload("res://scripts/ui/raster_button.gd")
 const COMPONENT_KIT := preload("res://scripts/ui/van_mong_component_kit.gd")
 const SKILL_ICON_ROOT := "res://assets/generated/ui/SKILLICON-001-five-formation/runtime/"
 const PLAYER_PORTRAIT_PATH := "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/player.png"
+const HUD_PLAYER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/player_identity_plaque.png")
+const HUD_TIMER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/timer_plaque.png")
+const HUD_SKILL_RAIL: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/five_skill_rail.png")
 const BODY_FONT := preload("res://assets/fonts/BeVietnamPro-Regular.ttf")
 const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
 const DISPLAY_FONT := preload("res://assets/fonts/Literata-Variable.ttf")
@@ -43,8 +69,9 @@ var skill_strip: Control
 var life_margin: MarginContainer
 var player_portrait_frame: TextureRect
 var player_portrait: TextureRect
-var skill_rail_chrome: TextureRect
+var skill_rail_chrome: Control
 var skill_slots: Array[Control] = []
+var skill_frames: Array[Control] = []
 var skill_icons: Array[TextureRect] = []
 var skill_key_labels: Array[Label] = []
 var skill_name_labels: Array[Label] = []
@@ -171,9 +198,9 @@ func _build_interface() -> void:
 	objective_strip.hide()
 
 func _build_top_hud() -> void:
-	# Combat HUD is intentionally split into three compact ritual objects.  The
-	# old full-width dashboard hid a large slice of the arena and made every
-	# statistic feel equally important.
+	# V4 keeps the arena as the hero. Identity, time and cooldown are compact edge
+	# islands with unequal weight; no island spans enough width to read as a web
+	# dashboard header.
 	top_hud = Control.new()
 	top_hud.name = "TopHUD"
 	top_hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -183,24 +210,26 @@ func _build_top_hud() -> void:
 	var life_panel: CultivationPanel = CULTIVATION_PANEL.new()
 	life_plaque = life_panel
 	life_plaque.name = "LifePlaque"
-	life_panel.configure(CultivationPanel.FrameKind.HUD, Color("#081719", 0.93), Color(GOLD, 0.64), 2)
+	life_panel.configure(CultivationPanel.FrameKind.HUD, Color("#081719", 0.91), Color(JADE, 0.48), 2)
+	life_panel.use_authored_fixed(HUD_PLAYER_FRAME)
 	life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	life_plaque.offset_left = 64.0
-	life_plaque.offset_top = 20.0
-	life_plaque.offset_right = 664.0
-	life_plaque.offset_bottom = 170.0
+	life_plaque.offset_left = 32.0
+	life_plaque.offset_top = 24.0
+	life_plaque.offset_right = 422.0
+	life_plaque.offset_bottom = 206.0
 	top_hud.add_child(life_plaque)
 
-	# PanelContainer owns the layout of direct children. Keep portrait chrome in
-	# the panel's non-layout material root so it cannot be expanded over meters.
-	player_portrait_frame = COMPONENT_KIT.ritual_chrome(life_panel.material_root, "touch_skill", Rect2(18.0, 23.0, 100.0, 100.0), Color(0.90, 1.0, 0.96, 0.92))
+	# The generated plaque already owns the jade/bronze portrait socket. Runtime
+	# portrait, labels and meters remain separate so localization and values stay
+	# live while the authored material is never stretched out of proportion.
+	player_portrait_frame = null
 	if ResourceLoader.exists(PLAYER_PORTRAIT_PATH):
 		var portrait_loaded: Variant = load(PLAYER_PORTRAIT_PATH)
 		if portrait_loaded is Texture2D:
 			player_portrait = TextureRect.new()
 			player_portrait.name = "PlayerPortrait"
-			player_portrait.position = Vector2(24.0, 22.0)
-			player_portrait.size = Vector2(88.0, 106.0)
+			player_portrait.position = Vector2(27.0, 27.0)
+			player_portrait.size = Vector2(76.0, 94.0)
 			player_portrait.texture = portrait_loaded as Texture2D
 			player_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			player_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -209,102 +238,103 @@ func _build_top_hud() -> void:
 			life_panel.material_root.add_child(player_portrait)
 
 	life_margin = MarginContainer.new()
-	life_margin.add_theme_constant_override("margin_left", 126)
-	life_margin.add_theme_constant_override("margin_right", 24)
-	life_margin.add_theme_constant_override("margin_top", 15)
-	life_margin.add_theme_constant_override("margin_bottom", 13)
+	life_margin.add_theme_constant_override("margin_left", 112)
+	life_margin.add_theme_constant_override("margin_right", 16)
+	life_margin.add_theme_constant_override("margin_top", 28)
+	life_margin.add_theme_constant_override("margin_bottom", 30)
 	life_plaque.add_child(life_margin)
 	var life_column := VBoxContainer.new()
-	life_column.add_theme_constant_override("separation", 6)
+	life_column.add_theme_constant_override("separation", 2)
 	life_margin.add_child(life_column)
 	var identity_row := HBoxContainer.new()
-	identity_row.add_theme_constant_override("separation", 12)
+	identity_row.add_theme_constant_override("separation", 8)
 	life_column.add_child(identity_row)
-	realm_label = _label("PHÀM NHÂN", 23, GOLD, true)
+	realm_label = _label("PHÀM NHÂN", 17, PAPER, true)
 	realm_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	identity_row.add_child(realm_label)
-	level_label = _label("TU VI · 01", 13, PAPER_DIM)
+	level_label = _label("TU VI 01", 12, Color(GOLD, 0.82), true)
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	identity_row.add_child(level_label)
 
 	var health_row := HBoxContainer.new()
-	health_row.add_theme_constant_override("separation", 9)
+	health_row.add_theme_constant_override("separation", 6)
 	life_column.add_child(health_row)
 	var health_name := _label("MỆNH", 11, Color(CRIMSON, 0.92), true)
-	health_name.custom_minimum_size = Vector2(48.0, 18.0)
+	health_name.custom_minimum_size = Vector2(38.0, 16.0)
 	health_row.add_child(health_name)
 	health_bar = _progress_bar(CRIMSON, 120.0)
-	health_bar.custom_minimum_size = Vector2(255.0, 14.0)
+	health_bar.custom_minimum_size = Vector2(130.0, 12.0)
 	health_row.add_child(health_bar)
-	health_label = _label("120 / 120", 12, PAPER)
-	health_label.custom_minimum_size = Vector2(74.0, 18.0)
+	health_label = _label("120/120", 11, PAPER)
+	health_label.custom_minimum_size = Vector2(58.0, 16.0)
 	health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	health_row.add_child(health_label)
 
 	var xp_row := HBoxContainer.new()
-	xp_row.add_theme_constant_override("separation", 9)
+	xp_row.add_theme_constant_override("separation", 6)
 	life_column.add_child(xp_row)
 	var xp_name := _label("KHÍ", 11, Color(JADE, 0.92), true)
-	xp_name.custom_minimum_size = Vector2(48.0, 18.0)
+	xp_name.custom_minimum_size = Vector2(38.0, 16.0)
 	xp_row.add_child(xp_name)
 	xp_bar = _progress_bar(JADE, 18.0)
-	xp_bar.custom_minimum_size = Vector2(338.0, 10.0)
+	xp_bar.custom_minimum_size = Vector2(190.0, 9.0)
 	xp_row.add_child(xp_bar)
 
 	var time_panel: CultivationPanel = CULTIVATION_PANEL.new()
 	time_plaque = time_panel
 	time_plaque.name = "TimePlaque"
-	time_panel.configure(CultivationPanel.FrameKind.HUD, Color("#081719", 0.90), Color(GOLD, 0.55), 5)
+	time_panel.configure(CultivationPanel.FrameKind.HUD, Color("#081719", 0.89), Color(GOLD, 0.48), 5)
+	time_panel.use_authored_fixed(HUD_TIMER_FRAME)
 	time_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	time_plaque.offset_left = -292.0
-	time_plaque.offset_top = 20.0
-	time_plaque.offset_right = -64.0
-	time_plaque.offset_bottom = 148.0
+	time_plaque.offset_left = -208.0
+	time_plaque.offset_top = 24.0
+	time_plaque.offset_right = -32.0
+	time_plaque.offset_bottom = 96.0
 	top_hud.add_child(time_plaque)
 	var time_margin := MarginContainer.new()
-	time_margin.add_theme_constant_override("margin_left", 20)
-	time_margin.add_theme_constant_override("margin_right", 20)
-	time_margin.add_theme_constant_override("margin_top", 20)
-	time_margin.add_theme_constant_override("margin_bottom", 16)
+	time_margin.add_theme_constant_override("margin_left", 13)
+	time_margin.add_theme_constant_override("margin_right", 13)
+	time_margin.add_theme_constant_override("margin_top", 8)
+	time_margin.add_theme_constant_override("margin_bottom", 7)
 	time_plaque.add_child(time_margin)
 	var stats := VBoxContainer.new()
 	stats.alignment = BoxContainer.ALIGNMENT_CENTER
 	stats.add_theme_constant_override("separation", -1)
 	time_margin.add_child(stats)
-	var clock_caption := _label("THIÊN KIẾP", 10, Color(GOLD, 0.74), true)
+	var clock_caption := _label("THIÊN KIẾP", 10, Color(GOLD, 0.80), true)
 	clock_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stats.add_child(clock_caption)
-	timer_label = _label("04:00", 28, PAPER, true)
+	timer_label = _label("04:00", 21, PAPER, true)
 	timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stats.add_child(timer_label)
-	kills_label = _label("0 YÊU VẬT", 11, PAPER_DIM)
+	kills_label = _label("0 YÊU VẬT", 10, PAPER_DIM)
 	kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stats.add_child(kills_label)
 
 	var pulse_panel: CultivationPanel = CULTIVATION_PANEL.new()
 	pulse_plaque = pulse_panel
 	pulse_plaque.name = "PulsePlaque"
-	pulse_panel.configure(CultivationPanel.FrameKind.BANNER, Color("#081719", 0.91), Color(JADE, 0.62), 8)
+	pulse_panel.configure(CultivationPanel.FrameKind.BANNER, Color("#081719", 0.87), Color(JADE, 0.52), 8)
 	pulse_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	pulse_plaque.offset_left = -478.0
-	pulse_plaque.offset_top = -112.0
-	pulse_plaque.offset_right = -64.0
-	pulse_plaque.offset_bottom = -48.0
+	pulse_plaque.offset_left = -212.0
+	pulse_plaque.offset_top = 106.0
+	pulse_plaque.offset_right = -32.0
+	pulse_plaque.offset_bottom = 150.0
 	top_hud.add_child(pulse_plaque)
 	var pulse_margin := MarginContainer.new()
-	pulse_margin.add_theme_constant_override("margin_left", 22)
-	pulse_margin.add_theme_constant_override("margin_right", 22)
-	pulse_margin.add_theme_constant_override("margin_top", 18)
-	pulse_margin.add_theme_constant_override("margin_bottom", 11)
+	pulse_margin.add_theme_constant_override("margin_left", 14)
+	pulse_margin.add_theme_constant_override("margin_right", 14)
+	pulse_margin.add_theme_constant_override("margin_top", 4)
+	pulse_margin.add_theme_constant_override("margin_bottom", 5)
 	pulse_plaque.add_child(pulse_margin)
 	var pulse_column := VBoxContainer.new()
-	pulse_column.add_theme_constant_override("separation", 5)
+	pulse_column.add_theme_constant_override("separation", 0)
 	pulse_margin.add_child(pulse_column)
-	pulse_label = _label("SPACE  ·  KIẾM TRẬN", 14, JADE, true)
+	pulse_label = _label("[2] KIẾM TRẬN", 11, JADE, true)
 	pulse_column.add_child(pulse_label)
 	pulse_bar = _progress_bar(GOLD, 1.0)
-	pulse_bar.custom_minimum_size = Vector2(320.0, 11.0)
+	pulse_bar.custom_minimum_size = Vector2(148.0, 8.0)
 	pulse_bar.value = 1.0
 	pulse_column.add_child(pulse_bar)
 
@@ -339,31 +369,31 @@ func _apply_safe_layout() -> void:
 	if life_plaque != null:
 		life_plaque.offset_left = safe.position.x
 		life_plaque.offset_top = top
-		life_plaque.offset_right = safe.position.x + 600.0
-		life_plaque.offset_bottom = top + 150.0
+		life_plaque.offset_right = safe.position.x + 390.0
+		life_plaque.offset_bottom = top + 182.0
 	var pause_reserve := 96.0 if _touch_layout_enabled else 0.0
 	if time_plaque != null:
 		time_plaque.offset_right = -(right_outset + pause_reserve)
-		time_plaque.offset_left = time_plaque.offset_right - 228.0
+		time_plaque.offset_left = time_plaque.offset_right - 176.0
 		time_plaque.offset_top = top
-		time_plaque.offset_bottom = top + 128.0
+		time_plaque.offset_bottom = top + 72.0
 	if pulse_plaque != null:
 		pulse_plaque.offset_right = -(right_outset + pause_reserve)
-		pulse_plaque.offset_left = pulse_plaque.offset_right - 414.0
-		pulse_plaque.offset_top = top + 138.0
-		pulse_plaque.offset_bottom = top + 202.0
+		pulse_plaque.offset_left = pulse_plaque.offset_right - 180.0
+		pulse_plaque.offset_top = top + 82.0
+		pulse_plaque.offset_bottom = top + 126.0
 	if objective_strip != null:
-		var objective_left := safe.position.x + (220.0 if _touch_layout_enabled else 0.0)
+		var objective_left := safe.position.x + (200.0 if _touch_layout_enabled else 0.0)
 		objective_strip.offset_left = objective_left
-		objective_strip.offset_right = objective_left + 470.0
-		objective_strip.offset_bottom = -(bottom_outset + 118.0)
-		objective_strip.offset_top = objective_strip.offset_bottom - 52.0
+		objective_strip.offset_right = objective_left + 300.0
+		objective_strip.offset_bottom = -(bottom_outset + 70.0)
+		objective_strip.offset_top = objective_strip.offset_bottom - 34.0
 	if skill_strip != null:
 		skill_strip.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		skill_strip.offset_left = -400.0
-		skill_strip.offset_top = -196.0
-		skill_strip.offset_right = 400.0
-		skill_strip.offset_bottom = -32.0
+		skill_strip.offset_left = -250.0
+		skill_strip.offset_top = -138.0
+		skill_strip.offset_right = 250.0
+		skill_strip.offset_bottom = -24.0
 
 
 func _is_phone_landscape_window() -> bool:
@@ -386,29 +416,38 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 	top_hud.position = Vector2.ZERO
 	top_hud.size = physical
 	top_hud.scale = Vector2.ONE * device_scale
-	health_bar.custom_minimum_size = Vector2(140.0, 14.0)
-	xp_bar.custom_minimum_size = Vector2(230.0, 10.0)
-	pulse_bar.custom_minimum_size = Vector2(120.0, 11.0)
-	if pulse_label != null and pulse_label.text.begins_with("SPACE"):
+	health_bar.custom_minimum_size = Vector2(90.0, 10.0)
+	xp_bar.custom_minimum_size = Vector2(124.0, 8.0)
+	pulse_bar.custom_minimum_size = Vector2(100.0, 7.0)
+	if pulse_label != null and pulse_label.text.begins_with("["):
 		pulse_label.text = "KIẾM TRẬN"
 	if life_plaque != null:
 		life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		life_plaque.position = Vector2(safe.position.x, safe.position.y)
-		life_plaque.size = Vector2(360.0, 112.0)
+		life_plaque.size = Vector2(260.0, 121.0)
 	if life_margin != null:
-		life_margin.add_theme_constant_override("margin_left", 20)
+		life_margin.add_theme_constant_override("margin_left", 76)
+		life_margin.add_theme_constant_override("margin_right", 10)
+		life_margin.add_theme_constant_override("margin_top", 16)
+		life_margin.add_theme_constant_override("margin_bottom", 18)
+	if health_label != null:
+		health_label.hide()
 	if player_portrait_frame != null:
-		player_portrait_frame.hide()
+		player_portrait_frame.show()
+		player_portrait_frame.position = Vector2(5.0, 6.0)
+		player_portrait_frame.size = Vector2(56.0, 56.0)
 	if player_portrait != null:
-		player_portrait.hide()
+		player_portrait.show()
+		player_portrait.position = Vector2(18.0, 18.0)
+		player_portrait.size = Vector2(50.0, 62.0)
 	if time_plaque != null:
 		time_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		time_plaque.position = Vector2(safe.end.x - 210.0, safe.position.y)
-		time_plaque.size = Vector2(130.0, 94.0)
+		time_plaque.position = Vector2(safe.end.x - 176.0, safe.position.y)
+		time_plaque.size = Vector2(96.0, 64.0)
 	if pulse_plaque != null:
 		pulse_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		pulse_plaque.position = Vector2(safe.position.x + 368.0, safe.position.y)
-		pulse_plaque.size = Vector2(168.0, 64.0)
+		pulse_plaque.position = Vector2(safe.get_center().x - 65.0, safe.position.y)
+		pulse_plaque.size = Vector2(130.0, 44.0)
 	if objective_strip != null:
 		# The touch layout already explains movement and active skill state through
 		# the controls/rail.  A second sentence under the rail only muddies combat.
@@ -416,7 +455,7 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 	if skill_strip != null:
 		skill_strip.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		skill_strip.scale = Vector2.ONE * device_scale
-		skill_strip.position = Vector2(safe.get_center().x - 240.0, safe.end.y - 104.0) * device_scale
+		skill_strip.position = Vector2(safe.get_center().x - 166.0, safe.end.y - 80.0) * device_scale
 		_layout_phone_skill_strip()
 	_apply_upgrade_layout_for_viewport(device_scale, physical)
 	_apply_pause_layout_for_viewport(device_scale, physical)
@@ -427,23 +466,32 @@ func _restore_desktop_hud_layout() -> void:
 		return
 	top_hud.scale = Vector2.ONE
 	top_hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	health_bar.custom_minimum_size = Vector2(255.0, 14.0)
-	xp_bar.custom_minimum_size = Vector2(338.0, 10.0)
-	pulse_bar.custom_minimum_size = Vector2(320.0, 11.0)
+	health_bar.custom_minimum_size = Vector2(130.0, 12.0)
+	xp_bar.custom_minimum_size = Vector2(190.0, 9.0)
+	pulse_bar.custom_minimum_size = Vector2(148.0, 8.0)
 	if life_plaque != null:
 		life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	if life_margin != null:
-		life_margin.add_theme_constant_override("margin_left", 126)
+		life_margin.add_theme_constant_override("margin_left", 112)
+		life_margin.add_theme_constant_override("margin_right", 16)
+		life_margin.add_theme_constant_override("margin_top", 28)
+		life_margin.add_theme_constant_override("margin_bottom", 30)
+	if health_label != null:
+		health_label.show()
 	if player_portrait_frame != null:
 		player_portrait_frame.show()
+		player_portrait_frame.position = Vector2(8.0, 11.0)
+		player_portrait_frame.size = Vector2(78.0, 78.0)
 	if player_portrait != null:
 		player_portrait.show()
+		player_portrait.position = Vector2(27.0, 27.0)
+		player_portrait.size = Vector2(76.0, 94.0)
 	if time_plaque != null:
 		time_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	if pulse_plaque != null:
 		pulse_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	if objective_strip != null:
-		objective_strip.show()
+		objective_strip.hide()
 		objective_strip.scale = Vector2.ONE
 		objective_strip.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	if skill_strip != null:
@@ -462,36 +510,36 @@ func _apply_upgrade_layout_for_viewport(device_scale: float, viewport_size: Vect
 		upgrade_halo.hide()
 		upgrade_column.scale = Vector2.ONE * device_scale
 		upgrade_column.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		upgrade_column.position = Vector2(22.0, 4.0) * device_scale
-		upgrade_column.size = Vector2(viewport_size.x - 44.0, viewport_size.y - 8.0)
-		upgrade_column.add_theme_constant_override("separation", 4)
-		upgrade_cards.custom_minimum_size = Vector2(viewport_size.x - 44.0, 260.0)
+		upgrade_column.position = Vector2(20.0, 3.0) * device_scale
+		upgrade_column.size = Vector2(viewport_size.x - 40.0, viewport_size.y - 6.0)
+		upgrade_column.add_theme_constant_override("separation", 3)
+		upgrade_cards.custom_minimum_size = Vector2(viewport_size.x - 40.0, 266.0)
 		upgrade_cards.add_theme_constant_override("separation", 8)
 		if upgrade_hint != null:
 			upgrade_hint.text = "THỜI GIAN NGƯNG ĐỌNG  ·  CHẠM MỘT PHÙ LỤC ĐỂ LĨNH NGỘ"
 		for child in upgrade_cards.get_children():
 			if child is Control:
-				(child as Control).custom_minimum_size = Vector2(250.0, 260.0)
-				(child as Control).pivot_offset = Vector2(125.0, 130.0)
+				(child as Control).custom_minimum_size = Vector2(220.0, 266.0)
+				(child as Control).pivot_offset = Vector2(110.0, 133.0)
 			if child.has_method("set_touch_mode"):
 				child.call("set_touch_mode", true)
 		return
 	upgrade_halo.show()
 	upgrade_column.scale = Vector2.ONE
 	upgrade_column.set_anchors_preset(Control.PRESET_CENTER)
-	upgrade_column.offset_left = -670.0
-	upgrade_column.offset_top = -330.0
-	upgrade_column.offset_right = 670.0
-	upgrade_column.offset_bottom = 330.0
-	upgrade_column.add_theme_constant_override("separation", 15)
-	upgrade_cards.custom_minimum_size = Vector2(1260.0, 430.0)
-	upgrade_cards.add_theme_constant_override("separation", 28)
+	upgrade_column.offset_left = -480.0
+	upgrade_column.offset_top = -270.0
+	upgrade_column.offset_right = 480.0
+	upgrade_column.offset_bottom = 270.0
+	upgrade_column.add_theme_constant_override("separation", 10)
+	upgrade_cards.custom_minimum_size = Vector2(860.0, 350.0)
+	upgrade_cards.add_theme_constant_override("separation", 18)
 	if upgrade_hint != null:
 		upgrade_hint.text = "THỜI GIAN NGƯNG ĐỌNG   ·   CHỌN BẰNG CHUỘT HOẶC PHÍM 1 / 2 / 3"
 	for child in upgrade_cards.get_children():
 		if child is Control:
-			(child as Control).custom_minimum_size = Vector2(330.0, 390.0)
-			(child as Control).pivot_offset = Vector2(165.0, 195.0)
+			(child as Control).custom_minimum_size = Vector2(270.0, 340.0)
+			(child as Control).pivot_offset = Vector2(135.0, 170.0)
 		if child.has_method("set_touch_mode"):
 			child.call("set_touch_mode", false)
 
@@ -499,14 +547,17 @@ func _apply_upgrade_layout_for_viewport(device_scale: float, viewport_size: Vect
 func _apply_pause_layout_for_viewport(device_scale: float, viewport_size: Vector2) -> void:
 	if pause_card == null:
 		return
-	var card_size := Vector2(620.0, 360.0)
+	var card_size := Vector2(460.0, 276.0)
 	if _touch_layout_enabled and _is_phone_landscape_window():
+		card_size = Vector2(430.0, 258.0)
 		pause_card.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		pause_card.scale = Vector2.ONE * device_scale
 		pause_card.position = (viewport_size - card_size) * 0.5 * device_scale
 		pause_card.size = card_size
 		if pause_text != null:
 			pause_text.text = "Hành trình đã tạm dừng\nChạm TIẾP TỤC để trở lại chiến trận"
+		for node in pause_card.find_children("*", "Button", true, false):
+			(node as Button).custom_minimum_size.y = 64.0
 		return
 	pause_card.scale = Vector2.ONE
 	pause_card.set_anchors_preset(Control.PRESET_CENTER)
@@ -515,7 +566,9 @@ func _apply_pause_layout_for_viewport(device_scale: float, viewport_size: Vector
 	pause_card.offset_right = card_size.x * 0.5
 	pause_card.offset_bottom = card_size.y * 0.5
 	if pause_text != null:
-		pause_text.text = "Dòng thời gian đã dừng lại\nP  tiếp tục hành trình   ·   R  nhập thế lại"
+		pause_text.text = "Dòng thời gian đã dừng lại\nP  tiếp tục   ·   R  nhập thế lại"
+	for node in pause_card.find_children("*", "Button", true, false):
+		(node as Button).custom_minimum_size.y = 56.0
 
 func _build_objective_strip() -> void:
 	var strip: CultivationPanel = CULTIVATION_PANEL.new()
@@ -523,42 +576,51 @@ func _build_objective_strip() -> void:
 	objective_strip.name = "ObjectivePlaque"
 	strip.configure(CultivationPanel.FrameKind.BANNER, Color("#081719", 0.83), Color(JADE, 0.42), 10)
 	strip.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	strip.offset_left = 64.0
-	strip.offset_top = -100.0
-	strip.offset_right = 534.0
-	strip.offset_bottom = -48.0
+	strip.offset_left = 32.0
+	strip.offset_top = -72.0
+	strip.offset_right = 332.0
+	strip.offset_bottom = -38.0
 	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root_control.add_child(strip)
-	COMPONENT_KIT.nine_patch(strip, "secondary", Rect2(0.0, 0.0, 470.0, 52.0), Color(0.76, 0.90, 0.84, 0.94))
-	objective_label = _label("SINH TỒN  ·  THU LINH KHÍ  ·  PHÁ CẢNH", 12, PAPER_DIM, true)
+	objective_label = _label("THU LINH KHÍ  ·  PHÁ CẢNH", 11, PAPER_DIM, true)
 	objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	objective_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	strip.add_child(objective_label)
 
 
 func _build_skill_strip() -> void:
-	# Five-slot combat rail follows the selected arsenal direction. The first two
-	# slots mirror currently playable actions; the remaining slots communicate
-	# loadout capacity and progression without pretending locked skills are live.
+	# Reduced five-medallion rail from the approved V4 board. It is intentionally
+	# narrower than the player's movement lane and uses icon state before copy.
 	skill_strip = Control.new()
 	skill_strip.name = "FiveSkillRail"
 	skill_strip.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	skill_strip.offset_left = -400.0
-	skill_strip.offset_top = -196.0
-	skill_strip.offset_right = 400.0
-	skill_strip.offset_bottom = -32.0
+	skill_strip.offset_left = -250.0
+	skill_strip.offset_top = -138.0
+	skill_strip.offset_right = 250.0
+	skill_strip.offset_bottom = -24.0
 	skill_strip.clip_contents = false
 	skill_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root_control.add_child(skill_strip)
-	skill_rail_chrome = COMPONENT_KIT.ritual_chrome(skill_strip, "skill_rail", Rect2(0.0, 0.0, 800.0, 164.0), Color(0.92, 0.98, 0.94, 0.98))
+	var rail_panel := TextureRect.new()
+	rail_panel.name = "AuthoredFiveSkillRail"
+	rail_panel.texture = HUD_SKILL_RAIL
+	rail_panel.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rail_panel.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rail_panel.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	rail_panel.position = Vector2.ZERO
+	rail_panel.size = Vector2(500.0, 114.0)
+	rail_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	skill_strip.add_child(rail_panel)
+	skill_rail_chrome = rail_panel
 	skill_slots.clear()
+	skill_frames.clear()
 	skill_icons.clear()
 	skill_key_labels.clear()
 	skill_name_labels.clear()
 	skill_lock_labels.clear()
 	var skill_names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "LINH THÚ"]
 	var keys := ["1", "2", "3", "4", "5"]
-	var slot_centers := [132.0, 269.0, 403.0, 540.0, 675.0]
+	var slot_centers := [58.0, 159.0, 261.0, 362.0, 464.0]
 	var icons := [
 		SKILL_ICON_ROOT + "skill_phi_kiem.png",
 		SKILL_ICON_ROOT + "skill_kiem_tran.png",
@@ -569,12 +631,19 @@ func _build_skill_strip() -> void:
 	for index in skill_names.size():
 		var slot := Control.new()
 		slot.name = "SkillSlot_%02d" % (index + 1)
-		slot.position = Vector2(slot_centers[index] - 58.0, 17.0)
-		slot.size = Vector2(116.0, 140.0)
+		slot.position = Vector2(slot_centers[index] - 42.0, 5.0)
+		slot.size = Vector2(84.0, 91.0)
 		slot.clip_contents = false
 		skill_strip.add_child(slot)
 		skill_slots.append(slot)
 		var active := index < 2
+		var frame := SkillMedallion.new()
+		frame.configure(active)
+		frame.position = Vector2(5.0, 0.0)
+		frame.size = Vector2(74.0, 74.0)
+		slot.add_child(frame)
+		frame.visible = false
+		skill_frames.append(frame)
 		if ResourceLoader.exists(icons[index]):
 			var icon_loaded: Variant = load(icons[index])
 			if icon_loaded is Texture2D:
@@ -588,27 +657,27 @@ func _build_skill_strip() -> void:
 				icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				slot.add_child(icon)
 				skill_icons.append(icon)
-				icon.position = Vector2(14.0, 3.0)
-				icon.size = Vector2(88.0, 88.0)
+				icon.position = Vector2(12.0, 1.0)
+				icon.size = Vector2(60.0, 60.0)
 		var key_label := _label(keys[index], 14, GOLD if active else PAPER_DIM, true)
 		key_label.z_index = 3
-		key_label.position = Vector2(-3.0, -4.0)
-		key_label.size = Vector2(24.0, 24.0)
+		key_label.position = Vector2(1.0, 0.0)
+		key_label.size = Vector2(20.0, 20.0)
 		key_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		slot.add_child(key_label)
 		skill_key_labels.append(key_label)
 		var name_label := _label(skill_names[index], 10, PAPER if active else PAPER_DIM, true)
 		name_label.z_index = 3
-		name_label.position = Vector2(-8.0, 102.0)
-		name_label.size = Vector2(132.0, 20.0)
+		name_label.position = Vector2(-6.0, 65.0)
+		name_label.size = Vector2(96.0, 18.0)
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		slot.add_child(name_label)
 		skill_name_labels.append(name_label)
 		if not active:
 			var lock_label := _label("CẤP %d" % (index + 3), 10, CRIMSON, true)
 			lock_label.z_index = 3
-			lock_label.position = Vector2(-8.0, 82.0)
-			lock_label.size = Vector2(132.0, 16.0)
+			lock_label.position = Vector2(-6.0, 50.0)
+			lock_label.size = Vector2(96.0, 16.0)
 			lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			slot.add_child(lock_label)
 			skill_lock_labels.append(lock_label)
@@ -617,27 +686,26 @@ func _build_skill_strip() -> void:
 func _layout_phone_skill_strip() -> void:
 	if skill_strip == null:
 		return
-	skill_strip.size = Vector2(480.0, 104.0)
+	skill_strip.size = Vector2(332.0, 76.0)
 	if skill_rail_chrome != null:
 		skill_rail_chrome.position = Vector2.ZERO
-		skill_rail_chrome.size = Vector2(480.0, 99.0)
-	var centres := [79.0, 160.0, 241.0, 322.0, 403.0]
+		skill_rail_chrome.size = Vector2(332.0, 76.0)
+	var centres := [38.0, 106.0, 173.0, 240.0, 308.0]
 	for index in mini(skill_slots.size(), centres.size()):
 		var slot := skill_slots[index]
-		slot.position = Vector2(centres[index] - 38.0, 3.0)
-		slot.size = Vector2(76.0, 96.0)
+		slot.position = Vector2(centres[index] - 31.0, 2.0)
+		slot.size = Vector2(62.0, 68.0)
+		if index < skill_frames.size():
+			skill_frames[index].position = Vector2(3.0, 0.0)
+			skill_frames[index].size = Vector2(56.0, 56.0)
 		if index < skill_icons.size():
 			var icon := skill_icons[index]
-			icon.position = Vector2(10.0, 4.0)
-			icon.size = Vector2(56.0, 56.0)
+			icon.position = Vector2(7.0, 3.0)
+			icon.size = Vector2(48.0, 48.0)
 		if index < skill_key_labels.size():
 			skill_key_labels[index].hide()
 		if index < skill_name_labels.size():
-			var name_label := skill_name_labels[index]
-			name_label.position = Vector2(-7.0, 68.0)
-			name_label.size = Vector2(90.0, 18.0)
-			name_label.add_theme_font_size_override("font_size", 10)
-			name_label.text = ["PHI KIẾM", "KIẾM TRẬN", "KHÓA", "KHÓA", "KHÓA"][index]
+			skill_name_labels[index].hide()
 	for lock_label in skill_lock_labels:
 		lock_label.hide()
 
@@ -645,33 +713,34 @@ func _layout_phone_skill_strip() -> void:
 func _layout_desktop_skill_strip() -> void:
 	if skill_strip == null:
 		return
-	skill_strip.size = Vector2(800.0, 164.0)
+	skill_strip.size = Vector2(500.0, 114.0)
 	if skill_rail_chrome != null:
 		skill_rail_chrome.position = Vector2.ZERO
-		skill_rail_chrome.size = Vector2(800.0, 164.0)
-	var centres := [132.0, 269.0, 403.0, 540.0, 675.0]
+		skill_rail_chrome.size = Vector2(500.0, 114.0)
+	var centres := [58.0, 159.0, 261.0, 362.0, 464.0]
 	var names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "LINH THÚ"]
 	for index in mini(skill_slots.size(), centres.size()):
 		var slot := skill_slots[index]
-		slot.position = Vector2(centres[index] - 58.0, 17.0)
-		slot.size = Vector2(116.0, 140.0)
+		slot.position = Vector2(centres[index] - 42.0, 5.0)
+		slot.size = Vector2(84.0, 91.0)
+		if index < skill_frames.size():
+			skill_frames[index].position = Vector2(5.0, 0.0)
+			skill_frames[index].size = Vector2(74.0, 74.0)
 		if index < skill_icons.size():
 			var icon := skill_icons[index]
-			icon.position = Vector2(14.0, 3.0)
-			icon.size = Vector2(88.0, 88.0)
+			icon.position = Vector2(12.0, 1.0)
+			icon.size = Vector2(60.0, 60.0)
 		if index < skill_key_labels.size():
 			var key_label := skill_key_labels[index]
 			key_label.show()
-			key_label.position = Vector2(-3.0, -4.0)
-			key_label.size = Vector2(24.0, 24.0)
+			key_label.position = Vector2(0.0, 73.0)
+			key_label.size = Vector2(84.0, 18.0)
+			key_label.add_theme_font_size_override("font_size", 14)
 		if index < skill_name_labels.size():
-			var name_label := skill_name_labels[index]
-			name_label.position = Vector2(-8.0, 102.0)
-			name_label.size = Vector2(132.0, 20.0)
-			name_label.add_theme_font_size_override("font_size", 10)
-			name_label.text = names[index]
+			skill_name_labels[index].text = names[index]
+			skill_name_labels[index].hide()
 	for lock_label in skill_lock_labels:
-		lock_label.show()
+		lock_label.hide()
 
 func _build_start_overlay() -> void:
 	start_overlay = _full_overlay(Color(0.015, 0.035, 0.038, 0.58))
@@ -733,33 +802,33 @@ func _load_key_art() -> TextureRect:
 	return art
 
 func _build_upgrade_overlay() -> void:
-	upgrade_overlay = _full_overlay(Color(0.01, 0.025, 0.027, 0.88))
+	upgrade_overlay = _full_overlay(Color(0.01, 0.025, 0.027, 0.80))
 	upgrade_overlay.hide()
 	root_control.add_child(upgrade_overlay)
 	var ritual_halo: CultivationPanel = CULTIVATION_PANEL.new()
 	upgrade_halo = ritual_halo
 	ritual_halo.configure(CultivationPanel.FrameKind.SEAL, Color(0.0, 0.0, 0.0, 0.0), Color(GOLD, 0.60), 12)
 	ritual_halo.set_anchors_preset(Control.PRESET_CENTER)
-	ritual_halo.offset_left = -330.0
-	ritual_halo.offset_top = -330.0
-	ritual_halo.offset_right = 330.0
-	ritual_halo.offset_bottom = 330.0
+	ritual_halo.offset_left = -240.0
+	ritual_halo.offset_top = -240.0
+	ritual_halo.offset_right = 240.0
+	ritual_halo.offset_bottom = 240.0
 	ritual_halo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	upgrade_overlay.add_child(ritual_halo)
 	var column := VBoxContainer.new()
 	upgrade_column = column
 	column.set_anchors_preset(Control.PRESET_CENTER)
-	column.offset_left = -670.0
-	column.offset_top = -330.0
-	column.offset_right = 670.0
-	column.offset_bottom = 330.0
+	column.offset_left = -480.0
+	column.offset_top = -270.0
+	column.offset_right = 480.0
+	column.offset_bottom = 270.0
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.add_theme_constant_override("separation", 15)
+	column.add_theme_constant_override("separation", 10)
 	upgrade_overlay.add_child(column)
 	var eyebrow := _label("—  ĐẠO TÂM KHAI NGỘ  —", 15, GOLD, true)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(eyebrow)
-	var title := _label("LĨNH NGỘ CÔNG PHÁP", 34, PAPER, true)
+	var title := _label("LĨNH NGỘ CÔNG PHÁP", 30, PAPER, true)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(title)
 	var hint := _label("THỜI GIAN NGƯNG ĐỌNG   ·   CHỌN BẰNG CHUỘT HOẶC PHÍM 1 / 2 / 3", 12, PAPER_DIM)
@@ -767,27 +836,27 @@ func _build_upgrade_overlay() -> void:
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(hint)
 	upgrade_cards = HBoxContainer.new()
-	upgrade_cards.custom_minimum_size = Vector2(1260.0, 430.0)
+	upgrade_cards.custom_minimum_size = Vector2(860.0, 350.0)
 	upgrade_cards.alignment = BoxContainer.ALIGNMENT_CENTER
-	upgrade_cards.add_theme_constant_override("separation", 28)
+	upgrade_cards.add_theme_constant_override("separation", 18)
 	column.add_child(upgrade_cards)
 
 func _build_pause_overlay() -> void:
-	pause_overlay = _full_overlay(Color(0.01, 0.03, 0.035, 0.72))
+	pause_overlay = _full_overlay(Color(0.01, 0.03, 0.035, 0.76))
 	pause_overlay.hide()
 	root_control.add_child(pause_overlay)
-	var card := _center_card(Vector2(620.0, 360.0), Color("#d2c39e", 0.975), Color("#427d6f", 0.82))
+	var card := _center_card(Vector2(460.0, 276.0), Color("#0b191b", 0.97), Color("#8a6730", 0.82))
 	pause_card = card
 	pause_overlay.add_child(card)
-	var content := _card_content(card, 34)
+	var content := _card_content(card, 28)
 	content.alignment = BoxContainer.ALIGNMENT_CENTER
-	var eyebrow := _label("—  NHẤT NIỆM VÔ TRẦN  —", 13, Color("#276f65"), true)
+	var eyebrow := _label("—  NHẤT NIỆM VÔ TRẦN  —", 13, GOLD, true)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(eyebrow)
-	var title := _label("TĨNH TÂM", 38, PAPER_INK, true)
+	var title := _label("TĨNH TÂM", 32, PAPER, true)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(title)
-	var text := _label("Dòng thời gian đã dừng lại\nP  tiếp tục hành trình   ·   R  nhập thế lại", 16, PAPER_COPY)
+	var text := _label("Dòng thời gian đã dừng lại\nP  tiếp tục   ·   R  nhập thế lại", 15, PAPER_DIM)
 	pause_text = text
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(text)
@@ -795,33 +864,33 @@ func _build_pause_overlay() -> void:
 	actions.alignment = BoxContainer.ALIGNMENT_CENTER
 	actions.add_theme_constant_override("separation", 18)
 	content.add_child(actions)
-	var resume_button := _button("TIẾP TỤC", 17, Vector2(230.0, 64.0), RasterButton.ArtVariant.JADE)
+	var resume_button := _button("TIẾP TỤC", 16, Vector2(164.0, 56.0), RasterButton.ArtVariant.JADE)
 	resume_button.pressed.connect(func() -> void: Events.resume_requested.emit())
 	actions.add_child(resume_button)
-	var restart_button := _button("NHẬP THẾ LẠI", 16, Vector2(230.0, 64.0), RasterButton.ArtVariant.CRIMSON)
+	var restart_button := _button("NHẬP THẾ LẠI", 15, Vector2(164.0, 56.0), RasterButton.ArtVariant.CRIMSON)
 	restart_button.pressed.connect(func() -> void: Events.restart_requested.emit())
 	actions.add_child(restart_button)
 
 func _build_end_overlay() -> void:
-	end_overlay = _full_overlay(Color(0.01, 0.025, 0.03, 0.88))
+	end_overlay = _full_overlay(Color(0.01, 0.025, 0.03, 0.82))
 	end_overlay.hide()
 	root_control.add_child(end_overlay)
-	var card := _center_card(Vector2(700.0, 462.0), Color("#d2c39e", 0.98), Color("#9a7133", 0.90))
+	var card := _center_card(Vector2(560.0, 340.0), Color("#0b191b", 0.98), Color("#9a7133", 0.90))
 	end_overlay.add_child(card)
-	var content := _card_content(card, 42)
+	var content := _card_content(card, 34)
 	content.alignment = BoxContainer.ALIGNMENT_CENTER
-	var seal := _label("—  ĐẠO QUẢ  —", 15, BRONZE_INK, true)
+	var seal := _label("—  ĐẠO QUẢ  —", 15, GOLD, true)
 	seal.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(seal)
-	end_title = _label("PHI THĂNG", 46, PAPER_INK, true)
+	end_title = _label("PHI THĂNG", 38, PAPER, true)
 	end_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(end_title)
-	end_details = _label("", 18, PAPER_COPY)
+	end_details = _label("", 17, PAPER_DIM)
 	end_details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	end_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	end_details.custom_minimum_size = Vector2(600.0, 100.0)
+	end_details.custom_minimum_size = Vector2(470.0, 76.0)
 	content.add_child(end_details)
-	var restart_button := _button("NHẬP THẾ LẠI  [R]", 18, Vector2(310.0, 56.0))
+	var restart_button := _button("NHẬP THẾ LẠI  [R]", 17, Vector2(250.0, 54.0))
 	restart_button.pressed.connect(func() -> void: Events.restart_requested.emit())
 	content.add_child(restart_button)
 
@@ -830,27 +899,27 @@ func _build_banner() -> void:
 	banner_panel = banner
 	banner.configure(CultivationPanel.FrameKind.BANNER, Color(INK, 0.89), Color(GOLD, 0.66), 14)
 	banner_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	banner_panel.offset_left = -340.0
-	banner_panel.offset_top = 132.0
-	banner_panel.offset_right = 340.0
-	banner_panel.offset_bottom = 224.0
+	banner_panel.offset_left = -230.0
+	banner_panel.offset_top = 104.0
+	banner_panel.offset_right = 230.0
+	banner_panel.offset_bottom = 172.0
 	banner_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	banner_panel.hide()
 	root_control.add_child(banner_panel)
 	var column := VBoxContainer.new()
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
 	banner_panel.add_child(column)
-	banner_title = _label("CẢNH GIỚI ĐỘT PHÁ", 22, GOLD, true)
+	banner_title = _label("CẢNH GIỚI ĐỘT PHÁ", 19, GOLD, true)
 	banner_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(banner_title)
-	banner_subtitle = _label("Đạo cơ sơ thành", 16, PAPER)
+	banner_subtitle = _label("Đạo cơ sơ thành", 14, PAPER)
 	banner_subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(banner_subtitle)
 
 func _on_health_changed(current: float, maximum: float) -> void:
 	health_bar.max_value = maximum
 	health_bar.value = current
-	health_label.text = "%d / %d" % [ceili(current), ceili(maximum)]
+	health_label.text = "%d/%d" % [ceili(current), ceili(maximum)]
 
 func _on_experience_changed(current: float, required: float, level: int) -> void:
 	xp_bar.max_value = required
@@ -867,20 +936,20 @@ func _on_run_stats_changed(elapsed: float, duration: float, kills: int) -> void:
 	timer_label.text = "%02d:%02d" % [minutes, seconds]
 	kills_label.text = "%d YÊU VẬT" % kills
 	if remaining <= 0:
-		objective_label.text = "THIÊN MA GIÁNG THẾ  ·  ĐÁNH BẠI ĐỂ PHI THĂNG"
+		objective_label.text = "THIÊN MA GIÁNG THẾ"
 
 func _on_pulse_state_changed(remaining: float, cooldown: float) -> void:
 	pulse_bar.max_value = cooldown
 	pulse_bar.value = cooldown - remaining
 	var compact_phone := _touch_layout_enabled and _is_phone_landscape_window()
 	if remaining <= 0.01:
-		pulse_label.text = "KIẾM TRẬN" if compact_phone else ("KIẾM TRẬN — SẴN SÀNG" if _touch_layout_enabled else "SPACE  ·  KIẾM TRẬN — SẴN SÀNG")
+		pulse_label.text = "KIẾM TRẬN" if compact_phone else "[2] KIẾM TRẬN · SẴN SÀNG"
 		pulse_label.add_theme_color_override("font_color", JADE)
 	else:
-		pulse_label.text = ("KIẾM · %.1fs" if compact_phone else "KIẾM TRẬN  ·  %.1fs") % remaining
+		pulse_label.text = ("KIẾM · %.1fs" if compact_phone else "[2] KIẾM TRẬN · %.1fs") % remaining
 		pulse_label.add_theme_color_override("font_color", PAPER_DIM)
 	if compact_phone and pulse_plaque != null:
-		pulse_plaque.size = Vector2(168.0, 64.0)
+		pulse_plaque.size = Vector2(130.0, 44.0)
 
 func _on_upgrade_options_presented(options: Array[Dictionary]) -> void:
 	visible_upgrade_ids.clear()
@@ -901,8 +970,8 @@ func _on_upgrade_options_presented(options: Array[Dictionary]) -> void:
 
 func _upgrade_button(option: Dictionary, card_index: int = 0) -> Button:
 	var card: CultivationChoiceButton = CULTIVATION_CHOICE.new()
-	card.custom_minimum_size = Vector2(330.0, 390.0)
-	card.pivot_offset = Vector2(165.0, 195.0)
+	card.custom_minimum_size = Vector2(270.0, 340.0)
+	card.pivot_offset = Vector2(135.0, 170.0)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var option_id := StringName(str(option.get("id", "")))
 	var accent := _upgrade_accent(str(option.get("id", "")), card_index)
@@ -989,7 +1058,7 @@ func _on_game_finished(victory: bool, title: String, details: String) -> void:
 		end_overlay.hide()
 		return
 	end_title.text = title
-	end_title.add_theme_color_override("font_color", BRONZE_INK if victory else Color("#8e312f"))
+	end_title.add_theme_color_override("font_color", GOLD if victory else Color("#e06b52"))
 	end_details.text = details
 	end_overlay.show()
 
@@ -998,7 +1067,10 @@ func _set_combat_chrome_visible(value: bool) -> void:
 	if top_hud != null:
 		top_hud.visible = value
 	if objective_strip != null:
-		objective_strip.visible = value and not (_touch_layout_enabled and _is_phone_landscape_window())
+		# V4 removes the redundant mission sentence from live combat. The object is
+		# retained for compatibility and boss-state updates, but the world art and
+		# enemy telegraphs own the lower-left lane.
+		objective_strip.visible = false
 	if skill_strip != null:
 		skill_strip.visible = value
 
@@ -1051,7 +1123,7 @@ func _label(text_value: String, font_size: int, color: Color, bold: bool = false
 	label.add_theme_color_override("font_color", color)
 	if bold:
 		if color.get_luminance() > 0.48:
-			label.add_theme_constant_override("outline_size", 4)
+			label.add_theme_constant_override("outline_size", 3 if font_size >= 28 else 2)
 			label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.52))
 		else:
 			label.add_theme_constant_override("outline_size", 1)

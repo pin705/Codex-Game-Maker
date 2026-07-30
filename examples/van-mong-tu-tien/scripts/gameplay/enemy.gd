@@ -4,9 +4,9 @@ extends CharacterBody2D
 # Resource-backed profiles are configured by the session from game_balance.json.
 
 const RuntimeVisualsScript := preload("res://scripts/gameplay/runtime_visuals.gd")
-const RITUAL_ATLAS: Texture2D = preload("res://assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png")
-const BOSS_PORTRAIT: Texture2D = preload("res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/thien_giac.png")
-const BOSS_BAR_REGION := Rect2(424.0, 252.0, 1088.0, 256.0)
+const BOSS_HUD_CREST: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/boss_crest.png")
+const BOSS_HUD_CHANNEL: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/boss_bar_channel.png")
+const UI_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
 
 signal died(enemy: CultivationEnemy, death_position: Vector2, xp_value: float, was_boss: bool)
 signal player_contact(damage: float)
@@ -97,6 +97,7 @@ func setup(enemy_kind: int, player: CultivatorPlayer, difficulty: float, base_co
 			contact_damage = base_damage * 1.83
 			xp_value = 0.0
 			collision_radius = 52.0
+	z_index = 20 if boss else 0
 	health = max_health
 	contact_radius = collision_radius + 18.0
 	if body_shape != null:
@@ -258,22 +259,23 @@ func _draw_boss_telegraph(alpha: float) -> void:
 	# final hit area. Broken, unequal brush segments preserve that readability
 	# while matching the dry-ink world instead of looking like a debug circle.
 	draw_circle(Vector2.ZERO, 230.0, Color(CRIMSON, (0.075 + warning_progress * 0.055) * alpha))
-	for segment in 18:
-		var base_angle := TAU * float(segment) / 18.0
-		var irregular := sin(float(segment) * 2.31 + visual_seed * 4.0) * 0.035
-		var span := TAU / 18.0 * (0.70 + 0.10 * sin(float(segment) * 1.73))
-		var radius := 230.0 + sin(float(segment) * 2.07 + visual_seed) * 2.8
-		var width := 3.2 + float(segment % 4) * 0.65
-		draw_arc(Vector2.ZERO, radius, base_angle + irregular, base_angle + irregular + span, 7, Color(CRIMSON, pulse * alpha), width, true)
-	for segment in 10:
-		var base_angle := -age * 0.42 + TAU * float(segment) / 10.0
-		var span := TAU / 10.0 * (0.42 + 0.10 * float(segment % 3))
-		draw_arc(Vector2.ZERO, 216.0 + float(segment % 2) * 2.0, base_angle, base_angle + span, 6, Color(GOLD, 0.54 * alpha), 2.0 + float(segment % 2), true)
+	for segment in 13:
+		var base_angle := TAU * float(segment) / 13.0
+		var irregular := sin(float(segment) * 2.31 + visual_seed * 4.0) * 0.075
+		var span := TAU / 13.0 * (0.42 + 0.34 * absf(sin(float(segment) * 1.73 + visual_seed)))
+		var radius := 230.0 + sin(float(segment) * 2.07 + visual_seed) * 7.0
+		var width := 2.6 + float((segment * 3) % 5) * 1.05
+		draw_arc(Vector2.ZERO, radius, base_angle + irregular, base_angle + irregular + span, 7, Color(CRIMSON, (0.64 + 0.22 * float(segment % 2)) * pulse * alpha), width, true)
+	for segment in 8:
+		var base_angle := -age * 0.42 + TAU * float(segment) / 8.0
+		var span := TAU / 8.0 * (0.24 + 0.13 * float(segment % 3))
+		draw_arc(Vector2.ZERO, 214.0 + sin(float(segment) * 2.7) * 5.0, base_angle, base_angle + span, 5, Color(GOLD, 0.48 * alpha), 1.8 + float(segment % 3), true)
 	var advancing_radius := lerpf(72.0, 222.0, warning_progress)
-	for segment in 14:
-		var base_angle := TAU * float(segment) / 14.0 - age * 0.12
-		var span := TAU / 14.0 * (0.62 + 0.08 * sin(float(segment) * 3.0))
-		draw_arc(Vector2.ZERO, advancing_radius + float(segment % 3) * 1.4, base_angle, base_angle + span, 6, Color(PALE, 0.80 * alpha), 3.0 + float(segment % 2) * 1.5, true)
+	for segment in 9:
+		var base_angle := TAU * float(segment) / 9.0 - age * 0.12
+		var span := TAU / 9.0 * (0.28 + 0.22 * absf(sin(float(segment) * 2.4 + visual_seed)))
+		var brush_radius := advancing_radius + sin(float(segment) * 2.1 + visual_seed) * 4.5
+		draw_arc(Vector2.ZERO, brush_radius, base_angle, base_angle + span, 5, Color(PALE, (0.48 + 0.12 * float(segment % 2)) * alpha), 2.6 + float(segment % 3) * 1.2, true)
 	for rune_index in 12:
 		var angle := TAU * float(rune_index) / 12.0 + age * 0.12
 		var rune_center := Vector2.from_angle(angle) * 223.0
@@ -340,58 +342,67 @@ func _draw_boss(bob: float, alpha: float) -> void:
 		draw_arc(Vector2.ZERO, 230.0 * warning_progress, 0.0, TAU, 64, Color(CRIMSON, 0.78), 7.0, true)
 
 func _draw_health_bar(alpha: float) -> void:
-	var device_scale := _phone_device_scale() if boss else 1.0
-	var phone_boss := boss and device_scale > 1.0
-	var width := (390.0 if phone_boss else 520.0) if boss else 82.0
-	# The phone plaque remains above the boss but uses a shorter offset and a
-	# compact width, keeping it between the device HUD and the touch rail.
-	var y := (-125.0 if phone_boss else -180.0) if boss else -116.0
 	var ratio := clampf(health / max_health, 0.0, 1.0)
-	var plate_top := y - 17.0 * device_scale if boss else y - 6.0
-	var plate_bottom := y + 16.0 * device_scale if boss else y + 11.0
+	if boss:
+		_draw_boss_health_bar(alpha, ratio)
+		return
+	var width := 82.0
+	var y := -116.0
+	var plate_top := y - 6.0
+	var plate_bottom := y + 11.0
 	var plate := PackedVector2Array([
 		Vector2(-width * 0.5 - 9.0, plate_top), Vector2(width * 0.5 + 5.0, plate_top),
 		Vector2(width * 0.5 + 9.0, plate_top + 4.0), Vector2(width * 0.5 + 5.0, plate_bottom),
 		Vector2(-width * 0.5 - 5.0, plate_bottom), Vector2(-width * 0.5 - 9.0, plate_bottom - 4.0),
 	])
-	var boss_chrome_rect := Rect2()
-	if boss:
-		# UIKIT-007 owns a dedicated boss silhouette. Preserve its source aspect
-		# and keep the live name/health state drawn above it.
-		var chrome_width := width
-		var chrome_height := chrome_width / (BOSS_BAR_REGION.size.x / BOSS_BAR_REGION.size.y)
-		boss_chrome_rect = Rect2(-chrome_width * 0.5, y - chrome_height * 0.5, chrome_width, chrome_height)
-		draw_texture_rect_region(RITUAL_ATLAS, boss_chrome_rect, BOSS_BAR_REGION, Color(1.0, 1.0, 1.0, 0.96 * alpha))
-		var portrait_size := chrome_height * 0.72
-		var portrait_center := Vector2(boss_chrome_rect.position.x + chrome_width * 0.103, boss_chrome_rect.get_center().y - chrome_height * 0.01)
-		var portrait_rect := Rect2(portrait_center - Vector2.ONE * portrait_size * 0.5, Vector2.ONE * portrait_size)
-		draw_texture_rect(BOSS_PORTRAIT, portrait_rect, false, Color(1.0, 1.0, 1.0, alpha))
-	else:
-		draw_colored_polygon(plate, Color(INK, 0.88 * alpha))
-		draw_polyline(PackedVector2Array([plate[0], plate[1], plate[2], plate[3], plate[4], plate[5], plate[0]]), Color(CRIMSON, 0.68 * alpha), 1.3, true)
-	if boss:
-		# The phone HUD is rendered from the expanded world canvas and then
-		# compensated back into device space. Keep the plaque title short there so
-		# the boss identity remains fully readable at the real 844x390 scale.
-		var boss_label := "THIÊN GIÁC" if phone_boss else "THIÊN GIÁC  ·  MA CHỦ"
-		var title_left := boss_chrome_rect.position.x + boss_chrome_rect.size.x * 0.205
-		var title_width := boss_chrome_rect.size.x * 0.69
-		var title_baseline := boss_chrome_rect.position.y + boss_chrome_rect.size.y * 0.34
-		draw_string(ThemeDB.fallback_font, Vector2(title_left, title_baseline), boss_label, HORIZONTAL_ALIGNMENT_CENTER, title_width, maxi(13, roundi(13.0 * minf(device_scale, 1.35))), Color(INK, 0.96 * alpha))
+	draw_colored_polygon(plate, Color(INK, 0.88 * alpha))
+	draw_polyline(PackedVector2Array([plate[0], plate[1], plate[2], plate[3], plate[4], plate[5], plate[0]]), Color(CRIMSON, 0.68 * alpha), 1.3, true)
 	var bar_left := -width * 0.5
 	var bar_width := width
 	var bar_y := y
 	var bar_height := 5.0
-	if boss:
-		bar_left = boss_chrome_rect.position.x + boss_chrome_rect.size.x * 0.205
-		bar_width = boss_chrome_rect.size.x * 0.69
-		bar_y = boss_chrome_rect.position.y + boss_chrome_rect.size.y * 0.535
-		bar_height = maxf(7.0, boss_chrome_rect.size.y * 0.13)
 	draw_rect(Rect2(bar_left, bar_y, bar_width, bar_height), Color("#332c28", 0.94 * alpha), true)
 	draw_rect(Rect2(bar_left, bar_y, bar_width * ratio, bar_height), Color(CRIMSON, alpha), true)
-	draw_line(Vector2(bar_left, bar_y), Vector2(bar_left + bar_width * ratio, bar_y), Color("#f2ddb0", 0.46 * alpha), device_scale if boss else 1.0, true)
-	if not boss:
-		draw_circle(Vector2(bar_left - 4.0, bar_y + bar_height * 0.5), 2.2, Color(GOLD, 0.82 * alpha))
+	draw_line(Vector2(bar_left, bar_y), Vector2(bar_left + bar_width * ratio, bar_y), Color("#f2ddb0", 0.46 * alpha), 1.0, true)
+	draw_circle(Vector2(bar_left - 4.0, bar_y + bar_height * 0.5), 2.2, Color(GOLD, 0.82 * alpha))
+
+
+func _draw_boss_health_bar(alpha: float, ratio: float) -> void:
+	# The HUD frame is split into an aspect-preserved crest and channel. This
+	# keeps the authored pixels intact while the live title and health fill remain
+	# readable native content.
+	var physical := Vector2(DisplayServer.window_get_size())
+	var phone := physical.x > physical.y and physical.x <= 960.0 and physical.y <= 540.0
+	var viewport_size := get_viewport_rect().size
+	var target_center := Vector2(physical.x * 0.5, 132.0) if phone else Vector2(viewport_size.x * 0.5, 54.0)
+	var canvas_transform := get_canvas_transform()
+	var canvas_scale := maxf(0.001, canvas_transform.basis_xform(Vector2.RIGHT).length())
+	var screen_to_world := 1.0 / canvas_scale
+	var canvas_position := canvas_transform.affine_inverse() * target_center
+	var center := to_local(canvas_position)
+	var desired_width := minf(390.0 if phone else 560.0, (physical.x if phone else viewport_size.x) - (280.0 if phone else 560.0))
+	desired_width = maxf(desired_width, 330.0 if phone else 480.0)
+	var width := desired_width * screen_to_world
+	var channel_height := width * (88.0 / 752.0)
+	var channel_rect := Rect2(center - Vector2(width, channel_height) * 0.5, Vector2(width, channel_height))
+	draw_texture_rect(BOSS_HUD_CHANNEL, channel_rect, false, Color(1.0, 1.0, 1.0, alpha))
+
+	var crest_size := (62.0 if phone else 82.0) * screen_to_world
+	var crest_center := Vector2(channel_rect.position.x + crest_size * 0.42, center.y)
+	var crest_rect := Rect2(crest_center - Vector2.ONE * crest_size * 0.5, Vector2.ONE * crest_size)
+	draw_texture_rect(BOSS_HUD_CREST, crest_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	var content_left := channel_rect.position.x + crest_size * 0.76
+	var content_width := channel_rect.end.x - content_left - 18.0 * screen_to_world
+	var title_size := maxi(12, roundi((13.0 if phone else 15.0) * screen_to_world))
+	var title := "THIÊN GIÁC" if phone else "THIÊN GIÁC  ·  MA CHỦ"
+	draw_string(UI_FONT, Vector2(content_left, channel_rect.position.y + (21.0 if phone else 25.0) * screen_to_world), title, HORIZONTAL_ALIGNMENT_LEFT, content_width, title_size, Color("#e7ddc4", alpha))
+	var bar_rect := Rect2(content_left, channel_rect.end.y - (18.0 if phone else 20.0) * screen_to_world, content_width, (7.0 if phone else 8.0) * screen_to_world)
+	draw_rect(bar_rect, Color("#061012", 0.96 * alpha), true)
+	draw_rect(Rect2(bar_rect.position, Vector2(bar_rect.size.x * ratio, bar_rect.size.y)), Color("#b43d35", alpha), true)
+	draw_line(bar_rect.position, Vector2(bar_rect.position.x + bar_rect.size.x * ratio, bar_rect.position.y), Color("#f0d184", 0.54 * alpha), 1.0 * screen_to_world, true)
+	for index in range(1, 5):
+		var tick_x := bar_rect.position.x + bar_rect.size.x * float(index) / 5.0
+		draw_line(Vector2(tick_x, bar_rect.position.y + 1.0 * screen_to_world), Vector2(tick_x, bar_rect.end.y - 1.0 * screen_to_world), Color("#e7ddc4", 0.16 * alpha), 1.0 * screen_to_world, true)
 
 
 func _phone_device_scale() -> float:
