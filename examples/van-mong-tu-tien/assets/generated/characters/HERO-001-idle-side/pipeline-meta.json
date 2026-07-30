@@ -1,5 +1,5 @@
 {
-  "style_lock": {"path": "design/art/style-lock.json", "style_version": "2.0.0", "style_lock_sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
+  "style_lock": {"path": "design/art/style-lock.json", "style_version": "3.0.0", "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da", "art_bible_sha256": "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"},
   "schema": "codex-game-maker.asset-pipeline.v1",
   "asset_id": "HERO-001-idle-side",
   "kind": "sprite",

@@ -1,7 +1,7 @@
 .tools/
 tmp/
 .research/
-# examples/
+examples/
 dist/
 
 **/.godot/
