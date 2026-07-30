@@ -38,7 +38,7 @@
       "Prepare this game for commercial release across its declared platforms and keep working until the strict commercial gate passes.",
       "Audit this project honestly across player-ready quality, performance, platforms, compliance, localization, accessibility, marketing, and live operations."
     ],
-    "brandColor": "#3B82F6",
+    "brandColor": "#2D7F71",
     "composerIcon": "./assets/logo.png",
     "logo": "./assets/logo.png",
     "screenshots": [

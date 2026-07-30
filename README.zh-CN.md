@@ -2,7 +2,7 @@
 
 **Languages:** [English](README.md) | [简体中文](README.zh-CN.md)
 
-![Codex Game Maker banner](assets/brand/banner.png)
+![Codex Game Maker — 水墨与翡翠工作室视觉](assets/brand/banner.png)
 
 **面向 Codex 的 Godot 优先端到端游戏工作流：目标是完整、精致、可交给玩家，而不是单屏原型。**
 
@@ -10,7 +10,9 @@
 
 > 当前状态：`v1.0.0`。Godot 优先的商业 2D 工作流、项目 contract、迁移路径与发布工具已经进入稳定版。Gate 通过只代表声明范围内已有当前、可验证的 evidence，不能替代平台认证、法律顾问、签名授权、商店审核、独立视觉判断或真实玩家测试。
 
-Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产品与游戏设计、Godot 实现、完整状态、生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图、人工 playtest、性能、构建、合规、本地化、无障碍、商店素材、遥测、客服与回滚计划。
+Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产品与游戏设计、Godot 实现、游戏专属玩家旅程、风格锁定的生产级资产、游戏化 HUD/菜单、控制、音频、自动测试、运行截图、人工 playtest、性能、构建、合规、本地化、无障碍、商店素材、遥测、客服与回滚计划。
+
+当前 cultivation-survivor case study 用于演示动态 journey graph、墨/绢/青铜视觉语言、响应式 UI、修炼 VFX 演化、音频 bus 与 player-ready evidence。大型生成项目与截图默认不打入 plugin 包；公开 showcase 时必须同时提供 brief、plugin commit、hash 与 reviewer provenance。
 
 ## 它有什么不同
 
@@ -24,6 +26,18 @@ Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产�
 | 商业全流程 | 商业目标、平台、性能、合规、本地化、无障碍、营销、在线服务、发布、客服、遥测与回滚最终汇入一个 release contract。 |
 | 遇到版本/资源问题会查文档 | 引擎版本、API、Web export、资源生成不满意时优先查官方文档和网络资源。 |
 
+## 1.0 当前能力
+
+- **动态玩家旅程：** 每个项目声明自己的 state、transition、completion condition 与 recovery path，不再使用一套固定菜单/屏幕数量判断所有游戏。
+- **强制视觉连续性：** versioned style lock 绑定 art bible、approved references、asset family、prompt、manifest 与新 task session state；过期或跨风格 production art 会被阻止。
+- **游戏化 UI：** authored component family、专用 nine-slice、safe area、响应式布局、input focus 与 runtime capture 取代默认控件和 HTML/dashboard 风格。
+- **资产呈现 QA：** accepted asset 必须有 provenance、有效媒体、aspect/crop/tile/frame 规则、真实 runtime reference 与当前 composite evidence。
+- **音频 QA：** WAV metrics 与 compressed-audio command evidence 覆盖 duration、sample rate、peak/RMS、loop seam、hash、bus 与 listening review。
+- **保守迁移：** dry-run、默认 backup、migration report 与明确 review blocker，避免旧项目被静默标记为完成。
+- **评估框架：** 六个 benchmark brief、23 skills routing coverage、hard negatives、weighted blind review；没有真实 run 时 aggregate 会诚实保持 BLOCKED。
+- **已验证引擎策略：** checksum-pinned Godot 4.6.2；Godot 4.7 development build 不能用于 production claim。
+- **可复现发布工具：** deterministic ZIP、SHA-256、file SBOM、clean URL marketplace install 与三平台 runtime/Web-export workflow definition。
+
 ## Player-Ready 模式
 
 “制作这个游戏”“完成这个原型”或“自动从头做到尾”等宽泛请求会进入 `game-studio-build`。除非用户明确只要 prototype，否则默认目标是边界清晰的 `PLAYER_READY` 游戏。
@@ -31,6 +45,18 @@ Codex Game Maker 会把一个 Codex 会话变成端到端游戏工作室：产�
 流程不会套用固定的 title/pause/victory 清单。每个游戏都要声明自己的 schema-v2 状态图、transition、required journey、completion/recovery path、experience requirement，以及由该游戏实际系统推导出的资产、UI 和音频 coverage。`player_ready_gate.py` 会阻止 agent 把 mock、空模板或只会启动的场景说成完成。
 
 Gate 会验证 graph reachability、每个 required state 的不同运行证据、每条 journey/recovery 的 executable command、资产 provenance/runtime references、UI surface coverage、动态 audio contract，以及绑定当前项目 fingerprint 的命令日志与哈希。视觉流程会先锁定 look-dev，再检查每个 required state × target viewport 的当前截图、资产比例/九宫格/crop/tile 用法、跨资产风格一致性、未关闭的 High/Blocker，并把截图绑定到真实 visual-smoke command。测试覆盖没有传统状态名的 endless sandbox、错误复用截图、拉伸资产、虚假单候选 look-dev 与未绑定视觉证据。真正的“好玩”和市场审美仍必须由真实玩家测试与有判断力的视觉 review 决定。
+
+## 参考示例：Vân Mộng Tu Tiên
+
+示例项目不再以旧的 mascot/platformer demo 作为主要展示，而是覆盖：
+
+- 游戏专属的 title → 宗门 hub → 关卡/loadout → combat → breakthrough → result journey。
+- 横屏响应式 UI、keyboard/controller focus、mobile safe area、portrait guard、pause 与 restart recovery。
+- 修炼主题 HUD、功法卡、图鉴、成就、设置与结果 surface。
+- 已集成的角色、敌人、Boss、projectile、impact、pickup、地图 plate 与修炼 VFX。
+- style-lock、资产 provenance、视觉截图、audio bus、smoke test 与 player-ready contract。
+
+新项目默认遵循插件 1.0 的 Godot 4.6.2 策略；已有示例项目不会被插件静默升级。
 
 ## 商业发布模式
 
@@ -216,13 +242,13 @@ powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\preview-
 创建多动作角色：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId cultivator-hero -Description "original restrained cinematic xianxia cultivator, readable silhouette, ink-and-jade material language" -Actions "idle,run,cast,hurt,death"
 ```
 
 处理 raw sheets：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt" -ProcessExistingRaw
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId cultivator-hero -Description "original restrained cinematic xianxia cultivator, readable silhouette, ink-and-jade material language" -Actions "idle,run,cast,hurt,death" -ProcessExistingRaw
 ```
 
 QA、修复、导入 Godot：
@@ -230,7 +256,7 @@ QA、修复、导入 Godot：
 ```powershell
 powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\check-asset-qa.ps1 -Root .
 powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\repair-asset-processing.ps1 -Root . -Apply
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-sprite-to-godot.ps1 -Project . -BundleId cultivator-hero
 ```
 
 ## 它能生成什么
@@ -295,11 +321,11 @@ design/assets/godot-import-manifest.yaml
 ## 示例提示词
 
 ```text
-Use Codex Game Maker to build a small cozy platformer player-ready from start to finish. Go with defaults, continue autonomously, and do not stop at a one-screen prototype or mock assets.
+Use Codex Game Maker to build a compact cultivation-survivor game player-ready from start to finish. Go with defaults, lock an original ink-and-jade visual identity, continue autonomously, and do not stop at a one-screen prototype, generic HUD, or mock assets.
 ```
 
 ```text
-Use Codex Game Maker to create a cute cat platformer hero with idle, run, jump, attack, and hurt animations.
+Use Codex Game Maker to create an original xianxia cultivator with idle, run, cast, hurt, death and readable cultivation VFX. Compare candidates, seal the accepted style, process every action, and integrate it into the current Godot scene.
 ```
 
 ```text

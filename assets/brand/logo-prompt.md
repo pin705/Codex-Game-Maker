@@ -5,7 +5,7 @@ Mode: built-in GPT Image generation.
 Prompt:
 
 ```text
-Create a polished square logo concept for an open-source tool named "Codex Game Maker". Subject: a cute cat game-maker mascot sitting at a compact game development workbench. The cat wears small round glasses and a tiny hoodie, confidently holding a stylus/game controller. On the desk are a mini Godot-like game editor screen, a sprite sheet, a small pixel-art character preview, and coding tools. Style: charming modern 2D illustration, clean vector-like shapes but rendered as a high-quality raster image, friendly GitHub project branding, readable silhouette, balanced composition, soft but not overly pastel colors, professional open-source developer tool feel. No text, no watermark, no logos copied from real brands, no clutter. Square composition, centered mascot, suitable as a GitHub avatar/logo.
+Create a premium square emblem for an open-source Godot-first commercial 2D game studio tool. Use an original jade spirit-fox and an ink-brush sword stroke inside a restrained cultivation sigil. Deep ink-black background, jade and teal light, antique-gold linework, parchment/lacquer material cues, elegant authored 2D illustration, crisp silhouette that remains readable at small plugin-icon size. No words, no letters, no watermark, no copied brand marks, no mascot cat, no platformer imagery, no generic app dashboard, no neon rainbow gradients. Centered square composition.
 ```
 
 Selected output:
@@ -13,4 +13,3 @@ Selected output:
 ```text
 assets/brand/logo.png
 ```
-

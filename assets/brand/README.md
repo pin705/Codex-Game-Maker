@@ -8,11 +8,12 @@ Current public assets:
 
 See `docs/RELEASE_ASSETS.md` for specs.
 
-Generated so far:
+Current visual direction:
 
-- `logo.png`: GPT Image logo concept.
-- `banner.png`: README banner derived from the logo.
-- `social-preview.png`: GitHub social preview derived from the logo.
+- Original ink-and-jade xianxia studio identity.
+- Jade spirit-fox, ink-brush sword, cultivation sigils and antique-gold linework.
+- No mascot cat, platformer mockup, stale version label, copied game UI, watermark or in-image product text.
+- README copy and version badges stay as live Markdown so they cannot drift inside a raster asset.
 
 Optional showcase enhancements:
 

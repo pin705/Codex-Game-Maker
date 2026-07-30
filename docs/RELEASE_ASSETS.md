@@ -16,17 +16,17 @@ This document tracks what is needed before Codex Game Maker looks polished on Gi
 
 | Asset | Recommended Content | Size |
 |---|---|---:|
-| `assets/brand/logo.png` | Cute cat game-maker mascot at a compact workbench | 1024x1024 |
-| `assets/brand/banner.png` | Cat mascot, Codex-style workbench, sprite sheet, Godot editor, browser preview | 1600x500 |
-| `assets/brand/social-preview.png` | Project name, one-line value prop, mascot, Godot + GPT Image visual cues | 1280x640 |
+| `assets/brand/logo.png` | Original jade spirit-fox and ink-brush sword emblem for the game studio tool | 1024x1024 |
+| `assets/brand/banner.png` | Ink-and-jade cultivation realm with production-grid motifs and negative space for README copy | 1600x500 |
+| `assets/brand/social-preview.png` | Original spirit-fox/sword key art with dark copy-safe space for GitHub metadata | 1280x640 |
 | `assets/brand/demo.gif` | End-to-end sprite asset pipeline to Godot Web preview | 12-20 seconds |
 | `assets/brand/workflow-diagram.png` | Prompt -> GPT Image -> processor -> QA -> Godot -> browser preview | 1200x700 |
 
 Current status:
 
-- `logo.png`: generated and saved.
-- `banner.png`: generated from the logo for README use.
-- `social-preview.png`: generated from the logo for GitHub social preview.
+- `logo.png`: generated original emblem; no copied brand marks, mascot or in-image text.
+- `banner.png`: generated ink-and-jade studio visual; no stale Godot 4.4/v0.1-alpha labels.
+- `social-preview.png`: generated copy-safe social visual; repository title and description remain live Markdown/metadata rather than unreliable in-image text.
 - `demo.gif`: optional showcase enhancement.
 - `workflow-diagram.png`: optional showcase enhancement.
 
@@ -34,8 +34,8 @@ Current status:
 
 Recommended sequence:
 
-1. Prompt: "Use Codex Game Maker to create a cute cat platformer hero."
-2. Show generated action bundle files: `idle`, `run`, `jump`, `attack`, `hurt`.
+1. Prompt: "Use Codex Game Maker to build a cultivation-survivor player-ready slice with a locked original ink-and-jade style."
+2. Show generated action bundle files: `idle`, `run`, `cast`, `hurt`, `death`.
 3. Show GPT Image raw sheets under `assets/raw/`.
 4. Run asset processor and show transparent frames + GIF previews.
 5. Run `plugins/codex-game-maker/tools/import-sprite-to-godot.ps1`.

@@ -2,7 +2,7 @@
 
 **Languages:** [English](README.md) | [简体中文](README.zh-CN.md)
 
-![Codex Game Maker banner](assets/brand/banner.png)
+![Codex Game Maker — ink-and-jade studio banner](assets/brand/banner.png)
 
 **Codex skills for building complete, polished, player-ready Godot games—not just one-screen prototypes.**
 
@@ -19,17 +19,21 @@
 
 Turn a single Codex session into a Godot-first game making workspace.
 
-Godot-first workflows. Product and game design. Complete gameplay states. Production assets. Game-native UI. Integrated audio. Accessibility and localization. Verified builds. Store and launch readiness.
+Godot-first workflows. Product and game design. Complete game-specific journeys. Style-locked production art. Game-native UI. Integrated audio. Accessibility and localization. Verified builds. Store and launch readiness.
 
 > Status: `v1.0.0`. The Godot-first commercial 2D workflow, project contracts, migration path, and release tooling are stable. A passing gate means the declared scope has current verifiable evidence; it does not replace platform certification, legal counsel, signing authorities, store review, independent visual judgment, or real-player testing.
 
 Codex Game Maker turns a Codex session into an end-to-end game studio workspace: product planning, game design, Godot setup, complete gameplay implementation, sprite/map/UI asset production, game-native HUD and menus, controls, audio, automated checks, runtime capture, manual playtesting, performance, builds, compliance, localization, accessibility, store marketing, telemetry, support, and rollback planning.
 
+The current reference case study is a cultivation-survivor project used to exercise the dynamic journey graph, ink/silk/bronze visual language, responsive UI, cultivation VFX evolution, audio buses, and player-ready evidence. Large generated projects and capture sets are intentionally excluded from the distributable plugin; published showcases must carry their brief, plugin commit, hashes and reviewer provenance.
+
 ## Table Of Contents
 
 - [What Makes It Different](#what-makes-it-different)
+- [1.0 At A Glance](#10-at-a-glance)
 - [Evaluation And Showcase Evidence](#evaluation-and-showcase-evidence)
 - [Player-Ready Mode](#player-ready-mode)
+- [Representative Case Study](#representative-case-study)
 - [Commercial Release Mode](#commercial-release-mode)
 - [1.0 Scope And Evidence Standard](#10-scope-and-evidence-standard)
 - [What's Included](#whats-included)
@@ -57,6 +61,18 @@ Codex Game Maker is not just a prompt pack. It is a Codex-first game workflow wh
 | Evidence gates | One screen, placeholder assets, default controls, generic dashboard UI, silence, or untested claims cannot pass player-ready. |
 | Commercial lifecycle | Business, platform, performance, compliance, localization, accessibility, marketing, online, launch, support, telemetry, and rollback workstreams converge on one release contract. |
 | Web-aware troubleshooting | Use web search for official docs when engine versions, APIs, export errors, or resource issues matter. |
+
+## 1.0 At A Glance
+
+- **Dynamic player journeys:** each project declares its own states, transitions, completion conditions and recovery paths; the plugin no longer pretends one fixed menu/screen checklist fits every game.
+- **Hard visual continuity:** a versioned style lock binds the art bible, approved references, asset families, prompts, manifests and fresh-task session state. Stale or mismatched production art is blocked.
+- **Game-native UI:** authored component families, dedicated nine-slices, safe areas, responsive layouts, input focus and runtime captures replace default controls and HTML-like dashboard styling.
+- **Asset presentation QA:** accepted files must have provenance, valid media, aspect/crop/tile/frame rules, real runtime references and current composite evidence.
+- **Audio QA:** WAV metrics and compressed-audio command evidence cover duration, sample rate, peak/RMS, loop seams, hashes, buses and listening review.
+- **Conservative migration:** dry-run, backup-by-default, migration report and explicit review blockers prevent old projects from being silently relabeled as complete.
+- **Evaluation framework:** six benchmark briefs, routing coverage for all 23 skills, hard negatives, weighted blind review and honest aggregation that stays blocked until real runs exist.
+- **Verified engine policy:** Godot 4.6.2 is checksum-pinned; 4.7 development builds are rejected for production claims.
+- **Reproducible release tooling:** deterministic ZIP, SHA-256 checksum, file SBOM, clean URL-marketplace installation and three-OS runtime/Web-export workflow definitions.
 
 ## Evaluation And Showcase Evidence
 
@@ -97,6 +113,18 @@ The template suggests examples; the gate never treats their names or counts as u
 - adversarial regression cases, including an endless sandbox with no conventional state names, unreachable state/recovery failures, reused evidence, distorted runtime assets, under-declared inventories, fake look-dev comparison, unresolved high visual findings, and unbound captures.
 
 This proves internal consistency and evidence coverage. It cannot mathematically prove that a GDD itself is fun, tasteful, or commercially successful, so visual review and real-player testing remain required.
+
+## Representative Case Study
+
+The current cultivation-survivor case study is intentionally more representative than the old mascot/platformer demo. It exercises:
+
+- A game-specific title → sect hub → stage/loadout → combat → breakthrough → result journey.
+- Responsive landscape UI with controller/keyboard focus, mobile safe areas, portrait guard, pause and restart recovery.
+- Cultivation-themed HUD, technique cards, codex, achievements, settings and result surfaces.
+- Runtime-integrated hero, enemies, boss, projectile, impact, pickup, map plates and cultivation VFX.
+- Style-lock, asset provenance, visual captures, audio buses, smoke tests and player-ready contracts.
+
+Run any full example with the exact Godot version declared by that project. For new projects, the plugin's stable 1.0 policy recommends Godot 4.6.2; existing projects are never silently upgraded.
 
 ## Commercial Release Mode
 
@@ -322,24 +350,24 @@ natural language request
   -> Godot Web preview
 ```
 
-Plan a multi-action character bundle:
+Plan a multi-action cultivator bundle:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt"
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId cultivator-hero -Description "original restrained cinematic xianxia cultivator, readable silhouette, ink-and-jade material language" -Actions "idle,run,cast,hurt,death"
 ```
 
 Save GPT Image raw sheets as:
 
 ```text
-assets/raw/hero-cat-idle-sheet.png
-assets/raw/hero-cat-run-sheet.png
-assets/raw/hero-cat-jump-sheet.png
+assets/raw/cultivator-hero-idle-sheet.png
+assets/raw/cultivator-hero-run-sheet.png
+assets/raw/cultivator-hero-cast-sheet.png
 ```
 
 Process every available raw sheet:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat game hero with a blue backpack" -Actions "idle,run,jump,attack,hurt" -ProcessExistingRaw
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\create-action-bundle.ps1 -Root . -AssetId cultivator-hero -Description "original restrained cinematic xianxia cultivator, readable silhouette, ink-and-jade material language" -Actions "idle,run,cast,hurt,death" -ProcessExistingRaw
 ```
 
 Run QA and deterministic repair:
@@ -352,15 +380,15 @@ powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\repair-a
 Import accepted frames into Godot:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-sprite-to-godot.ps1 -Project . -BundleId cultivator-hero
 ```
 
 For maps:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\process-prop-pack.ps1 -Input .\assets\raw\forest-props.png -OutDir .\assets\generated\props\forest -Rows 3 -Cols 3 -AssetId forest-props -ExpectedProps 9
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\compose-layered-map-preview.ps1 -Base .\assets\raw\map-base.png -Placements .\assets\raw\map-placements.json -Out .\assets\generated\maps\forest\preview.png
-powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-map-to-godot.ps1 -Project . -AssetId forest-level
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\process-prop-pack.ps1 -Input .\assets\raw\sect-props.png -OutDir .\assets\generated\props\sect -Rows 3 -Cols 3 -AssetId sect-props -ExpectedProps 9
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\compose-layered-map-preview.ps1 -Base .\assets\raw\mist-valley.png -Placements .\assets\raw\mist-valley-placements.json -Out .\assets\generated\maps\mist-valley\preview.png
+powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-map-to-godot.ps1 -Project . -AssetId mist-valley-stage
 ```
 
 ## What It Can Generate
@@ -370,7 +398,7 @@ powershell -ExecutionPolicy Bypass -File plugins\codex-game-maker\tools\import-m
 - Projectile, impact, muzzle flash, dust, spell, and hit FX.
 - Reference-guided variants and identity-locked action sheets.
 - Prop packs with extracted transparent props.
-- Layered platformer, RPG, tower defense, and arena map assets.
+- Layered platformer, RPG, cultivation-survivor, tower defense, and arena map assets.
 - Collision, zones, exits, checkpoints, and placement metadata.
 - Godot-ready `AnimatedSprite2D`, `SpriteFrames`, `Sprite2D`, `StaticBody2D`, `Area2D`, and `TileMapLayer` handoff files.
 
@@ -482,13 +510,13 @@ The user controls scope and can request checkpoints. Once autonomous/default exe
 Start a new project:
 
 ```text
-Use Codex Game Maker to build a small cozy platformer player-ready from start to finish. Go with defaults, continue autonomously, and do not stop at a one-screen prototype or mock assets.
+Use Codex Game Maker to build a compact cultivation-survivor game player-ready from start to finish. Go with defaults, lock a coherent original ink-and-jade style, continue autonomously, and do not stop at a one-screen prototype, generic HUD, or mock assets.
 ```
 
 Create a sprite bundle:
 
 ```text
-Use Codex Game Maker to create a cute cat platformer hero with idle, run, jump, attack, and hurt animations.
+Use Codex Game Maker to create an original xianxia cultivator with idle, run, cast, hurt, death and readable cultivation VFX. Compare multiple candidates, seal the accepted style, process every action, and integrate the result into the current Godot scene.
 ```
 
 Create a map:
@@ -506,7 +534,7 @@ Use Codex Game Maker to review this project before I export a browser demo.
 Finish a weak prototype:
 
 ```text
-/player-ready Audit this prototype, then finish every gameplay state, replace incomplete assets, redesign the HTML-like UI as game-native UI, integrate audio, run tests, capture every state, playtest it, and keep iterating until the player-ready gate passes.
+/player-ready Audit this prototype, then finish every game-specific journey, replace incomplete assets, redesign the HTML-like UI as game-native UI, lock the visual identity, deepen combat/progression, integrate audio, run tests, capture every state, playtest it, and keep iterating until the player-ready gate passes.
 ```
 
 Commercial release mode:
