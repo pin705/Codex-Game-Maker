@@ -83,16 +83,14 @@ func _run() -> void:
 	game.player.health = 77.0
 	game.player.update_bounds(Rect2(80.0, 54.0, 1790.0, 792.0))
 	_expect(is_equal_approx(game.player.health, 77.0), "responsive bounds update never resets player health")
-	_expect(str(ProjectSettings.get_setting("display/window/stretch/aspect", "")) == "expand", "project stretch expands modern landscape aspect ratios")
+	_expect(str(ProjectSettings.get_setting("display/window/stretch/mode", "")) == "disabled", "project renders phone UI at native device resolution")
 	_expect(game.get_node_or_null("MobileSupportLayer") != null, "responsive runtime includes mobile lifecycle layer")
 	game.queue_free()
 	await get_tree().process_frame
 
-	# Validate the real phone-landscape branch through DisplayServer rather than
-	# assigning a small logical Control size. With `canvas_items + expand`, an
-	# 844x390 window produces a wider logical root; the front end compensates by
-	# using an 844x390 local canvas and scaling it back into that root. As a
-	# result, every 64-local-pixel target remains 64 physical pixels on device.
+	# Validate the real phone-landscape branch through DisplayServer. Native
+	# rendering keeps the Control root at 844x390 so text and raster chrome are
+	# never downsampled from the old 1947x900 expanded canvas.
 	var phone_size := Vector2(844.0, 390.0)
 	DisplayServer.window_set_size(Vector2i(phone_size))
 	await get_tree().process_frame
@@ -118,15 +116,14 @@ func _run() -> void:
 		get_tree().root.add_child(harness)
 		await get_tree().process_frame
 		await get_tree().process_frame
-		# Match the expanded logical root observed by the native 844x390 renderer.
-		harness.root.size = Vector2(900.0 * phone_size.x / phone_size.y, 900.0)
+		harness.root.size = phone_size
 		phone_frontend = harness
 	phone_frontend._layout_design_canvas()
 	_expect(phone_frontend.phone_layout_active, "844x390 activates the dedicated phone meta layout")
 	_expect(phone_frontend.screen_root.size.is_equal_approx(phone_size), "phone screen_root uses an 844x390 local canvas")
 	var expected_phone_scale := minf(phone_frontend.root.size.x / phone_size.x, phone_frontend.root.size.y / phone_size.y)
 	var expected_phone_position := (phone_frontend.root.size - phone_size * expected_phone_scale) * 0.5
-	_expect(expected_phone_scale > 1.0 and phone_frontend.screen_root.scale.is_equal_approx(Vector2.ONE * expected_phone_scale), "phone screen_root applies the compensating expand scale")
+	_expect(is_equal_approx(expected_phone_scale, 1.0) and phone_frontend.screen_root.scale.is_equal_approx(Vector2.ONE), "phone screen_root renders one logical pixel per device pixel")
 	_expect(phone_frontend.screen_root.position.is_equal_approx(expected_phone_position), "phone screen_root remains centered after compensation")
 
 	phone_frontend.last_victory = true
@@ -138,6 +135,8 @@ func _run() -> void:
 		{"id": "hub", "screen": phone_frontend.SCREEN_HUB},
 		{"id": "stages", "screen": phone_frontend.SCREEN_STAGES},
 		{"id": "loadout", "screen": phone_frontend.SCREEN_LOADOUT},
+		{"id": "inventory", "screen": phone_frontend.SCREEN_INVENTORY},
+		{"id": "spirit-beast", "screen": phone_frontend.SCREEN_SPIRIT_BEAST},
 		{"id": "techniques", "screen": phone_frontend.SCREEN_TECHNIQUES},
 		{"id": "codex", "screen": phone_frontend.SCREEN_CODEX},
 		{"id": "achievements", "screen": phone_frontend.SCREEN_ACHIEVEMENTS},
@@ -151,6 +150,18 @@ func _run() -> void:
 		await get_tree().process_frame
 		_expect(phone_frontend.phone_layout_active and phone_frontend.screen_name == state_id, "phone meta screen builds: %s" % state_label)
 		_assert_minimum_phone_button_height(phone_frontend.screen_root, state_label)
+
+	# Rebuild the exact surface where the served-Web review found the leading
+	# balance digit clipped, then compare the field against the rendered text.
+	phone_frontend._show_screen(phone_frontend.SCREEN_INVENTORY)
+	await get_tree().process_frame
+	var phone_currency := phone_frontend.screen_root.get_node_or_null("PhoneCurrency") as Label
+	_expect(phone_currency != null, "phone inventory exposes the shared currency header")
+	if phone_currency != null:
+		var currency_font := phone_currency.get_theme_font(&"font")
+		var currency_text_width := currency_font.get_string_size(phone_currency.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, phone_currency.get_theme_font_size(&"font_size")).x
+		var currency_outline := float(phone_currency.get_theme_constant(&"outline_size")) * 2.0
+		_expect(phone_currency.size.x + 0.01 >= currency_text_width + currency_outline, "phone currency field fits every rendered balance digit")
 
 	phone_frontend._show_screen(phone_frontend.SCREEN_SETTINGS)
 	await get_tree().process_frame

@@ -48,7 +48,7 @@ func _run() -> void:
 	_expect(MetaProfile.purchase_technique(&"sword_damage"), "permanent technique can be purchased")
 	_expect(int(MetaProfile.technique_ranks.get("sword_damage", 0)) == before_rank + 1, "purchase increments rank")
 
-	for screen_id: StringName in [frontend.SCREEN_CODEX, frontend.SCREEN_ACHIEVEMENTS, frontend.SCREEN_SETTINGS]:
+	for screen_id: StringName in [frontend.SCREEN_INVENTORY, frontend.SCREEN_SPIRIT_BEAST, frontend.SCREEN_CODEX, frontend.SCREEN_ACHIEVEMENTS, frontend.SCREEN_SETTINGS]:
 		frontend._show_screen(screen_id)
 		await get_tree().process_frame
 		_expect(frontend.screen_root.get_child_count() > 4, "%s screen has authored content" % screen_id)

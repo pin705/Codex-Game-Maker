@@ -30,67 +30,96 @@ PASS: phone screen_root applies the compensating expand scale
 PASS: phone screen_root remains centered after compensation
 PASS: phone meta screen builds: title
 PASS: phone title exposes at least one BaseButton
-PASS: phone title target @Button@169 is at least 64 local px high
-PASS: phone title target @Button@170 is at least 64 local px high
-PASS: phone title target @Button@171 is at least 64 local px high
+PASS: phone title target @Button@187 is at least 64 local px high
+PASS: phone title target @Button@188 is at least 64 local px high
+PASS: phone title target @Button@189 is at least 64 local px high
 PASS: phone meta screen builds: hub
 PASS: phone hub exposes at least one BaseButton
-PASS: phone hub target @Button@177 is at least 64 local px high
-PASS: phone hub target @Button@182 is at least 64 local px high
-PASS: phone hub target @Button@183 is at least 64 local px high
-PASS: phone hub target @Button@184 is at least 64 local px high
-PASS: phone hub target @Button@185 is at least 64 local px high
-PASS: phone hub target @Button@186 is at least 64 local px high
-PASS: phone hub target @Button@187 is at least 64 local px high
+PASS: phone hub target @Button@195 is at least 64 local px high
+PASS: phone hub target @Button@200 is at least 64 local px high
+PASS: phone hub target @Button@201 is at least 64 local px high
+PASS: phone hub target @Button@202 is at least 64 local px high
+PASS: phone hub target @Button@203 is at least 64 local px high
+PASS: phone hub target @Button@204 is at least 64 local px high
+PASS: phone hub target @Button@205 is at least 64 local px high
+PASS: phone hub target @Button@206 is at least 64 local px high
+PASS: phone hub target @Button@207 is at least 64 local px high
 PASS: phone meta screen builds: stages
 PASS: phone stages exposes at least one BaseButton
-PASS: phone stages target @Button@188 is at least 64 local px high
-PASS: phone stages target @Button@198 is at least 64 local px high
-PASS: phone stages target @Button@204 is at least 64 local px high
-PASS: phone stages target @Button@210 is at least 64 local px high
-PASS: phone stages target @Button@213 is at least 64 local px high
+PASS: phone stages target @Button@208 is at least 64 local px high
+PASS: phone stages target @Button@218 is at least 64 local px high
+PASS: phone stages target @Button@224 is at least 64 local px high
+PASS: phone stages target @Button@230 is at least 64 local px high
+PASS: phone stages target @Button@233 is at least 64 local px high
 PASS: phone meta screen builds: loadout
 PASS: phone loadout exposes at least one BaseButton
-PASS: phone loadout target @Button@214 is at least 64 local px high
-PASS: phone loadout target @Button@224 is at least 64 local px high
-PASS: phone loadout target @Button@230 is at least 64 local px high
-PASS: phone loadout target @Button@236 is at least 64 local px high
-PASS: phone loadout target @Button@238 is at least 64 local px high
+PASS: phone loadout target @Button@234 is at least 64 local px high
+PASS: phone loadout target @Button@244 is at least 64 local px high
+PASS: phone loadout target @Button@250 is at least 64 local px high
+PASS: phone loadout target @Button@256 is at least 64 local px high
+PASS: phone loadout target @Button@258 is at least 64 local px high
+PASS: phone meta screen builds: inventory
+PASS: phone inventory exposes at least one BaseButton
+PASS: phone inventory target @Button@259 is at least 64 local px high
+PASS: phone inventory target ItemSlot_kiem_huyen is at least 64 local px high
+PASS: phone inventory target ItemSlot_ho_tam_ngoc is at least 64 local px high
+PASS: phone inventory target ItemSlot_dao_bao_van is at least 64 local px high
+PASS: phone inventory target ItemSlot_linh_gioi_moc is at least 64 local px high
+PASS: phone inventory target @Button@268 is at least 64 local px high
+PASS: phone inventory target @Button@269 is at least 64 local px high
+PASS: phone inventory target @Button@270 is at least 64 local px high
+PASS: phone inventory target @Button@271 is at least 64 local px high
+PASS: phone inventory target ItemSlot_kiem_thien_quang is at least 64 local px high
+PASS: phone inventory target ItemSlot_minh_ngoc_kinh is at least 64 local px high
+PASS: phone inventory target ItemSlot_huyet_van_phu is at least 64 local px high
+PASS: phone inventory target ItemSlot_tu_linh_quyen is at least 64 local px high
+PASS: phone inventory target ItemSlot_thien_giac_an is at least 64 local px high
+PASS: phone inventory target ItemSlot_kiem_tam_thach is at least 64 local px high
+PASS: phone inventory target ItemSlot_van_linh_hoan is at least 64 local px high
+PASS: phone inventory target ItemSlot_ngoc_the_giap is at least 64 local px high
+PASS: phone inventory target @Button@276 is at least 64 local px high
+PASS: phone meta screen builds: spirit-beast
+PASS: phone spirit-beast exposes at least one BaseButton
+PASS: phone spirit-beast target @Button@277 is at least 64 local px high
+PASS: phone spirit-beast target @Button@284 is at least 64 local px high
+PASS: phone spirit-beast target ArsenalTab_TRỢ_CHIẾN is at least 64 local px high
+PASS: phone spirit-beast target ArsenalTab_NỘI_TẠI is at least 64 local px high
+PASS: phone spirit-beast target ArsenalTab_TIẾN_HÓA is at least 64 local px high
 PASS: phone meta screen builds: techniques
 PASS: phone techniques exposes at least one BaseButton
-PASS: phone techniques target @Button@239 is at least 64 local px high
-PASS: phone techniques target @Button@250 is at least 64 local px high
-PASS: phone techniques target @Button@257 is at least 64 local px high
-PASS: phone techniques target @Button@264 is at least 64 local px high
+PASS: phone techniques target @Button@294 is at least 64 local px high
+PASS: phone techniques target @Button@305 is at least 64 local px high
+PASS: phone techniques target @Button@312 is at least 64 local px high
+PASS: phone techniques target @Button@319 is at least 64 local px high
 PASS: phone meta screen builds: codex
 PASS: phone codex exposes at least one BaseButton
-PASS: phone codex target @Button@265 is at least 64 local px high
-PASS: phone codex target @Button@270 is at least 64 local px high
-PASS: phone codex target @Button@271 is at least 64 local px high
-PASS: phone codex target @Button@272 is at least 64 local px high
-PASS: phone codex target @Button@273 is at least 64 local px high
-PASS: phone codex target @Button@274 is at least 64 local px high
+PASS: phone codex target @Button@320 is at least 64 local px high
+PASS: phone codex target @Button@325 is at least 64 local px high
+PASS: phone codex target @Button@326 is at least 64 local px high
+PASS: phone codex target @Button@327 is at least 64 local px high
+PASS: phone codex target @Button@328 is at least 64 local px high
+PASS: phone codex target @Button@329 is at least 64 local px high
 PASS: phone meta screen builds: achievements
 PASS: phone achievements exposes at least one BaseButton
-PASS: phone achievements target @Button@282 is at least 64 local px high
+PASS: phone achievements target @Button@337 is at least 64 local px high
 PASS: phone meta screen builds: settings
 PASS: phone settings exposes at least one BaseButton
-PASS: phone settings target @Button@317 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@326 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@328 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@330 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@332 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@334 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@336 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@338 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@340 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@341 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@342 is at least 64 local px high
-PASS: phone settings target PhoneSettingsScroll/SettingsContent/@Button@343 is at least 64 local px high
+PASS: phone settings target @Button@372 is at least 64 local px high
+PASS: phone settings target @Button@380 is at least 64 local px high
+PASS: phone settings target @Button@382 is at least 64 local px high
+PASS: phone settings target @Button@384 is at least 64 local px high
+PASS: phone settings target @Button@386 is at least 64 local px high
+PASS: phone settings target @Button@388 is at least 64 local px high
+PASS: phone settings target @Button@390 is at least 64 local px high
+PASS: phone settings target @Button@392 is at least 64 local px high
+PASS: phone settings target @Button@394 is at least 64 local px high
+PASS: phone settings target @Button@397 is at least 64 local px high
+PASS: phone settings target @Button@398 is at least 64 local px high
+PASS: phone settings target @Button@399 is at least 64 local px high
 PASS: phone meta screen builds: results
 PASS: phone results exposes at least one BaseButton
-PASS: phone results target @Button@360 is at least 64 local px high
-PASS: phone results target @Button@361 is at least 64 local px high
+PASS: phone results target @Button@415 is at least 64 local px high
+PASS: phone results target @Button@416 is at least 64 local px high
 PASS: phone reset DialogCanvas is 844x390
 PASS: phone rank ascension DialogCanvas is 844x390
 RESPONSIVE LAYOUT RESULT: PASS

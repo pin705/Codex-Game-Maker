@@ -1,0 +1,32 @@
+SCRIPT ERROR: Parse Error: Identifier "BRONZE_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:430)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:435)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:445)
+SCRIPT ERROR: Parse Error: Identifier "BRONZE_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:1127)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:1131)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:1139)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:1151)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:1989)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:1993)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:2608)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:2620)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:2687)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:2692)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_INK" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:2735)
+SCRIPT ERROR: Parse Error: Identifier "PAPER_COPY" not declared in the current scope.
+          at: GDScript::reload (res://scripts/ui/frontend.gd:2740)
+ERROR: Failed to load script "res://scripts/ui/frontend.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)

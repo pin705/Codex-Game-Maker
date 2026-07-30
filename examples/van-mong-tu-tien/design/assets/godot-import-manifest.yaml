@@ -1,16 +1,24 @@
 schema: "codex-game-maker.godot-import-manifest.v1"
 project: van-mong-tu-tien
 engine: "Godot 4.4"
-updated: "2026-07-29"
+updated: "2026-07-30"
+style_lock:
+  path: "design/art/style-lock.json"
+  style_version: "3.0.0"
+  style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+  art_bible_sha256: "2ae2550201bd145ffa4972d96738fd8b90ef21e582f014e66623bf277ff7f2b1"
+  current_unsealed_art_bible_sha256: "adb4c66b770941446061c202091f97cca1f78212457782baf9107b1fd99f81d2"
+  reseal_status: deferred_until_full_v3_capture_acceptance
+  binding_note: "The version/digest and sealed art-bible hash are preserved; this additive metadata batch intentionally does not reseal the lock."
 runtime_bridge: "scripts/gameplay/runtime_visuals.gd"
 export_filter_reference: "https://docs.godotengine.org/en/4.4/tutorials/export/exporting_projects.html#resource-options"
 verification_note: >-
-  Accepted textures/audio have native import/runtime evidence. Front-end and
-  combat captures plus smoke suites pass. PREMIUM-001 sigils, UIKIT-004 folios
-  and UIKIT-005 restrained controls are mapped to their actual scripts and
-  native capture evidence. UIKIT-003 and the superseded UIKIT-002 components
-  are retained only as legacy files; Web/manual/physical-device QA remains
-  required.
+  The current V3 family has a clean Godot 4.6.2 import/parse, native 1600x900
+  and 844x390 captures, and a fresh served Chromium export. UIKIT-007 now binds
+  the boss bar; UIKIT-008, PORTRAIT-001/002 and ACHIEVEICON-001 are imported and
+  source-wired; bundled Be Vietnam Pro/Literata render current Vietnamese copy.
+  Independent visual review, cross-browser, manual balance, audio listening and
+  physical-device QA remain required.
 
 imports:
   - asset_id: KEYART-001
@@ -378,6 +386,358 @@ imports:
       - "production/playtests/mobile-support/portrait-overlay.png"
     verification: "Godot import resources resolve and post-generation native captures show the selected command and panel components"
 
+  - asset_id: UIKIT-006-arsenal-plates
+    status: integrated_current_runtime_evidence
+    source_prompt: "assets/source-prompts/UIKIT-006-arsenal-plates.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-006-arsenal-plates/pipeline-meta.json"
+    accepted_source: "assets/generated/ui/UIKIT-006-arsenal-plates/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/van_mong_component_kit.gd"
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+    target_nodes:
+      - "ComponentKit fixed-ratio atlas TextureRect regions"
+      - "FrontEnd inventory, comparison and companion chrome"
+      - "HUD five-skill rail material chrome"
+    load_policy: >-
+      UIKIT-006 is loaded only from the runtime directory so Godot Web export
+      includes it while the source atlas remains excluded. Labels, cooldowns,
+      stats, focus and state remain live Godot nodes above the raster material.
+    texture_filter: linear
+    stretch_mode: "fixed-ratio region crops; no arbitrary folio or frame stretch"
+    target_display_size: "132x146 inventory slots; 860x100 desktop and fitted 600x70 phone skill rails"
+    collision_role: none
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
+    verification_evidence:
+      - "production/playtests/frontend/inventory.png"
+      - "production/playtests/frontend/inventory-phone.png"
+      - "production/playtests/frontend/spirit-beast.png"
+      - "production/playtests/frontend/spirit-beast-phone.png"
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/evidence/platforms/web-v3-inventory.png"
+      - "production/evidence/platforms/web-v3-inventory-phone.png"
+    verification: "Native captures and served Chromium captures resolve the runtime atlas; independent visual verdict remains a separate gate"
+
+  - asset_id: UIKIT-007-ritual-surface-atlas
+    status: integrated_current_runtime_evidence
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    source_prompt: "assets/source-prompts/UIKIT-007-ritual-surface-atlas.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/pipeline-meta.json"
+    raw_source: "assets/raw/ui/UIKIT-007-ritual-surface-atlas-v001.png"
+    accepted_source: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png"
+    import_file: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png.import"
+    imported_resource: "res://.godot/imported/atlas-transparent.png-510210d96a05dcc32e0bfa5226a04f4e.ctex"
+    hashes:
+      raw_sha256: "302172f890f74428fce745a103839cf52ce867e61b6497b2eecba2a8acd82c2a"
+      processed_sha256: "02f7a634a8857745c0cb2b3aa1195ff06596a05c0dc0bcdeea5922dfb729828c"
+      runtime_delivery_sha256: "02f7a634a8857745c0cb2b3aa1195ff06596a05c0dc0bcdeea5922dfb729828c"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/van_mong_component_kit.gd"
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/mobile_touch_controls.gd"
+      - "scripts/gameplay/enemy.gd"
+    target_nodes:
+      - "VanMongComponentKit AtlasTexture regions"
+      - "FrontEnd title scroll, wide header, guarded modal and result NinePatchRect/TextureRect nodes"
+      - "HUD FiveSkillRail TextureRect"
+      - "MobileTouchControls custom-draw attack and joystick medallions"
+      - "Enemy boss identity bar and dedicated portrait composition"
+    active_regions:
+      title_scroll: [20, 24, 380, 684]
+      wide_header: [456, 68, 596, 164]
+      skill_rail: [444, 500, 836, 172]
+      touch_attack: [1280, 548, 232, 224]
+      touch_skill: [1312, 788, 168, 160]
+      modal_guard: [60, 716, 472, 268]
+      result_plate: [560, 716, 708, 256]
+      boss_bar: [424, 252, 1088, 256]
+    reserved_unbound_regions:
+      status_plaque: [1092, 48, 404, 168]
+    nine_slice_margins:
+      wide_header: [76, 38, 76, 38]
+      modal_guard: [66, 52, 66, 52]
+      result_plate: [86, 52, 86, 52]
+    load_policy: >-
+      ResourceLoader/load through VanMongComponentKit from the runtime-only
+      path. Every label, stat, binding, cooldown and focus state remains a live
+      Godot node. status_plaque remains reserved with no claimed runtime mapping.
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED for title/rail; NinePatchRect only for wide_header, modal_guard and result_plate; custom square draw for touch regions"
+    target_display_size: "720x820 title bounds; 820-900x92 header; 800x164 skill rail; safe-area-scaled touch medallions"
+    collision_role: none
+    import_generated: true
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off; size_limit 0"
+    alpha_verification: "1536x1024 RGBA; 770024 transparent and 22487 partial pixels after chroma-key removal"
+    known_gap: "Physical touch-device and independent visual review remain open; the current simulated/native 844x390 capture shows no blocking touch-medallion distortion"
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+    verification: "Godot 4.6.2 import/parse, native desktop/844x390 captures and served Chromium rendering pass; independent review remains pending"
+
+  - asset_id: UIKIT-008-control-silhouettes
+    status: integrated_current_runtime_evidence
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    source_prompt: "assets/source-prompts/UIKIT-008-control-silhouettes.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-008-control-silhouettes/pipeline-meta.json"
+    raw_source: "assets/raw/ui/UIKIT-008-control-silhouettes-v001.png"
+    accepted_source: "assets/generated/ui/UIKIT-008-control-silhouettes/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-008-control-silhouettes/runtime/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/UIKIT-008-control-silhouettes/runtime"
+    runtime_components: [primary.png, secondary.png, back.png, stepper.png, destructive.png, confirm.png]
+    target_scripts:
+      - "scripts/ui/raster_button.gd"
+      - "scripts/ui/frontend.gd"
+    load_policy: "Runtime-only component paths; live captions/focus/disabled state remain Godot nodes"
+    texture_filter: linear
+    stretch_mode: "authored nine-slice margins for long plaques; uniform for stepper and confirm"
+    collision_role: none
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
+      - "production/playtests/frontend/settings.png"
+    verification: "All six controls import and render in current native/Web surfaces; independent review remains pending"
+
+  - asset_id: PORTRAIT-001-bestiary-companion-atlas
+    status: integrated_current_runtime_evidence
+    style_version: "3.0.0"
+    source_prompt: "assets/source-prompts/PORTRAIT-001-bestiary-companion-atlas.yaml"
+    pipeline_meta: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/pipeline-meta.json"
+    raw_source: "assets/raw/portraits/PORTRAIT-001-bestiary-companion-atlas-v001.png"
+    accepted_source: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/source/atlas-transparent.png"
+    runtime_file: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime/atlas-transparent.png"
+    runtime_path: "res://assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime"
+    target_script: "scripts/ui/frontend.gd"
+    target_nodes: "Codex dossier portraits and Thanh Vân Hồ companion portrait"
+    load_policy: "Uniform aspect-preserved dossier art only; never used as combat animation"
+    texture_filter: linear
+    collision_role: none
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/frontend/codex.png"
+      - "production/playtests/frontend/codex-phone.png"
+      - "production/playtests/frontend/spirit-beast.png"
+      - "production/playtests/frontend/spirit-beast-phone.png"
+    verification: "Six runtime crops import and render with live dossier text"
+
+  - asset_id: PORTRAIT-002-hero-boss
+    status: integrated_current_runtime_evidence
+    style_version: "3.0.0"
+    source_prompt: "assets/source-prompts/PORTRAIT-002-hero-boss.yaml"
+    pipeline_meta: "assets/generated/portraits/PORTRAIT-002-hero-boss/pipeline-meta.json"
+    raw_source: "assets/raw/portraits/PORTRAIT-002-hero-boss-v001.png"
+    accepted_source: "assets/generated/portraits/PORTRAIT-002-hero-boss/source/atlas-transparent.png"
+    runtime_file: "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/atlas-transparent.png"
+    runtime_path: "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime"
+    target_scripts:
+      - "scripts/ui/hud.gd"
+      - "scripts/gameplay/enemy.gd"
+    target_nodes: "Player status medallion and Thiên Giác boss bar portrait"
+    load_policy: "Uniform identity portrait only; gameplay actors retain separate sprite sheets"
+    texture_filter: linear
+    collision_role: none
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/combat-phone.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+    verification: "Both runtime crops import and remain inside desktop/phone HUD compositions"
+
+  - asset_id: ACHIEVEICON-001-six-seals
+    status: integrated_current_runtime_evidence
+    style_version: "3.0.0"
+    source_prompt: "assets/source-prompts/ACHIEVEICON-001-six-seals.yaml"
+    pipeline_meta: "assets/generated/ui/ACHIEVEICON-001-six-seals/pipeline-meta.json"
+    raw_source: "assets/raw/ui/ACHIEVEICON-001-six-seals-v001.png"
+    accepted_source: "assets/generated/ui/ACHIEVEICON-001-six-seals/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/ACHIEVEICON-001-six-seals/runtime/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/ACHIEVEICON-001-six-seals/runtime"
+    target_script: "scripts/ui/frontend.gd"
+    target_nodes: "Six achievement record seals"
+    load_policy: "Uniform seal art with live title/progress/state labels"
+    texture_filter: linear
+    collision_role: none
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/frontend/achievements.png"
+      - "production/playtests/frontend/achievements-phone.png"
+    verification: "Six semantic seals import and render as distinct milestone identities"
+
+  - asset_id: FONT-001-be-vietnam-pro
+    status: integrated_current_native_and_web_evidence
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    source_directory: "https://github.com/google/fonts/tree/main/ofl/bevietnampro"
+    source_files:
+      - "assets/fonts/BeVietnamPro-Regular.ttf"
+      - "assets/fonts/BeVietnamPro-SemiBold.ttf"
+    runtime_paths:
+      - "res://assets/fonts/BeVietnamPro-Regular.ttf"
+      - "res://assets/fonts/BeVietnamPro-SemiBold.ttf"
+    import_files:
+      - "assets/fonts/BeVietnamPro-Regular.ttf.import"
+      - "assets/fonts/BeVietnamPro-SemiBold.ttf.import"
+    imported_resources:
+      - "res://.godot/imported/BeVietnamPro-Regular.ttf-fa34f1fa74690458f4e1c1145ecc5f4f.fontdata"
+      - "res://.godot/imported/BeVietnamPro-SemiBold.ttf-b33b0691bc355ff142c79ad6b932c0ea.fontdata"
+    license_file: "assets/fonts/OFL-BeVietnamPro.txt"
+    license: "SIL Open Font License 1.1"
+    hashes:
+      regular_sha256: "cd1ef6e9d7db28ad5cdb88a65ccbe693870e60d340b791f349d248342b4fe4c3"
+      semibold_sha256: "bd8e27eb02720b9d91e59e4f10a90878643219f25ce6a8d9a4f06a8a88d3bb71"
+      license_sha256: "6b7f8f73609a25ea78c891e34cf37b06f8a676b7ea986e941e43b009110f2a85"
+    target_resource: "resources/ui/cultivation_theme.tres"
+    target_scripts:
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/raster_button.gd"
+    target_nodes:
+      - "Theme default/Label font using BeVietnamPro-Regular"
+      - "Theme Button font and RasterButton captions using BeVietnamPro-SemiBold"
+      - "FrontEnd/HUD body, HUD value, eyebrow and action Labels"
+    load_policy: "Project-local FontFile preload/ext_resource is primary; current importer permits system fallback, so served-Web glyph capture remains mandatory"
+    import_settings: "FontFile font_data_dynamic; antialiasing 1; mipmaps off; embedded bitmaps disabled; hinting 1; subpixel positioning 4; compression on; allow_system_fallback true"
+    collision_role: none
+    import_generated: true
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+    verification: "Official bytes/OFL and FontFile imports are hash-verified; native desktop/phone and served Chromium Vietnamese glyph rendering pass"
+
+  - asset_id: FONT-002-literata
+    status: integrated_current_native_and_web_evidence
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    source_directory: "https://github.com/google/fonts/tree/main/ofl/literata"
+    upstream_filename: "Literata[opsz,wght].ttf"
+    source_files:
+      - "assets/fonts/Literata-Variable.ttf"
+    runtime_paths:
+      - "res://assets/fonts/Literata-Variable.ttf"
+    import_files:
+      - "assets/fonts/Literata-Variable.ttf.import"
+    imported_resources:
+      - "res://.godot/imported/Literata-Variable.ttf-4f37faa15341f1125b6bdeee4d9d1f4f.fontdata"
+    license_file: "assets/fonts/OFL-Literata.txt"
+    license: "SIL Open Font License 1.1"
+    hashes:
+      variable_sha256: "b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440"
+      license_sha256: "8742963604cd89dc81437811a850018fc03b2bfad686d7422c8235967c87614e"
+    target_scripts:
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+    target_nodes:
+      - "FrontEnd and HUD Labels at 25 px or larger when the display role is requested"
+    load_policy: "Project-local FontFile preload is primary; current importer permits system fallback, so served-Web display-glyph capture remains mandatory"
+    import_settings: "FontFile font_data_dynamic; antialiasing 1; mipmaps off; embedded bitmaps disabled; hinting 1; subpixel positioning 4; compression on; allow_system_fallback true"
+    collision_role: none
+    import_generated: true
+    import_verified: true
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/technique-upgrade.png"
+      - "production/playtests/frontend/results.png"
+    verification: "Official bytes/OFL and FontFile import are hash-verified; current native and served Chromium display headings render"
+
+  - asset_id: UIICON-001-relics
+    status: integrated_current_runtime_evidence
+    source_prompt: "assets/source-prompts/UIICON-001-relics.yaml"
+    pipeline_meta: "assets/generated/ui/UIICON-001-relics/pipeline-meta.json"
+    accepted_source: "assets/generated/ui/UIICON-001-relics/source/atlas-transparent.png"
+    runtime_files:
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_jade_sword.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_heart_mirror.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_cloud_robe.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_wood_ring.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_sun_sword.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_moon_mirror.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_blood_talisman.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_ancient_manual.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_horn_seal.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_sword_crystal.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_cloud_bracelet.png"
+      - "assets/generated/ui/UIICON-001-relics/runtime/relic_spirit_cuirass.png"
+    runtime_root: "res://assets/generated/ui/UIICON-001-relics/runtime/"
+    target_scene: "scenes/main.tscn"
+    target_script: "scripts/ui/frontend.gd"
+    target_nodes:
+      - "Inventory item-slot TextureRects"
+      - "Equipped relic portrait and comparison folio TextureRects"
+    load_policy: "Runtime path table resolved through ResourceLoader/load; procedural icon fallback only when an individual file is absent"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED / uniform transparent 362x362 cells"
+    target_display_size: "84x84 list icons and aspect-fitted detail portraits"
+    collision_role: none
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
+    verification_evidence:
+      - "production/playtests/frontend/inventory.png"
+      - "production/playtests/frontend/inventory-phone.png"
+      - "production/evidence/platforms/web-v3-inventory.png"
+      - "production/evidence/platforms/web-v3-inventory-phone.png"
+    verification: "All twelve runtime icon imports exist and current native/served Chromium inventory captures show distinct relic identities"
+
+  - asset_id: SKILLICON-001-five-formation
+    status: integrated_current_runtime_evidence
+    source_prompt: "assets/source-prompts/SKILLICON-001-five-formation.yaml"
+    pipeline_meta: "assets/generated/ui/SKILLICON-001-five-formation/pipeline-meta.json"
+    accepted_source: "assets/generated/ui/SKILLICON-001-five-formation/source/atlas-transparent.png"
+    replacement_source: "assets/raw/ui/SKILLICON-001-linh-phu-v001.png"
+    rejected_source: "assets/raw/ui/SKILLICON-001-linh-phu-rejected.png"
+    runtime_files:
+      - "assets/generated/ui/SKILLICON-001-five-formation/runtime/skill_phi_kiem.png"
+      - "assets/generated/ui/SKILLICON-001-five-formation/runtime/skill_kiem_tran.png"
+      - "assets/generated/ui/SKILLICON-001-five-formation/runtime/skill_linh_phu.png"
+      - "assets/generated/ui/SKILLICON-001-five-formation/runtime/skill_bang_lien.png"
+      - "assets/generated/ui/SKILLICON-001-five-formation/runtime/skill_thien_loi.png"
+      - "assets/generated/ui/SKILLICON-001-five-formation/runtime/assist_thanh_van_ho.png"
+    runtime_root: "res://assets/generated/ui/SKILLICON-001-five-formation/runtime/"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/frontend.gd"
+    target_nodes:
+      - "HUD five-skill rail TextureRects"
+      - "FrontEnd technique and companion TextureRects"
+    load_policy: "Runtime path tables resolve each accepted glyph independently; rejected pseudo-calligraphy has no res:// runtime reference"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED / uniform transparent glyph canvases"
+    target_display_size: "70x70 skill rail glyphs; 120x120 companion assist medallion"
+    collision_role: none
+    import_verified: true
+    import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
+    verification_evidence:
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/playtests/mobile-support/combat-phone.png"
+      - "production/playtests/frontend/techniques.png"
+      - "production/playtests/frontend/spirit-beast.png"
+      - "production/playtests/frontend/spirit-beast-phone.png"
+      - "production/evidence/platforms/web-v3-spirit-beast.png"
+      - "production/evidence/platforms/web-v3-spirit-beast-phone.png"
+    verification: "Five active glyphs plus the companion glyph import from runtime paths; the rejected Linh Phù variant is retained only under assets/raw"
+
   - asset_id: PREMIUM-001-cultivation-sigils
     status: integrated_native_qa_passed
     source_prompt: "assets/source-prompts/PREMIUM-001-cultivation-sigils.yaml"
@@ -469,12 +829,13 @@ imports:
     verification: "Godot imports resolve and current native captures show all three selected folio silhouettes without aspect distortion"
 
   - asset_id: UI-RUNTIME-001
-    status: implemented_native_qa_passed
+    status: integrated_current_native_and_web_evidence
     source_prompt: ""
     accepted_source: >-
       Authored Control scripts plus PREMIUM-001 primary sigils, UIKIT-004
-      primary folios, UIKIT-005 restrained controls and selective UIKIT-002
-      scroll/talisman chrome
+      primary folios, UIKIT-006 arsenal chrome, UIKIT-007 ritual surfaces,
+      UIKIT-008 controls, PORTRAIT-001/002, ACHIEVEICON-001,
+      UIKIT-005/selective UIKIT-002 transitional support and bundled fonts
     runtime_files:
       - "scripts/ui/hud.gd"
       - "scripts/ui/cultivation_panel.gd"
@@ -483,6 +844,8 @@ imports:
       - "scripts/ui/cultivation_meter.gd"
       - "scripts/ui/frontend.gd"
       - "scripts/ui/raster_button.gd"
+      - "scripts/ui/van_mong_component_kit.gd"
+      - "resources/ui/cultivation_theme.tres"
     runtime_icon_paths:
       - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png"
       - "res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png"
@@ -496,25 +859,37 @@ imports:
       - "res://assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png"
       - "res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png"
       - "res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png"
+      - "res://assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png"
+      - "res://assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png"
+      - "res://assets/generated/ui/UIKIT-008-control-silhouettes/runtime"
+      - "res://assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime"
+      - "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime"
+      - "res://assets/generated/ui/ACHIEVEICON-001-six-seals/runtime"
+    runtime_font_paths:
+      - "res://assets/fonts/BeVietnamPro-Regular.ttf"
+      - "res://assets/fonts/BeVietnamPro-SemiBold.ttf"
+      - "res://assets/fonts/Literata-Variable.ttf"
     target_scene: "scenes/main.tscn"
     target_script: "scripts/ui/frontend.gd and scripts/ui/hud.gd"
     target_node: "NinePatchRect, TextureRect and custom Control subclasses"
     load_policy: >-
-      Primary sigils/folios, UIKIT-005 matte lacquer/command chrome and active
-      UIKIT-002 scroll/talisman surfaces. UIKIT-003 and the old UIKIT-002
-      medallions/lacquer/compact crops are legacy and unreferenced; procedural
-      drawing remains the actual missing-texture fallback.
+      Primary sigils/folios, UIKIT-006 inventory chrome, UIKIT-007 ritual
+      surfaces, UIKIT-008 controls, dedicated portrait/achievement families,
+      bundled runtime fonts and transitional UIKIT-005 plus active UIKIT-002
+      paper components. UIKIT-003 and old UIKIT-002 medallions/lacquer crops
+      remain legacy and unreferenced; procedural drawing remains fallback.
     texture_filter: linear
     target_display_size: "logical 1600x900; current primary captures are 1600x900"
     collision_role: none
     import_verified: true
-    verification: "Current front-end, combat, breakthrough, responsive and portrait captures exercise the declared primary asset paths"
+    verification: "Clean Godot 4.6.2 parse plus current native desktop/phone and served Chromium evidence exercise the V3 paths; independent visual review remains open"
 
   - asset_id: META-ENV-UI-AUDIO-002
-    status: integrated_native_qa_passed
+    status: integrated_current_ui_typography_evidence
     accepted_source: >-
-      HUB-001, STAGE-002/003, PREMIUM-001, UIKIT-004, UIKIT-005, selective
-      UIKIT-002 scroll/talisman support chrome and AUDIO-001
+      HUB-001, STAGE-002/003, PREMIUM-001, UIKIT-004/005/006/007/008,
+      PORTRAIT-001/002, ACHIEVEICON-001, selective UIKIT-002 scroll/talisman
+      support chrome, bundled fonts and AUDIO-001
     runtime_files:
       - "assets/generated/environments/HUB-001-van-mong-sect/hub-background-1600x900-v001.webp"
       - "assets/generated/environments/STAGE-002-huyet-van-dai/stage-huyet-van-dai-1600x900-v001.webp"
@@ -522,15 +897,24 @@ imports:
       - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png"
       - "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png"
       - "assets/generated/ui/UIKIT-005-restrained-controls/runtime"
+      - "assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png"
+      - "assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png"
+      - "assets/generated/ui/UIKIT-008-control-silhouettes/runtime"
+      - "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime"
+      - "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime"
+      - "assets/generated/ui/ACHIEVEICON-001-six-seals/runtime"
       - "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime"
       - "assets/generated/ui/UIKIT-004-talisman-folios/runtime"
+      - "assets/fonts/BeVietnamPro-Regular.ttf"
+      - "assets/fonts/BeVietnamPro-SemiBold.ttf"
+      - "assets/fonts/Literata-Variable.ttf"
       - "assets/generated/audio"
     target_scene: "scenes/main.tscn"
     target_script: "scripts/ui/frontend.gd; scripts/gameplay/ink_background.gd; scripts/audio/audio_director.gd"
     target_node: "FrontEnd CanvasLayer, InkBackground, AudioDirector autoload"
     load_policy: "ResourceLoader/load with gameplay-safe fallbacks"
     texture_filter: linear
-    target_display_size: "1600x900 UI/environment; aspect-preserved sigils/folios; 656x160 source command plaque"
+    target_display_size: "1600x900 desktop and dedicated 844x390 phone UI; aspect-preserved sigils/folios/ritual chrome"
     collision_role: none
     import_verified: true
-    verification: "Native screenshots plus frontend/meta/audio/runtime/long-run smoke suites PASS"
+    verification: "Current V3 UI and typography complete import/parse plus native/Web capture; audio listening and independent visual review remain separate open gates"

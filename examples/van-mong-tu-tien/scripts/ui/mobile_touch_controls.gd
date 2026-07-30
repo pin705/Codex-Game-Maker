@@ -15,6 +15,7 @@ signal controls_visibility_changed(is_visible: bool)
 signal layout_changed(safe_area: Rect2)
 
 const SafeArea := preload("res://scripts/ui/mobile_safe_area.gd")
+const ComponentKit := preload("res://scripts/ui/van_mong_component_kit.gd")
 const PULSE_TEXTURE: Texture2D = preload("res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png")
 
 const MOVE_LEFT := &"move_left"
@@ -61,9 +62,13 @@ var _safe_area_override := Rect2()
 var _has_safe_area_override := false
 var _force_visible_for_test := false
 var _device_pixel_scale := 1.0
+var _attack_frame: Texture2D
+var _joystick_frame: Texture2D
 
 
 func _ready() -> void:
+	_attack_frame = ComponentKit.ritual_texture("touch_attack")
+	_joystick_frame = ComponentKit.ritual_texture("touch_skill")
 	set_process_input(true)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -357,7 +362,11 @@ func _draw() -> void:
 
 func _draw_joystick() -> void:
 	draw_circle(_joystick_center + Vector2(4.0, 6.0), _joystick_radius + 8.0, Color(0.0, 0.0, 0.0, 0.34))
-	draw_circle(_joystick_center, _joystick_radius + 6.0, Color(INK, 0.58))
+	if _joystick_frame != null:
+		var frame_extent := (_joystick_radius + 12.0) * 2.0
+		draw_texture_rect(_joystick_frame, Rect2(_joystick_center - Vector2.ONE * frame_extent * 0.5, Vector2.ONE * frame_extent), false, Color(0.86, 1.0, 0.96, 0.88))
+	else:
+		draw_circle(_joystick_center, _joystick_radius + 6.0, Color(INK, 0.58))
 	draw_arc(_joystick_center, _joystick_radius, 0.0, TAU, 64, Color(JADE, 0.72), 3.0, true)
 	draw_arc(_joystick_center, _joystick_radius * 0.76, 0.0, TAU, 64, Color(PAPER, 0.18), 1.5, true)
 	for direction: Vector2 in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
@@ -377,8 +386,12 @@ func _draw_pulse_button() -> void:
 	var radius := minf(_pulse_hit_rect.size.x, _pulse_hit_rect.size.y) * 0.32
 	var pressed := _pulse_touch >= 0
 	draw_circle(center + Vector2(4.0, 6.0), radius + 7.0, Color(0.0, 0.0, 0.0, 0.38))
-	draw_circle(center, radius + 5.0, Color(INK, 0.78))
-	draw_arc(center, radius + 1.0, 0.0, TAU, 64, Color(GOLD, 0.96), 4.0, true)
+	if _attack_frame != null:
+		var frame_extent := (radius + 11.0) * 2.0
+		draw_texture_rect(_attack_frame, Rect2(center - Vector2.ONE * frame_extent * 0.5, Vector2.ONE * frame_extent), false, Color(1.0, 0.94, 0.88, 0.92 if pressed else 1.0))
+	else:
+		draw_circle(center, radius + 5.0, Color(INK, 0.78))
+		draw_arc(center, radius + 1.0, 0.0, TAU, 64, Color(GOLD, 0.96), 4.0, true)
 	var icon_extent := radius * (1.48 if pressed else 1.58)
 	var icon_rect := Rect2(center - Vector2.ONE * icon_extent * 0.5, Vector2.ONE * icon_extent)
 	draw_texture_rect(PULSE_TEXTURE, icon_rect, false, Color(1.0, 1.0, 1.0, 0.82 if pressed else 1.0))

@@ -1,11 +1,66 @@
-# Art Bible V2: Vân Mộng Tu Tiên
+# Art Bible V4: Vân Mộng Tu Tiên
 
-Status: Verified  
-Release evidence boundary: visual batch is integrated across desktop and dedicated 844×390 phone layouts; physical/Web/manual release gates remain pending  
+Status: V4 master UI board approved by user; full desktop/mobile implementation and runtime revalidation in progress
+Release evidence boundary: V4 replaces the rejected V3 UI composition and chrome strategy. Existing captures are baseline evidence only until the complete desktop and dedicated 844×390 matrix is refreshed.
 Source concept: `design/gdd/game-concept.md`  
 Asset brief: `design/assets/visual-overhaul-batch-01.md`  
 Scale contract: `design/assets/scene-scale-plan.yaml`  
 Target: commercial-adjacent authored 2D presentation at native resolution; full release readiness still requires Web/manual QA
+
+## V4 Commercial UI Reset — User Directed
+
+The user rejected the current V3 presentation as visually fragmented, cheap and
+overloaded: buttons and text are weak, the hub reads like a dashboard, large
+backgrounds are repeatedly cropped, and generated chrome fights the world art.
+V4 therefore supersedes V3 for every UI surface while preserving the underlying
+game systems and accepted world/actor assets.
+
+Primary user reference:
+`design/art/lookdev/v4/user-commercial-ui-reference.png`. It is a composition,
+hierarchy and material-density reference supplied by the user. It is not a
+runtime bitmap, a source for copied trade dress, or permission to reproduce
+another game's layout/iconography.
+
+Approved implementation target:
+`design/art/lookdev/v4/master-board-candidate-01.png`. The user approved this
+single overview board on 2026-07-30 and requested the implementation follow it
+across every desktop and mobile surface. The board locks composition hierarchy,
+material restraint, component silhouettes, combat density and cross-screen
+coherence. Generated labels and exact atlas pixels are not runtime assets;
+Godot-native controls and live Vietnamese text must reproduce the system.
+
+V4 non-negotiable rules:
+
+- One material system across the whole game: matte blue-black ink, warm muted
+  paper, thin aged bronze structure, restrained jade focus and cinnabar danger.
+- Layout and type establish hierarchy before ornament. No label may be shrunk to
+  rescue an overcrowded panel; content is reduced or recomposed instead.
+- Major panels, buttons, tabs, HUD islands and modals use scalable Godot-native
+  clipped silhouettes. Generated atlases may supply icons or isolated artwork,
+  but not stretched/cropped control chrome.
+- Meta screens share one subdued sect-world backing. Stage art appears only as
+  a contained preview or as the actual combat world, never as a different
+  full-screen wallpaper behind every menu.
+- Phone landscape uses complete aspect-preserved art with ink extension fields;
+  important subjects and frames cannot be cover-cropped to fill 844×390.
+- Desktop body copy targets 17–19 logical px, action labels 17–20 px and major
+  headings 30–46 px. Phone body copy remains at least 15–16 physical px where
+  displayed; optional prose is removed before text is reduced.
+- The hub has three unequal priorities only: identity/loadout, current
+  expedition, and a compact command rail. It may not become a grid of seven
+  equal buttons or a wall of framed cards.
+- Combat HUD uses compact edge islands and a reduced five-skill rail. The arena
+  center, player movement lane and boss telegraphs remain visually dominant.
+- Icons and portraits are color-normalized toward ink/paper before integration;
+  saturation is reserved for state. Blue neon, violet corruption, jade safety
+  and gold reward cannot all compete at full intensity in one frame.
+- Repetition is controlled: one surface silhouette may appear at most twice in
+  the same screen unless it represents a deliberate list/grid family.
+
+V3 raster chrome (`UIKIT-006`, `UIKIT-007`, `UIKIT-008`, scroll and talisman
+panel crops) remains in the repository for provenance and rollback but is no
+longer the default component layer. V4 production UI is native/custom-drawn;
+icons, portraits and environment art remain reusable after palette and scale QA.
 
 ## Why V2 Exists
 
@@ -19,6 +74,65 @@ Audited evidence:
 - Runtime implementation confirms the gap: entity files rely on `_draw()` primitives and `scripts/ui/hud.gd` relies on `StyleBoxFlat` and default `ProgressBar` styling.
 
 V2 therefore supersedes the former “procedural runtime plus one splash” art strategy. Procedural drawing may remain only as a documented fallback, collision/telegraph aid or temporary debug layer. It is not the intended shipped presentation.
+
+## V3 Arsenal Direction — User Approved
+
+The player approved `design/art/lookdev/v3/arsenal-reference-approved.png` as the target for the next production pass. The reference is used for hierarchy, material response, density and authored silhouette—not as a bitmap pasted behind live controls and not as permission to copy another game's trade dress.
+
+V3 adds the following non-negotiable rules to the living-ink identity:
+
+- Combat HUD is a constellation of three edge-anchored islands plus a raised five-skill rail. The middle arena remains open; no broad lower bar may consume the character's movement lane.
+- Inventory uses a legible equipment column, a dense slot grid and a visually separate comparison folio. These three regions have different silhouettes and depth, not three equal dashboard cards.
+- Every item and active skill has its own game asset. Rarity frames are presentation chrome only and can never substitute for an item icon.
+- Item icons use centered, recognizable relic silhouettes with painterly metal, jade, silk, stone or talisman material. They remain readable at 56–96 logical pixels and contain no baked text, border, rarity color field or watermark.
+- Active-skill icons use one bold brush silhouette, one restrained element accent and a dark circular ground. Cooldown, rank, binding, locked and casting states remain live UI layers.
+- Companion management pairs one large illustrated subject with a compact assist state, bond rule and contained evolution strip. Evolution markers must never hang below the mobile safe area.
+- Desktop supports editorial density; 844×390 phone uses fewer words, larger protected labels and icon-first choices. It is a dedicated composition rather than a scaled desktop screenshot.
+- Aged bronze is thin structural hardware. Blue-black lacquer is matte and absorbent. Paper shows fibre and wash. Jade/gold/violet/cinnabar communicate state without glossy plastic bevels or uncontrolled bloom.
+
+Rejected direction: `design/art/lookdev/v3/scroll-heavy-candidate-rejected.png` is too scroll-dominant and leaves insufficient visual distinction between equipment, inventory, skills and companion states. The decision record is `design/art/lookdev/v3/decision.md`.
+
+## V3 Authored UI Identity Batch — Runtime Revalidation Recorded
+
+This additive batch keeps style version `3.0.0` and digest
+`0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da`.
+It does **not** reseal `design/art/style-lock.json`: the full shared-component
+migration, refreshed desktop/phone captures and independent review must be
+accepted first. Consequently this edited art bible is not new style-lock or
+player-ready evidence; the lock's art-bible hash is intentionally left for the
+final accepted migration seal.
+
+`UIKIT-007-ritual-surface-atlas` extends the approved arsenal material language
+through one committed 1536×1024 atlas:
+
+- Raw source: `assets/raw/ui/UIKIT-007-ritual-surface-atlas-v001.png`, SHA-256 `302172f890f74428fce745a103839cf52ce867e61b6497b2eecba2a8acd82c2a`.
+- Alpha source and runtime delivery: `assets/generated/ui/UIKIT-007-ritual-surface-atlas/source/atlas-transparent.png` and `runtime/atlas-transparent.png`, both SHA-256 `02f7a634a8857745c0cb2b3aa1195ff06596a05c0dc0bcdeea5922dfb729828c`.
+- Provenance and processing: `assets/source-prompts/UIKIT-007-ritual-surface-atlas.yaml` plus `assets/generated/ui/UIKIT-007-ritual-surface-atlas/pipeline-meta.json`; chroma cleanup records 770,024 transparent and 22,487 partially transparent pixels.
+- Source-wired regions: desktop title scroll and wide header, guarded modal and result plates, raised five-skill rail, attack medallion, joystick medallion and the live boss identity/health bar. `status_plaque` alone remains reserved and unbound.
+- Only `wide_header`, `modal_guard` and `result_plate` are dedicated nine-slice surfaces, using margins 76/38/76/38, 66/52/66/52 and 86/52/86/52 respectively. The scroll, boss bar and skill rail preserve their source aspect. Current native 1600×900/844×390 captures show the square touch targets and boss bar without blocking distortion or overlap; physical-device review remains open.
+- The atlas contains no text, number, cooldown, rarity, key binding, logo or pseudo-calligraphy. Those remain live Godot nodes.
+
+The batch also bundles two OFL typography families from the official Google
+Fonts repository so Vietnamese presentation never depends on an OS or remote
+font:
+
+| Family | Project files and SHA-256 | Runtime role | License/provenance |
+|---|---|---|---|
+| Be Vietnam Pro | `assets/fonts/BeVietnamPro-Regular.ttf` — `cd1ef6e9d7db28ad5cdb88a65ccbe693870e60d340b791f349d248342b4fe4c3`; `BeVietnamPro-SemiBold.ttf` — `bd8e27eb02720b9d91e59e4f10a90878643219f25ce6a8d9a4f06a8a88d3bb71` | Regular for body/HUD/default labels; SemiBold for buttons, tabs, eyebrows and compact emphasis | [Google Fonts Be Vietnam Pro](https://github.com/google/fonts/tree/main/ofl/bevietnampro); local `OFL-BeVietnamPro.txt`, SHA-256 `6b7f8f73609a25ea78c891e34cf37b06f8a676b7ea986e941e43b009110f2a85` |
+| Literata variable roman | `assets/fonts/Literata-Variable.ttf` (upstream `Literata[opsz,wght].ttf`) — `b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440` | Large ritual titles and high-tier headings only | [Google Fonts Literata](https://github.com/google/fonts/tree/main/ofl/literata); local `OFL-Literata.txt`, SHA-256 `8742963604cd89dc81437811a850018fc03b2bfad686d7422c8235967c87614e` |
+
+These hashes match the recorded official raw downloads and Godot FontFile import
+artifacts. A clean Godot 4.6.2 parse, current Vietnamese native captures at
+1600×900 and 844×390, and served Chromium rendering now pass. Cross-browser,
+physical low-DPI and independent visual review remain open.
+
+`UIKIT-008-control-silhouettes` removes the remaining one-shape control problem:
+primary, secondary, back, stepper, destructive and confirm roles use distinct
+original silhouettes with live Vietnamese captions. `PORTRAIT-001` supplies six
+bestiary/companion dossier illustrations, `PORTRAIT-002` supplies player HUD and
+Thiên Giác identity portraits, and `ACHIEVEICON-001` supplies six semantic
+achievement seals. All four families are integrated candidates with current
+native evidence; none is independently accepted or release-ready yet.
 
 ## Visual Identity
 
@@ -76,6 +190,7 @@ These are material and brush-behavior studies only. Do not trace a composition, 
 
 - Frames use asymmetrical lacquered-paper plates held by aged bronze corner clamps and one jade/cinnabar accent, with deliberate chipped edges.
 - Upgrade cards resemble a compact talisman folio: tall paper body, seal notch, icon medallion and a narrow bottom text field.
+- Body and HUD copy use Be Vietnam Pro Regular; actions and compact emphasis use Be Vietnam Pro SemiBold; Literata is reserved for large ritual headings. All fonts are bundled project-local resources with Vietnamese copy rendered at runtime.
 - Avoid equal-weight dashboard boxes. Hierarchy comes from silhouette, material and spacing, not from adding more rounded rectangles.
 - Corners are clipped, folded or bracketed rather than uniformly rounded. No glassmorphism, glossy bevel, pill buttons or generic CSS gradients.
 
@@ -158,6 +273,13 @@ Saturation rule: no full-screen teal/orange grade. Functional color should occup
 | `FX-001-kiem-an-impact` | Sword hit | 2x4, 8 frames, 384 px cells |
 | `ARENA-001-cloud-ring` | Arena plate | 1600x900 single frame |
 | `UI-RUNTIME-001` | HUD/cards/modals | custom Godot Controls + accepted raster icons |
+| `UIKIT-007-ritual-surface-atlas` | Title/header/modal/result/HUD/touch material chrome | 1536x1024 atlas; nine isolated regions; fixed-shape plus three dedicated nine-slices |
+| `UIKIT-008-control-silhouettes` | Primary/secondary/back/stepper/destructive/confirm controls | 1536x1024 atlas; six isolated regions; four dedicated nine-slices plus two uniform medallions |
+| `PORTRAIT-001-bestiary-companion-atlas` | Codex threats and Thanh Vân Hồ dossier identity | 3x2, six 512 px cells |
+| `PORTRAIT-002-hero-boss` | Player HUD and Thiên Giác boss identity | 2x1, two 887 px cells |
+| `ACHIEVEICON-001-six-seals` | Six distinct achievement identities | 3x2, six 512 px cells |
+| `FONT-001-be-vietnam-pro` | Vietnamese body, HUD and action typography | Regular + SemiBold project-local TTF files |
+| `FONT-002-literata` | Ritual display typography | Variable roman `opsz,wght` TTF |
 | `UIKIT-001-kim-ngoc-components` | Optional future raster atlas | deferred, not displayed |
 
 ## Generation, Provenance And QA
@@ -192,3 +314,5 @@ Saturation rule: no full-screen teal/orange grade. Functional color should occup
 - [x] Breakthrough cards use authored material frames and real icons; all three fit at `1280x720`.
 - [x] Title, normal combat, boss, breakthrough, pause, victory and defeat received severity-based visual review.
 - [x] Asset harness, asset QA and Godot runtime checks pass for every accepted asset.
+- [x] UIKIT-007/008, PORTRAIT-001/002, ACHIEVEICON-001 and bundled fonts pass current Godot import/parse plus 1600×900 and 844×390 capture checks.
+- [ ] The refreshed full-surface V3 batch receives independent visual review before any player-ready, release-ready or commercial-ready claim.

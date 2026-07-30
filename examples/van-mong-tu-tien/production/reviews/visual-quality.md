@@ -1,6 +1,10 @@
 # Visual Quality Review: Vân Mộng Tu Tiên / Local Candidate
 
 Status: **BLOCKED**  
+Review state: **SUPERSEDED — PENDING FULL V3 RUNTIME REVIEW**
+
+Supersession notice: the user approved the arsenal reference but subsequently rejected current whole-game runtime convergence. The per-surface findings below are retained as historical evidence only; they do not certify the current V3 target or replace a full recapture and independent review after shared-component migration.
+
 Reviewed: 2026-07-30T09:53:39+07:00  
 Reviewer: Codex clean-context independent visual reviewer (`/root/independent_visual_review_final`)  
 Reviewer mode: independent agent; did not author or select the current game, UI, VFX, or art changes  
@@ -14,7 +18,7 @@ Method: native-resolution `view_image` inspection of every required desktop and 
 - Quality evidence: `production/evidence/quality-run.json`, SHA-256 `bacbbe75859125d76a2493af245a12871327aee124115e1c1370e50ed37d00bc`
 - Visual-smoke command SHA-256: `c6dec56e4025779e124de21f23f0d9b38d66e2c6b112b60dfbe107f04822c987`
 - Capture integrity: PASS — all 30 required captures, both boss-condition captures, and all three look-dev candidate files match the SHA-256 values in `production/reviews/visual-quality-contract.json`.
-- Style lock: PASS — style `van-mong-living-ink-lacquer` version `2.0.0`, digest `0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c`.
+- Style lock at metadata refresh: PASS — style `van-mong-living-ink-lacquer` version `3.0.0`, digest `0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da`.
 - `cgm doctor`: PASS_WITH_WARNINGS only for unavailable PowerShell and optional Pillow/numpy dependencies; no visual evidence blocker.
 - `cgm player-ready --skip-quality`: BLOCKED as expected by the still-open visual, manual-playtest, listening, and physical-device requirements.
 

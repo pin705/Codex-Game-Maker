@@ -1,21 +1,22 @@
 {
   "schema_version": 1,
   "style_id": "van-mong-living-ink-lacquer",
-  "style_version": "2.0.0",
+  "style_version": "4.1.0",
   "status": "locked",
   "source_art_bible": "design/art/art-bible.md",
-  "art_bible_sha256": "e59594f3dc1d7395c0474850452d0d7a024d1a620bb987d50415b8b4cbd802e4",
-  "digest": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c",
+  "art_bible_sha256": "8d3718447ee5292a68528d8310791ea68e7dcb40c3dce4e385c078f8484763ea",
+  "digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
   "identity_rule": "Mực sống trên lụa cũ, đồng ám giữ khung, ngọc quang chỉ bùng lên khi kiếm ý vận hành.",
   "anchors": {
     "materials": [
       "Warm xuan paper and aged silk grain form the quiet world and support planes.",
       "Blue-black wet and dry ink defines silhouettes, brush edges and deep lacquer fields.",
-      "Aged bronze and sparse gold provide structure, milestones and ritual hardware without glossy plastic bevels.",
+      "Aged bronze and sparse gold provide thin structure, milestones and ritual hardware without glossy plastic bevels or oversized ornament.",
       "Jade light and cinnabar seals remain restrained functional accents rather than full-screen grading."
     ],
     "shape_language": [
-      "Asymmetric ritual plaques with clipped, folded or bracketed corners.",
+      "Scalable Godot-native asymmetric ritual plaques with clipped, folded or bracketed corners.",
+      "Control silhouette and negative space carry hierarchy before decoration; raster chrome never rescues a weak layout.",
       "Tall irregular talisman folios with protected runtime text fields and separate sigil medallions.",
       "Compact readable actor silhouettes: light cultivator plane, low ink beasts, upright corrupted cultivators and a broad horned boss.",
       "Broken brush rings, seals and ordered sword triangles communicate combat state without debug-vector geometry."
@@ -41,7 +42,8 @@
     "typography_roles": [
       "Runtime-rendered Vietnamese text only; generated textures contain no lettering or pseudo-calligraphy.",
       "Compact uppercase eyebrows establish context, high-contrast ritual titles establish hierarchy and quiet body copy explains consequences.",
-      "Critical HUD values use protected high-contrast fields and remain readable above moving world art."
+      "Critical HUD values use protected high-contrast fields and remain readable above moving world art.",
+      "Body text is never reduced to compensate for overcrowding; composition and copy density are corrected first."
     ],
     "detail_density": [
       "World edges and ritual objects carry painterly detail while center gameplay lanes retain deliberate negative space.",
@@ -59,6 +61,8 @@
     "No glossy mobile bevels, glassmorphism, neon gradients or plastic 3D material response.",
     "No generic rounded SaaS cards, equal-weight dashboard grids or default engine controls presented as final UI.",
     "No stretched folios, arbitrary nine-sliced prop crops, repeated one-size-fits-all ornate frames or text colliding with ornament.",
+    "No full-screen wallpaper swap for every meta screen and no cover-cropping that removes the focal subject on phone layouts.",
+    "No raster-generated button or panel chrome as the default control layer; production controls use scalable native silhouettes.",
     "No primitive-only final actors, pickups or impacts and no visible collision/debug geometry.",
     "No inconsistent camera, light direction, texture density or actor grounding between generated asset families.",
     "No baked text, pseudo-Chinese glyphs, logos, watermarks or generated inscriptions."
@@ -71,72 +75,55 @@
     "combat-ui",
     "meta-ui",
     "talisman-folios",
-    "cultivation-sigils"
+    "cultivation-sigils",
+    "equipment-icons",
+    "active-skill-icons",
+    "companion-ui"
   ],
   "locked_references": [
     {
-      "path": "production/playtests/frontend/contact-sheet-current-desktop.png",
-      "sha256": "171d3c1a7649960d7ca0b31e82985d8358e21df355e96e9b87cca1ece6681f91",
+      "path": "design/art/lookdev/v4/user-commercial-ui-reference.png",
+      "sha256": "739cc53318b1fcac3fb1b5737090dad569a771a63bf256ebc133671a53ac1fda",
       "families": [
-        "environment",
-        "meta-ui",
-        "talisman-folios",
-        "cultivation-sigils"
-      ]
-    },
-    {
-      "path": "production/playtests/frontend/contact-sheet-current-phone.png",
-      "sha256": "ca9acfb5b2507caf20c7969053a0422672cbad26852065cf714e8bef8ca85dab",
-      "families": [
-        "environment",
-        "meta-ui",
         "combat-ui",
-        "talisman-folios",
-        "cultivation-sigils"
+        "meta-ui",
+        "equipment-icons",
+        "active-skill-icons",
+        "companion-ui"
       ]
     },
     {
-      "path": "production/playtests/frontend/title.png",
-      "sha256": "f2c8f32fe908186aeaa6147e46269f7244ab994985a0be8a08424801bbbffd7b",
+      "path": "design/art/lookdev/v4/master-board-candidate-01.png",
+      "sha256": "67d4e8e65d5684ffd2d1c78280d286953da76b8613fea853262361e6b6f7af05",
+      "families": [
+        "combat-ui",
+        "meta-ui",
+        "equipment-icons",
+        "active-skill-icons",
+        "companion-ui"
+      ]
+    },
+    {
+      "path": "assets/generated/key-art/KEYART-001-title-1280x720-v001.webp",
+      "sha256": "8c2c528333d379fce1ca3c35ac9f6ecbd2ad53fe98b4c29837a7c5596a3124fd",
       "families": [
         "key-art",
         "meta-ui"
       ]
     },
     {
-      "path": "production/playtests/overhaul/gameplay-final.png",
-      "sha256": "219767f65f25187238a430d4784aa19e7fce0a9d3ccbc01d171abf6dbf763dbd",
+      "path": "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.webp",
+      "sha256": "64dd8e892e28853fc1ce69b1607f31d5fc68a8e8a0a4f26b98f7a72583c94517",
       "families": [
         "environment",
-        "actors",
-        "combat-fx",
         "combat-ui"
-      ]
-    },
-    {
-      "path": "production/playtests/overhaul/boss-final.png",
-      "sha256": "d3e17d5864020444004329b5a22eca57d5515515f993abac68bfeb396f068949",
-      "families": [
-        "environment",
-        "actors",
-        "combat-fx",
-        "combat-ui"
-      ]
-    },
-    {
-      "path": "production/playtests/overhaul/upgrade-final.png",
-      "sha256": "fe78e446cc6b9552a5b7da98453ba3f6cc5a3b6d3e6c75abe8f4dfc3f91e344d",
-      "families": [
-        "combat-ui",
-        "talisman-folios",
-        "cultivation-sigils"
       ]
     }
   ],
   "change_control": {
-    "previous_digest": "45543c85c81df28a91fea48094238b0ff7cb048ce5ec8e058e356b1d4667abf1",
-    "change_reason": "Bind verified art-bible document status and final 844x390 phone evidence",
-    "approved_by": "Codex autonomous production workflow, user-directed continuation",
+    "previous_digest": "1c7f7924571b48ad3ed1b4c0901224d145315d70ad32ba8aef192ef86c118a0e",
+    "change_reason": "Lock the user-approved V4 master UI board for complete desktop and mobile implementation",
+    "approved_by": "User approved master-board-candidate-01 on 2026-07-30",
     "approved_on": "2026-07-30"
   }
 }

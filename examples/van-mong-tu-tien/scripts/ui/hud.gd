@@ -17,6 +17,11 @@ const CULTIVATION_ACTION := preload("res://scripts/ui/cultivation_action_button.
 const CULTIVATION_METER := preload("res://scripts/ui/cultivation_meter.gd")
 const RASTER_BUTTON := preload("res://scripts/ui/raster_button.gd")
 const COMPONENT_KIT := preload("res://scripts/ui/van_mong_component_kit.gd")
+const SKILL_ICON_ROOT := "res://assets/generated/ui/SKILLICON-001-five-formation/runtime/"
+const PLAYER_PORTRAIT_PATH := "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/player.png"
+const BODY_FONT := preload("res://assets/fonts/BeVietnamPro-Regular.ttf")
+const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
+const DISPLAY_FONT := preload("res://assets/fonts/Literata-Variable.ttf")
 
 var root_control: Control
 var health_bar: ProgressBar
@@ -35,6 +40,15 @@ var time_plaque: Control
 var objective_strip: Control
 var pulse_plaque: Control
 var skill_strip: Control
+var life_margin: MarginContainer
+var player_portrait_frame: TextureRect
+var player_portrait: TextureRect
+var skill_rail_chrome: TextureRect
+var skill_slots: Array[Control] = []
+var skill_icons: Array[TextureRect] = []
+var skill_key_labels: Array[Label] = []
+var skill_name_labels: Array[Label] = []
+var skill_lock_labels: Array[Label] = []
 var _touch_layout_enabled := false
 var _mobile_safe_area := Rect2()
 
@@ -173,12 +187,29 @@ func _build_top_hud() -> void:
 	life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	life_plaque.offset_left = 64.0
 	life_plaque.offset_top = 20.0
-	life_plaque.offset_right = 564.0
+	life_plaque.offset_right = 664.0
 	life_plaque.offset_bottom = 170.0
 	top_hud.add_child(life_plaque)
 
-	var life_margin := MarginContainer.new()
-	life_margin.add_theme_constant_override("margin_left", 24)
+	# PanelContainer owns the layout of direct children. Keep portrait chrome in
+	# the panel's non-layout material root so it cannot be expanded over meters.
+	player_portrait_frame = COMPONENT_KIT.ritual_chrome(life_panel.material_root, "touch_skill", Rect2(18.0, 23.0, 100.0, 100.0), Color(0.90, 1.0, 0.96, 0.92))
+	if ResourceLoader.exists(PLAYER_PORTRAIT_PATH):
+		var portrait_loaded: Variant = load(PLAYER_PORTRAIT_PATH)
+		if portrait_loaded is Texture2D:
+			player_portrait = TextureRect.new()
+			player_portrait.name = "PlayerPortrait"
+			player_portrait.position = Vector2(24.0, 22.0)
+			player_portrait.size = Vector2(88.0, 106.0)
+			player_portrait.texture = portrait_loaded as Texture2D
+			player_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			player_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			player_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			player_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			life_panel.material_root.add_child(player_portrait)
+
+	life_margin = MarginContainer.new()
+	life_margin.add_theme_constant_override("margin_left", 126)
 	life_margin.add_theme_constant_override("margin_right", 24)
 	life_margin.add_theme_constant_override("margin_top", 15)
 	life_margin.add_theme_constant_override("margin_bottom", 13)
@@ -308,7 +339,7 @@ func _apply_safe_layout() -> void:
 	if life_plaque != null:
 		life_plaque.offset_left = safe.position.x
 		life_plaque.offset_top = top
-		life_plaque.offset_right = safe.position.x + 500.0
+		life_plaque.offset_right = safe.position.x + 600.0
 		life_plaque.offset_bottom = top + 150.0
 	var pause_reserve := 96.0 if _touch_layout_enabled else 0.0
 	if time_plaque != null:
@@ -325,14 +356,14 @@ func _apply_safe_layout() -> void:
 		var objective_left := safe.position.x + (220.0 if _touch_layout_enabled else 0.0)
 		objective_strip.offset_left = objective_left
 		objective_strip.offset_right = objective_left + 470.0
-		objective_strip.offset_bottom = -bottom_outset
+		objective_strip.offset_bottom = -(bottom_outset + 118.0)
 		objective_strip.offset_top = objective_strip.offset_bottom - 52.0
 	if skill_strip != null:
 		skill_strip.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		skill_strip.offset_left = -430.0
-		skill_strip.offset_top = -118.0
-		skill_strip.offset_right = 430.0
-		skill_strip.offset_bottom = -18.0
+		skill_strip.offset_left = -400.0
+		skill_strip.offset_top = -196.0
+		skill_strip.offset_right = 400.0
+		skill_strip.offset_bottom = -32.0
 
 
 func _is_phone_landscape_window() -> bool:
@@ -364,6 +395,12 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 		life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		life_plaque.position = Vector2(safe.position.x, safe.position.y)
 		life_plaque.size = Vector2(360.0, 112.0)
+	if life_margin != null:
+		life_margin.add_theme_constant_override("margin_left", 20)
+	if player_portrait_frame != null:
+		player_portrait_frame.hide()
+	if player_portrait != null:
+		player_portrait.hide()
 	if time_plaque != null:
 		time_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		time_plaque.position = Vector2(safe.end.x - 210.0, safe.position.y)
@@ -373,15 +410,14 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 		pulse_plaque.position = Vector2(safe.position.x + 368.0, safe.position.y)
 		pulse_plaque.size = Vector2(168.0, 64.0)
 	if objective_strip != null:
-		objective_strip.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		objective_strip.scale = Vector2.ONE * device_scale
-		objective_strip.position = Vector2(safe.get_center().x - 174.0, safe.end.y - 44.0) * device_scale
-		objective_strip.size = Vector2(348.0, 40.0)
+		# The touch layout already explains movement and active skill state through
+		# the controls/rail.  A second sentence under the rail only muddies combat.
+		objective_strip.hide()
 	if skill_strip != null:
 		skill_strip.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		skill_strip.scale = Vector2.ONE * device_scale
-		skill_strip.position = Vector2(safe.get_center().x - 300.0, safe.end.y - 128.0) * device_scale
-		skill_strip.size = Vector2(600.0, 100.0)
+		skill_strip.position = Vector2(safe.get_center().x - 240.0, safe.end.y - 104.0) * device_scale
+		_layout_phone_skill_strip()
 	_apply_upgrade_layout_for_viewport(device_scale, physical)
 	_apply_pause_layout_for_viewport(device_scale, physical)
 
@@ -396,16 +432,24 @@ func _restore_desktop_hud_layout() -> void:
 	pulse_bar.custom_minimum_size = Vector2(320.0, 11.0)
 	if life_plaque != null:
 		life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	if life_margin != null:
+		life_margin.add_theme_constant_override("margin_left", 126)
+	if player_portrait_frame != null:
+		player_portrait_frame.show()
+	if player_portrait != null:
+		player_portrait.show()
 	if time_plaque != null:
 		time_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	if pulse_plaque != null:
 		pulse_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	if objective_strip != null:
+		objective_strip.show()
 		objective_strip.scale = Vector2.ONE
 		objective_strip.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	if skill_strip != null:
 		skill_strip.scale = Vector2.ONE
 		skill_strip.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		_layout_desktop_skill_strip()
 	_apply_upgrade_layout_for_viewport(1.0, root_control.size)
 	_apply_pause_layout_for_viewport(1.0, root_control.size)
 
@@ -485,6 +529,7 @@ func _build_objective_strip() -> void:
 	strip.offset_bottom = -48.0
 	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root_control.add_child(strip)
+	COMPONENT_KIT.nine_patch(strip, "secondary", Rect2(0.0, 0.0, 470.0, 52.0), Color(0.76, 0.90, 0.84, 0.94))
 	objective_label = _label("SINH TỒN  ·  THU LINH KHÍ  ·  PHÁ CẢNH", 12, PAPER_DIM, true)
 	objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	objective_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -498,57 +543,135 @@ func _build_skill_strip() -> void:
 	skill_strip = Control.new()
 	skill_strip.name = "FiveSkillRail"
 	skill_strip.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	skill_strip.offset_left = -430.0
-	skill_strip.offset_top = -118.0
-	skill_strip.offset_right = 430.0
-	skill_strip.offset_bottom = -18.0
+	skill_strip.offset_left = -400.0
+	skill_strip.offset_top = -196.0
+	skill_strip.offset_right = 400.0
+	skill_strip.offset_bottom = -32.0
+	skill_strip.clip_contents = false
 	skill_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root_control.add_child(skill_strip)
-	COMPONENT_KIT.chrome(skill_strip, "command", Rect2(0.0, 0.0, 860.0, 100.0), Color(0.78, 0.88, 0.85, 0.78), false)
+	skill_rail_chrome = COMPONENT_KIT.ritual_chrome(skill_strip, "skill_rail", Rect2(0.0, 0.0, 800.0, 164.0), Color(0.92, 0.98, 0.94, 0.98))
+	skill_slots.clear()
+	skill_icons.clear()
+	skill_key_labels.clear()
+	skill_name_labels.clear()
+	skill_lock_labels.clear()
 	var skill_names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "LINH THÚ"]
 	var keys := ["1", "2", "3", "4", "5"]
+	var slot_centers := [132.0, 269.0, 403.0, 540.0, 675.0]
 	var icons := [
-		"res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png",
-		"res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png",
-		"res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png",
-		"res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png",
-		"res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png",
+		SKILL_ICON_ROOT + "skill_phi_kiem.png",
+		SKILL_ICON_ROOT + "skill_kiem_tran.png",
+		SKILL_ICON_ROOT + "skill_linh_phu.png",
+		SKILL_ICON_ROOT + "skill_bang_lien.png",
+		SKILL_ICON_ROOT + "skill_thien_loi.png",
 	]
 	for index in skill_names.size():
 		var slot := Control.new()
 		slot.name = "SkillSlot_%02d" % (index + 1)
-		slot.position = Vector2(44.0 + index * 154.0, 8.0)
-		slot.size = Vector2(132.0, 84.0)
+		slot.position = Vector2(slot_centers[index] - 58.0, 17.0)
+		slot.size = Vector2(116.0, 140.0)
+		slot.clip_contents = false
 		skill_strip.add_child(slot)
+		skill_slots.append(slot)
 		var active := index < 2
-		COMPONENT_KIT.chrome(slot, "medallion" if active else "lock", Rect2(16.0, 0.0, 84.0, 84.0), Color(0.90, 1.0, 0.96, 1.0) if active else Color(0.46, 0.50, 0.48, 0.82), true)
-		if active and ResourceLoader.exists(icons[index]):
+		if ResourceLoader.exists(icons[index]):
 			var icon_loaded: Variant = load(icons[index])
 			if icon_loaded is Texture2D:
 				var icon := TextureRect.new()
-				icon.texture = icon_loaded as Texture2D
-				icon.position = Vector2(29.0, 13.0)
-				icon.size = Vector2(58.0, 58.0)
+				icon.z_index = 2
 				icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				icon.texture = icon_loaded as Texture2D
+				icon.custom_minimum_size = Vector2.ZERO
+				icon.modulate = Color(1.0, 1.0, 1.0, 1.0) if active else Color(0.48, 0.56, 0.54, 0.62)
 				icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				slot.add_child(icon)
+				skill_icons.append(icon)
+				icon.position = Vector2(14.0, 3.0)
+				icon.size = Vector2(88.0, 88.0)
 		var key_label := _label(keys[index], 14, GOLD if active else PAPER_DIM, true)
-		key_label.position = Vector2(1.0, 3.0)
-		key_label.size = Vector2(22.0, 22.0)
+		key_label.z_index = 3
+		key_label.position = Vector2(-3.0, -4.0)
+		key_label.size = Vector2(24.0, 24.0)
 		key_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		slot.add_child(key_label)
+		skill_key_labels.append(key_label)
 		var name_label := _label(skill_names[index], 10, PAPER if active else PAPER_DIM, true)
-		name_label.position = Vector2(0.0, 68.0)
-		name_label.size = Vector2(132.0, 16.0)
+		name_label.z_index = 3
+		name_label.position = Vector2(-8.0, 102.0)
+		name_label.size = Vector2(132.0, 20.0)
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		slot.add_child(name_label)
+		skill_name_labels.append(name_label)
 		if not active:
-			var lock_label := _label("MỞ Ở CẤP %d" % (index + 3), 9, CRIMSON, true)
-			lock_label.position = Vector2(0.0, 51.0)
-			lock_label.size = Vector2(132.0, 14.0)
+			var lock_label := _label("CẤP %d" % (index + 3), 10, CRIMSON, true)
+			lock_label.z_index = 3
+			lock_label.position = Vector2(-8.0, 82.0)
+			lock_label.size = Vector2(132.0, 16.0)
 			lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			slot.add_child(lock_label)
+			skill_lock_labels.append(lock_label)
+
+
+func _layout_phone_skill_strip() -> void:
+	if skill_strip == null:
+		return
+	skill_strip.size = Vector2(480.0, 104.0)
+	if skill_rail_chrome != null:
+		skill_rail_chrome.position = Vector2.ZERO
+		skill_rail_chrome.size = Vector2(480.0, 99.0)
+	var centres := [79.0, 160.0, 241.0, 322.0, 403.0]
+	for index in mini(skill_slots.size(), centres.size()):
+		var slot := skill_slots[index]
+		slot.position = Vector2(centres[index] - 38.0, 3.0)
+		slot.size = Vector2(76.0, 96.0)
+		if index < skill_icons.size():
+			var icon := skill_icons[index]
+			icon.position = Vector2(10.0, 4.0)
+			icon.size = Vector2(56.0, 56.0)
+		if index < skill_key_labels.size():
+			skill_key_labels[index].hide()
+		if index < skill_name_labels.size():
+			var name_label := skill_name_labels[index]
+			name_label.position = Vector2(-7.0, 68.0)
+			name_label.size = Vector2(90.0, 18.0)
+			name_label.add_theme_font_size_override("font_size", 10)
+			name_label.text = ["PHI KIẾM", "KIẾM TRẬN", "KHÓA", "KHÓA", "KHÓA"][index]
+	for lock_label in skill_lock_labels:
+		lock_label.hide()
+
+
+func _layout_desktop_skill_strip() -> void:
+	if skill_strip == null:
+		return
+	skill_strip.size = Vector2(800.0, 164.0)
+	if skill_rail_chrome != null:
+		skill_rail_chrome.position = Vector2.ZERO
+		skill_rail_chrome.size = Vector2(800.0, 164.0)
+	var centres := [132.0, 269.0, 403.0, 540.0, 675.0]
+	var names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "LINH THÚ"]
+	for index in mini(skill_slots.size(), centres.size()):
+		var slot := skill_slots[index]
+		slot.position = Vector2(centres[index] - 58.0, 17.0)
+		slot.size = Vector2(116.0, 140.0)
+		if index < skill_icons.size():
+			var icon := skill_icons[index]
+			icon.position = Vector2(14.0, 3.0)
+			icon.size = Vector2(88.0, 88.0)
+		if index < skill_key_labels.size():
+			var key_label := skill_key_labels[index]
+			key_label.show()
+			key_label.position = Vector2(-3.0, -4.0)
+			key_label.size = Vector2(24.0, 24.0)
+		if index < skill_name_labels.size():
+			var name_label := skill_name_labels[index]
+			name_label.position = Vector2(-8.0, 102.0)
+			name_label.size = Vector2(132.0, 20.0)
+			name_label.add_theme_font_size_override("font_size", 10)
+			name_label.text = names[index]
+	for lock_label in skill_lock_labels:
+		lock_label.show()
 
 func _build_start_overlay() -> void:
 	start_overlay = _full_overlay(Color(0.015, 0.035, 0.038, 0.58))
@@ -770,6 +893,8 @@ func _on_upgrade_options_presented(options: Array[Dictionary]) -> void:
 		var card := _upgrade_button(option, option_index)
 		upgrade_cards.add_child(card)
 	_apply_safe_layout()
+	if _touch_layout_enabled and _is_phone_landscape_window():
+		_set_combat_chrome_visible(false)
 	upgrade_overlay.show()
 	if upgrade_cards.get_child_count() > 0:
 		(upgrade_cards.get_child(0) as Button).call_deferred("grab_focus")
@@ -823,6 +948,7 @@ func _upgrade_accent(upgrade_id: String, card_index: int) -> Color:
 
 func _on_upgrade_pressed(upgrade_id: StringName) -> void:
 	upgrade_overlay.hide()
+	_set_combat_chrome_visible(true)
 	Events.upgrade_selected.emit(upgrade_id)
 
 func _select_upgrade_index(index: int) -> void:
@@ -840,8 +966,7 @@ func _on_banner_requested(title: String, subtitle: String, duration: float) -> v
 
 func _on_game_started() -> void:
 	start_overlay.hide()
-	top_hud.show()
-	objective_strip.show()
+	_set_combat_chrome_visible(true)
 	upgrade_overlay.hide()
 	pause_overlay.hide()
 	end_overlay.hide()
@@ -851,12 +976,13 @@ func _on_game_paused(is_paused: bool) -> void:
 		pause_overlay.hide()
 	else:
 		pause_overlay.visible = is_paused
+	if _touch_layout_enabled and _is_phone_landscape_window() and not upgrade_overlay.visible and not end_overlay.visible:
+		_set_combat_chrome_visible(not is_paused)
 
 func _on_game_finished(victory: bool, title: String, details: String) -> void:
 	upgrade_overlay.hide()
 	pause_overlay.hide()
-	top_hud.hide()
-	objective_strip.hide()
+	_set_combat_chrome_visible(false)
 	# FrontEnd presents authored results, rewards and hub navigation. The old
 	# modal remains a fallback for focused HUD tests.
 	if get_node_or_null("../FrontEnd") != null:
@@ -866,6 +992,15 @@ func _on_game_finished(victory: bool, title: String, details: String) -> void:
 	end_title.add_theme_color_override("font_color", BRONZE_INK if victory else Color("#8e312f"))
 	end_details.text = details
 	end_overlay.show()
+
+
+func _set_combat_chrome_visible(value: bool) -> void:
+	if top_hud != null:
+		top_hud.visible = value
+	if objective_strip != null:
+		objective_strip.visible = value and not (_touch_layout_enabled and _is_phone_landscape_window())
+	if skill_strip != null:
+		skill_strip.visible = value
 
 func _full_overlay(color: Color) -> Control:
 	var overlay := Control.new()
@@ -911,6 +1046,7 @@ func _card_content(card: PanelContainer, margin_size: int) -> VBoxContainer:
 func _label(text_value: String, font_size: int, color: Color, bold: bool = false) -> Label:
 	var label := Label.new()
 	label.text = text_value
+	label.add_theme_font_override("font", DISPLAY_FONT if bold and font_size >= 25 else (ACTION_FONT if bold else BODY_FONT))
 	label.add_theme_font_size_override("font_size", maxi(font_size, 14))
 	label.add_theme_color_override("font_color", color)
 	if bold:

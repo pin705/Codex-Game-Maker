@@ -97,6 +97,8 @@ const UPGRADE_CATALOG := [
 @onready var projectiles: Node2D = $World/Projectiles
 @onready var player: CultivatorPlayer = $World/Player
 
+var presentation_camera: Camera2D
+
 var balance: Dictionary = {}
 var arena_config: Dictionary = {}
 var run_config: Dictionary = {}
@@ -205,6 +207,7 @@ func _apply_meta_loadout() -> void:
 func _configure_world() -> void:
 	var arena_size := _runtime_arena_size()
 	_store_runtime_arena_size(arena_size)
+	_layout_world_for_viewport(arena_size)
 	var margin := float(arena_config.get("margin", 54.0))
 	var bounds := Rect2(Vector2.ONE * margin, arena_size - Vector2.ONE * margin * 2.0)
 	background.configure(arena_size)
@@ -227,6 +230,7 @@ func _refresh_meta_loadout_for_run() -> void:
 	_apply_meta_loadout()
 	var arena_size := _runtime_arena_size()
 	_store_runtime_arena_size(arena_size)
+	_layout_world_for_viewport(arena_size)
 	var margin := float(arena_config.get("margin", 54.0))
 	player.setup(Rect2(Vector2.ONE * margin, arena_size - Vector2.ONE * margin * 2.0), player_config)
 	background.refresh_selected_stage()
@@ -242,6 +246,7 @@ func _on_viewport_size_changed() -> void:
 	if current_size.is_equal_approx(arena_size):
 		return
 	_store_runtime_arena_size(arena_size)
+	_layout_world_for_viewport(arena_size)
 	background.configure(arena_size)
 	var margin := float(arena_config.get("margin", 54.0))
 	player.update_bounds(Rect2(Vector2.ONE * margin, arena_size - Vector2.ONE * margin * 2.0))
@@ -250,6 +255,29 @@ func _on_viewport_size_changed() -> void:
 func _runtime_arena_size() -> Vector2:
 	var viewport_size := get_viewport_rect().size
 	return Vector2(maxf(viewport_size.x, 1600.0), maxf(viewport_size.y, 900.0))
+
+
+func _layout_world_for_viewport(arena_size: Vector2) -> void:
+	# Native device rendering keeps UI text sharp, so combat needs a camera that
+	# adapts the *view* without transforming World coordinates. Scaling World
+	# itself changed player/enemy global positions and sent the boss off-screen.
+	# Cover preserves 16:9 desktop and wide phones; on phone only excess vertical
+	# scenery is cropped while the player/boss centre remains visible.
+	var viewport_size := get_viewport_rect().size
+	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0 or arena_size.x <= 1.0 or arena_size.y <= 1.0:
+		return
+	var cover_scale := maxf(viewport_size.x / arena_size.x, viewport_size.y / arena_size.y)
+	world.scale = Vector2.ONE
+	world.position = Vector2.ZERO
+	if presentation_camera == null:
+		presentation_camera = Camera2D.new()
+		presentation_camera.name = "PresentationCamera"
+		presentation_camera.ignore_rotation = true
+		presentation_camera.position_smoothing_enabled = false
+		world.add_child(presentation_camera)
+	presentation_camera.position = arena_size * 0.5
+	presentation_camera.zoom = Vector2.ONE * cover_scale
+	presentation_camera.make_current()
 
 
 func _store_runtime_arena_size(arena_size: Vector2) -> void:

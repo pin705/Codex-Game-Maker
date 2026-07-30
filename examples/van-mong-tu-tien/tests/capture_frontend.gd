@@ -22,6 +22,9 @@ func _capture() -> void:
 		phone_landscape = args.size() > 1 and str(args[1]).to_lower() == "phone"
 	var capture_size := Vector2i(844, 390) if phone_landscape else Vector2i(1600, 900)
 	DisplayServer.window_set_size(capture_size)
+	# Headless rendering has no native window to resize; pin the root Window size
+	# so expand-stretch cannot fall back to the square dummy surface.
+	get_viewport().size = capture_size
 	await get_tree().process_frame
 	await get_tree().process_frame
 	MetaProfile.auto_save = false

@@ -1,12 +1,12 @@
 # UI/UX Spec: Vân Mộng Tu Tiên
 
-Status: Verified  
+Status: V3 authored UI/portrait batch passes current parse, native desktop/phone capture and served Chromium checks; independent review pending
 Implementation mode: hybrid  
 Minimal UI rationale: Not applicable; this game intentionally uses authored ritual objects and chrome.  
 Visual quality contract: `production/reviews/visual-quality-contract.json`  
 Style lock: `design/art/style-lock.json`  
-Style version: 2.0.0  
-Style SHA-256: 0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c  
+Style version: 3.0.0
+Style SHA-256: 0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da
 Visual/layout smoke command ID: `visual_smoke`
 
 Implementation resources:
@@ -14,19 +14,27 @@ Implementation resources:
 - `res://scripts/ui/frontend.gd`
 - `res://scripts/ui/hud.gd`
 - `res://scripts/ui/raster_button.gd`
+- `res://scripts/ui/van_mong_component_kit.gd`
 - `res://scripts/ui/cultivation_panel.gd`
 - `res://scripts/ui/cultivation_choice_button.gd`
 - `res://scripts/ui/mobile_touch_controls.gd`
 - `res://scripts/ui/rotate_device_overlay.gd`
 - `res://resources/ui/cultivation_theme.tres`
+- `res://assets/fonts/BeVietnamPro-Regular.ttf`
+- `res://assets/fonts/BeVietnamPro-SemiBold.ttf`
+- `res://assets/fonts/Literata-Variable.ttf`
 
 ## Visual Language
 
-The interface combines Xuan-paper and dry-brush silhouettes with ink-black lacquer, aged bronze, restrained jade, milestone gold and cinnabar danger states. Large surfaces are asymmetric scrolls, talisman folios, seals or clipped ritual plaques; equal-weight browser-dashboard cards are forbidden. Typography uses warm paper/ink contrast with concise Vietnamese uppercase eyebrows, a strong title line and quieter explanatory copy. Depth comes from silhouette-matched shadows, inset lacquer, wax seals, pins and sparse ritual rings rather than generic gradients.
+The interface combines Xuan-paper and dry-brush silhouettes with ink-black lacquer, aged bronze, restrained jade, milestone gold and cinnabar danger states. The user-approved arsenal reference adds dense-but-ordered item slots, an explicit comparison tooltip, a five-skill rail and companion management surfaces without changing the Vân Mộng identity. UIKIT-007 extends those materials into a dedicated title scroll, desktop header, modal guard, result plate, combat rail, boss bar and touch medallions. UIKIT-008 gives primary, secondary, back, stepper, destructive and confirm roles distinct silhouettes. PORTRAIT-001/002 and ACHIEVEICON-001 add dedicated dossier, HUD, boss and milestone identities. Large surfaces are asymmetric scrolls, talisman folios, seals or clipped ritual plaques; equal-weight browser-dashboard cards are forbidden. Typography is project-local: Be Vietnam Pro Regular carries body/HUD copy, Be Vietnam Pro SemiBold carries actions and compact emphasis, and Literata is restricted to large ritual headings. Depth comes from silhouette-matched shadows, inset lacquer, wax seals, pins and sparse ritual rings rather than generic gradients.
 
 Gameplay keeps the center playfield clear. Player status occupies a notched upper-left plaque; timer and active-skill information form a separate upper-right cluster. Pause moves to the upper-right reach zone on touch layouts. Boss attacks use a complete fixed danger boundary plus an advancing timing ring, label and non-color line language.
 
 ## Screen Inventory
+
+The evidence paths below are current native captures for the V3 batch. They
+prove simulated/native layout and imported rendering, but do not replace clean-
+context independent review, cross-browser or physical-device acceptance.
 
 | State ID | Player goal | Required components | Input modes | Evidence |
 |---|---|---|---|---|
@@ -34,6 +42,8 @@ Gameplay keeps the center playfield clear. Player status occupies a notched uppe
 | hub | Choose the next permanent or run action | Open sect composition, doctrine ritual, expedition dossier, command seals | Keyboard, pointer, controller, touch | `production/playtests/frontend/hub.png`; `hub-phone.png` |
 | stages | Compare arena risk, unlock and reward | Three sealed stage talismans, preview art, protected CTA | Keyboard, pointer, controller, touch | `production/playtests/frontend/stages.png`; `stages-phone.png` |
 | loadout | Equip one doctrine and enter combat | Three authored doctrine cards, sigils, summary strip | Keyboard, pointer, controller, touch | `production/playtests/frontend/loadout.png`; `loadout-phone.png` |
+| inventory | Compare and equip cultivation treasures | Character dossier, rarity grid, item tooltip, before/after deltas, equip action | Keyboard, pointer, controller, touch | `production/playtests/frontend/inventory.png`; `inventory-phone.png` |
+| spirit-beast | Inspect and bind one companion | Companion portrait, assist cooldown, bond passive, evolution milestones | Keyboard, pointer, controller, touch | `production/playtests/frontend/spirit-beast.png`; `spirit-beast-phone.png` |
 | techniques | Spend Linh Ngọc on persistent evolution | Account ledger, three distinct folios, live previews | Keyboard, pointer, controller, touch | `production/playtests/frontend/techniques.png`; `techniques-phone.png` |
 | rank-ascension | Understand the newly unlocked visual tier | Full shade, authored scroll, animated technique preview | Automatic ritual reveal | `production/playtests/frontend/technique-upgrade.png`; `technique-upgrade-phone.png` |
 | codex | Inspect known or unknown enemies | Lacquer index, bestiary talisman, paper dossier | Keyboard, pointer, controller, touch | `production/playtests/frontend/codex.png`; `codex-phone.png` |
@@ -55,9 +65,9 @@ Center-playfield protection: no persistent command or pause target occupies the 
 
 ## Component System
 
-Theme/style resources: `CultivationPanel`, `RasterButton`, `CultivationMeter`, `TechniquePreview`, the PREMIUM-001 sigils, UIKIT-004 folios, UIKIT-005 restrained controls and only the active UIKIT-002 scroll/talisman components.  
-Panels and frames: UIKIT-005 supplies the matte blue-black nine-slice lacquer shell; UIKIT-002 scroll/talisman paper remains active; aspect-preserved folios and sigils serve irregular ritual objects. Custom drawing remains authoritative for meters, focus rings and combat telegraphs.  
-Buttons and focus states: one UIKIT-005 matte ink plaque replaces separate glossy gold/jade/ink assets. Gold is primary/milestone, jade is safe/selected, ink is secondary and cinnabar is destructive through restrained runtime edge/tint/wording; hover/focus raises frame emphasis, press scales inward, and disabled states dim art while retaining readable text.  
+Theme/style resources: `CultivationPanel`, `RasterButton`, `VanMongComponentKit`, `CultivationMeter`, `TechniquePreview`, UIKIT-007 ritual surfaces, UIKIT-008 controls, UIKIT-006 arsenal plates, PORTRAIT-001/002, ACHIEVEICON-001, UIICON-001 relics, SKILLICON-001 five-formation glyphs, UIKIT-004 folios, transitional UIKIT-005 controls, the active UIKIT-002 scroll/talisman components, Be Vietnam Pro and Literata.
+Panels and frames: UIKIT-007 owns the title scroll, wide desktop header, guarded modal, result plate, five-skill rail, boss bar and touch medallions. Its `wide_header`, `modal_guard` and `result_plate` regions alone are dedicated nine-slices; title, boss and rail regions are aspect-fitted. The current phone capture accepts the near-square touch draw without blocking distortion. UIKIT-005 lacquer and UIKIT-002 paper remain transitional support; aspect-preserved folios and sigils serve irregular ritual objects. Custom drawing remains authoritative for meters, focus rings and combat telegraphs.
+Buttons and focus states: `RasterButton` selects distinct UIKIT-008 primary, secondary, back and destructive silhouettes; compact steppers use the UIKIT-008 medallion where space permits. Gold is primary/milestone, jade is safe/selected, ink is secondary and cinnabar is destructive through authored shape plus restrained runtime edge/tint/wording; hover/focus raises frame emphasis, press scales inward, and disabled states dim art while retaining readable text.
 Meters, cards, tooltips and prompts: health/qi/cooldown never rely on color alone; talisman cards protect text inside the detected folio silhouette; compact `−/+` controls deliberately use crisp native material drawing and tooltips rather than cropped raster fragments.
 
 | Asset/component ID | Source kind | Render mode | Native/frame size | Runtime/tested size range | Protected text rect | Evidence |
@@ -71,6 +81,15 @@ Meters, cards, tooltips and prompts: health/qi/cooldown never rely on color alon
 | `UIKIT-004-folio-jade` | dedicated-component | uniform | 703×1399 | 250×260 phone; 330×390 breakthrough; 366×704 meta | 70% of fitted visual width | `production/playtests/frontend/techniques.png` |
 | `UIKIT-004-folio-spirit` | dedicated-component | uniform | 917×1458 | 250×260 phone; 330×390 breakthrough; 366×704 meta | 70% of fitted visual width | `production/playtests/overhaul/upgrade-final.png` |
 | `PREMIUM-001-sigils` | dedicated-component | uniform | 512×512 | approximately 53×53 to 200×200 | not applicable; icon-only | `production/playtests/frontend/loadout.png` |
+| `UIKIT-006-arsenal-plates` | generated-raster-atlas | fixed-ratio/material-chrome | 1254×1254 atlas | item 132×146; tooltip 448×694; rail 860×100 | runtime labels remain outside texture; slot text stays in lower 38% | `production/playtests/frontend/inventory.png`, `spirit-beast.png`, `production/playtests/overhaul/gameplay-final.png` |
+| `UIKIT-007-ritual-surface-atlas` | generated-raster-atlas | aspect-fit, three dedicated nine-slices and custom touch draw | 1536×1024 atlas; nine regions | title visual 456×820 in 720×820 bounds; header 820–900×92; rail 800×164; boss 520×122; square safe-area touch targets | all copy/stats/cooldowns remain separate nodes; margins: header 76/38/76/38, modal 66/52/66/52, result 86/52/86/52 | `production/playtests/frontend/title.png`, `title-phone.png`, `production/playtests/overhaul/boss-final.png`, `production/playtests/mobile-support/boss-phone.png` |
+| `UIKIT-008-control-silhouettes` | generated-raster-atlas | mixed dedicated nine-slice and uniform | 1536×1024 atlas; six runtime crops | 128×64 back to 390×66 primary; 64–96 px medallions | captions/focus/disabled/destructive state remain live; recorded margins per crop | `production/playtests/frontend/title.png`, `hub.png`, `settings.png`, `title-phone.png`, `hub-phone.png` |
+| `PORTRAIT-001/002` | generated-raster-atlas | uniform | six 512×512 dossier cells; two 887×887 HUD cells | 72–260 px by surface | no baked title/stat; portraits never replace combat frames | `production/playtests/frontend/codex.png`, `spirit-beast.png`, `production/playtests/overhaul/boss-final.png` |
+| `ACHIEVEICON-001-six-seals` | generated-raster-atlas | uniform | six 512×512 cells | 64–88 px | progress/title/state remain live | `production/playtests/frontend/achievements.png`, `achievements-phone.png` |
+| `UIICON-001-relics` | generated-raster-atlas | uniform/fixed-ratio | 1448×1086 atlas; 362×362 cells | item icon 56–104 px | transparent padding is preserved; no baked rarity/title | `production/playtests/frontend/inventory.png`, `inventory-phone.png` |
+| `SKILLICON-001-five-formation` | generated-raster-atlas | uniform | 1536×1024 atlas; 512×512 cells plus Linh Phù replacement | skill glyph 54–70 px | icons are separate from medallion/lock chrome; rank/cooldown/key remain live | `production/playtests/overhaul/gameplay-final.png`, `production/playtests/frontend/techniques.png` |
+| `FONT-001-be-vietnam-pro` | licensed project-local font family | runtime FontFile | Regular + SemiBold TTF | 14–50 logical px by role | Vietnamese copy remains live; primary font is bundled while the importer permits system fallback | Current native 1600×900/844×390 and served Chromium glyph rendering pass |
+| `FONT-002-literata` | licensed project-local variable font | runtime FontFile | roman `opsz,wght` TTF | 25–50 logical px display role | large headings only; body/actions remain Be Vietnam Pro; importer permits system fallback | Current native and served Chromium display-title rendering pass |
 | `MobileTouchControls` | procedural plus sigil | custom/uniform | device-space control | minimum 64×64 physical hit targets after expand compensation | label outside hit disc | `production/playtests/mobile-support/combat-phone.png` |
 
 Legacy status: UIKIT-003 command PNGs and UIKIT-002 `ui_lacquer_panel`, compact
@@ -95,7 +114,7 @@ Target resolutions/aspects: verified automated layouts at 1600×900, 1280×720, 
 
 ## Accessibility
 
-Text sizing and contrast: body copy is at least 14 logical px on the reference canvas, titles 24–50 px, paper uses dark ink, lacquer uses warm paper. Final low-DPI phone readability remains part of physical-device QA.  
+Text sizing and contrast: body copy is at least 14 logical px on the reference canvas, titles 24–50 px, paper uses dark ink, lacquer uses warm paper. Be Vietnam Pro Regular/SemiBold and Literata are bundled locally under OFL 1.1; a fresh Vietnamese glyph and longest-copy capture remains required. Final low-DPI phone readability remains part of physical-device QA.
 Non-color encoding: selected/disabled/destructive states differ by wording, frame family, brightness and silhouette in addition to color; boss telegraph uses two boundaries and runes.  
 Reduced motion: profile setting lowers particle caps, trail lengths, animation timing and screen-motion feedback while retaining state information.  
 Remapping and prompt updates: InputMap actions are centralized; a player-facing remapping screen and platform-glyph swap are outside this candidate and must be completed before a broad commercial release claim.
@@ -108,6 +127,6 @@ UI audio cues: button presses route through `AudioDirector.play_ui`; title, hub,
 
 ## Evidence
 
-Runtime captures: `production/playtests/frontend/`, `production/playtests/overhaul/`, `production/playtests/mobile-support/`, `production/playtests/responsive/`.  
+Runtime captures: `production/playtests/frontend/`, `production/playtests/overhaul/`, `production/playtests/mobile-support/`, `production/playtests/responsive/` contain the current V3 native evidence; title and boss desktop/phone captures were refreshed after the final protected-label and boss-bar position fixes.
 Navigation test: `tests/smoke_frontend_flow.tscn`, `tests/smoke_mobile_support.tscn`, `tests/smoke_responsive_layout.tscn`.  
-Known findings: physical iOS/Android notch, DPI, thumb reach and thermal QA; Firefox/Safari Web matrix and human Web audio output review; manual four-minute feel pass; human audio listening; final platform glyph/remapping pass. Godot 4.6.2 served Chromium smoke is recorded in `production/evidence/platforms/web-browser-review.md`; these remaining findings prohibit a commercial-ready claim.
+Known findings: Godot 4.6.2 parse plus runtime/mobile/responsive smokes pass; the refreshed Web export renders cleanly at 1600×900 and 844×390 with no console warning/error, and `boss_bar` is bound. `status_plaque` remains intentionally unused. Physical iOS/Android notch, DPI, thumb reach and thermal QA; Firefox/Safari Web matrix and human Web audio output review; manual four-minute feel pass; human audio listening; final platform glyph/remapping pass and clean-context independent visual review remain open. These open gates prevent a commercial-ready claim.

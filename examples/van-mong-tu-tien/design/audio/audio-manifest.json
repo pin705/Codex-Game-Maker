@@ -1,8 +1,8 @@
 {
   "style_lock": {
     "path": "design/art/style-lock.json",
-    "style_version": "2.0.0",
-    "sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+    "style_version": "3.0.0",
+    "sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
   },
   "intentional_silence": false,
   "silence_rationale": "",

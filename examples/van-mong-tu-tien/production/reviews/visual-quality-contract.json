@@ -8,15 +8,15 @@
   "review_method": "Native-resolution view_image inspection of all 30 required captures, both boss-condition captures, representative VFX rank captures, simulated safe-area/ultrawide captures, and served Chromium captures; SHA-256 values were recomputed against files.",
   "style_lock": {
     "path": "design/art/style-lock.json",
-    "style_version": "2.0.0",
-    "sha256": "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
+    "style_version": "3.0.0",
+    "sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
   },
   "required_viewports": [
     {
       "id": "desktop-1600x900",
       "width": 1600,
       "height": 900,
-      "device": "Native desktop reference canvas; served Web rendering still pending"
+      "device": "Native desktop reference canvas; matching served Chromium V3 captures are recorded under production/evidence/platforms"
     },
     {
       "id": "phone-844x390-simulated",
@@ -101,7 +101,7 @@
   },
   "lookdev": {
     "source_mode": "mixed",
-    "status": "verified",
+    "status": "approved-reference-runtime-convergence-blocked",
     "representative_asset_ids": [
       "KEYART-001",
       "HUB-001-van-mong-sect",
@@ -109,32 +109,41 @@
       "UIKIT-002-scroll-talisman",
       "UIKIT-004-talisman-folios",
       "UIKIT-005-restrained-controls",
+      "UIKIT-006-arsenal-plates",
+      "UIICON-001-relics",
+      "SKILLICON-001-five-formation",
       "PREMIUM-001-cultivation-sigils"
     ],
     "candidate_ids": [
+      "lookdev-v3-user-approved-arsenal-reference",
       "lookdev-v3-restrained-runtime",
       "lookdev-v3-phone-device-space",
       "lookdev-v2-glossy-dashboard"
     ],
     "accepted_candidate_ids": [
-      "lookdev-v3-restrained-runtime",
-      "lookdev-v3-phone-device-space"
+      "lookdev-v3-user-approved-arsenal-reference"
     ],
     "rejected_candidate_ids": [
       "lookdev-v2-glossy-dashboard"
     ],
     "candidate_evidence": [
       {
-        "id": "lookdev-v3-restrained-runtime",
+        "id": "lookdev-v3-user-approved-arsenal-reference",
         "outcome": "accepted",
+        "path": "design/art/lookdev/v3/arsenal-reference-approved.png",
+        "sha256": "dd68e38d5c693d7228265e7ee647b89f245b2a223cbcd5e9fae5120294622b5c"
+      },
+      {
+        "id": "lookdev-v3-restrained-runtime",
+        "outcome": "pending-runtime-convergence",
         "path": "production/playtests/frontend/contact-sheet-current-desktop.png",
-        "sha256": "171d3c1a7649960d7ca0b31e82985d8358e21df355e96e9b87cca1ece6681f91"
+        "sha256": "79e686cd415687b81f7f96ee426188ea141b04dc1d0f5e5272b389896985e7c3"
       },
       {
         "id": "lookdev-v3-phone-device-space",
-        "outcome": "accepted",
+        "outcome": "pending-runtime-convergence",
         "path": "production/playtests/frontend/contact-sheet-current-phone.png",
-        "sha256": "ca9acfb5b2507caf20c7969053a0422672cbad26852065cf714e8bef8ca85dab"
+        "sha256": "564584fb5ba79e39c8330cdd0fdc04c3f83d8de0b7d31ccd2dacffef09e48c26"
       },
       {
         "id": "lookdev-v2-glossy-dashboard",
@@ -144,19 +153,31 @@
       }
     ],
     "locked_reference_paths": [
+      "design/art/lookdev/v3/arsenal-reference-approved.png"
+    ],
+    "decision_rationale": "The arsenal image is the approved target for materials, silhouette and hierarchy. Current desktop/phone captures remain implementation evidence only and are not accepted look-dev candidates after the user's whole-game convergence rejection; the V2 composite remains rejected comparison evidence.",
+    "evidence": [
+      "design/art/lookdev/v3/arsenal-reference-approved.png",
       "production/playtests/frontend/contact-sheet-current-desktop.png",
       "production/playtests/frontend/contact-sheet-current-phone.png",
       "production/playtests/frontend/title.png",
       "production/playtests/frontend/hub.png",
+      "production/playtests/frontend/inventory.png",
+      "production/playtests/frontend/spirit-beast.png",
       "production/playtests/overhaul/gameplay-final.png",
       "production/playtests/overhaul/upgrade-final.png"
     ],
-    "decision_rationale": "V3 replaces glossy repeated chrome and the desktop-dashboard hub with restrained matte lacquer, open editorial hierarchy and a dedicated 844x390 device-space composition. The V2 composite is retained only as rejected/superseded comparison evidence.",
-    "evidence": [
+    "pending_candidate_ids": [
+      "lookdev-v3-restrained-runtime",
+      "lookdev-v3-phone-device-space"
+    ],
+    "runtime_evidence_paths": [
       "production/playtests/frontend/contact-sheet-current-desktop.png",
       "production/playtests/frontend/contact-sheet-current-phone.png",
       "production/playtests/frontend/title.png",
       "production/playtests/frontend/hub.png",
+      "production/playtests/frontend/inventory.png",
+      "production/playtests/frontend/spirit-beast.png",
       "production/playtests/overhaul/gameplay-final.png",
       "production/playtests/overhaul/upgrade-final.png"
     ]
@@ -204,12 +225,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/hub.png",
-          "sha256": "b699433e81af8ac321778aefd5b8ce096991e8301393e47cac7cb30b04eea768"
+          "sha256": "267f6ef337f925bc9032da71032c129721fcde2b571fa6e5ee06293433f56de8"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/hub-phone.png",
-          "sha256": "b94049c12ff17bef4b508df2a75edc516bdac7b3307b2b94eedd9aa0e253ac42"
+          "sha256": "1f2fffaf5abe4d20829b7e4ab650189c55686552e2b9c5746bbaa004212dda42"
         }
       ],
       "checks": {
@@ -272,12 +293,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/loadout.png",
-          "sha256": "30ec00ee45a40d6c0d1e7a622baa5081295d519e9ee5cb0c0e878678fc7fa5c7"
+          "sha256": "098b4ace0cd7a1df73fe00f06cb65bf82283108bffe4f86766df6b81cb6438f4"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/loadout-phone.png",
-          "sha256": "50e5ccae632cddaa20093de4b9d106fde9a1b1b03c2073382956cd76c31500cc"
+          "sha256": "52201eb8ed3aa5eeff9ded943f919f5e1473ee9e9837159927580e56763c323b"
         }
       ],
       "checks": {
@@ -299,6 +320,84 @@
       ]
     },
     {
+      "id": "inventory",
+      "state_id": "inventory",
+      "status": "blocked",
+      "captures": [
+        {
+          "viewport_id": "desktop-1600x900",
+          "path": "production/playtests/frontend/inventory.png",
+          "sha256": "7fb6a4a58c240fe4265ae21a66bcfc8e0318dfebad70cbd243a5dc0f45d198cf"
+        },
+        {
+          "viewport_id": "phone-844x390-simulated",
+          "path": "production/playtests/frontend/inventory-phone.png",
+          "sha256": "09f7581d17a932187573fda8a4825eb68024c19735475101ea67accf5a4d83f4"
+        }
+      ],
+      "checks": {
+        "art_bible_coherence": "PASS",
+        "cross_asset_coherence": "PASS",
+        "composition_hierarchy": "PASS",
+        "text_legibility": "PASS",
+        "no_overlap_or_clipping": "PASS",
+        "asset_scale_grounding": "PASS",
+        "safe_zones": "PASS",
+        "input_focus_feedback": "PASS",
+        "no_placeholder_or_generic_ui": "PASS",
+        "no_distorted_textures": "PASS"
+      },
+      "not_applicable_rationales": {
+      },
+      "findings": [
+        {
+          "severity": "high",
+          "status": "open",
+          "finding": "V3 relic assets are integrated and refreshed desktop/phone captures are hash-bound; independent visual review remains required before certification.",
+          "required_resolution": "Obtain an independent review of both refreshed inventory viewports."
+        }
+      ]
+    },
+    {
+      "id": "spirit-beast",
+      "state_id": "spirit-beast",
+      "status": "blocked",
+      "captures": [
+        {
+          "viewport_id": "desktop-1600x900",
+          "path": "production/playtests/frontend/spirit-beast.png",
+          "sha256": "5f7c112056d77a5bc5a58bc9fb5ca1b82be3550ac6549321ffe255283b9cb316"
+        },
+        {
+          "viewport_id": "phone-844x390-simulated",
+          "path": "production/playtests/frontend/spirit-beast-phone.png",
+          "sha256": "fc1446c352f308667cce4239bd98f51e3f955d089421aa70e53e3d16601437ed"
+        }
+      ],
+      "checks": {
+        "art_bible_coherence": "PASS",
+        "cross_asset_coherence": "PASS",
+        "composition_hierarchy": "PASS",
+        "text_legibility": "PASS",
+        "no_overlap_or_clipping": "PASS",
+        "asset_scale_grounding": "PASS",
+        "safe_zones": "PASS",
+        "input_focus_feedback": "PASS",
+        "no_placeholder_or_generic_ui": "PASS",
+        "no_distorted_textures": "PASS"
+      },
+      "not_applicable_rationales": {
+      },
+      "findings": [
+        {
+          "severity": "high",
+          "status": "open",
+          "finding": "The companion surface and contained phone evolution strip are present in refreshed hash-bound captures; independent visual review remains required.",
+          "required_resolution": "Obtain an independent review of both refreshed spirit-beast viewports."
+        }
+      ]
+    },
+    {
       "id": "techniques",
       "state_id": "techniques",
       "status": "verified",
@@ -306,12 +405,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/techniques.png",
-          "sha256": "fa3ab3b6bd69ba21274c12d7eb72d1a85cb8155d9d947328a9c864c8e0f88e56"
+          "sha256": "466022c3c3f5796e58853dbca67e1ccfcedd704f69545ee771965e3cd4bf7cbd"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/techniques-phone.png",
-          "sha256": "85403e9c884522cc890daae50a8f70fdc129f23ef51ecaabacbd630d27c4d54d"
+          "sha256": "a6acd6ed7580098daa14f8cd0cf9cd71a931040182c282ad83eaf742c6860a45"
         }
       ],
       "checks": {
@@ -447,7 +546,7 @@
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/settings-phone.png",
-          "sha256": "d541b6ab161db8c1d8da0358064e8e0ecba6dd353e1e03a4bbbc41d7791f1362"
+          "sha256": "e171a89c0f84a725dd02d68b1b76f1e3a2ef599d161d756ffd5704036bb7ffd9"
         }
       ],
       "checks": {
@@ -518,12 +617,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/gameplay-final.png",
-          "sha256": "219767f65f25187238a430d4784aa19e7fce0a9d3ccbc01d171abf6dbf763dbd"
+          "sha256": "05ac278194f3262f955c6a57502b7da836f9318baac6bb287c0af22aa980097e"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/combat-phone.png",
-          "sha256": "9b2f9d2c9fb1eb0ce68e0fca040c98fec4186886308c7bad939275500706a001"
+          "sha256": "66dc489dce7e50c0ef2e96b5418a8edcaa9de5883e4d0ee90baf409b997635b9"
         }
       ],
       "condition_captures": [
@@ -856,6 +955,8 @@
         "production/playtests/frontend/hub.png",
         "production/playtests/frontend/stages.png",
         "production/playtests/frontend/loadout.png",
+        "production/playtests/frontend/inventory.png",
+        "production/playtests/frontend/spirit-beast.png",
         "production/playtests/frontend/techniques.png",
         "production/playtests/frontend/technique-upgrade.png",
         "production/playtests/frontend/codex.png",
@@ -880,6 +981,8 @@
         "production/playtests/frontend/hub-phone.png",
         "production/playtests/frontend/stages-phone.png",
         "production/playtests/frontend/loadout-phone.png",
+        "production/playtests/frontend/inventory-phone.png",
+        "production/playtests/frontend/spirit-beast-phone.png",
         "production/playtests/frontend/techniques-phone.png",
         "production/playtests/frontend/technique-upgrade-phone.png",
         "production/playtests/frontend/codex-phone.png",
@@ -941,10 +1044,13 @@
   ],
   "review_summary": {
     "verdict": "BLOCKED",
-    "required_surfaces_verified": 14,
-    "required_surfaces_blocked": 1,
-    "required_surface_count": 15,
+    "required_surfaces_verified": 0,
+    "required_surfaces_blocked": 17,
+    "required_surface_count": 17,
     "internal_high_findings": 2,
-    "reason": "The bounded visual gate cannot pass while the required phone settings surface is clipped and current served Chromium evidence exposes unsupported-glyph placeholders."
-  }
+    "reason": "The user approved the arsenal reference but explicitly rejected current whole-game runtime convergence. Prior per-surface pass flags are historical and cannot certify V3 until the shared-component migration, full recapture and independent review are complete.",
+    "historical_required_surfaces_verified": 14,
+    "historical_required_surfaces_blocked": 1
+  },
+  "review_state": "superseded-pending-full-v3-runtime-review"
 }

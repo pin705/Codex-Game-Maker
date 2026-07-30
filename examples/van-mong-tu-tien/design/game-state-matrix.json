@@ -28,6 +28,8 @@
         {"to": "stages", "trigger": "Choose HÀNH TRÌNH"},
         {"to": "loadout", "trigger": "Choose ĐỔI TÂM PHÁP"},
         {"to": "techniques", "trigger": "Choose CÔNG PHÁP"},
+        {"to": "inventory", "trigger": "Choose PHÁP BẢO"},
+        {"to": "spirit-beast", "trigger": "Choose LINH THÚ"},
         {"to": "codex", "trigger": "Choose VẠN TƯỢNG PHỔ"},
         {"to": "achievements", "trigger": "Choose THÀNH TỰU"},
         {"to": "settings", "trigger": "Choose THIẾT LẬP"}
@@ -56,6 +58,32 @@
       "evidence": ["production/playtests/frontend/loadout.png", "production/playtests/frontend/loadout-phone.png"],
       "transitions": [
         {"to": "combat", "trigger": "Confirm NHẬP CẢNH"},
+        {"to": "hub", "trigger": "Back"}
+      ]
+    },
+    {
+      "id": "inventory",
+      "role": "Inspect, compare and equip authored cultivation treasures",
+      "required": true,
+      "status": "integrated",
+      "ui_surface": true,
+      "scene": "scenes/main.tscn",
+      "evidence": ["production/playtests/frontend/inventory.png", "production/playtests/frontend/inventory-phone.png"],
+      "transitions": [
+        {"to": "inventory", "trigger": "Select or equip one item"},
+        {"to": "hub", "trigger": "Back"}
+      ]
+    },
+    {
+      "id": "spirit-beast",
+      "role": "Inspect companion assist, bond and evolution state",
+      "required": true,
+      "status": "integrated",
+      "ui_surface": true,
+      "scene": "scenes/main.tscn",
+      "evidence": ["production/playtests/frontend/spirit-beast.png", "production/playtests/frontend/spirit-beast-phone.png"],
+      "transitions": [
+        {"to": "spirit-beast", "trigger": "Summon or dismiss the active bond"},
         {"to": "hub", "trigger": "Back"}
       ]
     },
@@ -223,7 +251,7 @@
       "required": true,
       "goal": "Navigate every permanent progression surface and complete a protected technique purchase/profile action loop",
       "start_state": "hub",
-      "required_states": ["hub", "techniques", "rank-ascension", "codex", "achievements", "settings", "reset-confirmation"],
+      "required_states": ["hub", "inventory", "spirit-beast", "techniques", "rank-ascension", "codex", "achievements", "settings", "reset-confirmation"],
       "completion_states": ["hub"],
       "test_command_id": "meta_navigation_test",
       "recovery_paths": [
@@ -248,7 +276,7 @@
       "id": "premium-ink-silk-bronze-material-language",
       "required": true,
       "rationale": "The product promise depends on authored cultivation artifacts rather than browser-dashboard panels.",
-      "fulfilled_by": ["title", "hub", "stages", "loadout", "techniques", "combat-upgrade", "results-victory"],
+      "fulfilled_by": ["title", "hub", "stages", "loadout", "inventory", "spirit-beast", "techniques", "combat-upgrade", "results-victory"],
       "evidence": ["production/playtests/frontend/title.png", "production/playtests/overhaul/upgrade-final.png"]
     },
     {

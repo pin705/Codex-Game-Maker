@@ -4,6 +4,9 @@ extends CharacterBody2D
 # Resource-backed profiles are configured by the session from game_balance.json.
 
 const RuntimeVisualsScript := preload("res://scripts/gameplay/runtime_visuals.gd")
+const RITUAL_ATLAS: Texture2D = preload("res://assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png")
+const BOSS_PORTRAIT: Texture2D = preload("res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/thien_giac.png")
+const BOSS_BAR_REGION := Rect2(424.0, 252.0, 1088.0, 256.0)
 
 signal died(enemy: CultivationEnemy, death_position: Vector2, xp_value: float, was_boss: bool)
 signal player_contact(damage: float)
@@ -339,13 +342,10 @@ func _draw_boss(bob: float, alpha: float) -> void:
 func _draw_health_bar(alpha: float) -> void:
 	var device_scale := _phone_device_scale() if boss else 1.0
 	var phone_boss := boss and device_scale > 1.0
-	var plaque_scale := minf(device_scale, 1.45 if phone_boss else 1.90)
-	var width := 174.0 * plaque_scale if boss else 82.0
-	# The desktop plaque lives above the boss. On a short phone viewport that
-	# position collides with the device-space timer/pause islands whenever the
-	# boss enters the upper-right fight lane, so the compact phone plaque is
-	# grounded below the boss instead.
-	var y := (106.0 if phone_boss else -180.0) if boss else -116.0
+	var width := (390.0 if phone_boss else 520.0) if boss else 82.0
+	# The phone plaque remains above the boss but uses a shorter offset and a
+	# compact width, keeping it between the device HUD and the touch rail.
+	var y := (-125.0 if phone_boss else -180.0) if boss else -116.0
 	var ratio := clampf(health / max_health, 0.0, 1.0)
 	var plate_top := y - 17.0 * device_scale if boss else y - 6.0
 	var plate_bottom := y + 16.0 * device_scale if boss else y + 11.0
@@ -354,20 +354,44 @@ func _draw_health_bar(alpha: float) -> void:
 		Vector2(width * 0.5 + 9.0, plate_top + 4.0), Vector2(width * 0.5 + 5.0, plate_bottom),
 		Vector2(-width * 0.5 - 5.0, plate_bottom), Vector2(-width * 0.5 - 9.0, plate_bottom - 4.0),
 	])
-	draw_colored_polygon(plate, Color(INK, 0.88 * alpha))
-	draw_polyline(PackedVector2Array([plate[0], plate[1], plate[2], plate[3], plate[4], plate[5], plate[0]]), Color(GOLD if boss else CRIMSON, 0.68 * alpha), 1.3 * device_scale if boss else 1.3, true)
+	var boss_chrome_rect := Rect2()
+	if boss:
+		# UIKIT-007 owns a dedicated boss silhouette. Preserve its source aspect
+		# and keep the live name/health state drawn above it.
+		var chrome_width := width
+		var chrome_height := chrome_width / (BOSS_BAR_REGION.size.x / BOSS_BAR_REGION.size.y)
+		boss_chrome_rect = Rect2(-chrome_width * 0.5, y - chrome_height * 0.5, chrome_width, chrome_height)
+		draw_texture_rect_region(RITUAL_ATLAS, boss_chrome_rect, BOSS_BAR_REGION, Color(1.0, 1.0, 1.0, 0.96 * alpha))
+		var portrait_size := chrome_height * 0.72
+		var portrait_center := Vector2(boss_chrome_rect.position.x + chrome_width * 0.103, boss_chrome_rect.get_center().y - chrome_height * 0.01)
+		var portrait_rect := Rect2(portrait_center - Vector2.ONE * portrait_size * 0.5, Vector2.ONE * portrait_size)
+		draw_texture_rect(BOSS_PORTRAIT, portrait_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	else:
+		draw_colored_polygon(plate, Color(INK, 0.88 * alpha))
+		draw_polyline(PackedVector2Array([plate[0], plate[1], plate[2], plate[3], plate[4], plate[5], plate[0]]), Color(CRIMSON, 0.68 * alpha), 1.3, true)
 	if boss:
 		# The phone HUD is rendered from the expanded world canvas and then
 		# compensated back into device space. Keep the plaque title short there so
 		# the boss identity remains fully readable at the real 844x390 scale.
 		var boss_label := "THIÊN GIÁC" if phone_boss else "THIÊN GIÁC  ·  MA CHỦ"
-		draw_string(ThemeDB.fallback_font, Vector2(-width * 0.5, y - 3.0 * device_scale), boss_label, HORIZONTAL_ALIGNMENT_CENTER, width, maxi(12, roundi(12.0 * device_scale)), Color(PALE, 0.96 * alpha))
-	var bar_y := y + 4.0 * device_scale if boss else y
-	var bar_height := 7.0 * device_scale if boss else 5.0
-	draw_rect(Rect2(-width * 0.5, bar_y, width, bar_height), Color("#332c28", 0.92 * alpha), true)
-	draw_rect(Rect2(-width * 0.5, bar_y, width * ratio, bar_height), Color(CRIMSON if boss else CRIMSON, alpha), true)
-	draw_line(Vector2(-width * 0.5, bar_y), Vector2(-width * 0.5 + width * ratio, bar_y), Color("#f2ddb0", 0.46 * alpha), device_scale if boss else 1.0, true)
-	draw_circle(Vector2(-width * 0.5 - 4.0 * device_scale, bar_y + bar_height * 0.5), 2.2 * device_scale if boss else 2.2, Color(GOLD, 0.82 * alpha))
+		var title_left := boss_chrome_rect.position.x + boss_chrome_rect.size.x * 0.205
+		var title_width := boss_chrome_rect.size.x * 0.69
+		var title_baseline := boss_chrome_rect.position.y + boss_chrome_rect.size.y * 0.34
+		draw_string(ThemeDB.fallback_font, Vector2(title_left, title_baseline), boss_label, HORIZONTAL_ALIGNMENT_CENTER, title_width, maxi(13, roundi(13.0 * minf(device_scale, 1.35))), Color(INK, 0.96 * alpha))
+	var bar_left := -width * 0.5
+	var bar_width := width
+	var bar_y := y
+	var bar_height := 5.0
+	if boss:
+		bar_left = boss_chrome_rect.position.x + boss_chrome_rect.size.x * 0.205
+		bar_width = boss_chrome_rect.size.x * 0.69
+		bar_y = boss_chrome_rect.position.y + boss_chrome_rect.size.y * 0.535
+		bar_height = maxf(7.0, boss_chrome_rect.size.y * 0.13)
+	draw_rect(Rect2(bar_left, bar_y, bar_width, bar_height), Color("#332c28", 0.94 * alpha), true)
+	draw_rect(Rect2(bar_left, bar_y, bar_width * ratio, bar_height), Color(CRIMSON, alpha), true)
+	draw_line(Vector2(bar_left, bar_y), Vector2(bar_left + bar_width * ratio, bar_y), Color("#f2ddb0", 0.46 * alpha), device_scale if boss else 1.0, true)
+	if not boss:
+		draw_circle(Vector2(bar_left - 4.0, bar_y + bar_height * 0.5), 2.2, Color(GOLD, 0.82 * alpha))
 
 
 func _phone_device_scale() -> float:

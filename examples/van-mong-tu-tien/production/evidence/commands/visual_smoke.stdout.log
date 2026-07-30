@@ -4,6 +4,8 @@ PASS: visual evidence res://production/playtests/frontend/title.png 1600x900
 PASS: visual evidence res://production/playtests/frontend/hub.png 1600x900
 PASS: visual evidence res://production/playtests/frontend/stages.png 1600x900
 PASS: visual evidence res://production/playtests/frontend/loadout.png 1600x900
+PASS: visual evidence res://production/playtests/frontend/inventory.png 1600x900
+PASS: visual evidence res://production/playtests/frontend/spirit-beast.png 1600x900
 PASS: visual evidence res://production/playtests/frontend/techniques.png 1600x900
 PASS: visual evidence res://production/playtests/frontend/technique-upgrade.png 1600x900
 PASS: visual evidence res://production/playtests/frontend/codex.png 1600x900
@@ -28,6 +30,8 @@ PASS: visual evidence res://production/playtests/frontend/title-phone.png 844x39
 PASS: visual evidence res://production/playtests/frontend/hub-phone.png 844x390
 PASS: visual evidence res://production/playtests/frontend/stages-phone.png 844x390
 PASS: visual evidence res://production/playtests/frontend/loadout-phone.png 844x390
+PASS: visual evidence res://production/playtests/frontend/inventory-phone.png 844x390
+PASS: visual evidence res://production/playtests/frontend/spirit-beast-phone.png 844x390
 PASS: visual evidence res://production/playtests/frontend/techniques-phone.png 844x390
 PASS: visual evidence res://production/playtests/frontend/technique-upgrade-phone.png 844x390
 PASS: visual evidence res://production/playtests/frontend/codex-phone.png 844x390
@@ -45,4 +49,4 @@ PASS: visual evidence res://production/playtests/mobile-support/portrait-overlay
 PASS: visual evidence res://production/playtests/responsive/hub-wide.png 2100x900
 PASS: visual evidence res://production/playtests/responsive/combat-wide-touch.png 2100x900
 PASS: visual evidence res://production/playtests/responsive/reset-wide.png 2100x900
-VISUAL EVIDENCE RESULT: PASS; artifacts=45
+VISUAL EVIDENCE RESULT: PASS; artifacts=49

@@ -1,4 +1,10 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" load_steps=3 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/BeVietnamPro-Regular.ttf" id="1_body"]
+[ext_resource type="FontFile" path="res://assets/fonts/BeVietnamPro-SemiBold.ttf" id="2_action"]
 
 [resource]
+default_font = ExtResource("1_body")
 default_font_size = 16
+Button/fonts/font = ExtResource("2_action")
+Label/fonts/font = ExtResource("1_body")

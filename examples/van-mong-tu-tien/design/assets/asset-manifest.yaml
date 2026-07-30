@@ -1,16 +1,23 @@
 schema_version: 1
 project: van-mong-tu-tien
-updated: "2026-07-29"
+updated: "2026-07-30"
 style_lock:
   path: "design/art/style-lock.json"
-  style_version: "2.0.0"
-  style_lock_sha256: "0c5290bf863761218e7a7a0e995c18cf07409a4137907ae34a350a72d179ac9c"
-  art_bible_sha256: "a8f39cabdc45005a393c5724dfbea86ad87870cfc64d5d3841c41cf110054a14"
+  style_version: "3.0.0"
+  style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+  art_bible_sha256: "2ae2550201bd145ffa4972d96738fd8b90ef21e582f014e66623bf277ff7f2b1"
+  current_unsealed_art_bible_sha256: "adb4c66b770941446061c202091f97cca1f78212457782baf9107b1fd99f81d2"
+  reseal_status: deferred_until_full_v3_capture_acceptance
+  binding_note: "The version/digest and sealed art-bible hash are preserved; this additive metadata batch intentionally does not reseal the lock."
 release_note: >-
-  Combat, three environments, hub, restrained UIKIT-005 raster controls and
-  procedural audio are integrated with native screenshot/smoke evidence. The
-  complete game is not declared release-ready; Web/manual/physical-device
-  verification is pending.
+  Combat, three environments, hub and the V3 authored UI families now have a
+  clean Godot 4.6.2 parse, current desktop/844x390 native captures and a fresh
+  served Chromium export. UIKIT-007 includes the live boss-bar binding;
+  UIKIT-008 supplies distinct control silhouettes; PORTRAIT-001/002 and
+  ACHIEVEICON-001 supply dedicated dossier, HUD and achievement identity art.
+  Independent visual review, physical mobile, cross-browser, audio listening
+  and human feel/balance gates remain open, so the complete game is not
+  declared player-ready, release-ready or commercial-ready.
 
 assets:
   - asset_id: KEYART-001
@@ -384,8 +391,8 @@ assets:
     name: "Vân Mộng raster-backed runtime UI"
     category: ui
     asset_kind: runtime_ui
-    status: implemented
-    acceptance: implemented_native_capture_pass
+    status: integrated_current_native_and_web_evidence
+    acceptance: current_parse_native_and_served_chromium_capture_pass
     generation_provider: gpt_image_plus_authored_gdscript
     release_ready: false
     raw_file: ""
@@ -411,16 +418,17 @@ assets:
       - "scripts/ui/cultivation_meter.gd"
       - "scripts/ui/frontend.gd"
       - "scripts/ui/raster_button.gd"
+      - "resources/ui/cultivation_theme.tres"
     collision_role: none
     notes: >-
       PREMIUM-001 sigils and UIKIT-004 folios carry the primary technique and
-      breakthrough identity. UIKIT-005 supplies full-size command plaques and
-      matte lacquer shells; UIKIT-002 supplies only the active scroll and
-      talisman surfaces. UIKIT-003 commands plus UIKIT-002 lacquer, compact
-      button crops and old sword/qi/vitality medallions are legacy and have no
-      runtime reference. Compact minus/plus controls and fallback structure are
-      native drawn; custom drawing remains authoritative for meters,
-      focus/feedback and combat telegraphs.
+      breakthrough identity. UIKIT-007 supplies the ritual title/header/modal,
+      result, boss, rail and touch family; UIKIT-008 supplies distinct controls;
+      PORTRAIT-001/002 and ACHIEVEICON-001 supply dedicated identity art.
+      UIKIT-005 and the two active UIKIT-002 paper components remain transitional
+      support. Be Vietnam Pro and Literata keep all copy live. Current parse,
+      responsive native captures and served Chromium rendering pass; independent
+      visual review remains pending.
 
   - asset_id: HUB-001-van-mong-sect
     name: "Vân Mộng Sơn Môn — authored hub"
@@ -716,6 +724,462 @@ assets:
       documented and accepted only for aspect-preserved uniform UI rendering,
       never for sprite-frame or nine-slice use. Provider IDs/model ID remain
       unknown_not_exposed. Web and physical-device QA remain release blockers.
+
+  - asset_id: UIKIT-006-arsenal-plates
+    name: "Arsenal matte rarity frames, tooltip and five-skill rail atlas"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated
+    acceptance: integrated_current_runtime_evidence
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: gpt_image
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-006-arsenal-plates-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-006-arsenal-plates/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-006-arsenal-plates/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-006-arsenal-plates/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-006-arsenal-plates.yaml"
+    frame_size: "1254x1254 RGBA atlas"
+    anchor: center
+    key_color: "#FF00FF source only"
+    collision_role: none
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: fixed-ratio-material-chrome
+      aspect_ratio_policy: "preserve slot frames; no arbitrary folio stretch"
+      runtime_usages:
+        - "scripts/ui/van_mong_component_kit.gd"
+        - "inventory and spirit-beast surfaces in scripts/ui/frontend.gd"
+        - "five-skill rail in scripts/ui/hud.gd"
+    runtime_evidence:
+      - "production/playtests/frontend/inventory.png"
+      - "production/playtests/frontend/inventory-phone.png"
+      - "production/playtests/frontend/spirit-beast.png"
+      - "production/playtests/frontend/spirit-beast-phone.png"
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/evidence/platforms/web-v3-inventory.png"
+      - "production/evidence/platforms/web-v3-inventory-phone.png"
+      - "production/evidence/platforms/web-v3-spirit-beast.png"
+      - "production/evidence/platforms/web-v3-spirit-beast-phone.png"
+    hashes:
+      source: "c412ebc21e3a480a61faaac7430167a9743205b47b8a487ef2f3c4f2d292aacb"
+      processed: "1775c6e7862ff93ec924beb0ac1c00a4ec8f7f7f743be4f7c1ce9146c7c8fd61"
+      runtime_delivery: "1775c6e7862ff93ec924beb0ac1c00a4ec8f7f7f743be4f7c1ce9146c7c8fd61"
+    notes: >-
+      Generated from the user-approved arsenal look-dev reference. The atlas is
+      used only as runtime material; labels, stat deltas and prompts remain
+      dynamic Vietnamese text. Asset is not release-ready until all captures
+      and independent visual review are refreshed.
+
+  - asset_id: UIKIT-007-ritual-surface-atlas
+    name: "V3 ritual title, header, modal, result, HUD and touch surface atlas"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated_current_runtime_evidence
+    acceptance: alpha_pipeline_parse_native_and_web_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-30"
+    reference_file: "design/art/lookdev/v3/arsenal-reference-approved.png"
+    pipeline_qa_status: alpha-pass-runtime-integration-in-progress
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-007-ritual-surface-atlas-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-007-ritual-surface-atlas/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-007-ritual-surface-atlas.yaml"
+    frame_size: "1536x1024 atlas; nine isolated RGBA component regions"
+    expected_components: 9
+    actual_components: 9
+    anchor: center
+    key_color: "#fa02fa measured source key; #FF00FF generation contract"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    collision_role: none
+    alpha_qa:
+      method: "remove_chroma_key.py --auto-key border --soft-matte --despill"
+      transparent_pixels: 770024
+      partial_pixels: 22487
+    presentation:
+      source_kind: generated-raster-atlas
+      aspect_ratio_policy: >-
+        Title and rail regions are aspect-fitted; only the dedicated
+        wide_header, modal_guard and result_plate quiet-center regions use the
+        recorded nine-slice margins. Touch controls draw their near-square
+        regions into square safe-area targets; current 844x390 captures show no
+        blocking distortion, while physical-device QA remains open.
+      components:
+        - id: UIKIT-007-title-scroll
+          region: [20, 24, 380, 684]
+          render_mode: uniform
+          runtime_usage: "desktop title ritual scroll in scripts/ui/frontend.gd"
+        - id: UIKIT-007-wide-header
+          region: [456, 68, 596, 164]
+          render_mode: nine-slice
+          nine_slice_margins: [76, 38, 76, 38]
+          runtime_usage: "desktop meta header in scripts/ui/frontend.gd"
+        - id: UIKIT-007-status-plaque
+          region: [1092, 48, 404, 168]
+          render_mode: uniform
+          runtime_usage: "reserved; no current runtime binding"
+        - id: UIKIT-007-boss-bar
+          region: [424, 252, 1088, 256]
+          render_mode: uniform
+          runtime_usage: "boss identity and health composition in scripts/gameplay/enemy.gd"
+        - id: UIKIT-007-skill-rail
+          region: [444, 500, 836, 172]
+          render_mode: uniform
+          runtime_usage: "raised five-slot rail in scripts/ui/hud.gd"
+        - id: UIKIT-007-touch-attack
+          region: [1280, 548, 232, 224]
+          render_mode: custom-draw-square
+          runtime_usage: "attack medallion in scripts/ui/mobile_touch_controls.gd"
+        - id: UIKIT-007-touch-skill
+          region: [1312, 788, 168, 160]
+          render_mode: custom-draw-square
+          runtime_usage: "joystick medallion in scripts/ui/mobile_touch_controls.gd"
+        - id: UIKIT-007-modal-guard
+          region: [60, 716, 472, 268]
+          render_mode: nine-slice
+          nine_slice_margins: [66, 52, 66, 52]
+          runtime_usage: "phone title and guarded modal surfaces in scripts/ui/frontend.gd"
+        - id: UIKIT-007-result-plate
+          region: [560, 716, 708, 256]
+          render_mode: nine-slice
+          nine_slice_margins: [86, 52, 86, 52]
+          runtime_usage: "result-stat plate in scripts/ui/frontend.gd"
+    runtime_refs:
+      - "scripts/ui/van_mong_component_kit.gd"
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/mobile_touch_controls.gd"
+      - "scripts/gameplay/enemy.gd"
+    runtime_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+      - "production/playtests/overhaul/pause-final.png"
+      - "production/playtests/mobile-support/pause-phone.png"
+    hashes:
+      raw_sha256: "302172f890f74428fce745a103839cf52ce867e61b6497b2eecba2a8acd82c2a"
+      processed_sha256: "02f7a634a8857745c0cb2b3aa1195ff06596a05c0dc0bcdeea5922dfb729828c"
+      runtime_delivery_sha256: "02f7a634a8857745c0cb2b3aa1195ff06596a05c0dc0bcdeea5922dfb729828c"
+    notes: >-
+      Source, alpha and runtime delivery hashes match pipeline-meta.json. No
+      text, stats, cooldowns or pseudo-calligraphy are baked into the atlas.
+      The boss-bar region is now bound with a dedicated Thiên Giác portrait;
+      status_plaque remains reserved and unclaimed. The near-square touch
+      regions were reviewed in the current phone capture. Godot import/parse,
+      native desktop/phone capture and served Chromium rendering pass; clean-
+      context independent visual review remains pending.
+
+  - asset_id: UIKIT-008-control-silhouettes
+    name: "Distinct V3 command, back, stepper, destructive and confirm controls"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated_current_runtime_evidence
+    acceptance: alpha_pipeline_parse_native_and_web_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: gpt_image
+    generated_on: "2026-07-30"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-008-control-silhouettes-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-008-control-silhouettes/runtime/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-008-control-silhouettes/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-008-control-silhouettes/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-008-control-silhouettes/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-008-control-silhouettes.yaml"
+    frame_size: "1536x1024 atlas; six isolated runtime components"
+    expected_components: 6
+    actual_components: 6
+    key_color: "#fc03fb source only"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    collision_role: none
+    presentation:
+      source_kind: generated-raster-atlas
+      aspect_ratio_policy: "nine-slice only the authored long plaques; preserve stepper/confirm aspect"
+      runtime_usages:
+        - "scripts/ui/raster_button.gd primary, secondary, back and destructive controls"
+        - "scripts/ui/frontend.gd compact navigation and stepper surfaces"
+    runtime_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
+      - "production/playtests/frontend/settings.png"
+      - "production/playtests/frontend/reset.png"
+    hashes:
+      raw_sha256: "653047747fe7188542aa10f5687de05e6ca31c73be78ca5ebe039f670a9c42da"
+      processed_sha256: "f2a9b7cb5e22020c4d321bbd0374e221504ef820ae9f1178ca33af1a71881dd6"
+      runtime_delivery_sha256: "f2a9b7cb5e22020c4d321bbd0374e221504ef820ae9f1178ca33af1a71881dd6"
+    notes: >-
+      Controls use distinct silhouettes instead of recolored generic bars. All
+      captions, focus, disabled state and destructive wording remain live Godot
+      nodes. Independent visual review remains open.
+
+  - asset_id: PORTRAIT-001-bestiary-companion-atlas
+    name: "Six original bestiary and Thanh Vân Hồ dossier portraits"
+    category: ui
+    asset_kind: portrait_atlas
+    status: integrated_current_runtime_evidence
+    acceptance: alpha_pipeline_parse_and_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-30"
+    release_ready: false
+    raw_file: "assets/raw/portraits/PORTRAIT-001-bestiary-companion-atlas-v001.png"
+    selected_file: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime/atlas-transparent.png"
+    processed_file: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/source/atlas-transparent.png"
+    frames_dir: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime"
+    pipeline_meta: "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/PORTRAIT-001-bestiary-companion-atlas.yaml"
+    frame_size: "1536x1024 RGBA atlas; six 512x512 cells"
+    collision_role: none
+    runtime_refs:
+      - "scripts/ui/frontend.gd"
+    runtime_evidence:
+      - "production/playtests/frontend/codex.png"
+      - "production/playtests/frontend/codex-phone.png"
+      - "production/playtests/frontend/spirit-beast.png"
+      - "production/playtests/frontend/spirit-beast-phone.png"
+    hashes:
+      raw_sha256: "c574d7d806a7929ffef26747d499de584575c79916d423cda44408152bdfa950"
+      processed_sha256: "523251e18aabd41af34b3f9790f79e355f063610bd17b251629091b4cd720f14"
+    notes: "Dossier-only identity art; never substituted for animated combat sprites."
+
+  - asset_id: PORTRAIT-002-hero-boss
+    name: "Player HUD and Thiên Giác boss identity portraits"
+    category: ui
+    asset_kind: portrait_atlas
+    status: integrated_current_runtime_evidence
+    acceptance: alpha_pipeline_parse_and_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-30"
+    release_ready: false
+    raw_file: "assets/raw/portraits/PORTRAIT-002-hero-boss-v001.png"
+    selected_file: "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/atlas-transparent.png"
+    processed_file: "assets/generated/portraits/PORTRAIT-002-hero-boss/source/atlas-transparent.png"
+    frames_dir: "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime"
+    pipeline_meta: "assets/generated/portraits/PORTRAIT-002-hero-boss/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/PORTRAIT-002-hero-boss.yaml"
+    frame_size: "1774x887 RGBA atlas; two 887x887 cells"
+    collision_role: none
+    runtime_refs:
+      - "scripts/ui/hud.gd"
+      - "scripts/gameplay/enemy.gd"
+    runtime_evidence:
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/combat-phone.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+    hashes:
+      raw_sha256: "f16ef4092abb0a93ca87a7d9929cd15e4da111fedfff1bd21a014d7b09f2f012"
+      processed_sha256: "379387eee907c97ce44ef6ff8581eaeb323a6fe384860c0a9ede9e8d4cb4fc38"
+    notes: "HUD/boss identity only; animated gameplay sprites retain their own authored sheets."
+
+  - asset_id: ACHIEVEICON-001-six-seals
+    name: "Six distinct engraved achievement seals"
+    category: ui
+    asset_kind: ui_achievement_icon_atlas
+    status: integrated_current_runtime_evidence
+    acceptance: alpha_pipeline_parse_and_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-30"
+    release_ready: false
+    raw_file: "assets/raw/ui/ACHIEVEICON-001-six-seals-v001.png"
+    selected_file: "assets/generated/ui/ACHIEVEICON-001-six-seals/runtime/atlas-transparent.png"
+    processed_file: "assets/generated/ui/ACHIEVEICON-001-six-seals/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/ACHIEVEICON-001-six-seals/runtime"
+    pipeline_meta: "assets/generated/ui/ACHIEVEICON-001-six-seals/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/ACHIEVEICON-001-six-seals.yaml"
+    frame_size: "1536x1024 RGBA atlas; six 512x512 cells"
+    collision_role: none
+    runtime_refs:
+      - "scripts/ui/frontend.gd"
+    runtime_evidence:
+      - "production/playtests/frontend/achievements.png"
+      - "production/playtests/frontend/achievements-phone.png"
+    hashes:
+      raw_sha256: "d73c1005d5d31b1aad1ca67db808f4c6542e7533a9a6b118698048a742878aae"
+      processed_sha256: "4da6fcb6a5aa5d65d0a2e901e40f368e4ab9d95a4cbf0697d79504ba153d92f6"
+    notes: "One semantic seal per achievement; all titles, progress and state remain live text."
+
+  - asset_id: FONT-001-be-vietnam-pro
+    name: "Be Vietnam Pro runtime body and action family"
+    category: ui
+    asset_kind: font_family
+    status: integrated_current_native_and_web_evidence
+    acceptance: official_source_hash_ofl_import_parse_and_glyph_capture_pass
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: web_sourced
+    release_ready: false
+    source_files:
+      - "assets/fonts/BeVietnamPro-Regular.ttf"
+      - "assets/fonts/BeVietnamPro-SemiBold.ttf"
+    license_file: "assets/fonts/OFL-BeVietnamPro.txt"
+    source_directory: "https://github.com/google/fonts/tree/main/ofl/bevietnampro"
+    source_urls:
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/bevietnampro/BeVietnamPro-Regular.ttf"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/bevietnampro/BeVietnamPro-SemiBold.ttf"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/bevietnampro/OFL.txt"
+    license: "SIL Open Font License 1.1"
+    copyright: "Copyright 2021 The Be Vietnam Pro Project Authors"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    runtime_refs:
+      - "resources/ui/cultivation_theme.tres"
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/raster_button.gd"
+    typography_roles:
+      regular: "body copy, HUD labels and default theme text"
+      semibold: "buttons, tabs, eyebrows and compact emphasis"
+    hashes:
+      regular_sha256: "cd1ef6e9d7db28ad5cdb88a65ccbe693870e60d340b791f349d248342b4fe4c3"
+      semibold_sha256: "bd8e27eb02720b9d91e59e4f10a90878643219f25ce6a8d9a4f06a8a88d3bb71"
+      license_sha256: "6b7f8f73609a25ea78c891e34cf37b06f8a676b7ea986e941e43b009110f2a85"
+    notes: >-
+      Local files are byte-identical to the recorded official Google Fonts raw
+      downloads. Font imports, current Vietnamese native captures and served
+      Chromium rendering pass; independent review and cross-browser/device QA
+      remain open.
+
+  - asset_id: FONT-002-literata
+    name: "Literata variable ritual display family"
+    category: ui
+    asset_kind: font_family
+    status: integrated_current_native_and_web_evidence
+    acceptance: official_source_hash_ofl_import_parse_and_glyph_capture_pass
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: web_sourced
+    release_ready: false
+    source_files:
+      - "assets/fonts/Literata-Variable.ttf"
+    upstream_filename: "Literata[opsz,wght].ttf"
+    license_file: "assets/fonts/OFL-Literata.txt"
+    source_directory: "https://github.com/google/fonts/tree/main/ofl/literata"
+    source_urls:
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/literata/Literata%5Bopsz%2Cwght%5D.ttf"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/literata/OFL.txt"
+    license: "SIL Open Font License 1.1"
+    copyright: "Copyright 2017 The Literata Project Authors"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    runtime_refs:
+      - "scripts/ui/frontend.gd"
+      - "scripts/ui/hud.gd"
+    typography_roles:
+      variable_roman: "large ritual titles and high-tier headings only"
+    hashes:
+      variable_sha256: "b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440"
+      license_sha256: "8742963604cd89dc81437811a850018fc03b2bfad686d7422c8235967c87614e"
+    notes: >-
+      The local filename is normalized for stable res:// loading; its bytes
+      match the official Google Fonts variable roman file. Font imports, current
+      native display-title captures and served Chromium rendering pass;
+      independent review and cross-browser/device QA remain open.
+
+  - asset_id: UIICON-001-relics
+    name: "Twelve original Vân Mộng cultivation relic icons"
+    category: ui
+    asset_kind: ui_item_icon_atlas
+    status: integrated
+    acceptance: integrated_current_runtime_evidence
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: gpt_image
+    release_ready: false
+    raw_file: "assets/raw/ui/UIICON-001-relics-v001.png"
+    selected_file: "assets/generated/ui/UIICON-001-relics/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIICON-001-relics/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIICON-001-relics/runtime"
+    pipeline_meta: "assets/generated/ui/UIICON-001-relics/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIICON-001-relics.yaml"
+    frame_size: "1448x1086 RGBA atlas; 362x362 cells"
+    anchor: center
+    key_color: "#FF00FF source only"
+    collision_role: none
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform
+      aspect_ratio_policy: "preserve transparent cell padding; no frame crop"
+      runtime_usages:
+        - "scripts/ui/frontend.gd item definitions and comparison folio"
+        - "scripts/ui/van_mong_component_kit.gd item slots"
+    runtime_evidence:
+      - "production/playtests/frontend/inventory.png"
+      - "production/playtests/frontend/inventory-phone.png"
+      - "production/evidence/platforms/web-v3-inventory.png"
+      - "production/evidence/platforms/web-v3-inventory-phone.png"
+    hashes:
+      source: "dd48e5dd8b66553aa5ab5be6137a31339483532626983379ca8a1db7728f25fe"
+      processed: "18a43b8ee178c3187c7550cf67e46afbd2f0f35ecdb6e5ec6b1a9889a0799081"
+    notes: >-
+      Chrome and rarity labels remain separate live nodes. The generated sheet is
+      rejected if any icon contains text, pseudo-calligraphy, duplicate silhouette
+      or visible chroma-key residue.
+
+  - asset_id: SKILLICON-001-five-formation
+    name: "Five-skill combat rail and companion assist glyphs"
+    category: ui
+    asset_kind: ui_active_skill_icon_atlas
+    status: integrated
+    acceptance: integrated_current_runtime_evidence
+    review_status: independent_visual_review_pending
+    style_version: "3.0.0"
+    style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    generation_provider: gpt_image
+    release_ready: false
+    raw_file: "assets/raw/ui/SKILLICON-001-five-formation-v001.png"
+    selected_file: "assets/generated/ui/SKILLICON-001-five-formation/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/SKILLICON-001-five-formation/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/SKILLICON-001-five-formation/runtime"
+    pipeline_meta: "assets/generated/ui/SKILLICON-001-five-formation/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/SKILLICON-001-five-formation.yaml"
+    frame_size: "1536x1024 RGBA atlas; 512x512 cells"
+    anchor: center
+    key_color: "#FF00FF source only"
+    collision_role: none
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform
+      aspect_ratio_policy: "preserve glyph silhouette; medallion and cooldown remain runtime chrome"
+      runtime_usages:
+        - "scripts/ui/hud.gd five-skill rail"
+        - "scripts/ui/frontend.gd doctrine and technique previews"
+    runtime_evidence:
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/playtests/frontend/techniques.png"
+      - "production/evidence/platforms/web-v3-spirit-beast.png"
+      - "production/evidence/platforms/web-v3-spirit-beast-phone.png"
+    hashes:
+      source: "8cc25be617c8ea443b3b3cc903504e789bd05a769a25e991ca38bcb038b4c49b"
+      processed: "f5c2deaf6bf19af259629f063f7e18d5cf6c0aa0d43a070e72155e64e78c3e8e"
+      replacement_source: "32a86bc502e6617fd9909020a04614b8112b48be723ca7fb80aaad398d19e926"
+    notes: >-
+      The first Linh Phù sheet cell was rejected for pseudo-calligraphy; the
+      accepted replacement uses only non-linguistic geometric seals and is bound
+      in pipeline-meta.json.
 
   - asset_id: AUDIO-001-procedural-score-sfx
     name: "Vân Mộng procedural score and event SFX"

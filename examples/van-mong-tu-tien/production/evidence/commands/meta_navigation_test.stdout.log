@@ -12,6 +12,8 @@ PASS: loadout changes discipline
 PASS: discipline selection persists
 PASS: permanent technique can be purchased
 PASS: purchase increments rank
+PASS: inventory screen has authored content
+PASS: spirit_beast screen has authored content
 PASS: codex screen has authored content
 PASS: achievements screen has authored content
 PASS: settings screen has authored content

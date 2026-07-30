@@ -2,9 +2,14 @@
   "asset_id": "UIKIT-006-arsenal-plates",
   "style_version": "3.0.0",
   "style_lock_digest": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
+  "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
+  "art_bible_sha256": "2ae2550201bd145ffa4972d96738fd8b90ef21e582f014e66623bf277ff7f2b1",
   "source": "assets/raw/ui/UIKIT-006-arsenal-plates-v001.png",
   "processed": "assets/generated/ui/UIKIT-006-arsenal-plates/source/atlas-transparent.png",
   "runtime_delivery": "assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png",
+  "source_sha256": "c412ebc21e3a480a61faaac7430167a9743205b47b8a487ef2f3c4f2d292aacb",
+  "processed_sha256": "1775c6e7862ff93ec924beb0ac1c00a4ec8f7f7f743be4f7c1ce9146c7c8fd61",
+  "runtime_sha256": "1775c6e7862ff93ec924beb0ac1c00a4ec8f7f7f743be4f7c1ce9146c7c8fd61",
   "source_kind": "generated-raster-atlas",
   "alpha": {
     "method": "remove_chroma_key.py",
@@ -15,8 +20,16 @@
   "atlas_size": [1254, 1254],
   "runtime_usage": {
     "component_script": "scripts/ui/van_mong_component_kit.gd",
-    "surfaces": ["hub", "inventory", "spirit-beast", "combat-hud", "results"],
+    "surfaces": ["stage-select", "loadout", "inventory", "spirit-beast", "techniques", "codex", "achievements", "settings", "combat-hud"],
     "render_modes": ["fixed-ratio", "material-chrome"]
   },
-  "qa_status": "pending-runtime-capture"
+  "qa_status": "integrated-current-runtime-evidence",
+  "review_status": "independent-visual-review-pending",
+  "runtime_evidence": [
+    "production/playtests/frontend/inventory.png",
+    "production/playtests/frontend/inventory-phone.png",
+    "production/playtests/frontend/spirit-beast.png",
+    "production/playtests/frontend/spirit-beast-phone.png",
+    "production/playtests/overhaul/gameplay-final.png"
+  ]
 }

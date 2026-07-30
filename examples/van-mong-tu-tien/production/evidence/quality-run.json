@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
-  "profile": "player_ready",
-  "started_at": "2026-07-30T02:42:16.100838+00:00",
-  "finished_at": "2026-07-30T02:43:12.769858+00:00",
+  "profile": "all",
+  "started_at": "2026-07-30T06:37:16.683014+00:00",
+  "finished_at": "2026-07-30T06:37:46.261437+00:00",
   "manifest": "production/quality-command-manifest.json",
-  "manifest_sha256": "eb7112f0f5b6dc93af8a36d8c7a3a01073fc3aa5de59f012b80db8a9c02eb327",
-  "project_fingerprint": "fad372c5a3771e23fce32b12a64f9e9037f311112c2ebfd9ec3d4d84576fa210",
-  "git_commit": "c5e90f9acc8ba4fc5edd3591459fb0d2af775569",
-  "git_dirty": false,
+  "manifest_sha256": "fe1f31445334ebf0d0dd4f1e97f6c547a8b6df9b7cd546a0a18863f4943639d4",
+  "project_fingerprint": "2bbf93d55377dc49c4e3fa2837aec61f43dc77d6fdd005fd742b768235bec7ab",
+  "git_commit": "377cfab2e8d8f33f4ade63290595f6289245762c",
+  "git_dirty": true,
   "godot": {
     "path": "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
     "status": "PASS",
@@ -19,10 +19,10 @@
       "id": "godot_import",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 7.85,
+      "duration_seconds": 6.968,
       "stdout": "production/evidence/commands/godot_import.stdout.log",
       "stderr": "production/evidence/commands/godot_import.stderr.log",
-      "stdout_sha256": "8c4d65be38f2d4f54b0c250df83b603e6b639d0832ac400088b074dd238125ee",
+      "stdout_sha256": "81caddee59a94b7b3690a9fcd018e84cf57efffdf048deff70f18c4f73beae09",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "artifacts": [],
       "argv": [
@@ -34,16 +34,16 @@
         "--quit"
       ],
       "command_sha256": "f8f95afe1185f51ffc899ece514c3e7c14d675a0adc05e854d7e98f5daf7cfe9",
-      "output_bytes": 2195
+      "output_bytes": 1404
     },
     {
       "id": "godot_lint",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 5.687,
+      "duration_seconds": 3.051,
       "stdout": "production/evidence/commands/godot_lint.stdout.log",
       "stderr": "production/evidence/commands/godot_lint.stderr.log",
-      "stdout_sha256": "f774087628798fa97973862bbd5548cdab672c06127997026b75a78967aa93cc",
+      "stdout_sha256": "cd861b65924888a02bdb0ee15394dcb6cac172feca60c26b3cb2126ea2dbdc44",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "artifacts": [],
       "argv": [
@@ -56,13 +56,13 @@
         "--quit"
       ],
       "command_sha256": "72c45d84dae83d8ce4ac72c27138b7c0dcbfca32d4849a9463a8e813ae3d7015",
-      "output_bytes": 4989
+      "output_bytes": 4196
     },
     {
       "id": "runtime_smoke",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 1.468,
+      "duration_seconds": 1.403,
       "stdout": "production/evidence/commands/runtime_smoke.stdout.log",
       "stderr": "production/evidence/commands/runtime_smoke.stderr.log",
       "stdout_sha256": "e2737fbc9dc5ffc29ad3712bcc949438b809b9eb979a142785ef129422b4c5cd",
@@ -84,10 +84,10 @@
       "id": "primary_session_test",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 1.694,
+      "duration_seconds": 2.219,
       "stdout": "production/evidence/commands/primary_session_test.stdout.log",
       "stderr": "production/evidence/commands/primary_session_test.stderr.log",
-      "stdout_sha256": "cc37ee0ea4b19149ea41e80886518d23ea7765cf9b8a2e55f42618148fd13213",
+      "stdout_sha256": "c31054819bcf6530862f6162710dcfce397b4efd4d6fb0cc6c781ca1fa93f1ef",
       "stderr_sha256": "544e38cf7a52acb4154b429f1ede8b3f880574951b1af1ca08cddb3da9119784",
       "artifacts": [],
       "argv": [
@@ -100,13 +100,13 @@
         "res://tests/smoke_frontend_flow.tscn"
       ],
       "command_sha256": "1de81a9619b2f272b9d31c19ae532b5abf40f1c9da2ee13d1a4e6f97c49fc9e6",
-      "output_bytes": 1324
+      "output_bytes": 1415
     },
     {
       "id": "recovery_flow_test",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 1.217,
+      "duration_seconds": 1.844,
       "stdout": "production/evidence/commands/recovery_flow_test.stdout.log",
       "stderr": "production/evidence/commands/recovery_flow_test.stderr.log",
       "stdout_sha256": "e2737fbc9dc5ffc29ad3712bcc949438b809b9eb979a142785ef129422b4c5cd",
@@ -128,10 +128,10 @@
       "id": "meta_navigation_test",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 1.399,
+      "duration_seconds": 2.066,
       "stdout": "production/evidence/commands/meta_navigation_test.stdout.log",
       "stderr": "production/evidence/commands/meta_navigation_test.stderr.log",
-      "stdout_sha256": "cc37ee0ea4b19149ea41e80886518d23ea7765cf9b8a2e55f42618148fd13213",
+      "stdout_sha256": "c31054819bcf6530862f6162710dcfce397b4efd4d6fb0cc6c781ca1fa93f1ef",
       "stderr_sha256": "544e38cf7a52acb4154b429f1ede8b3f880574951b1af1ca08cddb3da9119784",
       "artifacts": [],
       "argv": [
@@ -144,13 +144,13 @@
         "res://tests/smoke_frontend_flow.tscn"
       ],
       "command_sha256": "5c7402af238a449b1a7907d0c5b506071246c12082435c1ed218390e625bc83d",
-      "output_bytes": 1324
+      "output_bytes": 1415
     },
     {
       "id": "mobile_orientation_test",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 0.437,
+      "duration_seconds": 0.466,
       "stdout": "production/evidence/commands/mobile_orientation_test.stdout.log",
       "stderr": "production/evidence/commands/mobile_orientation_test.stderr.log",
       "stdout_sha256": "4164f7bafb478d572344160756ce8a02aa1ed9cbc776b6f194cabc2317a040a5",
@@ -172,7 +172,7 @@
       "id": "long_run",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 2.755,
+      "duration_seconds": 2.762,
       "stdout": "production/evidence/commands/long_run.stdout.log",
       "stderr": "production/evidence/commands/long_run.stderr.log",
       "stdout_sha256": "8b2f063d40637aa74d497e4d284a148bd72733aa9c0bf790c5495208a5708937",
@@ -194,10 +194,10 @@
       "id": "visual_smoke",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 1.451,
+      "duration_seconds": 1.446,
       "stdout": "production/evidence/commands/visual_smoke.stdout.log",
       "stderr": "production/evidence/commands/visual_smoke.stderr.log",
-      "stdout_sha256": "314ef6e26f0bf73a17048296f42ea8f145a2e0f1d3b406a81dc3b0ad6bb6e8bb",
+      "stdout_sha256": "7b43029cdadf5102b4b95ef91a5137aa0c83b3fbb7dd8a189835d9a03f7598ce",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "artifacts": [
         {
@@ -207,23 +207,33 @@
         },
         {
           "path": "production/playtests/frontend/hub.png",
-          "sha256": "fac25bd9a94014d90e768f78fd1ee183768b16756e88e2085f873a5d62a40bef",
-          "size": 2429138
+          "sha256": "267f6ef337f925bc9032da71032c129721fcde2b571fa6e5ee06293433f56de8",
+          "size": 2423528
         },
         {
           "path": "production/playtests/frontend/stages.png",
-          "sha256": "299e6da1784da45f21bdb6e2d2fc913d9ef99a6ae22c5a051eacf704e2b801fb",
-          "size": 2370060
+          "sha256": "02b401f2be5e6b03e372c643f3e847ce4b305154016638ef2a549facbbaec478",
+          "size": 2371450
         },
         {
           "path": "production/playtests/frontend/loadout.png",
-          "sha256": "30ec00ee45a40d6c0d1e7a622baa5081295d519e9ee5cb0c0e878678fc7fa5c7",
-          "size": 2098915
+          "sha256": "098b4ace0cd7a1df73fe00f06cb65bf82283108bffe4f86766df6b81cb6438f4",
+          "size": 2120453
+        },
+        {
+          "path": "production/playtests/frontend/inventory.png",
+          "sha256": "7fb6a4a58c240fe4265ae21a66bcfc8e0318dfebad70cbd243a5dc0f45d198cf",
+          "size": 1952874
+        },
+        {
+          "path": "production/playtests/frontend/spirit-beast.png",
+          "sha256": "5f7c112056d77a5bc5a58bc9fb5ca1b82be3550ac6549321ffe255283b9cb316",
+          "size": 1854318
         },
         {
           "path": "production/playtests/frontend/techniques.png",
-          "sha256": "fa3ab3b6bd69ba21274c12d7eb72d1a85cb8155d9d947328a9c864c8e0f88e56",
-          "size": 1965330
+          "sha256": "466022c3c3f5796e58853dbca67e1ccfcedd704f69545ee771965e3cd4bf7cbd",
+          "size": 1968895
         },
         {
           "path": "production/playtests/frontend/technique-upgrade.png",
@@ -262,8 +272,8 @@
         },
         {
           "path": "production/playtests/overhaul/gameplay-final.png",
-          "sha256": "219767f65f25187238a430d4784aa19e7fce0a9d3ccbc01d171abf6dbf763dbd",
-          "size": 2545554
+          "sha256": "05ac278194f3262f955c6a57502b7da836f9318baac6bb287c0af22aa980097e",
+          "size": 2561335
         },
         {
           "path": "production/playtests/overhaul/boss-final.png",
@@ -327,23 +337,33 @@
         },
         {
           "path": "production/playtests/frontend/hub-phone.png",
-          "sha256": "fb3151843ebe0beefcb17754f5b1596a4362c59a4d4b4966b2ab3f8d7e2d4870",
-          "size": 617562
+          "sha256": "1f2fffaf5abe4d20829b7e4ab650189c55686552e2b9c5746bbaa004212dda42",
+          "size": 631800
         },
         {
           "path": "production/playtests/frontend/stages-phone.png",
-          "sha256": "cb0188ff78e7090ea56f1facc51ccacd3c7cb29b2445607a3892a0ed431a7f02",
-          "size": 543212
+          "sha256": "ad264389b484a46060acf867abec07efa6bb0959716452c982382c3ada176bca",
+          "size": 538018
         },
         {
           "path": "production/playtests/frontend/loadout-phone.png",
-          "sha256": "50e5ccae632cddaa20093de4b9d106fde9a1b1b03c2073382956cd76c31500cc",
-          "size": 525584
+          "sha256": "52201eb8ed3aa5eeff9ded943f919f5e1473ee9e9837159927580e56763c323b",
+          "size": 527176
+        },
+        {
+          "path": "production/playtests/frontend/inventory-phone.png",
+          "sha256": "09f7581d17a932187573fda8a4825eb68024c19735475101ea67accf5a4d83f4",
+          "size": 577210
+        },
+        {
+          "path": "production/playtests/frontend/spirit-beast-phone.png",
+          "sha256": "fc1446c352f308667cce4239bd98f51e3f955d089421aa70e53e3d16601437ed",
+          "size": 577521
         },
         {
           "path": "production/playtests/frontend/techniques-phone.png",
-          "sha256": "85403e9c884522cc890daae50a8f70fdc129f23ef51ecaabacbd630d27c4d54d",
-          "size": 372041
+          "sha256": "a6acd6ed7580098daa14f8cd0cf9cd71a931040182c282ad83eaf742c6860a45",
+          "size": 369830
         },
         {
           "path": "production/playtests/frontend/technique-upgrade-phone.png",
@@ -362,8 +382,8 @@
         },
         {
           "path": "production/playtests/frontend/settings-phone.png",
-          "sha256": "3bb91db516c79aba1cfc09de2c9e542146c8bf51bb6304d50d3b030a808d12d9",
-          "size": 454556
+          "sha256": "e171a89c0f84a725dd02d68b1b76f1e3a2ef599d161d756ffd5704036bb7ffd9",
+          "size": 475166
         },
         {
           "path": "production/playtests/frontend/reset-phone.png",
@@ -382,8 +402,8 @@
         },
         {
           "path": "production/playtests/mobile-support/combat-phone.png",
-          "sha256": "9b2f9d2c9fb1eb0ce68e0fca040c98fec4186886308c7bad939275500706a001",
-          "size": 610029
+          "sha256": "66dc489dce7e50c0ef2e96b5418a8edcaa9de5883e4d0ee90baf409b997635b9",
+          "size": 621987
         },
         {
           "path": "production/playtests/mobile-support/boss-phone.png",
@@ -435,14 +455,14 @@
         "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
         "res://tests/smoke_visual_evidence.tscn"
       ],
-      "command_sha256": "c6dec56e4025779e124de21f23f0d9b38d66e2c6b112b60dfbe107f04822c987",
-      "output_bytes": 3873
+      "command_sha256": "6e41548bc852039ae82406ce9995f6e968063479cad8d75f09d83f95f5006712",
+      "output_bytes": 4213
     },
     {
       "id": "meta_profile_smoke",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 0.362,
+      "duration_seconds": 0.429,
       "stdout": "production/evidence/commands/meta_profile_smoke.stdout.log",
       "stderr": "production/evidence/commands/meta_profile_smoke.stderr.log",
       "stdout_sha256": "4fb3519b2689cc3e7855e87428c7b36975f5d218d1c3c5bffe36278ea13ab1a0",
@@ -464,7 +484,7 @@
       "id": "audio_smoke",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 2.281,
+      "duration_seconds": 2.246,
       "stdout": "production/evidence/commands/audio_smoke.stdout.log",
       "stderr": "production/evidence/commands/audio_smoke.stderr.log",
       "stdout_sha256": "638b8b1d66766359ba87b25c64ddd8c276433efb6a71ac7714850371fd5eeb5a",
@@ -507,7 +527,7 @@
       "id": "cultivation_vfx_smoke",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 0.435,
+      "duration_seconds": 0.43,
       "stdout": "production/evidence/commands/cultivation_vfx_smoke.stdout.log",
       "stderr": "production/evidence/commands/cultivation_vfx_smoke.stderr.log",
       "stdout_sha256": "654499aef926f1b115a36d20af99e23ba2c1eb0539ca65f532dd2063f364c924",
@@ -529,10 +549,10 @@
       "id": "responsive_layout_test",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 1.223,
+      "duration_seconds": 1.31,
       "stdout": "production/evidence/commands/responsive_layout_test.stdout.log",
       "stderr": "production/evidence/commands/responsive_layout_test.stderr.log",
-      "stdout_sha256": "eec3b09401cb0e8c748ebb0d4b3cb5ee3b244f12cf421cc68c520ad158258ad0",
+      "stdout_sha256": "973e93b5e6bdb0fba5e5f4aecb3c1915e49bb821d4df5677297ee2224d98c925",
       "stderr_sha256": "61ac16523469d8174c94be2de359c617e495d191645562ff40078bf412b698fd",
       "artifacts": [],
       "argv": [
@@ -545,39 +565,18 @@
         "res://tests/smoke_responsive_layout.tscn"
       ],
       "command_sha256": "befb0c4dedb3af2f5446e6024ed5919bc5d23b8a823774389647ad2b6c236a9d",
-      "output_bytes": 6272
+      "output_bytes": 7992
     },
     {
       "id": "web_export",
-      "status": "PASS",
-      "returncode": 0,
-      "duration_seconds": 3.481,
+      "status": "BLOCKED",
+      "returncode": 1,
+      "duration_seconds": 2.472,
       "stdout": "production/evidence/commands/web_export.stdout.log",
       "stderr": "production/evidence/commands/web_export.stderr.log",
-      "stdout_sha256": "81d8b0d15a9c55b9a65c6f4d4d45c7c91067e502089539e3ecf519780a01e4ef",
-      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "artifacts": [
-        {
-          "path": "build/web/index.html",
-          "sha256": "5b175263138c499c41d3139f1c14241b4b25dced00bb9de0c279cf1ecdf32521",
-          "size": 5453
-        },
-        {
-          "path": "build/web/index.js",
-          "sha256": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981",
-          "size": 315759
-        },
-        {
-          "path": "build/web/index.wasm",
-          "sha256": "cca8bc7c462d348aaa3f318aecf3281d99bf219e182256412711b24f0d086d80",
-          "size": 37695054
-        },
-        {
-          "path": "build/web/index.pck",
-          "sha256": "20edf081393474df0dba3ca183fc4c7f3653f21c5d4763f4db66e096397a9603",
-          "size": 17992588
-        }
-      ],
+      "stdout_sha256": "12ece617a700737861a0286f8710b204d9a78429ee211a6de3972bc8b60b7ccb",
+      "stderr_sha256": "58d2ee4d480a182748967cca2bfd0ecdd90440442788c2eefa72485dee689629",
+      "artifacts": [],
       "argv": [
         "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
         "--headless",
@@ -588,21 +587,27 @@
         "build/web/index.html"
       ],
       "command_sha256": "67b31576fd5c5e96afc284b641b6af6028cfb2c11197c24892d9bf4e20fd40f2",
-      "output_bytes": 34000
+      "output_bytes": 955,
+      "artifact_errors": [
+        "Missing expected artifact: build/web/index.html",
+        "Missing expected artifact: build/web/index.js",
+        "Missing expected artifact: build/web/index.wasm",
+        "Missing expected artifact: build/web/index.pck"
+      ]
     },
     {
       "id": "web_browser_smoke",
-      "status": "PASS",
-      "returncode": 0,
-      "duration_seconds": 24.817,
+      "status": "BLOCKED",
+      "returncode": 127,
+      "duration_seconds": 0.347,
       "stdout": "production/evidence/commands/web_browser_smoke.stdout.log",
       "stderr": "production/evidence/commands/web_browser_smoke.stderr.log",
-      "stdout_sha256": "a5d9e61f9f4d84aaeb43673101cd8e4b2786d0eec305b33c7058f2afc26def49",
-      "stderr_sha256": "90ef1e9efa488841809b0c11df463e1f00042f5a8418581df7b92149b7734fb7",
+      "stdout_sha256": "10c205128717025b51d1aa86a2c370338ac8cbe92ade86778510b05f99fa0359",
+      "stderr_sha256": "4ed45343432b193b6ec36335a99c1443278116977ca14fd0c8e85bef42e7a26e",
       "artifacts": [
         {
           "path": "production/evidence/platforms/web-smoke.json",
-          "sha256": "7c774daedffb6f96e7e48f8d8911369cfe0ab74569954bcd22b9b512fb8ae900",
+          "sha256": "725cd50416c7b9e42a2d26113c2541fd09a02fd362457184a18c4aa4d2406e09",
           "size": 1530
         },
         {
@@ -612,13 +617,13 @@
         },
         {
           "path": "production/evidence/platforms/web-hub.png",
-          "sha256": "daf2bd3775cb18813685b0ba8851e23b15f4b94d357b5e7aa7bdc0c94fb69f4f",
-          "size": 2180148
+          "sha256": "f3058fd7a4f2e126b4a5935c691529a9460e1e2ee3c7f9e3689150b7a1efba33",
+          "size": 2179674
         },
         {
           "path": "production/evidence/platforms/web-stages.png",
-          "sha256": "26b396025d4c211cc13eacf9371862955ed7769beb705c815f407c37cf6487c6",
-          "size": 2136786
+          "sha256": "0e21b1888279d1a238a2b6d63f44219b1b048a5c45968de3b4f6d75752663f37",
+          "size": 2139208
         },
         {
           "path": "production/evidence/platforms/web-title-phone.png",
@@ -627,8 +632,8 @@
         },
         {
           "path": "production/evidence/platforms/web-hub-phone.png",
-          "sha256": "dcab866e87b039b862e3c6fbce3a8c70dd4fafcc34217ae387606ea3cb8ec63b",
-          "size": 552090
+          "sha256": "1ce5a4bbd4938b76e9e5f10793c3675d79120f4ee947d43abe4309c045e7af48",
+          "size": 551660
         }
       ],
       "argv": [
@@ -637,7 +642,7 @@
         "test:web"
       ],
       "command_sha256": "0930ac8f44745a8e0f81087f29167241977b2eed10fbdbec46eb58083b2ecada",
-      "output_bytes": 544
+      "output_bytes": 182
     }
   ]
 }
