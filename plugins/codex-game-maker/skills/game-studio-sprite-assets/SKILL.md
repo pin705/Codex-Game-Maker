@@ -46,7 +46,7 @@ Do not force the user to choose rows, columns, or frame counts when the request 
 Before generating any sprite that may enter gameplay, create an asset harness:
 
 ```powershell
-../../tools/create-asset-harness.ps1 -Root . -AssetId hero-cat-run -Kind sprite -Action run -Rows 3 -Cols 4 -CellWidth 384 -CellHeight 384 -SafeMargin 48 -KeyColor "#FF00FF" -Loop
+../../tools/create-asset-harness.ps1 -Root . -AssetId cultivator-hero-run -Kind sprite -Action run -Rows 3 -Cols 4 -CellWidth 384 -CellHeight 384 -SafeMargin 48 -KeyColor "#FF00FF" -Loop
 ```
 
 Use the generated files as the source of truth:
@@ -67,14 +67,14 @@ The final image prompt must include the harness contract:
 After saving a raw sheet, run the harness gate before processing:
 
 ```powershell
-../../tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png
+../../tools/check-asset-harness.ps1 -Spec design/assets/harnesses/cultivator-hero-run.harness.json -Input assets/raw/cultivator-hero-run-sheet.png
 ```
 
 If the raw image has the right subject and motion but the generator missed exact canvas size, row/column layout, or safe-zone placement, run deterministic rectification before processing:
 
 ```powershell
-../../tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-sheet.png -Output assets/raw/hero-cat-run-rectified.png
-../../tools/check-asset-harness.ps1 -Spec design/assets/harnesses/hero-cat-run.harness.json -Input assets/raw/hero-cat-run-rectified.png
+../../tools/rectify-asset-to-harness.ps1 -Spec design/assets/harnesses/cultivator-hero-run.harness.json -Input assets/raw/cultivator-hero-run-sheet.png -Output assets/raw/cultivator-hero-run-rectified.png
+../../tools/check-asset-harness.ps1 -Spec design/assets/harnesses/cultivator-hero-run.harness.json -Input assets/raw/cultivator-hero-run-rectified.png
 ```
 
 Rectification is only for geometry: exact canvas, grid normalization, safe padding, pivot/bottom alignment, foreground-mask isolation, and component placement. The rectified output must not preserve rectangular chroma-key gradient blocks around the subject; if it does, fix the rectifier or rerun with stricter key tolerance before processing. Regenerate instead of rectifying when identity drifts, the action is not a real loop, a run/walk does not alternate feet, a jump pose sequence is wrong, limbs are missing, or neighboring-frame fragments are baked into the subject.
@@ -171,7 +171,7 @@ For a generated player/enemy that enters Godot gameplay:
 For a player, enemy, NPC, summon, or important animated object with multiple actions, create the bundle spec first:
 
 ```powershell
-../../tools/create-action-bundle.ps1 -Root . -AssetId hero-cat -Description "cute orange tabby cat with blue backpack" -Actions "idle,run,jump,attack,hurt"
+../../tools/create-action-bundle.ps1 -Root . -AssetId cultivator-hero -Description "original ink-and-jade cultivator with a readable runtime silhouette" -Actions "idle,run,cast,attack,hurt"
 ```
 
 This writes:
@@ -204,7 +204,7 @@ Expected outputs:
 For accepted Godot sprite bundles, create Godot 4.6.2 resources:
 
 ```powershell
-../../tools/import-sprite-to-godot.ps1 -Project . -BundleId hero-cat
+../../tools/import-sprite-to-godot.ps1 -Project . -BundleId cultivator-hero
 ```
 
 Expected Godot outputs:
@@ -255,4 +255,3 @@ Block or regenerate when:
 - metadata is missing
 - runtime scale, pivot, or state-machine mapping is missing for playable characters
 - the asset passes extraction but fails in-scene grounding, route readability, or collection/finish behavior
-

@@ -1494,8 +1494,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     showcase = sub.add_parser("showcase", help="create a Godot 4.6.2 asset pipeline showcase skeleton")
     showcase.add_argument("--root", default=".")
-    showcase.add_argument("--name", default="asset-pipeline-showcase")
-    showcase.add_argument("--title", default="Asset Pipeline Showcase")
+    showcase.add_argument("--name", default="cgm-player-ready-showcase")
+    showcase.add_argument("--title", default="Codex Game Maker Player-Ready Showcase")
     showcase.set_defaults(func=showcase_command)
 
     return parser

@@ -25,7 +25,7 @@ This cache-visible plugin release contains the dynamic game-state workflow and t
 - Added runtime asset-presentation contracts for aspect preservation, sprite frames, dedicated nine-slices with tested size ranges, tile seams, cover crop-safe areas, declared state usage, and runtime composite evidence.
 - Strengthened art/UI skills to reject first-pass generic AI art, cross-family style drift, tiny/mis-scaled actors, repeated one-size-fits-all chrome, text/ornament collisions, prop-pack crops misused as scalable panels, and self-authored visual PASS claims contradicted by captures.
 - Added semantic CI guards that prevent fixed state/group/audio constants from returning and require routing skills to reference the dynamic journey contract.
-- Removed the duplicate `codex-game-studio/`, root `tools/`, and root asset-requirements copies. `plugins/codex-game-maker/` is now the only implementation source of truth.
+- Removed duplicate legacy plugin/tool roots. `plugins/codex-game-maker/` is now the only implementation source of truth.
 - Added an evidence-backed commercial studio workflow spanning product/business planning, platforms, performance, compliance, localization, accessibility, narrative, online services, marketing, telemetry, support, live operations, and rollback.
 - Added 11 commercial specialist skills, bringing the plugin to 23 skills.
 - Added `cgm.py`, a cross-platform CLI for diagnostics, command-backed quality evidence, player-ready validation, commercial release validation, Godot installation, and exports.

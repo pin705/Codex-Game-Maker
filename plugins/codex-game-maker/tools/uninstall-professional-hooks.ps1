@@ -23,7 +23,7 @@ foreach ($name in @("pre-commit", "pre-push")) {
     Remove-Item -LiteralPath $path -Force
     Write-Host "Removed professional hook: $name"
 
-    $backup = Get-ChildItem -LiteralPath $hooksDir -File -Filter "$name.codex-game-studio.*.bak" -ErrorAction SilentlyContinue |
+    $backup = Get-ChildItem -LiteralPath $hooksDir -File -Filter "$name.codex-game-*.bak" -ErrorAction SilentlyContinue |
       Sort-Object LastWriteTime -Descending |
       Select-Object -First 1
     if ($backup) {
@@ -34,5 +34,4 @@ foreach ($name in @("pre-commit", "pre-push")) {
     Write-Host "Skipped non-Codex hook: $name"
   }
 }
-
 

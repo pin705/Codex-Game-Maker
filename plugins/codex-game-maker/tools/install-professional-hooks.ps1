@@ -25,7 +25,7 @@ function Install-Hook([string]$Name, [string]$Body) {
     if ($existing -notmatch [regex]::Escape($marker)) {
       if (!$Force) {
         $stamp = Get-Date -Format "yyyyMMddHHmmss"
-        $backup = "$path.codex-game-studio.$stamp.bak"
+        $backup = "$path.codex-game-maker.$stamp.bak"
         Copy-Item -LiteralPath $path -Destination $backup -Force
         Write-Host "Backed up existing hook: $backup"
       }
@@ -88,5 +88,4 @@ Install-Hook "pre-push" $prePush
 Write-Host ""
 Write-Host "Professional hooks installed. To remove them:"
 Write-Host "  pwsh -File tools/uninstall-professional-hooks.ps1"
-
 

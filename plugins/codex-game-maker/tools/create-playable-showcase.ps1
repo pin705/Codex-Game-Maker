@@ -1,7 +1,7 @@
 param(
   [string]$Root = ".",
-  [string]$Name = "asset-pipeline-showcase",
-  [string]$Title = "Asset Pipeline Showcase"
+  [string]$Name = "cgm-player-ready-showcase",
+  [string]$Title = "Codex Game Maker Player-Ready Showcase"
 )
 
 $ErrorActionPreference = "Stop"

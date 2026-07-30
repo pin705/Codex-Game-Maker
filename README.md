@@ -569,7 +569,6 @@ LICENSE
 - [Open source installation](docs/OPEN_SOURCE_INSTALLATION.md)
 - [Project migration](docs/PROJECT_MIGRATION.md)
 - [Playable asset integration playbook](docs/PLAYABLE_ASSET_INTEGRATION.md)
-- [Asset pipeline completion plan](docs/ASSET_PIPELINE_COMPLETION_PLAN.md)
 - [Release assets checklist](docs/RELEASE_ASSETS.md)
 
 ## License

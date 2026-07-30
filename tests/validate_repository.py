@@ -84,6 +84,28 @@ STYLE_BOUND_JSON_TEMPLATES = (
     "visual-quality-contract.json",
 )
 
+LEGACY_MARKERS = (
+    "0x" + "nick" + "mortal",
+    "0x" + "nicholas",
+    "nick" + "mortal",
+    "claude-code-game-" + "studios",
+    "codex-game-" + "studio",
+    "cat " + "platformer",
+    "cute " + "cat",
+    "hero-" + "cat",
+    "vampire-" + "grove",
+    "platform-" + "jumper",
+    "asset-pipeline-" + "showcase",
+)
+
+IGNORED_LEGACY_SCAN_PARTS = {
+    ".git",
+    ".venv",
+    "__pycache__",
+    "dist",
+    "node_modules",
+}
+
 
 def fail(message: str) -> None:
     raise SystemExit(message)
@@ -156,7 +178,8 @@ def validate_skill_resources() -> None:
 
 
 def validate_single_source() -> None:
-    for legacy in (ROOT / "codex-game-studio", ROOT / "tools", ROOT / "requirements-asset-tools.txt"):
+    root_plugin_copies = [path for path in ROOT.glob("codex-game-*") if path.is_dir()]
+    for legacy in (*root_plugin_copies, ROOT / "tools", ROOT / "requirements-asset-tools.txt"):
         if legacy.exists():
             fail(f"Duplicate legacy layout must not exist: {legacy.relative_to(ROOT)}")
     ignore_lines = {
@@ -167,6 +190,24 @@ def validate_single_source() -> None:
     continuity_paths = {"design/art", "production/session-state"}
     if ignore_lines & continuity_paths:
         fail("Style lock and session-state continuity paths must remain version-control eligible")
+
+
+def validate_no_legacy_branding() -> None:
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or IGNORED_LEGACY_SCAN_PARTS.intersection(path.parts):
+            continue
+        relative = path.relative_to(ROOT)
+        normalized_path = relative.as_posix().lower()
+        for marker in LEGACY_MARKERS:
+            if marker in normalized_path:
+                fail(f"Legacy project marker remains in path: {relative}")
+        try:
+            text = path.read_text(encoding="utf-8-sig").lower()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for marker in LEGACY_MARKERS:
+            if marker in text:
+                fail(f"Legacy project marker remains in file: {relative}")
 
 
 def validate_counts() -> None:
@@ -590,6 +631,7 @@ def main() -> int:
     validate_dynamic_contracts()
     validate_todo_markers()
     validate_single_source()
+    validate_no_legacy_branding()
     print("Repository validation passed")
     return 0
 

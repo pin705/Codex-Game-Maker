@@ -420,7 +420,7 @@ def process_sprite(args: argparse.Namespace) -> dict[str, Any]:
     expected = args.expected_frames if args.expected_frames > 0 else args.rows * args.cols
     opaque_key = count_opaque_color(sheet, key_color)
     meta = {
-        "schema": "codex-game-studio.asset-pipeline.v1",
+        "schema": "codex-game-maker.asset-pipeline.v1",
         "asset_id": args.asset_id,
         "kind": "sprite",
         "input": as_posix(input_path),
@@ -486,7 +486,7 @@ def process_prop_pack(args: argparse.Namespace) -> dict[str, Any]:
 
     expected = args.expected_props if args.expected_props > 0 else args.rows * args.cols
     meta = {
-        "schema": "codex-game-studio.asset-pipeline.v1",
+        "schema": "codex-game-maker.asset-pipeline.v1",
         "asset_id": args.asset_id,
         "kind": "prop_pack",
         "input": as_posix(input_path),
@@ -568,7 +568,7 @@ def compose_layered_preview(args: argparse.Namespace) -> dict[str, Any]:
 
     canvas.save(out_path)
     meta = {
-        "schema": "codex-game-studio.asset-pipeline.v1",
+        "schema": "codex-game-maker.asset-pipeline.v1",
         "kind": "layered_preview",
         "base": as_posix(base_path),
         "placements": as_posix(placements_path),
@@ -687,5 +687,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
 
