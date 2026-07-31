@@ -25,7 +25,7 @@
       "id": "journey-environments-and-key-art",
       "required": true,
       "status": "verified",
-      "coverage_basis": "Title, hub/meta navigation, three selectable stage identities and combat backgrounds declared by the state/UI inventory need distinct authored full-frame art.",
+      "coverage_basis": "Title, hub/meta navigation, the sequential three-stage route and combat backgrounds declared by the state/UI inventory need distinct authored full-frame art.",
       "required_asset_ids": [
         "KEYART-001",
         "HUB-001-van-mong-sect",

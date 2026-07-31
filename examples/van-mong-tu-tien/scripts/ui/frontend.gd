@@ -130,6 +130,64 @@ const V5_HUB_COMMAND_RAIL_PATH := "res://assets/generated/ui/UIKIT-015-v5-ledger
 const V5_ACHIEVEMENT_LEDGER_PATH := "res://assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime/achievement-ledger.png"
 const V5_VICTORY_SHRINE_PATH := "res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/victory-ascension-shrine.png"
 const V5_DEFEAT_SHRINE_PATH := "res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/defeat-broken-dao-shrine.png"
+const V5_FOLIO_PRIMARY_LAYOUTS := [
+	{
+		"header": Rect2(65.0, 26.0, 248.0, 57.0),
+		"info": Rect2(69.0, 356.0, 243.0, 89.0),
+		"action": Rect2(96.0, 451.0, 191.0, 33.0),
+	},
+	{
+		"header": Rect2(90.0, 24.0, 236.0, 58.0),
+		"info": Rect2(89.0, 335.0, 241.0, 100.0),
+		"action": Rect2(122.0, 441.0, 190.0, 33.0),
+	},
+	{
+		"header": Rect2(176.0, 51.0, 440.0, 113.0),
+		"info": Rect2(155.0, 676.0, 470.0, 139.0),
+		"action": Rect2(174.0, 835.0, 441.0, 97.0),
+	},
+]
+const V5_FOLIO_SECONDARY_LAYOUTS := [
+	{
+		"header": Rect2(62.0, 26.0, 277.0, 62.0),
+		"info": Rect2(62.0, 357.0, 278.0, 90.0),
+		"action": Rect2(105.0, 454.0, 201.0, 30.0),
+	},
+	{
+		"header": Rect2(72.0, 25.0, 254.0, 64.0),
+		"info": Rect2(63.0, 333.0, 267.0, 101.0),
+		"action": Rect2(98.0, 438.0, 211.0, 36.0),
+	},
+	{
+		"header": Rect2(155.0, 50.0, 432.0, 114.0),
+		"info": Rect2(153.0, 677.0, 449.0, 147.0),
+		"action": Rect2(145.0, 833.0, 466.0, 99.0),
+	},
+]
+const V5_LEDGER_CELL_RECTS := [
+	Rect2(103.0, 43.0, 300.0, 91.0),
+	Rect2(498.0, 43.0, 292.0, 91.0),
+	Rect2(103.0, 149.0, 300.0, 91.0),
+	Rect2(498.0, 149.0, 292.0, 91.0),
+	Rect2(103.0, 255.0, 300.0, 91.0),
+	Rect2(498.0, 255.0, 292.0, 91.0),
+]
+const V5_COMMAND_ROW_RECTS := [
+	Rect2(41.0, 51.0, 78.0, 38.0),
+	Rect2(41.0, 100.0, 78.0, 38.0),
+	Rect2(41.0, 149.0, 78.0, 38.0),
+	Rect2(41.0, 198.0, 78.0, 38.0),
+	Rect2(41.0, 247.0, 78.0, 38.0),
+	Rect2(41.0, 296.0, 78.0, 38.0),
+]
+const V5_CIRCLE_MASK_SHADER := """
+shader_type canvas_item;
+void fragment() {
+	vec2 delta = UV - vec2(0.5);
+	float circle = 1.0 - smoothstep(0.475, 0.5, length(delta));
+	COLOR = texture(TEXTURE, UV) * COLOR * circle;
+}
+"""
 const V4_ART_GRADE_SHADER := """
 shader_type canvas_item;
 uniform float saturation : hint_range(0.0, 1.0) = 0.5;
@@ -927,7 +985,8 @@ func _build_phone_techniques() -> void:
 		var technique_id := StringName(str(technique.get("id", "sword_damage")))
 		var rank := int(technique.get("rank", 0))
 		var max_rank := int(technique.get("max_rank", 5))
-		var cost := int(technique.get("next_cost", -1))
+		var cost := int(technique.get("fragment_cost", technique.get("next_cost", -1)))
+		var fragments_owned := int(technique.get("fragments_owned", 0))
 		var x := safe.position.x + index * (card_width + gap)
 		var card := _panel(Rect2(x, safe.position.y + 76.0, card_width, safe.size.y - 76.0), LACQUER_PANEL_PATH, 30)
 		screen_root.add_child(card)
@@ -1807,7 +1866,8 @@ func _build_techniques() -> void:
 		var technique_id := StringName(str(technique.get("id", "sword_damage")))
 		var rank := int(technique.get("rank", 0))
 		var max_rank := int(technique.get("max_rank", 5))
-		var cost := int(technique.get("next_cost", -1))
+		var cost := int(technique.get("fragment_cost", technique.get("next_cost", -1)))
+		var fragments_owned := int(technique.get("fragments_owned", 0))
 		var accent := _technique_accent(technique_id)
 		var folio_rect := Rect2(xs[index], 140.0, 366.0, 704.0)
 		screen_root.add_child(_folio_texture(str(FOLIO_PATHS[index]), Rect2(folio_rect.position + Vector2(6.0, 9.0), folio_rect.size), true))
@@ -1845,7 +1905,12 @@ func _build_techniques() -> void:
 		evolution.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		evolution.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		screen_root.add_child(evolution)
-		var price_text := "ĐÃ VIÊN MÃN" if rank >= max_rank else "NÂNG TẦNG  ·  %d LINH NGỌC" % cost
+		var fragment_label := _label("MẢNH %d  ·  CẦN %d" % [fragments_owned, cost] if rank < max_rank else "MẢNH ĐÃ TINH LUYỆN", 12, paper_accent, true)
+		fragment_label.position = Vector2(xs[index] + 32.0, 690.0)
+		fragment_label.size = Vector2(302.0, 24.0)
+		fragment_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		screen_root.add_child(fragment_label)
+		var price_text := "ĐÃ VIÊN MÃN" if rank >= max_rank else "NÂNG TẦNG  ·  %d MẢNH" % cost
 		var purchase := _button(price_text, RasterButton.ArtVariant.GOLD if rank < max_rank else RasterButton.ArtVariant.INK, Vector2(292.0, 62.0), 15, func() -> void: _purchase_technique(technique_id))
 		purchase.position = Vector2(xs[index] + 37.0, 742.0)
 		purchase.size = Vector2(292.0, 62.0)
@@ -2423,7 +2488,8 @@ func _margin(parent: Control, left: int, right: int, top: int, bottom: int) -> M
 
 func _button(caption: String, variant: RasterButton.ArtVariant, minimum: Vector2, font_size: int, callback: Callable) -> RasterButton:
 	var button := RasterButtonScript.new() as RasterButton
-	button.configure(caption, variant, minimum, font_size)
+	var resolved_font_size := maxi(11, roundi(float(font_size) * 0.84)) if phone_layout_active else font_size
+	button.configure(caption, variant, minimum, resolved_font_size)
 	if phone_layout_active:
 		# Preserve the 64 px action target while letting the authored ornament read
 		# as a compact command plaque on 390 px-tall landscape phones.
@@ -2684,7 +2750,7 @@ func _purchase_technique(technique_id: StringName) -> void:
 		_show_rank_ascension(technique_id, next_rank)
 	else:
 		var reason := str(receipt.get("error", ""))
-		_show_toast("Linh Ngọc chưa đủ" if reason == "insufficient_currency" else "Công pháp đã viên mãn")
+		_show_toast("Mảnh công pháp chưa đủ" if reason == "insufficient_fragments" else ("Linh Ngọc chưa đủ" if reason == "insufficient_currency" else "Công pháp đã viên mãn"))
 		_show_screen(SCREEN_TECHNIQUES)
 
 
@@ -3136,9 +3202,10 @@ func _v4_add_text(text_value: String, rect: Rect2, size_px: int, color: Color, b
 func _v4_text_to(parent: Control, text_value: String, rect: Rect2, size_px: int, color: Color, bold := false, align := HORIZONTAL_ALIGNMENT_LEFT) -> Label:
 	var text_node := _label(text_value, size_px, color, bold)
 	if phone_layout_active:
-		# Small captions were previously clamped back to 14 px, which made compact
-		# mobile folios print through their title and action cartouches.
-		text_node.add_theme_font_size_override(&"font_size", maxi(10, size_px))
+		# 844x390 is a dedicated composition. Optional copy is already removed by
+		# each builder; the remaining type uses an 84% phone scale instead of inheriting
+		# the desktop 14 px floor.
+		text_node.add_theme_font_size_override(&"font_size", maxi(10, roundi(float(size_px) * 0.84)))
 	text_node.position = rect.position
 	text_node.size = rect.size
 	text_node.horizontal_alignment = align
@@ -3353,62 +3420,53 @@ func _v4_build_hub(phone: bool) -> void:
 
 func _v4_build_stages(phone: bool) -> void:
 	_v4_meta_background(0.62 if not phone else 0.56)
-	var body := _v4_header("CHỌN THÍ LUYỆN", "Ba cảnh giới · chọn đường nhập đạo", phone)
+	var body := _v4_header("HÀNH TRÌNH ẢI", "Bắt đầu từ Ải 1 · chiến thắng tự mở ải kế tiếp", phone)
 	var stages := _stages()
 	var current_id := _selected_stage()
-	if phone:
-		var gap := 8.0
-		var card_width := (body.size.x - gap * 2.0) / 3.0
-		var card_height := body.size.y - 70.0
-		for index in mini(3, stages.size()):
-			var stage: Dictionary = stages[index]
-			var stage_id := StringName(str(stage.get("id", "van_mong")))
-			var unlocked := bool(stage.get("unlocked", false))
-			var selected := stage_id == current_id
-			var rect := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, card_height)
-			_v4_add_plate(rect, true, V4_JADE if selected else (V4_BRONZE if unlocked else V4_CINNABAR), selected)
-			_v4_add_art(str(STAGE_ART.get(String(stage_id), STAGE_ART["van_mong"])), Rect2(rect.position.x + 9.0, rect.position.y + 9.0, rect.size.x - 18.0, 72.0), Color.WHITE if unlocked else Color(0.34, 0.34, 0.33, 0.92))
-			_v4_add_text("ĐÃ CHỌN" if selected else ("ĐÃ KHAI MỞ" if unlocked else "PHONG ẤN"), Rect2(rect.position.x + 10.0, rect.position.y + 84.0, rect.size.x - 20.0, 19.0), 11, Color("#2f7469") if unlocked else V4_CINNABAR, true, HORIZONTAL_ALIGNMENT_CENTER)
-			_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(rect.position.x + 10.0, rect.position.y + 106.0, rect.size.x - 20.0, 26.0), 15, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-			_v4_add_text("HIỂM HỌA %d/3 · %d NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(rect.position.x + 8.0, rect.position.y + 136.0, rect.size.x - 16.0, 20.0), 12, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
-			var choose := _button("ĐANG CHỌN" if selected else ("CHỌN CẢNH" if unlocked else "CHƯA MỞ"), RasterButton.ArtVariant.JADE if selected else RasterButton.ArtVariant.INK, Vector2(rect.size.x - 16.0, 64.0), 12, func() -> void: _select_stage(stage_id))
-			choose.position = Vector2(rect.position.x + 8.0, rect.end.y - 66.0)
-			choose.size = Vector2(rect.size.x - 16.0, 64.0)
-			choose.disabled = not unlocked
-			choose.call_deferred("_refresh_visual_state")
-			screen_root.add_child(choose)
-		var description := _v4_add_text(str(_stage_data(current_id).get("description", "")), Rect2(body.position.x, body.end.y - 64.0, body.size.x - 306.0, 58.0), 13, V4_PAPER_MUTED)
-		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		var proceed := _button("CHUẨN BỊ", RasterButton.ArtVariant.GOLD, Vector2(296.0, 64.0), 17, func() -> void: _show_screen(SCREEN_LOADOUT))
-		proceed.position = Vector2(body.end.x - 296.0, body.end.y - 64.0)
-		proceed.size = Vector2(296.0, 64.0)
-		screen_root.add_child(proceed)
-		return
-	var gap := 24.0
+	var gap := 8.0 if phone else 24.0
 	var card_width := (body.size.x - gap * 2.0) / 3.0
+	var card_height := body.size.y - (74.0 if phone else 102.0)
 	for index in mini(3, stages.size()):
 		var stage: Dictionary = stages[index]
 		var stage_id := StringName(str(stage.get("id", "van_mong")))
 		var unlocked := bool(stage.get("unlocked", false))
-		var selected := stage_id == current_id
-		var rect := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, 620.0)
-		_v4_add_plate(rect, true, V4_JADE if selected else (V4_BRONZE if unlocked else V4_CINNABAR), selected)
-		_v4_add_art(str(STAGE_ART.get(String(stage_id), STAGE_ART["van_mong"])), Rect2(rect.position.x + 24.0, rect.position.y + 28.0, rect.size.x - 48.0, 226.0), Color.WHITE if unlocked else Color(0.34, 0.34, 0.33, 0.92))
-		_v4_add_text("ĐÃ CHỌN" if selected else ("ĐÃ KHAI MỞ" if unlocked else "PHONG ẤN"), Rect2(rect.position.x + 30.0, rect.position.y + 274.0, rect.size.x - 60.0, 24.0), 14, Color("#2f7469") if unlocked else V4_CINNABAR, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(rect.position.x + 30.0, rect.position.y + 310.0, rect.size.x - 60.0, 42.0), 27, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text("HIỂM HỌA %d / 3" % int(stage.get("difficulty", 1)), Rect2(rect.position.x + 32.0, rect.position.y + 362.0, rect.size.x - 64.0, 28.0), 16, V4_CINNABAR if unlocked else PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
-		var description := _v4_add_text(str(stage.get("description", "")), Rect2(rect.position.x + 42.0, rect.position.y + 406.0, rect.size.x - 84.0, 86.0), 17, PAPER_COPY, false, HORIZONTAL_ALIGNMENT_CENTER)
-		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_v4_add_text("THƯỞNG %d+ LINH NGỌC" % int((stage.get("rewards", {}) as Dictionary).get("base", 30)), Rect2(rect.position.x + 34.0, rect.position.y + 500.0, rect.size.x - 68.0, 24.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		var choose := _button("ĐANG CHỌN" if selected else ("CHỌN CẢNH" if unlocked else "CHƯA KHAI MỞ"), RasterButton.ArtVariant.JADE if selected else RasterButton.ArtVariant.INK, Vector2(rect.size.x - 92.0, 64.0), 16, func() -> void: _select_stage(stage_id))
-		choose.position = Vector2(rect.position.x + 46.0, rect.end.y - 82.0)
-		choose.size = Vector2(rect.size.x - 92.0, 64.0)
-		choose.disabled = not unlocked
-		choose.call_deferred("_refresh_visual_state")
-		screen_root.add_child(choose)
-	var proceed := _button("CHUẨN BỊ CÔNG PHÁP", RasterButton.ArtVariant.GOLD, Vector2(408.0, 70.0), 18, func() -> void: _show_screen(SCREEN_LOADOUT))
-	proceed.position = Vector2(596.0, 766.0)
-	proceed.size = Vector2(408.0, 70.0)
+		var record := stage.get("record", {}) as Dictionary
+		var victories := int(record.get("victories", 0))
+		var current := stage_id == current_id
+		var rect := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, card_height)
+		var accent := V4_JADE if current else (V4_BRONZE if unlocked else V4_CINNABAR)
+		_v4_add_plate(rect, true, accent, current)
+		_v4_add_art(str(STAGE_ART.get(String(stage_id), STAGE_ART["van_mong"])), Rect2(rect.position.x + (9.0 if phone else 24.0), rect.position.y + (9.0 if phone else 28.0), rect.size.x - (18.0 if phone else 48.0), 72.0 if phone else 226.0), Color.WHITE if unlocked else Color(0.34, 0.34, 0.33, 0.92))
+		var status := "ĐÃ VƯỢT" if victories > 0 else ("ẢI HIỆN TẠI" if current else ("SẴN SÀNG" if unlocked else "SẮP MỞ"))
+		if phone:
+			# The phone card is a compact status object, not a shrunken desktop
+			# paragraph. Keep each live field in its own trough so the risk line
+			# cannot collide with the record/reward strip at the foot of the folio.
+			_v4_add_text(status, Rect2(rect.position.x + 10.0, rect.position.y + 82.0, rect.size.x - 20.0, 18.0), 10, Color("#2f7469") if unlocked else V4_CINNABAR, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(rect.position.x + 10.0, rect.position.y + 104.0, rect.size.x - 20.0, 24.0), 14, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text("HIỂM HỌA · CẤP %d/3" % int(stage.get("difficulty", 1)), Rect2(rect.position.x + 8.0, rect.position.y + 132.0, rect.size.x - 16.0, 18.0), 11, V4_CINNABAR if unlocked else PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text("MỖI ẢI TĂNG ÁP LỰC", Rect2(rect.position.x + 12.0, rect.position.y + 154.0, rect.size.x - 24.0, 18.0), 9, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text("ĐÃ VƯỢT %d LẦN  ·  %d NGỌC" % [victories, int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(rect.position.x + 12.0, rect.end.y - 30.0, rect.size.x - 24.0, 18.0), 9, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		else:
+			_v4_add_text(status, Rect2(rect.position.x + 10.0, rect.position.y + 274.0, rect.size.x - 20.0, 24.0), 14, Color("#2f7469") if unlocked else V4_CINNABAR, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(rect.position.x + 10.0, rect.position.y + 310.0, rect.size.x - 20.0, 42.0), 27, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text("HIỂM HỌA %d/3" % int(stage.get("difficulty", 1)), Rect2(rect.position.x + 8.0, rect.position.y + 362.0, rect.size.x - 16.0, 28.0), 16, V4_CINNABAR if unlocked else PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			var description := _v4_add_text(str(stage.get("description", "")), Rect2(rect.position.x + 42.0, rect.position.y + 406.0, rect.size.x - 84.0, 86.0), 17, PAPER_COPY, false, HORIZONTAL_ALIGNMENT_CENTER)
+			description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			_v4_add_text("ĐÃ VƯỢT %d LẦN  ·  %d NGỌC" % [victories, int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(rect.position.x + 12.0, rect.end.y - 70.0, rect.size.x - 24.0, 22.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var current_stage := _stage_data(current_id)
+	var current_stage_number := 1
+	for stage_index in stages.size():
+		if StringName(str(stages[stage_index].get("id", ""))) == current_id:
+			current_stage_number = stage_index + 1
+			break
+	var footer_width := body.size.x - (306.0 if phone else 420.0)
+	var footer := _v4_add_text("Ải kế tiếp: %s\n%s" % [str(current_stage.get("name", "Vân Mộng Cốc")), str(current_stage.get("description", ""))], Rect2(body.position.x, body.end.y - (64.0 if phone else 76.0), footer_width, 62.0 if phone else 72.0), 12 if phone else 15, V4_PAPER_MUTED, true)
+	footer.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var proceed_size := Vector2(296.0 if phone else 408.0, 64.0 if phone else 70.0)
+	var proceed := _button("TIẾP TỤC ẢI %d" % current_stage_number, RasterButton.ArtVariant.GOLD, proceed_size, 15 if phone else 18, func() -> void: _show_screen(SCREEN_LOADOUT))
+	proceed.size = proceed_size
+	proceed.position = Vector2(body.end.x - proceed_size.x, body.end.y - proceed_size.y)
 	screen_root.add_child(proceed)
 
 
@@ -3594,7 +3652,8 @@ func _v4_build_techniques(phone: bool) -> void:
 		var technique_id := StringName(str(technique.get("id", "sword_damage")))
 		var rank := int(technique.get("rank", 0))
 		var max_rank := int(technique.get("max_rank", 5))
-		var cost := int(technique.get("next_cost", -1))
+		var cost := int(technique.get("fragment_cost", technique.get("next_cost", -1)))
+		var fragments_owned := int(technique.get("fragments_owned", 0))
 		var rect := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, card_height)
 		_v4_add_plate(rect, true, _technique_accent(technique_id), index == 1)
 		var preview_size := 96.0 if phone else 286.0
@@ -3904,24 +3963,133 @@ func _v5_add_fitted_art(path: String, bounds: Rect2, tint := Color.WHITE) -> Rec
 	return fitted
 
 
+## Keeps the complete raster and every live child in the same source-space
+## contract.  Callers author rectangles in native PNG coordinates; desktop and
+## phone only change the one uniform scale applied by this root.
+func _v5_add_contract_art(path: String, bounds: Rect2, tint := Color.WHITE) -> Dictionary:
+	var fitted := _v5_fit_art(path, bounds)
+	var texture := _load_texture(path)
+	var native_size := Vector2(texture.get_size()) if texture != null else fitted.size
+	var contract_root := Control.new()
+	contract_root.name = "V5Contract_%s" % path.get_file().get_basename()
+	contract_root.position = fitted.position
+	contract_root.size = fitted.size
+	contract_root.clip_contents = true
+	contract_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screen_root.add_child(contract_root)
+	var art := _texture(path, Rect2(Vector2.ZERO, fitted.size))
+	art.name = "AuthoredArt"
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	art.modulate = tint
+	contract_root.add_child(art)
+	return {
+		"root": contract_root,
+		"rect": fitted,
+		"native_size": native_size,
+		"scale": fitted.size.x / maxf(1.0, native_size.x),
+	}
+
+
+func _v5_contract_rect(contract: Dictionary, native_rect: Rect2) -> Rect2:
+	var scale := float(contract.get("scale", 1.0))
+	return Rect2(native_rect.position * scale, native_rect.size * scale)
+
+
+func _v5_contract_text(
+	contract: Dictionary,
+	text_value: String,
+	native_rect: Rect2,
+	size_px: int,
+	color: Color,
+	bold := false,
+	align := HORIZONTAL_ALIGNMENT_LEFT
+) -> Label:
+	var root := contract.get("root") as Control
+	var label := _v4_text_to(root, text_value, _v5_contract_rect(contract, native_rect), size_px, color, bold, align)
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	return label
+
+
+func _v5_contract_art(
+	contract: Dictionary,
+	path: String,
+	native_rect: Rect2,
+	tint := Color.WHITE,
+	circle_mask := false
+) -> TextureRect:
+	var root := contract.get("root") as Control
+	var art := _texture(path, _v5_contract_rect(contract, native_rect))
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED if circle_mask else TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	art.modulate = tint
+	if circle_mask:
+		var shader := Shader.new()
+		shader.code = V5_CIRCLE_MASK_SHADER
+		var material := ShaderMaterial.new()
+		material.shader = shader
+		art.material = material
+	root.add_child(art)
+	return art
+
+
+## The visible caption follows the narrow authored trough while the native
+## Button keeps a minimum 64 px hit region centered on that trough.
+func _v5_contract_button(
+	contract: Dictionary,
+	caption: String,
+	native_visual_rect: Rect2,
+	font_size: int,
+	font_color: Color,
+	callback: Callable
+) -> Button:
+	var root := contract.get("root") as Control
+	var visual := _v5_contract_rect(contract, native_visual_rect)
+	var hit_size := Vector2(maxf(64.0, visual.size.x), maxf(64.0, visual.size.y))
+	var hit_position := visual.get_center() - hit_size * 0.5
+	hit_position.x = clampf(hit_position.x, 0.0, maxf(0.0, root.size.x - hit_size.x))
+	hit_position.y = clampf(hit_position.y, 0.0, maxf(0.0, root.size.y - hit_size.y))
+	var hit_rect := Rect2(hit_position, hit_size)
+	var fitted: Rect2 = contract.get("rect", Rect2())
+	var absolute_hit := Rect2(fitted.position + hit_rect.position, hit_rect.size)
+	var button := _v5_art_slot_button(caption, absolute_hit, font_size, font_color, callback)
+	screen_root.remove_child(button)
+	root.add_child(button)
+	button.position = hit_rect.position
+	button.size = hit_rect.size
+	var caption_label := button.get_node_or_null("V5Caption") as Label
+	if caption_label != null:
+		caption_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		caption_label.position = visual.position - hit_rect.position
+		caption_label.size = visual.size
+		caption_label.clip_text = true
+	return button
+
+
 func _v5_art_slot_button(caption: String, rect: Rect2, font_size: int, font_color: Color, callback: Callable) -> Button:
 	var button := Button.new()
 	button.name = "V5ArtSlot_%s" % caption.replace(" ", "_")
 	button.position = rect.position
 	button.size = rect.size
 	button.custom_minimum_size = Vector2(maxf(64.0, rect.size.x), maxf(64.0, rect.size.y))
-	button.text = caption
+	button.text = ""
 	button.flat = true
 	button.focus_mode = Control.FOCUS_ALL
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	button.add_theme_font_override(&"font", ACTION_FONT)
-	button.add_theme_font_size_override(&"font_size", font_size)
-	button.add_theme_color_override(&"font_color", font_color)
-	button.add_theme_color_override(&"font_hover_color", font_color.lightened(0.16))
-	button.add_theme_color_override(&"font_pressed_color", font_color.darkened(0.12))
-	button.add_theme_color_override(&"font_focus_color", font_color.lightened(0.12))
-	button.add_theme_color_override(&"font_outline_color", Color(0.0, 0.0, 0.0, 0.56))
-	button.add_theme_constant_override(&"outline_size", 1)
+	var caption_label := Label.new()
+	caption_label.name = "V5Caption"
+	caption_label.text = caption
+	caption_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	caption_label.position.y = 1.5
+	caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	caption_label.add_theme_font_override(&"font", ACTION_FONT)
+	caption_label.add_theme_font_size_override(&"font_size", maxi(10, roundi(float(font_size) * 0.84)) if phone_layout_active else font_size)
+	caption_label.add_theme_color_override(&"font_color", font_color)
+	caption_label.add_theme_color_override(&"font_outline_color", Color(0.0, 0.0, 0.0, 0.56))
+	caption_label.add_theme_constant_override(&"outline_size", 1)
+	caption_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(caption_label)
 	for state_name in [&"normal", &"hover", &"pressed", &"disabled"]:
 		button.add_theme_stylebox_override(state_name, StyleBoxEmpty.new())
 	var focus_style := StyleBoxFlat.new()
@@ -3946,8 +4114,10 @@ func _v5_result_art_button(caption: String, rect: Rect2, font_size: int, callbac
 	# border reads as a misaligned extra button, so focus is expressed by a live
 	# diamond marker inside the authored caption field.
 	button.add_theme_stylebox_override(&"focus", StyleBoxEmpty.new())
-	button.focus_entered.connect(func() -> void: button.text = "◆  %s" % caption)
-	button.focus_exited.connect(func() -> void: button.text = caption)
+	var caption_label := button.get_node_or_null("V5Caption") as Label
+	if caption_label != null:
+		button.focus_entered.connect(func() -> void: caption_label.text = "◆  %s" % caption)
+		button.focus_exited.connect(func() -> void: caption_label.text = caption)
 	return button
 
 
@@ -3975,24 +4145,27 @@ func _v5_build_hub(phone: bool) -> void:
 		var top_y := safe.position.y + 54.0
 		# Phone hub uses compact editorial artifacts. Their art is visually small,
 		# while the separate actions below retain the full 64 px touch height.
-		var dossier := _v5_fit_art(V5_HUB_DOSSIER_PATH, Rect2(safe.position.x, top_y, 120.0, 164.0))
-		var dossier_art := _v4_add_art(V5_HUB_DOSSIER_PATH, dossier)
-		dossier_art.name = "HubIdentityPlate"
-		_v4_add_art(PLAYER_PORTRAIT_PATH, Rect2(dossier.position.x + 32.0, dossier.position.y + 23.0, 56.0, 56.0), Color(0.92, 0.94, 0.90, 0.96))
+		var dossier_contract := _v5_add_contract_art(V5_HUB_DOSSIER_PATH, Rect2(safe.position.x, top_y, 120.0, 164.0))
+		var dossier: Rect2 = dossier_contract.get("rect", Rect2())
+		var dossier_root := dossier_contract.get("root") as Control
+		dossier_root.name = "HubIdentityPlate"
+		_v5_contract_art(dossier_contract, PLAYER_PORTRAIT_PATH, Rect2(128.0, 75.0, 154.0, 154.0), Color(0.92, 0.94, 0.90, 0.96), true)
 		# The small dossier sockets are ornament, not text fields. Identity is carried
 		# by the portrait and the explicit Tâm Pháp action below at this scale.
 		var change := _button("TÂM PHÁP", RasterButton.ArtVariant.INK, Vector2(dossier.size.x, 64.0), 12, func() -> void: _show_screen(SCREEN_LOADOUT))
 		change.position = Vector2(dossier.position.x, safe.end.y - 64.0)
 		change.size = Vector2(dossier.size.x, 64.0)
 		screen_root.add_child(change)
-		var expedition := _v5_fit_art(V5_HUB_EXPEDITION_PATH, Rect2(dossier.end.x + 10.0, top_y, 278.0, 164.0))
-		var expedition_art := _v4_add_art(V5_HUB_EXPEDITION_PATH, expedition)
-		expedition_art.name = "HubExpeditionPlate"
+		var expedition_contract := _v5_add_contract_art(V5_HUB_EXPEDITION_PATH, Rect2(dossier.end.x + 10.0, top_y, 278.0, 164.0))
+		var expedition: Rect2 = expedition_contract.get("rect", Rect2())
+		var expedition_root := expedition_contract.get("root") as Control
+		expedition_root.name = "HubExpeditionPlate"
 		# The authored expedition object already contains its own landscape. A second
 		# stage bitmap created the conspicuous rectangle-within-a-rectangle layer.
-		_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(expedition.position.x + 28.0, expedition.position.y + 34.0, expedition.size.x - 56.0, 18.0), 10, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(expedition.position.x + 30.0, expedition.position.y + 55.0, expedition.size.x - 60.0, 28.0), 18, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text("HIỂM HỌA %d/3 · %d+ NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(expedition.position.x + 36.0, expedition.end.y - 38.0, expedition.size.x - 72.0, 20.0), 11, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(expedition_contract, "THÍ LUYỆN ĐANG CHỌN", Rect2(205.0, 130.0, 524.0, 48.0), 10, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(expedition_contract, str(stage.get("name", "Vân Mộng Cốc")), Rect2(150.0, 178.0, 634.0, 72.0), 18, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(expedition_contract, "HIỂM HỌA %d/3" % int(stage.get("difficulty", 1)), Rect2(40.0, 438.0, 250.0, 48.0), 10, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(expedition_contract, "%d+\nNGỌC" % int((stage.get("rewards", {}) as Dictionary).get("base", 30)), Rect2(760.0, 414.0, 142.0, 102.0), 10, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
 		var depart := _button("KHỞI HÀNH", RasterButton.ArtVariant.GOLD, Vector2(expedition.size.x, 64.0), 15, func() -> void: _show_screen(SCREEN_LOADOUT))
 		depart.position = Vector2(expedition.position.x, safe.end.y - 64.0)
 		depart.size = Vector2(expedition.size.x, 64.0)
@@ -4005,9 +4178,13 @@ func _v5_build_hub(phone: bool) -> void:
 			var command: Array = commands[index]
 			var col := index % 2
 			var row := index / 2
-			var button := _button(str(command[0]), RasterButton.ArtVariant.JADE if index == 1 else RasterButton.ArtVariant.INK, Vector2(command_width, 64.0), 12, command[1] as Callable)
-			button.position = Vector2(rail_x + col * (command_width + gap), top_y + row * 67.0)
-			button.size = Vector2(command_width, 64.0)
+			var button_width := command_width
+			var button_x := rail_x + col * (command_width + gap)
+			if index == commands.size() - 1:
+				button_x = rail_x + (rail_width - command_width) * 0.5
+			var button := _button(str(command[0]), RasterButton.ArtVariant.JADE if index == 1 else RasterButton.ArtVariant.INK, Vector2(button_width, 64.0), 12, command[1] as Callable)
+			button.position = Vector2(button_x, top_y + row * 67.0)
+			button.size = Vector2(button_width, 64.0)
 			screen_root.add_child(button)
 		return
 
@@ -4015,29 +4192,38 @@ func _v5_build_hub(phone: bool) -> void:
 	_v4_add_text("VÂN MỘNG ĐẠO TÔNG · NGOẠI VIỆN", Rect2(66.0, 74.0, 460.0, 24.0), 14, V4_PAPER_MUTED, true)
 	_v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(1262.0, 44.0, 274.0, 32.0), 20, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
 	_v4_add_rule(Rect2(62.0, 108.0, 1476.0, 1.0), Color(V4_BRONZE, 0.62))
-	var dossier := _v5_add_fitted_art(V5_HUB_DOSSIER_PATH, Rect2(54.0, 126.0, 380.0, 620.0))
-	_v4_add_art(PLAYER_PORTRAIT_PATH, Rect2(dossier.position.x + 92.0, dossier.position.y + 38.0, 196.0, 196.0), Color(0.92, 0.95, 0.91, 0.98))
-	_v4_add_text("KIẾM TU VÂN MỘNG", Rect2(dossier.position.x + 52.0, dossier.position.y + dossier.size.y * 0.45, dossier.size.x - 104.0, 24.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var dossier_contract := _v5_add_contract_art(V5_HUB_DOSSIER_PATH, Rect2(54.0, 126.0, 380.0, 620.0))
+	var dossier: Rect2 = dossier_contract.get("rect", Rect2())
+	_v5_contract_art(dossier_contract, PLAYER_PORTRAIT_PATH, Rect2(128.0, 75.0, 154.0, 154.0), Color(0.92, 0.95, 0.91, 0.98), true)
+	_v5_contract_text(dossier_contract, "KIẾM TU VÂN MỘNG", Rect2(104.0, 251.0, 200.0, 32.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
 	# Keep the decorative socket row unobstructed. Runtime data belongs in the two
 	# long authored status channels near the foot of the dossier.
-	_v4_add_text("TÂM PHÁP · TẦNG %d / 5" % rank, Rect2(dossier.position.x + 92.0, dossier.end.y - 110.0, dossier.size.x - 154.0, 25.0), 14, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
-	_v4_add_text("CÔNG LỰC %d" % _account_power(), Rect2(dossier.position.x + 92.0, dossier.end.y - 72.0, dossier.size.x - 154.0, 25.0), 14, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v5_contract_text(dossier_contract, "TÂM PHÁP · TẦNG %d / 5" % rank, Rect2(112.0, 444.0, 206.0, 28.0), 14, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v5_contract_text(dossier_contract, "CÔNG LỰC %d" % _account_power(), Rect2(112.0, 478.0, 206.0, 28.0), 14, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
 	var change := _button("ĐỔI TÂM PHÁP", RasterButton.ArtVariant.INK, Vector2(280.0, 64.0), 16, func() -> void: _show_screen(SCREEN_LOADOUT))
-	change.position = Vector2(dossier.position.x + 50.0, 748.0)
+	change.position = Vector2(dossier.position.x + (dossier.size.x - 280.0) * 0.5, dossier.end.y + 14.0)
 	change.size = Vector2(280.0, 64.0)
 	screen_root.add_child(change)
-	var expedition := _v5_add_fitted_art(V5_HUB_EXPEDITION_PATH, Rect2(448.0, 126.0, 750.0, 520.0))
-	_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(expedition.position.x + 112.0, expedition.position.y + 128.0, expedition.size.x - 224.0, 25.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-	_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(expedition.position.x + 96.0, expedition.position.y + 164.0, expedition.size.x - 192.0, 48.0), 31, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-	_v4_add_text("HIỂM HỌA %d / 3   ·   THƯỞNG %d+ LINH NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(expedition.position.x + 128.0, expedition.end.y - 82.0, expedition.size.x - 256.0, 28.0), 15, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var expedition_contract := _v5_add_contract_art(V5_HUB_EXPEDITION_PATH, Rect2(448.0, 126.0, 750.0, 520.0))
+	var expedition: Rect2 = expedition_contract.get("rect", Rect2())
+	_v5_contract_text(expedition_contract, "THÍ LUYỆN ĐANG CHỌN", Rect2(205.0, 130.0, 524.0, 48.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v5_contract_text(expedition_contract, str(stage.get("name", "Vân Mộng Cốc")), Rect2(150.0, 178.0, 634.0, 72.0), 29, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v5_contract_text(expedition_contract, "HIỂM HỌA %d / 3" % int(stage.get("difficulty", 1)), Rect2(40.0, 438.0, 250.0, 48.0), 13, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v5_contract_text(expedition_contract, "THƯỞNG\n%d+ NGỌC" % int((stage.get("rewards", {}) as Dictionary).get("base", 30)), Rect2(760.0, 414.0, 142.0, 102.0), 12, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
 	var depart := _button("KHỞI HÀNH", RasterButton.ArtVariant.GOLD, Vector2(292.0, 66.0), 18, func() -> void: _show_screen(SCREEN_LOADOUT))
 	depart.position = Vector2(expedition.end.x - 316.0, 658.0)
 	depart.size = Vector2(292.0, 66.0)
 	screen_root.add_child(depart)
-	var rail := _v5_add_fitted_art(V5_HUB_COMMAND_RAIL_PATH, Rect2(1244.0, 130.0, 244.0, 650.0))
-	for index in commands.size():
+	var rail_contract := _v5_add_contract_art(V5_HUB_COMMAND_RAIL_PATH, Rect2(1244.0, 130.0, 244.0, 650.0))
+	var rail: Rect2 = rail_contract.get("rect", Rect2())
+	for index in mini(V5_COMMAND_ROW_RECTS.size(), commands.size()):
 		var command: Array = commands[index]
-		_v5_art_slot_button(str(command[0]), Rect2(rail.position.x + 24.0, rail.position.y + 44.0 + index * 78.0, rail.size.x - 48.0, 64.0), 13, V4_PAPER, command[1] as Callable)
+		_v5_contract_button(rail_contract, str(command[0]), V5_COMMAND_ROW_RECTS[index], 13, V4_PAPER, command[1] as Callable)
+	var settings_command: Array = commands[commands.size() - 1]
+	var settings := _button(str(settings_command[0]), RasterButton.ArtVariant.INK, Vector2(rail.size.x, 64.0), 13, settings_command[1] as Callable)
+	settings.position = Vector2(rail.position.x, rail.end.y + 4.0)
+	settings.size = Vector2(rail.size.x, 64.0)
+	screen_root.add_child(settings)
 
 
 func _v5_build_loadout(phone: bool) -> void:
@@ -4054,17 +4240,20 @@ func _v5_build_loadout(phone: bool) -> void:
 		var discipline_id := StringName(str(discipline.get("id", "van_kiem")))
 		var is_selected := discipline_id == selected
 		var slot := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, card_height)
-		var folio := _v5_add_fitted_art(str(V5_FOLIO_PRIMARY_PATHS[index]), slot, Color(1.04, 1.06, 0.98, 1.0) if is_selected else Color.WHITE)
-		var title_size := 13 if phone else 25
+		var folio_contract := _v5_add_contract_art(str(V5_FOLIO_PRIMARY_PATHS[index]), slot, Color(1.04, 1.06, 0.98, 1.0) if is_selected else Color.WHITE)
+		var layout: Dictionary = V5_FOLIO_PRIMARY_LAYOUTS[index]
+		var header: Rect2 = layout.get("header", Rect2())
+		var info: Rect2 = layout.get("info", Rect2())
+		var title_size := 12 if phone else 22
 		var discipline_title := _phone_discipline_title(discipline_id) if phone else str(discipline.get("name", "Vạn Kiếm Quy Tông"))
-		_v4_add_text(discipline_title, Rect2(folio.position.x + 20.0, folio.position.y + (7.0 if phone else 18.0), folio.size.x - 40.0, 26.0 if phone else 56.0), title_size, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text(str(discipline.get("role", "Công kích")).to_upper(), Rect2(folio.position.x + 22.0, folio.position.y + (31.0 if phone else 72.0), folio.size.x - 44.0, 18.0), 10 if phone else 13, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(folio_contract, discipline_title, Rect2(header.position + Vector2(8.0, 3.0), Vector2(header.size.x - 16.0, header.size.y * 0.54)), title_size, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(folio_contract, str(discipline.get("role", "Công kích")).to_upper(), Rect2(header.position + Vector2(8.0, header.size.y * 0.52), Vector2(header.size.x - 16.0, header.size.y * 0.35)), 10 if phone else 13, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
 		if not phone:
-			var copy_y := folio.position.y + folio.size.y * 0.70
-			var copy := _v4_add_text(str(discipline.get("description", "")), Rect2(folio.position.x + 30.0, copy_y, folio.size.x - 60.0, folio.size.y * 0.17), 16, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			var copy_rect := Rect2(info.position + Vector2(12.0, 7.0), Vector2(info.size.x - 24.0, info.size.y * 0.58))
+			var copy := _v5_contract_text(folio_contract, str(discipline.get("description", "")), copy_rect, 14, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
 			copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		var equip_y := folio.end.y - (48.0 if phone else 64.0)
-		_v5_art_slot_button("ĐÃ TRANG BỊ" if is_selected else "TRANG BỊ", Rect2(folio.position.x + 28.0, equip_y, folio.size.x - 56.0, 64.0), 12 if phone else 15, V4_PAPER, func() -> void: _select_discipline(discipline_id))
+			copy.max_lines_visible = 3
+		_v5_contract_button(folio_contract, "ĐÃ TRANG BỊ" if is_selected else "TRANG BỊ", layout.get("action", Rect2()), 11 if phone else 14, V4_PAPER, func() -> void: _select_discipline(discipline_id))
 	if phone:
 		_v4_add_text("%s · HIỂM HỌA %d/3" % [str(_discipline_data(selected).get("name", "Vạn Kiếm Quy Tông")), int(stage.get("difficulty", 1))], Rect2(body.position.x, body.end.y - 54.0, body.size.x - 294.0, 46.0), 14, V4_PAPER_MUTED, true)
 		var start_phone := _button("NHẬP CẢNH", RasterButton.ArtVariant.GOLD, Vector2(286.0, 64.0), 17, _start_selected_run)
@@ -4090,20 +4279,25 @@ func _v5_build_techniques(phone: bool) -> void:
 		var technique_id := StringName(str(technique.get("id", "sword_damage")))
 		var rank := int(technique.get("rank", 0))
 		var max_rank := int(technique.get("max_rank", 5))
-		var cost := int(technique.get("next_cost", -1))
+		var cost := int(technique.get("fragment_cost", technique.get("next_cost", -1)))
+		var fragments_owned := int(technique.get("fragments_owned", 0))
 		var slot := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, body.size.y)
-		var folio := _v5_add_fitted_art(str(V5_FOLIO_SECONDARY_PATHS[index]), slot)
+		var folio_contract := _v5_add_contract_art(str(V5_FOLIO_SECONDARY_PATHS[index]), slot)
+		var layout: Dictionary = V5_FOLIO_SECONDARY_LAYOUTS[index]
+		var header: Rect2 = layout.get("header", Rect2())
+		var info: Rect2 = layout.get("info", Rect2())
 		var technique_title := _phone_technique_title(technique_id) if phone else str(technique.get("name", "Kiếm Tâm"))
-		_v4_add_text(technique_title, Rect2(folio.position.x + 22.0, folio.position.y + (7.0 if phone else 18.0), folio.size.x - 44.0, 27.0 if phone else 54.0), 12 if phone else 26, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text(_technique_school(technique_id), Rect2(folio.position.x + 22.0, folio.position.y + (40.0 if phone else 70.0), folio.size.x - 44.0, 20.0), 11 if phone else 13, _technique_accent(technique_id).darkened(0.34), true, HORIZONTAL_ALIGNMENT_CENTER)
-		var info_y := folio.position.y + folio.size.y * (0.69 if phone else 0.70)
-		_v4_add_text("TẦNG %d / %d" % [rank, max_rank], Rect2(folio.position.x + 28.0, info_y, folio.size.x - 56.0, 24.0), 12 if phone else 15, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(folio_contract, technique_title, Rect2(header.position + Vector2(8.0, 3.0), Vector2(header.size.x - 16.0, header.size.y * 0.54)), 12 if phone else 22, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(folio_contract, _technique_school(technique_id), Rect2(header.position + Vector2(8.0, header.size.y * 0.52), Vector2(header.size.x - 16.0, header.size.y * 0.35)), 10 if phone else 13, _technique_accent(technique_id).darkened(0.34), true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(folio_contract, "TẦNG %d / %d" % [rank, max_rank], Rect2(info.position + Vector2(12.0, 4.0), Vector2(info.size.x - 24.0, info.size.y * 0.22)), 11 if phone else 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v5_contract_text(folio_contract, "MẢNH %d  ·  CẦN %d" % [fragments_owned, cost] if rank < max_rank else "MẢNH ĐÃ TINH LUYỆN", Rect2(info.position + Vector2(12.0, info.size.y * 0.26), Vector2(info.size.x - 24.0, info.size.y * 0.21)), 10 if phone else 13, _technique_accent(technique_id).darkened(0.24), true, HORIZONTAL_ALIGNMENT_CENTER)
 		if not phone:
-			var evolution := _v4_add_text(_technique_evolution_copy(technique_id, rank, max_rank), Rect2(folio.position.x + 30.0, info_y + 26.0, folio.size.x - 60.0, folio.size.y * 0.12), 15, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			var evolution_rect := Rect2(info.position + Vector2(12.0, info.size.y * 0.48), Vector2(info.size.x - 24.0, info.size.y * 0.26))
+			var evolution := _v5_contract_text(folio_contract, _phone_technique_evolution_copy(technique_id, rank, max_rank), evolution_rect, 14, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
 			evolution.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		var price := "ĐÃ VIÊN MÃN" if rank >= max_rank else ("NÂNG · %d" % cost if phone else "NÂNG TẦNG · %d LINH NGỌC" % cost)
-		var purchase_y := folio.end.y - (48.0 if phone else 64.0)
-		var purchase := _v5_art_slot_button(price, Rect2(folio.position.x + 28.0, purchase_y, folio.size.x - 56.0, 64.0), 11 if phone else 14, V4_PAPER, func() -> void: _purchase_technique(technique_id))
+			evolution.max_lines_visible = 2
+		var price := "ĐÃ VIÊN MÃN" if rank >= max_rank else ("NÂNG · %d" % cost if phone else "NÂNG · %d MẢNH" % cost)
+		var purchase := _v5_contract_button(folio_contract, price, layout.get("action", Rect2()), 10 if phone else 13, V4_PAPER, func() -> void: _purchase_technique(technique_id))
 		purchase.disabled = rank >= max_rank
 
 
@@ -4111,26 +4305,38 @@ func _v5_build_achievements(phone: bool) -> void:
 	_v4_meta_background(0.50 if not phone else 0.44)
 	var body := _v4_header("THIÊN MỆNH LỤC", "Dấu mốc được khắc vào hồ sơ", phone)
 	var achievements := _achievement_entries()
-	var ledger := _v5_add_fitted_art(V5_ACHIEVEMENT_LEDGER_PATH, body.grow(-6.0 if phone else -28.0))
-	var icon_size := 40.0 if phone else 66.0
+	var ledger_contract := _v5_add_contract_art(V5_ACHIEVEMENT_LEDGER_PATH, body.grow(-6.0 if phone else -28.0))
+	var ledger_root := ledger_contract.get("root") as Control
 	for index in mini(6, achievements.size()):
 		var achievement: Dictionary = achievements[index]
-		var col := index % 2
-		var row := index / 2
 		var unlocked := bool(achievement.get("unlocked", false))
-		var center_x := ledger.position.x + ledger.size.x * (0.18 if col == 0 else 0.60)
-		var center_y := ledger.position.y + ledger.size.y * (0.245 + row * 0.275)
-		_v4_add_art(str(ACHIEVEMENT_SEALS.get(str(achievement.get("id", "nhap_dao")), ICON_SWORD_PATH)), Rect2(center_x - icon_size * 0.5, center_y - icon_size * 0.5, icon_size, icon_size), Color.WHITE if unlocked else Color(0.26, 0.27, 0.24, 0.66))
-		var text_x := center_x + icon_size * 0.70
-		var text_width := ledger.size.x * 0.27
-		_v4_add_text(str(achievement.get("name", "Thiên mệnh")), Rect2(text_x, center_y - (24.0 if phone else 34.0), text_width, 30.0 if phone else 42.0), 12 if phone else 17, PAPER_INK, true)
+		var native_cell: Rect2 = V5_LEDGER_CELL_RECTS[index]
+		var cell_rect := _v5_contract_rect(ledger_contract, native_cell)
+		var cell := Control.new()
+		cell.name = "AchievementCell_%02d" % (index + 1)
+		cell.position = cell_rect.position
+		cell.size = cell_rect.size
+		cell.clip_contents = true
+		cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ledger_root.add_child(cell)
+		var scale := float(ledger_contract.get("scale", 1.0))
+		var seal := _texture(str(ACHIEVEMENT_SEALS.get(str(achievement.get("id", "nhap_dao")), ICON_SWORD_PATH)), Rect2(Vector2(20.0, 17.0) * scale, Vector2(58.0, 58.0) * scale))
+		seal.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		seal.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		seal.modulate = Color.WHITE if unlocked else Color(0.26, 0.27, 0.24, 0.66)
+		cell.add_child(seal)
+		var title_width := maxf(1.0, native_cell.size.x - 102.0)
+		var title := _v4_text_to(cell, str(achievement.get("name", "Thiên mệnh")), Rect2(Vector2(100.0, 17.0) * scale, Vector2(title_width, 28.0) * scale), 12 if phone else 17, PAPER_INK, true)
+		title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		var progress_data: Dictionary = achievement.get("progress", {}) as Dictionary
 		var progress := "HOÀN TẤT" if unlocked else "%d / %d" % [int(progress_data.get("current", 0)), int(progress_data.get("target", 1))]
-		_v4_add_text(progress, Rect2(text_x, center_y + (8.0 if phone else 14.0), text_width, 22.0), 11 if phone else 14, Color("#6f5a31"), true)
+		var progress_label := _v4_text_to(cell, progress, Rect2(Vector2(100.0, 49.0) * scale, Vector2(title_width, 24.0) * scale), 11 if phone else 14, Color("#6f5a31"), true)
+		progress_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 
 func _v5_build_results(phone: bool) -> void:
-	var stage_path := str(STAGE_ART.get(String(_selected_stage()), STAGE_ART["van_mong"]))
+	var completed_stage_id := StringName(str(last_result.get("stage_id", _selected_stage())))
+	var stage_path := str(STAGE_ART.get(String(completed_stage_id), STAGE_ART["van_mong"]))
 	_set_background(stage_path, Color(V4_INK, 0.56 if not phone else 0.50))
 	var shrine_path := V5_VICTORY_SHRINE_PATH if last_victory else V5_DEFEAT_SHRINE_PATH
 	var bounds := _phone_safe_rect() if phone else Rect2(274.0, 94.0, 1052.0, 712.0)
@@ -4144,7 +4350,7 @@ func _v5_build_results(phone: bool) -> void:
 		_v4_add_text("THÍ LUYỆN KẾT THÚC", Rect2(shrine.position.x + 56.0, title_y - (14.0 if phone and last_victory else 0.0), shrine.size.x - 112.0, 18.0), 9 if phone else 13, result_color, true, HORIZONTAL_ALIGNMENT_CENTER)
 	var main_title_y := title_y if phone and last_victory else title_y + 20.0
 	_v4_add_text(last_result_title, Rect2(shrine.position.x + 44.0, main_title_y, shrine.size.x - 88.0, 34.0), 20 if phone else 32, result_color, true, HORIZONTAL_ALIGNMENT_CENTER)
-	var stage := _stage_data(_selected_stage())
+	var stage := _stage_data(completed_stage_id)
 	if not (phone and last_victory):
 		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(shrine.position.x + 60.0, main_title_y + 42.0, shrine.size.x - 120.0, 22.0), 12 if phone else 15, PAPER_INK if last_victory else V4_PAPER_MUTED, true, HORIZONTAL_ALIGNMENT_CENTER)
 	var button_y := shrine.end.y - 68.0
@@ -4154,8 +4360,12 @@ func _v5_build_results(phone: bool) -> void:
 	var stat_left := shrine.position.x + shrine.size.x * 0.13
 	var stat_total := shrine.size.x * 0.74
 	var stat_width := stat_total / 3.0
-	var stat_labels := ["THỜI GIAN", "TRẢM YÊU", "LINH NGỌC"]
-	var stat_values := [_format_time(run_elapsed), str(run_kills), "+%d" % int(last_result.get("total", 0))]
+	var fragment_drops := last_result.get("fragment_drops", {}) as Dictionary
+	var fragment_total := 0
+	for fragment_value: Variant in fragment_drops.values():
+		fragment_total += int(fragment_value)
+	var stat_labels := ["THỜI GIAN", "TRẢM YÊU", "NGỌC / MẢNH"]
+	var stat_values := [_format_time(run_elapsed), str(run_kills), "+%d / +%d" % [int(last_result.get("total", 0)), fragment_total]]
 	for index in 3:
 		var x := stat_left + index * stat_width
 		_v4_add_text(stat_labels[index], Rect2(x, stat_y, stat_width, 20.0), 11 if phone else 13, PAPER_COPY if last_victory else V4_PAPER_MUTED, true, HORIZONTAL_ALIGNMENT_CENTER)

@@ -10,11 +10,14 @@ PASS: start request enters RUNNING
 PASS: player is enabled after start
 PASS: rank VFX follows the player in live combat
 PASS: combat lifecycle enables mobile controls
+PASS: Thanh Van Ho companion enables with combat
 PASS: player uses a sprite when runtime art is available
 PASS: player runtime visual starts in idle state
+PASS: player uses acceleration/deceleration movement tuning
 PASS: player runtime visual changes idle -> move
 PASS: move state swaps to the move texture
 PASS: player runtime visual changes move -> idle
+PASS: movement feedback keeps a stable optical lean
 PASS: idle state restores the idle texture
 PASS: enemy uses a sprite when runtime art is available
 PASS: auto attack triggers the discipline sword fan VFX
@@ -22,6 +25,7 @@ PASS: projectile uses a sprite when runtime art is available
 PASS: auto sword damages the nearest enemy
 PASS: effect uses a sprite when runtime art is available
 PASS: qi pulse damages an enemy inside its radius
+PASS: companion active skill damages a target
 PASS: two enemy deaths increment kills exactly once each
 PASS: each enemy death creates one qi orb
 PASS: qi orb uses a sprite when runtime art is available
@@ -38,6 +42,8 @@ PASS: resume returns to RUNNING
 PASS: resume unpauses the world
 PASS: timeout produces victory without a boss kill
 PASS: player is disabled after timeout victory
+PASS: boss exposes a readable cast telegraph
+PASS: boss enters phase two at health threshold
 PASS: boss defeat produces immediate victory
 PASS: lethal damage produces defeat
 SMOKE RESULT: PASS

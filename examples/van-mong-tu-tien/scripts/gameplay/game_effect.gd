@@ -5,7 +5,7 @@ extends Node2D
 
 const RuntimeVisualsScript := preload("res://scripts/gameplay/runtime_visuals.gd")
 
-enum EffectKind { RING, BURST, HIT, PORTAL }
+enum EffectKind { RING, BURST, HIT, PORTAL, RIFT, SEAL }
 
 var kind := EffectKind.RING
 var effect_color := Color("#6ee7bf")
@@ -73,6 +73,28 @@ func _draw() -> void:
 				var radius := max_radius * (0.45 + float(index) * 0.2) * (0.75 + progress * 0.25)
 				var begin := spin + float(index) * 2.1
 				draw_arc(Vector2.ZERO, radius, begin, begin + PI * 1.35, 30, Color(effect_color, fade * (0.8 - index * 0.14)), 4.0 - index, true)
+		EffectKind.RIFT:
+			var length := max_radius
+			var tangent := Vector2(-sin(rotation), cos(rotation))
+			var forward := Vector2(cos(rotation), sin(rotation))
+			for side: float in [-1.0, 1.0]:
+				for segment in 7:
+					var a := float(segment) / 7.0
+					var b := minf(1.0, a + 0.10)
+					var start: Vector2 = forward * (length * 0.05 + length * a * progress) + tangent * (28.0 * side)
+					var finish: Vector2 = forward * (length * 0.05 + length * b * progress) + tangent * (28.0 * side)
+					draw_line(start, finish, Color(effect_color, fade * (0.76 - 0.06 * float(segment % 2))), 3.5 - float(segment % 2), true)
+			for mark in 5:
+				var mark_pos := forward * (length * (0.12 + float(mark) * 0.16) * progress)
+				draw_line(mark_pos - tangent * 8.0, mark_pos + tangent * 8.0, Color("#f1d487", fade * 0.56), 1.8, true)
+		EffectKind.SEAL:
+			for index in 4:
+				var angle := TAU * float(index) / 4.0 + age * 0.35
+				var center := Vector2.from_angle(angle) * max_radius * 0.52
+				var size := max_radius * (0.10 + progress * 0.07)
+				var diamond := PackedVector2Array([center + Vector2.UP * size, center + Vector2.RIGHT * size * 0.72, center + Vector2.DOWN * size, center + Vector2.LEFT * size * 0.72])
+				for edge in 4:
+					draw_line(diamond[edge], diamond[(edge + 1) % 4], Color(effect_color, fade * 0.72), 2.2, true)
 
 func _configure_runtime_sprite() -> void:
 	if visual_sprite != null:
@@ -94,6 +116,8 @@ func _runtime_role() -> StringName:
 			return &"effect_hit"
 		EffectKind.PORTAL:
 			return &"effect_portal"
+		EffectKind.RIFT, EffectKind.SEAL:
+			return &"none"
 	return &"effect_burst"
 
 func _update_runtime_sprite() -> void:

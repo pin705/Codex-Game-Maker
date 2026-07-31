@@ -19,6 +19,8 @@ var arena_rect := Rect2(54.0, 54.0, 1492.0, 792.0)
 var max_health := 120.0
 var health := 120.0
 var move_speed := 305.0
+var move_acceleration := 1180.0
+var move_deceleration := 1540.0
 var health_regen := 0.45
 var contact_invulnerability := 0.55
 var pickup_radius := 42.0
@@ -44,6 +46,9 @@ var visual_sprite: Sprite2D
 var visual_frames: Array = []
 var visual_frame_index := 0
 var visual_frame_clock := 0.0
+var direction_change_remaining := 0.0
+var direction_change_from := Vector2.DOWN
+var acceleration_observed := false
 
 func _ready() -> void:
 	_configure_runtime_sprite()
@@ -54,6 +59,8 @@ func setup(bounds: Rect2, config: Dictionary) -> void:
 	max_health = float(config.get("max_health", max_health))
 	health = max_health
 	move_speed = float(config.get("move_speed", move_speed))
+	move_acceleration = float(config.get("move_acceleration", move_acceleration))
+	move_deceleration = float(config.get("move_deceleration", move_deceleration))
 	health_regen = float(config.get("health_regen", health_regen))
 	contact_invulnerability = float(config.get("contact_invulnerability", contact_invulnerability))
 	pickup_radius = float(config.get("pickup_radius", pickup_radius))
@@ -82,10 +89,21 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 		return
 	var direction := Input.get_vector(&"move_left", &"move_right", &"move_up", &"move_down")
-	velocity = direction * move_speed
+	var was_moving := velocity.length_squared() > 18.0
 	if direction.length_squared() > 0.01:
-		last_move = direction.normalized()
-	_set_visual_state(&"move" if direction.length_squared() > 0.01 else &"idle")
+		var next_move := direction.normalized()
+		if was_moving and next_move.dot(last_move) < 0.15:
+			direction_change_remaining = 0.16
+			direction_change_from = last_move
+		last_move = next_move
+		velocity = velocity.move_toward(next_move * move_speed, move_acceleration * delta)
+		if velocity.length() < move_speed - 0.5:
+			acceleration_observed = true
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, move_deceleration * delta)
+	direction_change_remaining = maxf(0.0, direction_change_remaining - delta)
+	var moving_now := velocity.length_squared() > 18.0
+	_set_visual_state(&"move" if moving_now else &"idle")
 	_update_runtime_animation(delta)
 	move_and_slide()
 	global_position.x = clampf(global_position.x, arena_rect.position.x, arena_rect.end.x)
@@ -122,7 +140,7 @@ func increase_max_health(amount: float) -> void:
 	Events.player_health_changed.emit(health, max_health)
 
 func _draw() -> void:
-	var moving := velocity.length_squared() > 1.0
+	var moving := velocity.length_squared() > 18.0
 	var bob := sin(visual_time * (9.0 if moving else 3.0)) * (1.8 if moving else 1.1)
 	var breathe := 1.0 + sin(visual_time * 2.4) * 0.025
 	var alpha := 0.38 if invulnerability_remaining > 0.0 and int(invulnerability_remaining * 18.0) % 2 == 0 else 1.0
@@ -131,10 +149,16 @@ func _draw() -> void:
 	# Shadow and cultivation aura.
 	# Authored frames use a feet pivot, so the contact shadow belongs at the
 	# node origin rather than floating a body-height below the cultivator.
-	_draw_ink_ellipse(Vector2(0.0, 3.0), Vector2(27.0, 9.0), Color(0.0, 0.0, 0.0, 0.30 * alpha))
+	_draw_ink_grounding(alpha, moving)
 	draw_circle(Vector2.ZERO, 34.0 + sin(visual_time * 2.0) * 2.0, Color(JADE, 0.035 * alpha))
 	draw_arc(Vector2.ZERO, 31.0 + sin(visual_time * 1.8), -PI * 0.15 + visual_time * 0.18, PI * 1.25 + visual_time * 0.18, 30, Color(JADE, 0.26 * alpha), 2.0, true)
 	if visual_sprite != null and visual_sprite.texture != null:
+		# A small bottom-pivot lean makes acceleration readable without scale
+		# bounce or camera shake. The contact point stays fixed in world space.
+		var lean := clampf(velocity.x / maxf(move_speed, 1.0), -1.0, 1.0) * 0.055
+		if direction_change_remaining > 0.0:
+			lean += direction_change_from.x * 0.02 * (direction_change_remaining / 0.16)
+		visual_sprite.rotation = lerpf(visual_sprite.rotation, lean, 0.24)
 		return
 
 	# Ink-wash robe, kept centered so locomotion does not jitter.
@@ -196,7 +220,8 @@ func _update_runtime_animation(delta: float) -> void:
 	if visual_sprite == null or visual_frames.size() <= 1:
 		return
 	visual_frame_clock += delta
-	var frame_duration := 1.0 / (7.0 if visual_state == &"move" else 6.0)
+	var speed_ratio := clampf(velocity.length() / maxf(move_speed, 1.0), 0.0, 1.0)
+	var frame_duration := 1.0 / (lerpf(6.0, 9.0, speed_ratio) if visual_state == &"move" else 6.0)
 	while visual_frame_clock >= frame_duration:
 		visual_frame_clock -= frame_duration
 		visual_frame_index = (visual_frame_index + 1) % visual_frames.size()
@@ -210,10 +235,28 @@ func _update_runtime_sprite_feedback() -> void:
 	var alpha := 0.38 if invulnerability_remaining > 0.0 and int(invulnerability_remaining * 18.0) % 2 == 0 else 1.0
 	var tint := Color(1.35, 0.82, 0.82, alpha) if hit_flash > 0.0 else Color(1.0, 1.0, 1.0, alpha)
 	visual_sprite.modulate = tint
+	var lean := clampf(velocity.x / maxf(move_speed, 1.0), -1.0, 1.0) * 0.055
+	if direction_change_remaining > 0.0:
+		lean += direction_change_from.x * 0.02 * (direction_change_remaining / 0.16)
+	visual_sprite.rotation = lerpf(visual_sprite.rotation, lean, 0.24)
 
 func _draw_ink_ellipse(center: Vector2, radii: Vector2, color: Color) -> void:
 	var points := PackedVector2Array()
 	for index in 24:
 		var angle := TAU * float(index) / 24.0
-		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y))
+		var irregular := 1.0 + sin(float(index) * 2.17 + 0.8) * 0.10 + cos(float(index) * 4.31) * 0.045
+		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y) * irregular)
 	draw_colored_polygon(points, color)
+
+func _draw_ink_grounding(alpha: float, moving: bool) -> void:
+	# Three low-contrast dry-brush layers ground the feet and keep silhouettes
+	# readable over the authored arena. They intentionally avoid a perfect
+	# vector ellipse/debug circle.
+	var drift := clampf(velocity.x / maxf(move_speed, 1.0), -1.0, 1.0) * 3.0
+	_draw_ink_ellipse(Vector2(drift, 5.0), Vector2(29.0, 9.0), Color(0.01, 0.03, 0.03, 0.24 * alpha))
+	_draw_ink_ellipse(Vector2(-drift * 0.55, 5.6), Vector2(22.0, 6.0), Color(0.04, 0.10, 0.10, 0.28 * alpha))
+	for index in 5:
+		var angle := -0.78 + float(index) * 0.39
+		var start := Vector2(drift * 0.45, 5.0) + Vector2.from_angle(angle) * Vector2(17.0, 4.0)
+		var finish := start + Vector2(cos(angle) * (6.0 + index * 2.0), sin(angle) * 2.2)
+		draw_line(start, finish, Color(0.12, 0.22, 0.20, (0.20 if moving else 0.14) * alpha), 1.3 + float(index % 2), true)

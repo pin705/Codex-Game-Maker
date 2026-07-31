@@ -10,6 +10,8 @@ PASS: first result is recorded
 PASS: first victory is a first clear
 PASS: global counters update once
 PASS: Vân Mộng victory unlocks Huyết Vân
+PASS: victory auto-selects the next sequential stage
+PASS: run returns persistent skill fragment drops
 PASS: stage result discovers bestiary
 PASS: run achievement unlocks
 PASS: fast victory achievement unlocks
@@ -17,8 +19,10 @@ PASS: unlocked second stage can be selected
 PASS: second stage becomes current selection
 PASS: selected stage result is recorded without an explicit id
 PASS: Huyết Vân victory unlocks Thiên Môn
+PASS: second victory advances route to final stage
 PASS: per-stage record persists
 PASS: upgrade purchase succeeds
+PASS: fragment wallet persists after upgrade
 PASS: upgrade rank increments
 PASS: stage modifier is composed
 PASS: discipline modifier is composed

@@ -41,7 +41,7 @@ component silhouette before ornament.
 |---|---|---|
 | `title` | Key art, quiet vow plate, primary/secondary actions | `frontend/title.png`; `title-phone.png` |
 | `hub` | Identity folio, expedition dossier, command rail | `frontend/hub.png`; `hub-phone.png` |
-| `stages` | Three contained arena choices with lock/risk/reward | `frontend/stages.png`; `stages-phone.png` |
+| `stages` | Sequential three-stage route with completed/current/next state and one continue action | `frontend/stages.png`; `stages-phone.png` |
 | `loadout` | Three doctrine cards and protected enter action | `frontend/loadout.png`; `loadout-phone.png` |
 | `inventory` | Character dossier, relic grid and compare/equip plate | `frontend/inventory.png`; `inventory-phone.png` |
 | `spirit-beast` | Companion portrait, assist, passive and evolution strip | `frontend/spirit-beast.png`; `spirit-beast-phone.png` |
@@ -54,8 +54,8 @@ component silhouette before ornament.
 | `combat` | Status island, timer/action state, skill rail, touch zones | `overhaul/gameplay-final.png`; `mobile-support/combat-phone.png` |
 | `combat-upgrade` | Three in-run insight folios | `overhaul/upgrade-final.png`; `mobile-support/breakthrough-phone.png` |
 | `combat-paused` | Quiet interruption modal with recovery actions | `overhaul/pause-final.png`; `mobile-support/pause-phone.png` |
-| `results-victory` | Gold/jade summary, stats and recovery actions | `frontend/results.png`; `results-phone.png` |
-| `results-defeat` | Cinnabar summary with retained progression | `frontend/results-defeat.png`; `results-defeat-phone.png` |
+| `results-victory` | Gold/jade summary, Ngọc/Mảnh rewards, unlocks and recovery actions | `frontend/results.png`; `results-phone.png` |
+| `results-defeat` | Cinnabar summary with retained Ngọc/Mảnh progression | `frontend/results-defeat.png`; `results-defeat-phone.png` |
 | `portrait-guard` | Orientation block and rotation instruction | `mobile-support/portrait-overlay.png` |
 
 ## Component System
@@ -133,6 +133,9 @@ Primary runtime resources:
   removed first and all action targets remain at least 64 px.
 - Text never collides with a frame, seal, icon or button. Result copy owns a
   dedicated field above the action row.
+- The 844×390 route folios reserve independent status, stage-name, threat and
+  reward troughs. Full stage prose lives only in the footer so record/reward
+  copy cannot rise into the threat line.
 - Unsupported decorative diamonds/chevrons are not used as runtime font glyphs;
   served Chromium captures confirm clean Vietnamese rendering.
 
@@ -141,8 +144,12 @@ Primary runtime resources:
 - Screen changes use short ritual fades/reveals; reduced motion preserves all
   state information.
 - HUD never shakes with the world layer.
-- Boss warning shows a complete danger boundary, an advancing broken-brush
-  timing ring and non-color rune/tick structure.
+- Boss warnings use distinct broken-brush radial, directional-rift and summon
+  seal shapes, phase banners and a visible post-cast punish window.
+- Runtime skills expose explicit cast, travel and impact presentation beats.
+  Sword/fork/pierce, jade ward/heal, qi collapse, cloud-step afterimage,
+  phoenix blade and companion claw marks use broken arcs, brush trails, seals
+  and shards rather than a shared full neon ring.
 - UI audio is supplemental; all critical state remains visible.
 
 ## Accessibility Boundary

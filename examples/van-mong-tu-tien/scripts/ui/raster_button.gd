@@ -52,7 +52,10 @@ func configure(
 ) -> RasterButton:
 	caption = text_value
 	art_variant = variant
-	caption_size = clampi(font_size, 15, 22)
+	# Phone compositions deliberately request 11–13 px captions. Clamping every
+	# control back to 15 px made the art feel oversized and pushed long labels into
+	# the clasps even though the caller had already selected a compact size.
+	caption_size = clampi(font_size, 11, 22)
 	# 64 logical pixels is the V4 shared touch target. Narrow stepper controls
 	# retain the same square target instead of shrinking to their visible glyph.
 	custom_minimum_size = Vector2(maxf(minimum.x, 64.0), maxf(minimum.y, 64.0))
@@ -247,7 +250,10 @@ func _refresh_visual_state() -> void:
 	else:
 		surface.visible = true
 		surface.modulate = Color.WHITE
-	caption_label.position.y = 2.0 if is_pressed() else 0.0
+	# Be Vietnam Pro's cap-height sits optically high inside the authored plaque.
+	# A small baseline correction centers the visible glyphs, while pressed state
+	# adds only one extra pixel of travel.
+	caption_label.position.y = 2.5 if is_pressed() else 1.5
 	direction_mark.position.y = caption_label.position.y
 	caption_label.add_theme_color_override(&"font_color", Color(_caption_color(), 0.44) if disabled else _caption_color())
 	caption_label.add_theme_constant_override(&"outline_size", 2 if active and not _uses_paper_caption() else (0 if _uses_paper_caption() else 1))

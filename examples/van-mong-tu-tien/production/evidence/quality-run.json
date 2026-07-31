@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "profile": "all",
-  "started_at": "2026-07-31T05:45:20.310526+00:00",
-  "finished_at": "2026-07-31T05:45:23.564177+00:00",
+  "profile": "player_ready",
+  "started_at": "2026-07-31T10:27:33.071826+00:00",
+  "finished_at": "2026-07-31T10:28:20.929601+00:00",
   "manifest": "production/quality-command-manifest.json",
   "manifest_sha256": "fe1f31445334ebf0d0dd4f1e97f6c547a8b6df9b7cd546a0a18863f4943639d4",
-  "project_fingerprint": "1e04628c7538cfc7403053abc66e5141129b13c4e5576c26a9687dfbc4eb3c30",
-  "git_commit": "f3caf7a769c130131fba34e964ecd473c0e40d2c",
+  "project_fingerprint": "7bf75f3d5d9f383b54f3c3b32bb66d66a0c40162fbed278d356d0bf5d6feba9c",
+  "git_commit": "f490e86766f476804910ff5681ea76a8e550cf53",
   "git_dirty": true,
   "godot": {
     "path": "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
@@ -19,10 +19,10 @@
       "id": "godot_import",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 3.16,
+      "duration_seconds": 2.841,
       "stdout": "production/evidence/commands/godot_import.stdout.log",
       "stderr": "production/evidence/commands/godot_import.stderr.log",
-      "stdout_sha256": "ea5eb733689c1bfa25101cc5e3e0f44d4de4bbad3aadd29d8b5a3c3d71faeaf2",
+      "stdout_sha256": "386eaa29727b92ecc7ff8de4415f9e9d78da29b896fb25ffc68b42a6db69ff8b",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "artifacts": [],
       "argv": [
@@ -34,7 +34,630 @@
         "--quit"
       ],
       "command_sha256": "f8f95afe1185f51ffc899ece514c3e7c14d675a0adc05e854d7e98f5daf7cfe9",
-      "output_bytes": 1017
+      "output_bytes": 1711
+    },
+    {
+      "id": "godot_lint",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 2.945,
+      "stdout": "production/evidence/commands/godot_lint.stdout.log",
+      "stderr": "production/evidence/commands/godot_lint.stderr.log",
+      "stdout_sha256": "16e5e90f02e0b6be22d751839777536a57c029285abb18aee7d21e67050f3ddb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--editor",
+        "--verbose",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "--quit"
+      ],
+      "command_sha256": "72c45d84dae83d8ce4ac72c27138b7c0dcbfca32d4849a9463a8e813ae3d7015",
+      "output_bytes": 9489
+    },
+    {
+      "id": "runtime_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.329,
+      "stdout": "production/evidence/commands/runtime_smoke.stdout.log",
+      "stderr": "production/evidence/commands/runtime_smoke.stderr.log",
+      "stdout_sha256": "d8dad4f4fa55981f447ce96ccc6b3f5b609fce9e81770500b420f246cff53fb3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_runtime.tscn"
+      ],
+      "command_sha256": "c3f4b3409b32aa4403d043bdb187153a66b1b1abcd93fb5465eed314dc8e4201",
+      "output_bytes": 2210
+    },
+    {
+      "id": "primary_session_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.816,
+      "stdout": "production/evidence/commands/primary_session_test.stdout.log",
+      "stderr": "production/evidence/commands/primary_session_test.stderr.log",
+      "stdout_sha256": "c31054819bcf6530862f6162710dcfce397b4efd4d6fb0cc6c781ca1fa93f1ef",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_frontend_flow.tscn"
+      ],
+      "command_sha256": "1de81a9619b2f272b9d31c19ae532b5abf40f1c9da2ee13d1a4e6f97c49fc9e6",
+      "output_bytes": 1171
+    },
+    {
+      "id": "recovery_flow_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.307,
+      "stdout": "production/evidence/commands/recovery_flow_test.stdout.log",
+      "stderr": "production/evidence/commands/recovery_flow_test.stderr.log",
+      "stdout_sha256": "d8dad4f4fa55981f447ce96ccc6b3f5b609fce9e81770500b420f246cff53fb3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_runtime.tscn"
+      ],
+      "command_sha256": "d608bc2ad3ba17698bcf56e0e8c592f39a1d27d7ad79b28f6a41fd514e2dba29",
+      "output_bytes": 2210
+    },
+    {
+      "id": "meta_navigation_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.92,
+      "stdout": "production/evidence/commands/meta_navigation_test.stdout.log",
+      "stderr": "production/evidence/commands/meta_navigation_test.stderr.log",
+      "stdout_sha256": "c31054819bcf6530862f6162710dcfce397b4efd4d6fb0cc6c781ca1fa93f1ef",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_frontend_flow.tscn"
+      ],
+      "command_sha256": "5c7402af238a449b1a7907d0c5b506071246c12082435c1ed218390e625bc83d",
+      "output_bytes": 1171
+    },
+    {
+      "id": "mobile_orientation_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 0.425,
+      "stdout": "production/evidence/commands/mobile_orientation_test.stdout.log",
+      "stderr": "production/evidence/commands/mobile_orientation_test.stderr.log",
+      "stdout_sha256": "e2543f3edaf85d65016f7f2ecf5566a5d23ad7a8746163abb0c946c551e7a270",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_mobile_support.tscn"
+      ],
+      "command_sha256": "f5958920469463a82755d2222314d88becb788fd9fcba955b673c2377396ba8c",
+      "output_bytes": 2391
+    },
+    {
+      "id": "long_run",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 2.904,
+      "stdout": "production/evidence/commands/long_run.stdout.log",
+      "stderr": "production/evidence/commands/long_run.stderr.log",
+      "stdout_sha256": "8b2f063d40637aa74d497e4d284a148bd72733aa9c0bf790c5495208a5708937",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_long_run.tscn"
+      ],
+      "command_sha256": "f5b58818d90ff2417686455f10dc357779adeb2daa410809d5496f5365b69938",
+      "output_bytes": 126
+    },
+    {
+      "id": "visual_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.352,
+      "stdout": "production/evidence/commands/visual_smoke.stdout.log",
+      "stderr": "production/evidence/commands/visual_smoke.stderr.log",
+      "stdout_sha256": "7b43029cdadf5102b4b95ef91a5137aa0c83b3fbb7dd8a189835d9a03f7598ce",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [
+        {
+          "path": "production/playtests/frontend/title.png",
+          "sha256": "f3bfe79515dd6c7d9fd50d22dfa5c91dff8af13a0f59bdc2318bc1525e9ddd46",
+          "size": 2087023
+        },
+        {
+          "path": "production/playtests/frontend/hub.png",
+          "sha256": "c11567e0c756468efa6b0c440f9e0c30e4284a182c5100fd7b2cd956ef081244",
+          "size": 2661171
+        },
+        {
+          "path": "production/playtests/frontend/stages.png",
+          "sha256": "ba81f37c557138aa7ed90e4b87ea7686ba1cab77a5ea3045cb9be3e065779ef9",
+          "size": 1901737
+        },
+        {
+          "path": "production/playtests/frontend/loadout.png",
+          "sha256": "79f4ad890b0f8ae98f50d32edb1502a7dfed1f838007d1c51f906935013933f7",
+          "size": 2648707
+        },
+        {
+          "path": "production/playtests/frontend/inventory.png",
+          "sha256": "1dfd5a8428c06b20536789d37a4ff769535f5cab91c27b45b019febfabd35888",
+          "size": 1890774
+        },
+        {
+          "path": "production/playtests/frontend/spirit-beast.png",
+          "sha256": "ef604fa5ac56875d85d30fdf046651e3e556d5b8d39598a25f88c4033965a080",
+          "size": 2001052
+        },
+        {
+          "path": "production/playtests/frontend/techniques.png",
+          "sha256": "53010838233efda566069140e18b9f8ceca3c7273ba0de08feb28fb792155cd2",
+          "size": 2582937
+        },
+        {
+          "path": "production/playtests/frontend/technique-upgrade.png",
+          "sha256": "68d45f333c11b741f3c264a0b2cf03c5de57c4f919a97879d5eeb8e4eebde509",
+          "size": 1637764
+        },
+        {
+          "path": "production/playtests/frontend/codex.png",
+          "sha256": "8a73e975568cdf10b0c6f014b5310f2f8c36308a4b802b1a433353fe67685a7e",
+          "size": 2003241
+        },
+        {
+          "path": "production/playtests/frontend/achievements.png",
+          "sha256": "f4e83de0c686e83f40c871dfb2cf58e20600f8a06410df14c716c93807f0b793",
+          "size": 2168033
+        },
+        {
+          "path": "production/playtests/frontend/settings.png",
+          "sha256": "3411ee21c9606ee3044d01f1b099209adb3b15abc2a8fe5b14f5317b28fec133",
+          "size": 1965720
+        },
+        {
+          "path": "production/playtests/frontend/reset.png",
+          "sha256": "1cace6dc59bbc85e2fca80ee6eeeaac21ff586a225fbdc7a1e42b72bc1809db7",
+          "size": 1361137
+        },
+        {
+          "path": "production/playtests/frontend/results.png",
+          "sha256": "4d4fc38291296a138f96fc6e85b908fa9573193e07c60eb0f7aa95cc858430e9",
+          "size": 2466691
+        },
+        {
+          "path": "production/playtests/frontend/results-defeat.png",
+          "sha256": "c2f101f2f472a221b0396ca622003afee15ff6281fee8a94da2b9b5222eca2bb",
+          "size": 2480614
+        },
+        {
+          "path": "production/playtests/overhaul/gameplay-final.png",
+          "sha256": "14a47c8e017203b3ea99ef9e88053aaf6a3b0172955e09de43f2252c3bfb8a06",
+          "size": 2712976
+        },
+        {
+          "path": "production/playtests/overhaul/boss-final.png",
+          "sha256": "074e23cf2d446152e756e9e04eb9d5ee7b08f7921e65feb731ec548fa8a3ae27",
+          "size": 2703646
+        },
+        {
+          "path": "production/playtests/overhaul/upgrade-final.png",
+          "sha256": "a970b4c791370de33bf2abcb41f51312237957dd0b279f30ab7d5c380280dd72",
+          "size": 2035379
+        },
+        {
+          "path": "production/playtests/overhaul/pause-final.png",
+          "sha256": "cb72efaccd905d3dcf3a1c3f02d19d13f09b0fd2a6c135a185d89ba20e8be830",
+          "size": 1891982
+        },
+        {
+          "path": "production/playtests/overhaul/victory-final.png",
+          "sha256": "bcd128ba5834d6f85cf92351a009529e1eb2fb2177c8e553228434426897ec74",
+          "size": 2339656
+        },
+        {
+          "path": "production/playtests/overhaul/defeat-final.png",
+          "sha256": "564f9276bde4561d1d4ed2e719f260460003772f55921616b70857343bed0096",
+          "size": 2347241
+        },
+        {
+          "path": "production/playtests/vfx/sword-rank1.png",
+          "sha256": "5ce8a10afe93095d7e5eeb7763b723c4cbbafbee720b6307a9081d5e18ee6b31",
+          "size": 2740638
+        },
+        {
+          "path": "production/playtests/vfx/sword-rank5.png",
+          "sha256": "f8643788c9ab4792e5bce6543e690cc9e54704149c118c3a1e05d0227aef3943",
+          "size": 2743926
+        },
+        {
+          "path": "production/playtests/vfx/jade-rank1.png",
+          "sha256": "99623bea83d70f170e858e25762f4fded968fb8d931729700f0a4b25e0bb3f6c",
+          "size": 2748654
+        },
+        {
+          "path": "production/playtests/vfx/jade-rank5.png",
+          "sha256": "8464b298f54dc9d1f802c540322a9aeaf15e317cff918fbf8be71ec46908a228",
+          "size": 2740919
+        },
+        {
+          "path": "production/playtests/vfx/qi-rank1.png",
+          "sha256": "199969695ed241342f46fae6997a4aeb1f0c27c547bac66ec44551ced9a3c68f",
+          "size": 2734204
+        },
+        {
+          "path": "production/playtests/vfx/qi-rank5.png",
+          "sha256": "793478f8a36bc15c95264d8bcc2d56dc809a2854300dc6365fcae4e2950e460d",
+          "size": 2735080
+        },
+        {
+          "path": "production/playtests/frontend/title-phone.png",
+          "sha256": "3656abda69a57ba7b316bc9e4c70e9be983214b02eb30924f935c726113c477d",
+          "size": 592108
+        },
+        {
+          "path": "production/playtests/frontend/hub-phone.png",
+          "sha256": "226558c9484727c65ecc2965f3ab20385784d6b38ab9dbfd128df45b05a4c929",
+          "size": 612751
+        },
+        {
+          "path": "production/playtests/frontend/stages-phone.png",
+          "sha256": "b69e7804de5e3cd83cb2173063fa244f47e95cc7d8401eb5b4b0178821432713",
+          "size": 375961
+        },
+        {
+          "path": "production/playtests/frontend/loadout-phone.png",
+          "sha256": "84cf0054536ab1f9fbb71f49eca9c116a4ab3beb34b8cab89fae873d12f91342",
+          "size": 592765
+        },
+        {
+          "path": "production/playtests/frontend/inventory-phone.png",
+          "sha256": "ceb4f9e241f0d6d9d3ac3a087024021e4880db559b7e537e7839c4e0929d5d84",
+          "size": 343356
+        },
+        {
+          "path": "production/playtests/frontend/spirit-beast-phone.png",
+          "sha256": "98ca5a52d6dc893fb89a7d722431e284ff7bdeeb4a2c4c5887c6ba1381b205a3",
+          "size": 457955
+        },
+        {
+          "path": "production/playtests/frontend/techniques-phone.png",
+          "sha256": "0c20939b6c999a14b2ed64da344164b4d4bab088a6110ec7dc62bc71e006d7f4",
+          "size": 606176
+        },
+        {
+          "path": "production/playtests/frontend/technique-upgrade-phone.png",
+          "sha256": "b5147d6ab0c03c4e4f45519f211d8c49219d25dea54d0ca11110ece966d46fc3",
+          "size": 451695
+        },
+        {
+          "path": "production/playtests/frontend/codex-phone.png",
+          "sha256": "6658e4270dfc80954fdb12884bede0dd7680ba62b5fa88404d660c9011da7e52",
+          "size": 479666
+        },
+        {
+          "path": "production/playtests/frontend/achievements-phone.png",
+          "sha256": "11d1c795b63b23cfe9cb3d219d31baab560b0cfe002e3ad7ea029117b3ae45e2",
+          "size": 544603
+        },
+        {
+          "path": "production/playtests/frontend/settings-phone.png",
+          "sha256": "e27e7e5d4fa630785f6df39c9c17fb4f71428868c7fe08f2963f07c07f76777f",
+          "size": 492634
+        },
+        {
+          "path": "production/playtests/frontend/reset-phone.png",
+          "sha256": "6a9e35d5af76642f265396490b075851d7aac6a08d6a70709cbf388a3200ab57",
+          "size": 431326
+        },
+        {
+          "path": "production/playtests/frontend/results-phone.png",
+          "sha256": "424157ef8fb83b70a1b49f633f310efad766dc136523a894ec020a11ef3b3add",
+          "size": 608092
+        },
+        {
+          "path": "production/playtests/frontend/results-defeat-phone.png",
+          "sha256": "95e4c8043b97dcecd2358d47f8722d267a1b45bec018869fefd30b5e3c2817b5",
+          "size": 612445
+        },
+        {
+          "path": "production/playtests/mobile-support/combat-phone.png",
+          "sha256": "68df675557e14600e461ff0b97b1a1f98d728a2e4d23eb4549ab933a7e5e7a60",
+          "size": 699182
+        },
+        {
+          "path": "production/playtests/mobile-support/boss-phone.png",
+          "sha256": "c66d130d0e65333ee16a0eab4c06695f1569fd95f91ef3afa00ac7498ee22eb7",
+          "size": 702684
+        },
+        {
+          "path": "production/playtests/mobile-support/breakthrough-phone.png",
+          "sha256": "6f2661002eb5b86d9c79a1f70ecac2bc0ebb80930c4125652b33158ef7e59145",
+          "size": 471812
+        },
+        {
+          "path": "production/playtests/mobile-support/pause-phone.png",
+          "sha256": "3e4cdb9881051ebf8fdf0f8cfc20f6107a852741e4fc38377dafb60bba464435",
+          "size": 512372
+        },
+        {
+          "path": "production/playtests/mobile-support/landscape-controls.png",
+          "sha256": "bf4415970fc18276e5f56eaa0055a041cd7df82d5d27bf981dd63abc2488a061",
+          "size": 2670295
+        },
+        {
+          "path": "production/playtests/mobile-support/portrait-overlay.png",
+          "sha256": "6f01160a5f6e99149ac6bd91f217b40e2627f59533c481b6656e01a244ba8dd0",
+          "size": 871034
+        },
+        {
+          "path": "production/playtests/responsive/hub-wide.png",
+          "sha256": "3ab06644b87b40329121975d05191b115638373fe71c28a0d77dc4932c98dea0",
+          "size": 3085133
+        },
+        {
+          "path": "production/playtests/responsive/combat-wide-touch.png",
+          "sha256": "e0c474716fb362150be1af1a84b27df767cd0e652568275dbacebbce7e7cd9c9",
+          "size": 2999727
+        },
+        {
+          "path": "production/playtests/responsive/reset-wide.png",
+          "sha256": "747e57b3fb023fd5788393e89e9b00dfabd5923a29114f21592850c5343259dc",
+          "size": 1477450
+        }
+      ],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_visual_evidence.tscn"
+      ],
+      "command_sha256": "6e41548bc852039ae82406ce9995f6e968063479cad8d75f09d83f95f5006712",
+      "output_bytes": 4213
+    },
+    {
+      "id": "meta_profile_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 0.325,
+      "stdout": "production/evidence/commands/meta_profile_smoke.stdout.log",
+      "stderr": "production/evidence/commands/meta_profile_smoke.stderr.log",
+      "stdout_sha256": "6fbe6876ef3fd3e7ec026de8a9b5082b711efae5147299a3bcd035ae9fcd80b6",
+      "stderr_sha256": "2af3bc972b391571301aa510e28619bbbfe83335fe26265601a8ab7396cdbd33",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_meta_profile.tscn"
+      ],
+      "command_sha256": "2665a26b4d8d1b86e2e2af5e4b70e9adea5ac69b0cc698956544611c09a53a60",
+      "output_bytes": 2089
+    },
+    {
+      "id": "audio_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 2.084,
+      "stdout": "production/evidence/commands/audio_smoke.stdout.log",
+      "stderr": "production/evidence/commands/audio_smoke.stderr.log",
+      "stdout_sha256": "638b8b1d66766359ba87b25c64ddd8c276433efb6a71ac7714850371fd5eeb5a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [
+        {
+          "path": "assets/generated/audio/music_title.wav",
+          "sha256": "5230cf379f087d5e88a973c3d49c9ab6f3691db423516f222b70bdbfb92a184a",
+          "size": 1411244
+        },
+        {
+          "path": "assets/generated/audio/music_hub.wav",
+          "sha256": "96ac82baeeb7167140f0287d43761623a673d059c8a71bf4c4b359e6ad77131a",
+          "size": 1411244
+        },
+        {
+          "path": "assets/generated/audio/music_combat.wav",
+          "sha256": "35c726113c5562943199babedcbefde0fbc3d9cc1fce985806ab425688d967fb",
+          "size": 1411244
+        },
+        {
+          "path": "assets/generated/audio/music_result.wav",
+          "sha256": "056663719e0ab9aa6d7e9a63e37a2e3b625b9a76ea0301f8ce788f7454341e38",
+          "size": 1411244
+        }
+      ],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_audio.tscn"
+      ],
+      "command_sha256": "7f3a05b28bcb8763c68b07d86f881bd60abe55b7e7f4e6b04d098c0f7945d0b7",
+      "output_bytes": 775
+    },
+    {
+      "id": "cultivation_vfx_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 0.414,
+      "stdout": "production/evidence/commands/cultivation_vfx_smoke.stdout.log",
+      "stderr": "production/evidence/commands/cultivation_vfx_smoke.stderr.log",
+      "stdout_sha256": "bb89cf1601a49f1934353de88ad7e57cc64c2a09565137458accf7da65567d80",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_cultivation_vfx.tscn"
+      ],
+      "command_sha256": "4a68f5bb59e4790e5da81538c6c3565fd9149140accaa50595d57eaf4fac0929",
+      "output_bytes": 1095
+    },
+    {
+      "id": "responsive_layout_test",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 1.441,
+      "stdout": "production/evidence/commands/responsive_layout_test.stdout.log",
+      "stderr": "production/evidence/commands/responsive_layout_test.stderr.log",
+      "stdout_sha256": "70aead1604a06211c74ea03b430371d24045db6c49570e1dc5c5c05900411e2c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "res://tests/smoke_responsive_layout.tscn"
+      ],
+      "command_sha256": "befb0c4dedb3af2f5446e6024ed5919bc5d23b8a823774389647ad2b6c236a9d",
+      "output_bytes": 10999
+    },
+    {
+      "id": "web_export",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 3.521,
+      "stdout": "production/evidence/commands/web_export.stdout.log",
+      "stderr": "production/evidence/commands/web_export.stderr.log",
+      "stdout_sha256": "e877405524beadee0bdeba6e219a76274b74a9a9c6f74a051a552d1dd83d577d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [
+        {
+          "path": "build/web/index.html",
+          "sha256": "a1f2f4a8e6f3334864197af45a71fb15846e044bafe39cb5b9342ad09f2715d6",
+          "size": 5453
+        },
+        {
+          "path": "build/web/index.js",
+          "sha256": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981",
+          "size": 315759
+        },
+        {
+          "path": "build/web/index.wasm",
+          "sha256": "cca8bc7c462d348aaa3f318aecf3281d99bf219e182256412711b24f0d086d80",
+          "size": 37695054
+        },
+        {
+          "path": "build/web/index.pck",
+          "sha256": "01fcb3b1abd47f4556e64e246d897a05e12b4f4a7a2427d81858add8b2c3fba1",
+          "size": 56515620
+        }
+      ],
+      "argv": [
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "--export-release",
+        "Web",
+        "build/web/index.html"
+      ],
+      "command_sha256": "67b31576fd5c5e96afc284b641b6af6028cfb2c11197c24892d9bf4e20fd40f2",
+      "output_bytes": 73045
+    },
+    {
+      "id": "web_browser_smoke",
+      "status": "PASS",
+      "returncode": 0,
+      "duration_seconds": 23.138,
+      "stdout": "production/evidence/commands/web_browser_smoke.stdout.log",
+      "stderr": "production/evidence/commands/web_browser_smoke.stderr.log",
+      "stdout_sha256": "f379fc80d948c3cc7f0f4db4429a60fad6763594508a63f8e239c55b3ce183fb",
+      "stderr_sha256": "ebaaffebcde1cce5c2b225da35f7a8100fbf9cebc1cf6cfeafb21508603cfacc",
+      "artifacts": [
+        {
+          "path": "production/evidence/platforms/web-smoke.json",
+          "sha256": "3f9d998a6518dde33b85c6fa5bf2edd4ab60aa24f09dae732b2ce3fb566b86a9",
+          "size": 1530
+        },
+        {
+          "path": "production/evidence/platforms/web-title.png",
+          "sha256": "f73ebaddf70b2b7ed545e24a8b370736d0f0394ff5d7cfaf4f2325b8cc087bf5",
+          "size": 1877381
+        },
+        {
+          "path": "production/evidence/platforms/web-hub.png",
+          "sha256": "28eafdd70afb42678112ba47cc1825f70290d271cf8312de6ec79429ba82daea",
+          "size": 2394860
+        },
+        {
+          "path": "production/evidence/platforms/web-stages.png",
+          "sha256": "00176b52bf47811dfecb4571c27fed569952c7ec719ba4897b6661a1421231df",
+          "size": 1716687
+        },
+        {
+          "path": "production/evidence/platforms/web-title-phone.png",
+          "sha256": "f64cc8440a1962df71eab0c82c875c0998eb688ba52bc7e8a3b4a2bb4edb5218",
+          "size": 533910
+        },
+        {
+          "path": "production/evidence/platforms/web-hub-phone.png",
+          "sha256": "81d931774a6c2182bfd5d93460eb9ca88c28f6cda5a2a50e72c89b8e4cbac50b",
+          "size": 546898
+        }
+      ],
+      "argv": [
+        "npm",
+        "run",
+        "test:web"
+      ],
+      "command_sha256": "0930ac8f44745a8e0f81087f29167241977b2eed10fbdbec46eb58083b2ecada",
+      "output_bytes": 1817
     }
   ]
 }

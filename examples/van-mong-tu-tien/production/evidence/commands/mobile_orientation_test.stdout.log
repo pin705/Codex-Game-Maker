@@ -23,6 +23,8 @@ PASS: pause target dispatches once
 PASS: pause dispatch reaches existing _unhandled_input consumers
 PASS: pause action auto-releases after dispatch
 PASS: phone landscape preserves every 64 px touch target
+PASS: phone joystick art is compact inside its full touch target
+PASS: phone attack art is compact inside its full touch target
 PASS: phone landscape keeps all controls inside notch-safe bounds
 PASS: phone landscape touch zones remain disjoint
 PASS: joystick survives asymmetric safe-area relayout

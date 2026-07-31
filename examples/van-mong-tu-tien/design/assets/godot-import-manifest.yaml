@@ -15,8 +15,9 @@ export_filter_reference: "https://docs.godotengine.org/en/4.4/tutorials/export/e
 verification_note: >-
   The V4.1/V5 UIKIT-009 through UIKIT-016 families import through Godot 4.6.2
   and are bound to current desktop and 844x390 renderer captures. Runtime text,
-  values, focus and input stay native. Independent visual review, refreshed Web
-  evidence, cross-browser, manual balance, audio listening and physical-device
+  values, focus and input stay native. Refreshed Godot 4.6.2 Web export and
+  served Chromium smoke pass. Independent visual review, Firefox/Safari,
+  manual balance, audio listening and physical-device
   QA remain required.
 
 imports:

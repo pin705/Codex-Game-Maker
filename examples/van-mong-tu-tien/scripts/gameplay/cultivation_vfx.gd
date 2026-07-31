@@ -64,6 +64,7 @@ var _draw_budget_remaining := DESKTOP_PARTICLE_BUDGET
 var _attack_events: Array[Dictionary] = []
 var _hit_events: Array[Dictionary] = []
 var _pickup_events: Array[Dictionary] = []
+var _skill_events: Array[Dictionary] = []
 
 
 func _ready() -> void:
@@ -218,6 +219,46 @@ func trigger_pickup(source_global_position: Vector2 = Vector2(1.0e20, 1.0e20)) -
 	queue_redraw()
 
 
+## Player-facing skill VFX contract. Every learned skill can now express a
+## distinct cast, travel and impact beat without asking the simulation to own
+## drawing state. Positions are world-space so projectile/pet/boss callers can
+## share the same top-level presentation node.
+func trigger_skill_cast(skill_id: StringName, rank: int, direction: Vector2 = Vector2.ZERO) -> void:
+	_push_skill_event(&"cast", skill_id, rank, global_position, direction)
+
+
+func trigger_skill_travel(skill_id: StringName, rank: int, world_position: Vector2, direction: Vector2) -> void:
+	_push_skill_event(&"travel", skill_id, rank, world_position, direction)
+
+
+func trigger_skill_impact(skill_id: StringName, rank: int, world_position: Vector2) -> void:
+	_push_skill_event(&"impact", skill_id, rank, world_position, _facing)
+
+
+func _push_skill_event(phase: StringName, skill_id: StringName, rank: int, world_position: Vector2, direction: Vector2) -> void:
+	var safe_skill := _canonical_skill_id(skill_id)
+	var lifetime := 0.46
+	match phase:
+		&"cast":
+			lifetime = 0.30 if reduced_motion else 0.48
+		&"travel":
+			lifetime = 0.24 if reduced_motion else 0.38
+		&"impact":
+			lifetime = 0.28 if reduced_motion else 0.46
+	_push_transient(_skill_events, {
+		"age": 0.0,
+		"lifetime": lifetime,
+		"phase": phase,
+		"skill_id": safe_skill,
+		"rank": clampi(rank, 0, 6),
+		"position_global": world_position if _is_finite_vector(world_position) else global_position,
+		"direction": _normalized_or(direction, _facing),
+		"sequence": _next_sequence(),
+	})
+	effect_triggered.emit(StringName("skill_%s_%s" % [String(safe_skill), String(phase)]), clampi(rank, 0, 6))
+	queue_redraw()
+
+
 ## Deterministic inspection contract used by headless tests and an optional
 ## in-game performance HUD. No rendering internals need to be reached directly.
 func debug_snapshot() -> Dictionary:
@@ -237,6 +278,10 @@ func debug_snapshot() -> Dictionary:
 		"active_attacks": _attack_events.size(),
 		"active_hits": _hit_events.size(),
 		"active_pickups": _pickup_events.size(),
+		"active_skill_events": _skill_events.size(),
+		"active_skill_casts": _skill_phase_count(&"cast"),
+		"active_skill_travels": _skill_phase_count(&"travel"),
+		"active_skill_impacts": _skill_phase_count(&"impact"),
 		"active_transients": _active_transient_count(),
 		"following_actor": _actor != null and is_instance_valid(_actor),
 		"facing": _facing,
@@ -247,6 +292,7 @@ func clear_transients() -> void:
 	_attack_events.clear()
 	_hit_events.clear()
 	_pickup_events.clear()
+	_skill_events.clear()
 	queue_redraw()
 
 
@@ -262,6 +308,7 @@ func _process(delta: float) -> void:
 	_tick_events(_attack_events, safe_delta)
 	_tick_events(_hit_events, safe_delta)
 	_tick_events(_pickup_events, safe_delta)
+	_tick_events(_skill_events, safe_delta)
 	_redraw_clock += safe_delta
 	var redraw_interval := 1.0 / (12.0 if reduced_motion else (30.0 if _mobile_mode else 60.0))
 	if _redraw_clock >= redraw_interval:
@@ -283,6 +330,8 @@ func _draw() -> void:
 		_draw_attack_event(event)
 	for event: Dictionary in _hit_events:
 		_draw_hit_event(event)
+	for event: Dictionary in _skill_events:
+		_draw_skill_event(event)
 
 
 func _draw_orbiting_swords() -> void:
@@ -399,6 +448,163 @@ func _draw_hit_event(event: Dictionary) -> void:
 		var distance := radius * (0.48 + float(index % 3) * 0.12)
 		var shard_position := shard_direction * distance + Vector2(0.0, -7.0)
 		_draw_kite(shard_position, shard_direction, 8.0 + float(index % 2) * 3.0, 3.2, Color(JADE if index % 3 else GOLD, fade * 0.82), Color(PALE_JADE, fade * 0.90))
+
+
+func _draw_skill_event(event: Dictionary) -> void:
+	if not _take_draw_budget():
+		return
+	var phase := StringName(str(event.get("phase", "cast")))
+	var skill_id := StringName(str(event.get("skill_id", "sword_damage")))
+	var rank := int(event.get("rank", 0))
+	var progress := _event_progress(event)
+	var fade := 1.0 - progress
+	var center := to_local(event.get("position_global", global_position) as Vector2)
+	var direction: Vector2 = event.get("direction", _facing)
+	match phase:
+		&"cast":
+			_draw_skill_cast(skill_id, rank, center, direction, progress, fade)
+		&"travel":
+			_draw_skill_travel(skill_id, rank, center, direction, progress, fade)
+		&"impact":
+			_draw_skill_impact(skill_id, rank, center, direction, progress, fade)
+
+
+func _draw_skill_cast(skill_id: StringName, rank: int, center: Vector2, direction: Vector2, progress: float, fade: float) -> void:
+	var forward := _normalized_or(direction, _facing)
+	var side := forward.orthogonal()
+	match skill_id:
+		&"sword_damage", &"attack_speed", &"extra_sword", &"piercing_sword":
+			var blade_count := clampi(2 + int(ceil(float(rank) * 0.5)), 2, 5)
+			for index in blade_count:
+				var ratio := 0.5 if blade_count <= 1 else float(index) / float(blade_count - 1)
+				var blade_direction := forward.rotated(lerpf(-0.56, 0.56, ratio))
+				var blade_origin := center + blade_direction * (10.0 + progress * 8.0)
+				var blade_finish := blade_origin + blade_direction * (28.0 + float(rank) * 5.0) * progress
+				draw_line(blade_origin - blade_direction * 14.0, blade_finish, Color(DEEP_INK, fade * 0.44), 7.0, true)
+				draw_line(blade_origin, blade_finish, Color(JADE, fade * 0.68), 2.0, true)
+				_draw_sword(blade_finish, blade_direction, 0.58 + float(rank) * 0.035, fade)
+			_draw_ink_seal(center, forward, 24.0 + float(rank) * 3.0, Color(GOLD, fade * 0.54), Color(PALE_JADE, fade * 0.60))
+		&"phoenix_blade":
+			_draw_ink_seal(center, forward, 28.0 + float(rank) * 4.0, Color(GOLD, fade * 0.84), Color(VERMILION, fade * 0.58))
+			for index in 3 + mini(rank, 2):
+				var offset := (float(index) - 1.5) * 8.0
+				var flame_start := center + side * offset - forward * 12.0
+				var flame_end := flame_start + forward * (32.0 + progress * 14.0)
+				draw_line(flame_start, flame_end, Color(GOLD, fade * 0.70), 3.2, true)
+				draw_line(flame_start + side * 3.0, flame_end + side * 2.0, Color(VERMILION, fade * 0.45), 1.2, true)
+		&"qi_pulse":
+			var radius := 22.0 + float(rank) * 6.0 + progress * (28.0 + float(rank) * 5.0)
+			for band in 3:
+				for arc_index in 4:
+					var start := float(arc_index) * TAU / 4.0 + float(band) * 0.19 + progress * 0.35
+					var arc := _ellipse_arc_points(Vector2(radius - float(band) * 5.0, radius * 0.58), start, start + 0.62, 8, center + Vector2(0.0, 6.0))
+					draw_polyline(arc, Color(QI_BLUE if band == 0 else JADE, fade * (0.62 - float(band) * 0.12)), 2.4 - float(band) * 0.4, true)
+			_draw_ink_seal(center, forward, 16.0 + float(rank) * 2.0, Color(GOLD, fade * 0.58), Color(PALE_JADE, fade * 0.72))
+		&"cloud_step":
+			for index in 3:
+				var trail_center := center - forward * (18.0 + float(index) * 16.0) * (1.0 - progress * 0.35)
+				draw_line(trail_center - side * 10.0, trail_center + forward * 18.0 + side * 10.0, Color(DEEP_INK, fade * 0.46), 5.0, true)
+				draw_line(trail_center - side * 7.0, trail_center + forward * 14.0 + side * 7.0, Color(JADE, fade * (0.62 - float(index) * 0.12)), 1.8, true)
+		&"jade_body", &"life_stream":
+			for index in 6:
+				var angle := TAU * float(index) / 6.0 + progress * 0.4
+				var mote := center + Vector2.from_angle(angle) * (18.0 + progress * 20.0)
+				_draw_kite(mote, Vector2.from_angle(angle), 5.0 + float(rank) * 0.6, 2.2, Color(PALE_JADE, fade * 0.62), Color(GOLD, fade * 0.54))
+			_draw_ink_seal(center, forward, 24.0 + float(rank) * 3.0, Color(JADE, fade * 0.46), Color(PALE_JADE, fade * 0.68))
+		&"spirit_well":
+			for index in 4:
+				var start_angle := TAU * float(index) / 4.0 + progress * 0.35
+				var start := center + Vector2.from_angle(start_angle) * (48.0 + float(rank) * 8.0)
+				var control := center + Vector2.from_angle(start_angle + 0.52) * 34.0
+				var points := PackedVector2Array()
+				for sample in 9:
+					var t := float(sample) / 8.0
+					points.append(_quadratic_bezier(start, control, center, t))
+				draw_polyline(points, Color(QI_BLUE, fade * 0.64), 2.0, true)
+		&"pet_assist":
+			for index in 3:
+				var slash_offset := side * (float(index) - 1.0) * 10.0
+				draw_line(center + slash_offset - forward * 12.0, center + slash_offset + forward * 25.0, Color(JADE, fade * 0.72), 2.8, true)
+			_draw_ink_seal(center, forward, 18.0 + float(rank) * 2.0, Color(GOLD, fade * 0.52), Color(JADE, fade * 0.58))
+
+
+func _draw_skill_travel(skill_id: StringName, rank: int, origin: Vector2, direction: Vector2, progress: float, fade: float) -> void:
+	var forward := _normalized_or(direction, _facing)
+	var side := forward.orthogonal()
+	var distance := lerpf(8.0, 156.0 + float(rank) * 18.0, ease(progress, -1.25))
+	var center := origin + forward * distance
+	var trail_points := PackedVector2Array()
+	for index in 6:
+		var t := float(index) / 5.0
+		var point := center - forward * (distance * t * 0.72)
+		point += side * sin(t * PI + float(rank)) * (3.0 + float(rank))
+		trail_points.append(point)
+	if trail_points.size() >= 2:
+		draw_polyline(trail_points, Color(DEEP_INK, fade * 0.54), 8.0, true)
+		draw_polyline(trail_points, Color(JADE if skill_id != &"phoenix_blade" else GOLD, fade * 0.76), 2.0, true)
+	match skill_id:
+		&"phoenix_blade":
+			_draw_sword(center, forward, 0.92 + float(rank) * 0.05, fade)
+			for index in 3:
+				var flame := PackedVector2Array([center - forward * (6.0 + index * 5.0), center - forward * (26.0 + index * 8.0) + side * 8.0, center - forward * (18.0 + index * 6.0) - side * 5.0])
+				draw_colored_polygon(flame, Color(VERMILION, fade * 0.30))
+		&"pet_assist":
+			for index in 3:
+				var claw := center + side * (float(index) - 1.0) * 9.0
+				draw_line(claw - forward * 18.0, claw + forward * 15.0, Color(JADE, fade * 0.70), 3.0, true)
+		&"qi_pulse":
+			_draw_ink_seal(center, forward, 15.0 + float(rank) * 2.0, Color(QI_BLUE, fade * 0.72), Color(GOLD, fade * 0.46))
+		_:
+			_draw_sword(center, forward, 0.74 + float(rank) * 0.03, fade)
+
+
+func _draw_skill_impact(skill_id: StringName, rank: int, center: Vector2, direction: Vector2, progress: float, fade: float) -> void:
+	var forward := _normalized_or(direction, _facing)
+	var side := forward.orthogonal()
+	var radius := lerpf(10.0, 38.0 + float(rank) * 9.0, ease(progress, -1.1))
+	match skill_id:
+		&"qi_pulse":
+			for arc_index in 5:
+				var start := float(arc_index) * 0.88 + progress * 0.24
+				var arc := _ellipse_arc_points(Vector2(radius, radius * 0.60), start, start + 0.44, 7, center + Vector2(0.0, 5.0))
+				draw_polyline(arc, Color(JADE if arc_index % 2 else GOLD, fade * 0.72), 2.8 - float(arc_index % 2) * 0.6, true)
+			_draw_skill_shards(center, forward, radius, 6 + mini(rank, 4), fade, JADE)
+		&"jade_body", &"life_stream":
+			_draw_ink_seal(center, forward, radius * 0.78, Color(JADE, fade * 0.70), Color(PALE_JADE, fade * 0.82))
+			for index in 5:
+				var mote := center - Vector2(0.0, radius * 0.8) + Vector2(float(index - 2) * 8.0, -progress * 18.0)
+				draw_line(mote, mote + Vector2(0.0, -8.0), Color(PALE_JADE, fade * 0.64), 2.0, true)
+		&"pet_assist":
+			_draw_skill_shards(center, forward, radius, 5, fade, GOLD)
+			for index in 3:
+				var claw_start := center + side * (float(index) - 1.0) * 10.0 - forward * 16.0
+				draw_line(claw_start, claw_start + forward * 30.0, Color(JADE, fade * 0.82), 3.4, true)
+		&"cloud_step":
+			for index in 3:
+				var streak := center + side * (float(index) - 1.0) * 11.0
+				draw_line(streak - forward * 20.0, streak + forward * 20.0, Color(JADE, fade * 0.58), 2.0, true)
+		_:
+			_draw_skill_shards(center, forward, radius, 5 + mini(rank, 5), fade, GOLD if skill_id == &"phoenix_blade" else JADE)
+			_draw_ink_seal(center, forward, radius * 0.72, Color(GOLD, fade * 0.54), Color(PALE_JADE, fade * 0.72))
+
+
+func _draw_skill_shards(center: Vector2, direction: Vector2, radius: float, count: int, fade: float, color: Color) -> void:
+	var safe_count := maxi(count, 3)
+	for index in safe_count:
+		var angle := direction.angle() + lerpf(-1.16, 1.16, float(index) / float(safe_count - 1))
+		var shard_direction := Vector2.from_angle(angle)
+		var shard_center := center + shard_direction * radius * (0.58 + float(index % 3) * 0.13)
+		_draw_kite(shard_center, shard_direction, 7.0 + float(index % 2) * 2.0, 2.8, Color(color, fade * 0.58), Color(PALE_JADE if color == JADE else GOLD, fade * 0.78))
+
+
+func _draw_ink_seal(center: Vector2, direction: Vector2, radius: float, edge: Color, inner: Color) -> void:
+	var phase := direction.angle() - 0.36
+	for index in 3:
+		var start := phase + float(index) * 2.1
+		var arc := _ellipse_arc_points(Vector2(radius, radius * 0.56), start, start + 0.72, 9, center + Vector2(0.0, 4.0))
+		draw_polyline(arc, edge if index == 0 else inner, 1.8 if index == 0 else 1.1, true)
+	var mark := center + direction * (radius * 0.34)
+	draw_line(mark - direction.orthogonal() * radius * 0.20, mark + direction.orthogonal() * radius * 0.20, inner, 1.5, true)
 
 
 func _draw_qi_field() -> void:
@@ -617,6 +823,13 @@ func _next_sequence() -> int:
 	return _sequence
 
 
+func _canonical_skill_id(skill_id: StringName) -> StringName:
+	match skill_id:
+		&"sword_damage", &"attack_speed", &"extra_sword", &"piercing_sword", &"cloud_step", &"jade_body", &"spirit_well", &"qi_pulse", &"life_stream", &"phoenix_blade", &"pet_assist":
+			return skill_id
+	return &"sword_damage"
+
+
 func _push_transient(target: Array[Dictionary], event: Dictionary) -> void:
 	while _active_transient_count() >= _transient_cap:
 		_remove_oldest_transient()
@@ -626,7 +839,7 @@ func _push_transient(target: Array[Dictionary], event: Dictionary) -> void:
 func _remove_oldest_transient() -> void:
 	var oldest_kind := -1
 	var oldest_sequence := 2147483647
-	var pools: Array = [_attack_events, _hit_events, _pickup_events]
+	var pools: Array = [_attack_events, _hit_events, _pickup_events, _skill_events]
 	for kind_index in pools.size():
 		var pool: Array = pools[kind_index]
 		if pool.is_empty():
@@ -642,6 +855,8 @@ func _remove_oldest_transient() -> void:
 			_hit_events.remove_at(0)
 		2:
 			_pickup_events.remove_at(0)
+		3:
+			_skill_events.remove_at(0)
 
 
 func _trim_transients_to_cap() -> void:
@@ -650,7 +865,15 @@ func _trim_transients_to_cap() -> void:
 
 
 func _active_transient_count() -> int:
-	return _attack_events.size() + _hit_events.size() + _pickup_events.size()
+	return _attack_events.size() + _hit_events.size() + _pickup_events.size() + _skill_events.size()
+
+
+func _skill_phase_count(phase: StringName) -> int:
+	var count := 0
+	for event: Dictionary in _skill_events:
+		if StringName(str(event.get("phase", ""))) == phase:
+			count += 1
+	return count
 
 
 func _tick_events(events: Array[Dictionary], delta: float) -> void:

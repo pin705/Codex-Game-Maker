@@ -1,6 +1,6 @@
 # System GDD: Run Skills & Evolution
 
-Status: Implementation in progress  
+Status: Core cap/unlock/evolution filtering implemented; five fully independent active casts remain an expansion gate
 ID: SYS-06
 
 ## Player promise
@@ -15,6 +15,13 @@ A four-minute run grows from a two-technique foundation into a deliberate five-s
 - One reroll token per run is the initial economy baseline; skip converts the offer into a small heal only when no reroll remains. Both are disabled until their UI/runtime path is implemented.
 - Slot inputs are `skill_1` through `skill_5`; the existing `qi_pulse` action mirrors its assigned slot for backward compatibility.
 - Active skill cooldowns and cast stages advance only in RUNNING. Breakthrough, pause and result states freeze them.
+- The current implementation begins with two learned techniques, gates new catalog entries by level, excludes a sixth learned technique and removes max-rank rows before rolling three distinct offers.
+- Sword ranks 3/5 widen the projectile formation and add a distinct seal/VFX layer; remaining production skills still require their full table-specific rank 3/5 behavior implementations.
+- Every current runtime catalog skill now routes through distinct cast, travel
+  and impact VFX phases. This completes presentation feedback for sword,
+  phoenix, qi, movement, vitality, gathering and companion assists; it does not
+  replace the remaining gameplay gate for five independently targeted active
+  casts and their rank-3/rank-5 mechanics.
 
 ## Initial production skills
 

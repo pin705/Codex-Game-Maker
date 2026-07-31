@@ -41,11 +41,13 @@ func _run_smoke() -> void:
 	_expect(game.cultivation_vfx != null and bool(game.cultivation_vfx.debug_snapshot().get("following_actor", false)), "rank VFX follows the player in live combat")
 	if mobile_support != null:
 		_expect(bool(mobile_support.get_touch_controls().controls_enabled), "combat lifecycle enables mobile controls")
+	_expect(game.spirit_beast != null and game.spirit_beast.enabled, "Thanh Van Ho companion enables with combat")
 	_expect(game.player.visual_sprite != null, "player uses a sprite when runtime art is available")
 	_expect(game.player.visual_state == &"idle", "player runtime visual starts in idle state")
 	var idle_texture: Texture2D = game.player.visual_sprite.texture if game.player.visual_sprite != null else null
 	Input.action_press(&"move_right")
 	await get_tree().physics_frame
+	_expect(game.player.move_acceleration > 0.0 and game.player.move_deceleration > 0.0, "player uses acceleration/deceleration movement tuning")
 	await get_tree().physics_frame
 	_expect(game.player.visual_state == &"move", "player runtime visual changes idle -> move")
 	if game.player.visual_sprite != null:
@@ -54,6 +56,7 @@ func _run_smoke() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	_expect(game.player.visual_state == &"idle", "player runtime visual changes move -> idle")
+	_expect(is_zero_approx(game.player.visual_sprite.rotation) == false or game.player.velocity.length() < 1.0, "movement feedback keeps a stable optical lean")
 	if game.player.visual_sprite != null:
 		_expect(game.player.visual_sprite.texture == idle_texture, "idle state restores the idle texture")
 
@@ -77,6 +80,11 @@ func _run_smoke() -> void:
 		_expect(pulse_effect != null and pulse_effect.visual_sprite != null, "effect uses a sprite when runtime art is available")
 	_expect(pulse_enemy.health < pulse_health, "qi pulse damages an enemy inside its radius")
 	pulse_enemy.take_damage(99999.0, game.player.global_position)
+	# Pet assist is deterministic and targets the highest-threat living enemy.
+	var pet_enemy: CultivationEnemy = game._spawn_enemy(EnemyScript.EnemyKind.WISP, game.player.global_position + Vector2(190.0, 0.0)) as CultivationEnemy
+	var pet_health := pet_enemy.health
+	game._on_spirit_beast_assist(pet_enemy, 12.0, game.spirit_beast.global_position)
+	_expect(pet_enemy.health < pet_health, "companion active skill damages a target")
 	await get_tree().process_frame
 	_expect(game.kills == 2, "two enemy deaths increment kills exactly once each")
 	_expect(game.orbs.get_child_count() == 2, "each enemy death creates one qi orb")
@@ -121,6 +129,11 @@ func _run_smoke() -> void:
 	await get_tree().process_frame
 	boss_game._start_run()
 	var boss: CultivationEnemy = boss_game._spawn_enemy(EnemyScript.EnemyKind.BOSS, boss_game.player.global_position + Vector2(180.0, 0.0)) as CultivationEnemy
+	boss.boss_cast_clock = 0.0
+	boss._update_boss_cast(0.1)
+	_expect(boss.boss_telegraph > 0.0, "boss exposes a readable cast telegraph")
+	boss.take_damage(boss.max_health * 0.40, boss_game.player.global_position)
+	_expect(boss.boss_phase == 2, "boss enters phase two at health threshold")
 	boss.take_damage(999999.0, boss_game.player.global_position)
 	await get_tree().process_frame
 	_expect(boss_game.state == MainScript.GameState.VICTORY, "boss defeat produces immediate victory")

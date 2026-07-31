@@ -1,16 +1,16 @@
 # Served Web smoke review — Vân Mộng Tu Tiên
 
-Date: 2026-07-29  
+Date: 2026-07-31
 Build: Godot 4.6.2 Compatibility, single-thread Web export  
-Artifact: `build/web/index.html` (SHA-256 `5b175263138c499c41d3139f1c14241b4b25dced00bb9de0c279cf1ecdf32521`)
+Artifact: `build/web/index.html` (SHA-256 `a36e45fe94fa07d62f98f45f0fa3869a3bba846ab56a2b3abbbdcd28e5d9205d`)
 
 ## Evidence
 
-- Export command: `cgm export --preset Web`; output and template/export diagnostics: `production/evidence/platforms/export.log`.
+- Export command: Godot 4.6.2 `--export-release Web build/web/index.html`; output and template/export diagnostics: `production/evidence/platforms/export.log`.
 - Reproducible browser command: `npm run test:web` (`tests/web_smoke.spec.js`, Playwright 1.62.0).
 - Structured result: `production/evidence/platforms/web-smoke.json`.
 - Chromium captures: `web-title.png`, `web-hub.png`, `web-stages.png`, `web-title-phone.png`, `web-hub-phone.png`.
-- Browser Plugin visual/input pass: the served desktop canvas booted, the primary `NHẬP MÔN` pointer action entered Hub, `HÀNH TRÌNH` opened Stage Select, and `Escape` returned to Hub. Browser console error/warning query returned an empty list.
+- Browser visual/input pass: the served desktop canvas booted, the primary pointer action entered Hub, `HÀNH TRÌNH` opened the sequential route screen, and `Escape` returned to Hub. Browser console/page/network error queries returned an empty list.
 
 ## Checks
 

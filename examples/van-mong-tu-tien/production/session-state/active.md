@@ -37,6 +37,24 @@ Current phase: V4.1 style lock with the V5 corrective UI/art pass is implemented
   authored into their shrine instead of drawing another button texture on top.
 - Boss telegraph geometry uses irregular broken-brush arcs, non-color timing
   structure and a complete danger boundary.
+- Stage flow is now sequential from Ải 1; victory auto-advances the selected
+  route while seeded Vòng Vây, Song Tuyến and Tâm Nhãn variants change spawn
+  identity without stretching the authored arena.
+- Save v3 records skill-fragment wallets and increasing fragment costs. Run
+  results expose both Ngọc and Mảnh; in-run offers enforce a five-technique cap,
+  level milestones and rank-dependent projectile/VFX evolution.
+- Thiên Giác now cycles slam, directional rift and summon-seal mechanics across
+  health phases with readable telegraphs and punish windows. Thanh Vân Hồ is a
+  live companion with threat targeting, cooldown, assist damage and jade VFX.
+- Player locomotion uses acceleration/deceleration, speed-driven frame timing,
+  optical lean and irregular ink grounding; the underlying six-frame idle and
+  eight-frame move families remain bottom-pivot stable.
+- Skill feedback now has a shared bounded cast/travel/impact contract with
+  skill-specific brush language for sword formations, piercing/forked travel,
+  qi collapse, cloud-step afterimages, jade ward/heal, phoenix fire and Thanh
+  Vân Hồ claw marks. Reduced-motion/mobile transient caps remain enforced.
+- The phone route cards now keep status, name, threat, compact progression cue
+  and reward record in separate protected rects; long map prose is footer-only.
 
 ## Locked Direction
 
@@ -60,8 +78,9 @@ Current phase: V4.1 style lock with the V5 corrective UI/art pass is implemented
 - Visual evidence: 49 current artifacts; all declared phone BaseButtons retain a
   64 px target floor.
 - Style-lock verify: PASS.
-- Prior Web export/Chromium evidence predates this corrective pass; refresh is
-  still required before player-ready or release-ready status.
+- Godot 4.6.2 Web release export and the served Chromium desktop/844×390 smoke
+  were refreshed after this corrective pass; canvas boot, pointer/keyboard
+  transitions and responsive resize pass without page/console/network errors.
 - The plugin PowerShell asset-QA runner is unavailable in this environment;
   style-lock verification, pipeline metadata, alpha/chroma inspection, Godot
   import and native runtime evidence provide the local equivalent, with the

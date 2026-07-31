@@ -71,11 +71,13 @@ func _capture() -> void:
 			frontend.last_result_title = "PHI THĂNG THÀNH CÔNG" if frontend.last_victory else "ĐẠO TÂM TAN VỠ"
 			frontend.last_result_details = "Đạo tâm đã vượt qua ma kiếp. Một cảnh giới mới đang chờ phía trước." if frontend.last_victory else "Ma khí lấn át đạo tâm. Giữ căn cơ đã lĩnh ngộ và nhập thế lại."
 			frontend.last_result = {
+				"stage_id": "van_mong",
 				"total": 248 if frontend.last_victory else 46,
 				"first_clear": frontend.last_victory,
 				"first_clear_bonus": 100 if frontend.last_victory else 0,
 				"new_unlocks": ["huyet_van"] if frontend.last_victory else [],
 				"new_achievements": ["nhap_dao", "pha_vân_mộng"] if frontend.last_victory else [],
+				"fragment_drops": {"vitality": 7 if frontend.last_victory else 2},
 			}
 			frontend._show_screen(frontend.SCREEN_RESULTS)
 		_:

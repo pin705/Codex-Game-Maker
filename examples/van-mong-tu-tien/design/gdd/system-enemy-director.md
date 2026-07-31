@@ -31,10 +31,19 @@ Vân Mộng dần bị mực tà xâm chiếm: ban đầu người chơi có kho
 - Enemies use simple normalized pursuit plus restrained lateral sway. No pathfinding, projectiles or obstacle navigation are required for ordinary enemies.
 - Enemy-to-enemy collision may be disabled; apply a small deterministic separation force only if clumping makes silhouettes unreadable.
 
+### Seeded Encounter Identities
+
+- `Vòng Vây`: radial pressure and scripted encirclement.
+- `Song Tuyến`: alternating left/right edge pincers.
+- `Tâm Nhãn`: clustered pressure with occasional elite escort.
+- The stage id plus persistent run/victory counters derive a reproducible run seed.
+
 ### Boss
 
 - At the first `RUNNING` tick with elapsed time ≥ 150 s, spawn **Thiên Ma** once at arena top-center, regardless of the random spawn cadence.
-- Boss uses pursuit plus a telegraphed 230 px radial slam; telegraph lasts 0.92 s and cast cadence resets to 4.6 s.
+- Boss cycles a 230 px radial slam, a directional rift lane and a summon-seal ring.
+- Health thresholds at 66% and 33% enter phases 2/3, tighten cadence and alter pattern order.
+- Every cast has a distinct shape telegraph and opens a 1.25–1.55 s punish window where the boss receives 1.65× damage.
 - Show the announcement `THIÊN MA GIÁNG THẾ` without freezing the clock.
 - Boss defeat reports `is_boss = true` and triggers victory through session flow.
 - Surviving to 240 s wins; defeating the boss is also a victory route per the game contract.
@@ -72,7 +81,7 @@ Vân Mộng dần bị mực tà xâm chiếm: ban đầu người chơi có kho
 
 Upstream: session elapsed/state/seed, player position, arena bounds, tuning.  
 Downstream: combat target registry, player contact damage, progression drops, boss victory, HUD boss bar.  
-Signals/events: local enemy `died(enemy, position, xp_value, was_boss)`, `player_contact(damage)`, `boss_slam(origin, radius, damage)`; timed beats use `Events.banner_requested`.
+Signals/events: local enemy `died`, `player_contact`, `boss_slam`, `boss_rift`, `boss_summon`, `boss_phase_changed` and `boss_punish_window`; timed beats use `Events.banner_requested`.
 
 ## Visual And Audio Requirements
 
@@ -87,7 +96,8 @@ Audio cues: optional soft ink pop, enemy hit/death and one boss gong.
 - [ ] Random ordinary enemies appear on a valid configured arena edge; scripted ambush positions stay in bounds.
 - [ ] The 125-living cap is respected and no paused spawn debt creates a burst.
 - [ ] Wisp/Beast/Demon/Elite match their profile/scaling values and pursue without frame-rate dependence.
-- [ ] Scripted beats fire once at 1:15, 1:55 and 2:30; boss slam radius/telegraph are readable.
+- [x] Scripted beats fire once at 1:15, 1:55 and 2:30; all three boss mechanics expose distinct telegraphs.
+- [x] Boss phases and post-cast punish windows are asserted in native runtime smoke.
 - [ ] Boss defeat emits one boss result; timeout can still win with boss alive.
 - [ ] Restart clears all enemies and resets boss/spawn state.
 

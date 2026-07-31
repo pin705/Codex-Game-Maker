@@ -11,6 +11,9 @@ PASS: trigger_hit creates a jade flare
 PASS: Tụ Linh starts with vortex tendrils
 PASS: magnet rank adds vortex tendrils
 PASS: trigger_pickup creates a gathering beam
+PASS: skill VFX creates a distinct cast beat
+PASS: skill VFX creates a distinct travel beat
+PASS: skill VFX creates a distinct impact beat
 PASS: follow_actor snaps to actor
 PASS: update_actor tracks movement
 PASS: update_actor tracks facing

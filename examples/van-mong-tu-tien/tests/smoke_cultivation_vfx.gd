@@ -58,6 +58,18 @@ func _run() -> void:
 	await get_tree().process_frame
 	_expect(int(vfx.debug_snapshot().get("active_pickups", 0)) == 1, "trigger_pickup creates a gathering beam")
 
+	# Run skills expose separate authored cast/travel/impact beats. These events
+	# share the same bounded pool as permanent-technique feedback.
+	vfx.clear_transients()
+	vfx.trigger_skill_cast(&"qi_pulse", 4, Vector2.RIGHT)
+	vfx.trigger_skill_travel(&"phoenix_blade", 2, Vector2(340.0, 220.0), Vector2.UP)
+	vfx.trigger_skill_impact(&"pet_assist", 3, Vector2(420.0, 260.0))
+	await get_tree().process_frame
+	var skill_events := vfx.debug_snapshot()
+	_expect(int(skill_events.get("active_skill_casts", 0)) == 1, "skill VFX creates a distinct cast beat")
+	_expect(int(skill_events.get("active_skill_travels", 0)) == 1, "skill VFX creates a distinct travel beat")
+	_expect(int(skill_events.get("active_skill_impacts", 0)) == 1, "skill VFX creates a distinct impact beat")
+
 	# Actor following remains independent of player.gd and supports generic nodes.
 	var actor := Node2D.new()
 	add_child(actor)

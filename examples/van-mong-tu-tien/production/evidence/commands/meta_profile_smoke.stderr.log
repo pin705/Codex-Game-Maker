@@ -1,6 +1,6 @@
 WARNING: Hồ sơ JSON không hợp lệ (dòng 0: Expected key)
      at: push_warning (core/variant/variant_utility.cpp:1034)
      GDScript backtrace (most recent call first):
-         [0] _recover_from_load_error (res://scripts/meta/meta_profile.gd:1092)
-         [1] load (res://scripts/meta/meta_profile.gd:403)
-         [2] _run (res://tests/smoke_meta_profile.gd:81)
+         [0] _recover_from_load_error (res://scripts/meta/meta_profile.gd:1158)
+         [1] load (res://scripts/meta/meta_profile.gd:414)
+         [2] _run (res://tests/smoke_meta_profile.gd:85)

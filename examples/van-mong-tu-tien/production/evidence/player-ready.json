@@ -6,16 +6,16 @@
   },
   "checks": {
     "player-journeys-automated": "PASS",
-    "visual-quality-independent": "PASS",
+    "visual-quality-independent": "PENDING_INDEPENDENT_REVIEW",
     "audio-listening": "BLOCKED",
     "manual-four-minute-playtest": "BLOCKED",
     "mobile-device-qa": "BLOCKED",
     "quality-command-evidence": "PASS",
-    "served-web-browser-qa": "BLOCKED"
+    "served-web-browser-qa": "PASS"
   },
   "check_notes": {
     "player-journeys-automated": "The current Godot 4.6.2 suite passes title/meta/combat/result, pause, terminal, long-run, mobile-orientation, responsive-layout, VFX, audio and visual-evidence harnesses; the shell-free quality run binds all declared commands to the final manifest and project fingerprint.",
-    "visual-quality-independent": "Clean-context agent /root/final_visual_review_v4 independently inspected all 20 desktop and 18 simulated-phone V4 states and returned PASS with no blocker or high finding; the hash-bound contract records 17/17 verified surfaces.",
+    "visual-quality-independent": "Current V5 corrective desktop/844x390 matrix is regenerated and hash-bound, but the required clean-context reviewer has not yet independently signed the refreshed screenshots; visual-quality-contract.json remains pending_independent_review.",
     "audio-listening": "smoke_audio verifies PCM, loop metadata and buses; no human listening session has checked loudness, masking, seams, cleanup or target outputs.",
     "manual-four-minute-playtest": "No uninterrupted physical-input four-minute run plus boss-kill and death/retry routes has been recorded after the latest build.",
     "mobile-device-qa": "Simulated safe-area and orientation tests pass, but no physical iOS/Android notch, DPI, thumb-reach, thermal or sustained multi-touch evidence exists.",

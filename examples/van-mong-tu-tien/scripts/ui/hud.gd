@@ -45,6 +45,18 @@ const PLAYER_PORTRAIT_PATH := "res://assets/generated/portraits/PORTRAIT-002-her
 const HUD_PLAYER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/player-status-island.png")
 const HUD_TIMER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/timer-plaque.png")
 const HUD_SKILL_RAIL: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/five-skill-rail.png")
+const SKILL_RAIL_NATIVE_SIZE := Vector2(638.0, 125.0)
+const SKILL_RAIL_SLOT_CENTERS := [112.0, 216.0, 320.0, 424.0, 528.0]
+const SKILL_RAIL_DESKTOP_WIDTH := 500.0
+const SKILL_RAIL_PHONE_WIDTH := 244.0
+const SKILL_ICON_MASK_SHADER := """
+shader_type canvas_item;
+void fragment() {
+	vec2 delta = UV - vec2(0.5);
+	float circle = 1.0 - smoothstep(0.47, 0.5, length(delta));
+	COLOR = texture(TEXTURE, UV) * COLOR * circle;
+}
+"""
 const UPGRADE_VEIL: Texture2D = preload("res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/breakthrough-veil.png")
 const PAUSE_SHRINE: Texture2D = preload("res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/pause-meditation-wide.png")
 const BODY_FONT := preload("res://assets/fonts/BeVietnamPro-Regular.ttf")
@@ -180,6 +192,7 @@ func _connect_events() -> void:
 	Events.realm_changed.connect(_on_realm_changed)
 	Events.run_stats_changed.connect(_on_run_stats_changed)
 	Events.pulse_state_changed.connect(_on_pulse_state_changed)
+	Events.companion_state_changed.connect(_on_companion_state_changed)
 	Events.upgrade_options_presented.connect(_on_upgrade_options_presented)
 	Events.banner_requested.connect(_on_banner_requested)
 	Events.game_started.connect(_on_game_started)
@@ -443,7 +456,8 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 	if skill_strip != null:
 		skill_strip.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		skill_strip.scale = Vector2.ONE * device_scale
-		skill_strip.position = Vector2(safe.get_center().x - 130.0, safe.end.y - 62.0) * device_scale
+		var rail_height := SKILL_RAIL_NATIVE_SIZE.y * (SKILL_RAIL_PHONE_WIDTH / SKILL_RAIL_NATIVE_SIZE.x)
+		skill_strip.position = Vector2(safe.get_center().x - SKILL_RAIL_PHONE_WIDTH * 0.5, safe.end.y - rail_height - 7.0) * device_scale
 		_layout_phone_skill_strip()
 	_apply_upgrade_layout_for_viewport(device_scale, physical)
 	_apply_pause_layout_for_viewport(device_scale, physical)
@@ -644,16 +658,12 @@ func _build_objective_strip() -> void:
 
 
 func _build_skill_strip() -> void:
-	# Reduced five-medallion rail from the approved V4 board. It is intentionally
-	# narrower than the player's movement lane and uses icon state before copy.
+	# One native 638x125 coordinate contract owns chrome, medallion centers, icon
+	# crop and bindings. Desktop/phone only select a uniform width.
 	skill_strip = Control.new()
 	skill_strip.name = "FiveSkillRail"
 	skill_strip.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	skill_strip.offset_left = -250.0
-	skill_strip.offset_top = -138.0
-	skill_strip.offset_right = 250.0
-	skill_strip.offset_bottom = -24.0
-	skill_strip.clip_contents = false
+	skill_strip.clip_contents = true
 	skill_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root_control.add_child(skill_strip)
 	var rail_panel := TextureRect.new()
@@ -663,7 +673,6 @@ func _build_skill_strip() -> void:
 	rail_panel.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	rail_panel.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	rail_panel.position = Vector2.ZERO
-	rail_panel.size = Vector2(500.0, 114.0)
 	rail_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	skill_strip.add_child(rail_panel)
 	skill_rail_chrome = rail_panel
@@ -673,25 +682,23 @@ func _build_skill_strip() -> void:
 	skill_key_labels.clear()
 	skill_name_labels.clear()
 	skill_lock_labels.clear()
-	var skill_names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "LINH THÚ"]
+	var skill_names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "THANH VÂN HỒ"]
 	var keys := ["1", "2", "3", "4", "5"]
-	var slot_centers := [58.0, 159.0, 261.0, 362.0, 464.0]
 	var icons := [
 		SKILL_ICON_ROOT + "skill_phi_kiem.png",
 		SKILL_ICON_ROOT + "skill_kiem_tran.png",
 		SKILL_ICON_ROOT + "skill_linh_phu.png",
 		SKILL_ICON_ROOT + "skill_bang_lien.png",
-		SKILL_ICON_ROOT + "skill_thien_loi.png",
+		SKILL_ICON_ROOT + "assist_thanh_van_ho.png",
 	]
 	for index in skill_names.size():
 		var slot := Control.new()
 		slot.name = "SkillSlot_%02d" % (index + 1)
-		slot.position = Vector2(slot_centers[index] - 42.0, 5.0)
-		slot.size = Vector2(84.0, 91.0)
-		slot.clip_contents = false
+		slot.clip_contents = true
+		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		skill_strip.add_child(slot)
 		skill_slots.append(slot)
-		var active := index < 2
+		var active := index < 2 or index == 4
 		var frame := SkillMedallion.new()
 		frame.configure(active)
 		frame.position = Vector2(5.0, 0.0)
@@ -710,89 +717,72 @@ func _build_skill_strip() -> void:
 				icon.custom_minimum_size = Vector2.ZERO
 				icon.modulate = Color(1.0, 1.0, 1.0, 1.0) if active else Color(0.48, 0.56, 0.54, 0.62)
 				icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				var mask_shader := Shader.new()
+				mask_shader.code = SKILL_ICON_MASK_SHADER
+				var mask_material := ShaderMaterial.new()
+				mask_material.shader = mask_shader
+				icon.material = mask_material
 				slot.add_child(icon)
 				skill_icons.append(icon)
-				icon.position = Vector2(12.0, 1.0)
-				icon.size = Vector2(60.0, 60.0)
 		var key_label := _label(keys[index], 14, GOLD if active else PAPER_DIM, true)
 		key_label.z_index = 3
-		key_label.position = Vector2(1.0, 0.0)
-		key_label.size = Vector2(20.0, 20.0)
 		key_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		key_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		slot.add_child(key_label)
 		skill_key_labels.append(key_label)
 		var name_label := _label(skill_names[index], 10, PAPER if active else PAPER_DIM, true)
 		name_label.z_index = 3
-		name_label.position = Vector2(-6.0, 65.0)
-		name_label.size = Vector2(96.0, 18.0)
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_label.hide()
 		slot.add_child(name_label)
 		skill_name_labels.append(name_label)
 		if not active:
 			var lock_label := _label("CẤP %d" % (index + 3), 10, CRIMSON, true)
 			lock_label.z_index = 3
-			lock_label.position = Vector2(-6.0, 50.0)
-			lock_label.size = Vector2(96.0, 16.0)
 			lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			lock_label.hide()
 			slot.add_child(lock_label)
 			skill_lock_labels.append(lock_label)
+	_layout_desktop_skill_strip()
 
 
 func _layout_phone_skill_strip() -> void:
-	if skill_strip == null:
-		return
-	skill_strip.size = Vector2(260.0, 58.0)
-	if skill_rail_chrome != null:
-		skill_rail_chrome.position = Vector2.ZERO
-		skill_rail_chrome.size = Vector2(260.0, 58.0)
-	var centres := [29.0, 79.5, 130.0, 180.5, 231.0]
-	for index in mini(skill_slots.size(), centres.size()):
-		var slot := skill_slots[index]
-		slot.position = Vector2(centres[index] - 23.0, 1.0)
-		slot.size = Vector2(46.0, 52.0)
-		if index < skill_frames.size():
-			skill_frames[index].position = Vector2(3.0, 0.0)
-			skill_frames[index].size = Vector2(40.0, 40.0)
-		if index < skill_icons.size():
-			var icon := skill_icons[index]
-			icon.position = Vector2(5.0, 2.0)
-			icon.size = Vector2(36.0, 36.0)
-		if index < skill_key_labels.size():
-			skill_key_labels[index].hide()
-		if index < skill_name_labels.size():
-			skill_name_labels[index].hide()
-	for lock_label in skill_lock_labels:
-		lock_label.hide()
+	_layout_skill_strip_contract(SKILL_RAIL_PHONE_WIDTH, true)
 
 
 func _layout_desktop_skill_strip() -> void:
+	_layout_skill_strip_contract(SKILL_RAIL_DESKTOP_WIDTH, false)
+	if skill_strip != null:
+		skill_strip.position = Vector2(-skill_strip.size.x * 0.5, -skill_strip.size.y - 24.0)
+
+
+func _layout_skill_strip_contract(target_width: float, phone: bool) -> void:
 	if skill_strip == null:
 		return
-	skill_strip.size = Vector2(500.0, 114.0)
+	var scale := target_width / SKILL_RAIL_NATIVE_SIZE.x
+	var target_size := SKILL_RAIL_NATIVE_SIZE * scale
+	skill_strip.size = target_size
 	if skill_rail_chrome != null:
 		skill_rail_chrome.position = Vector2.ZERO
-		skill_rail_chrome.size = Vector2(500.0, 114.0)
-	var centres := [58.0, 159.0, 261.0, 362.0, 464.0]
-	var names := ["PHI KIẾM", "KIẾM TRẬN", "TỤ LINH", "NGỌC THỂ", "LINH THÚ"]
-	for index in mini(skill_slots.size(), centres.size()):
+		skill_rail_chrome.size = target_size
+	for index in mini(skill_slots.size(), SKILL_RAIL_SLOT_CENTERS.size()):
 		var slot := skill_slots[index]
-		slot.position = Vector2(centres[index] - 42.0, 5.0)
-		slot.size = Vector2(84.0, 91.0)
+		slot.position = Vector2(SKILL_RAIL_SLOT_CENTERS[index] - 43.0, 8.0) * scale
+		slot.size = Vector2(86.0, 108.0) * scale
 		if index < skill_frames.size():
-			skill_frames[index].position = Vector2(5.0, 0.0)
-			skill_frames[index].size = Vector2(74.0, 74.0)
+			skill_frames[index].position = Vector2.ZERO
+			skill_frames[index].size = slot.size
 		if index < skill_icons.size():
 			var icon := skill_icons[index]
-			icon.position = Vector2(12.0, 1.0)
-			icon.size = Vector2(60.0, 60.0)
+			icon.position = Vector2(11.0, 22.0) * scale
+			icon.size = Vector2(64.0, 64.0) * scale
 		if index < skill_key_labels.size():
 			var key_label := skill_key_labels[index]
-			key_label.show()
-			key_label.position = Vector2(0.0, 73.0)
-			key_label.size = Vector2(84.0, 18.0)
-			key_label.add_theme_font_size_override("font_size", 14)
+			key_label.visible = not phone
+			key_label.position = Vector2(29.0, 82.0) * scale
+			key_label.size = Vector2(28.0, 19.0) * scale
+			key_label.add_theme_font_size_override("font_size", 11)
 		if index < skill_name_labels.size():
-			skill_name_labels[index].text = names[index]
 			skill_name_labels[index].hide()
 	for lock_label in skill_lock_labels:
 		lock_label.hide()
@@ -1003,6 +993,12 @@ func _on_experience_changed(current: float, required: float, level: int) -> void
 	xp_bar.max_value = required
 	xp_bar.value = current
 	level_label.text = "TU VI · %02d" % level
+	for index: int in [2, 3]:
+		var active: bool = level >= index + 1
+		if index < skill_frames.size():
+			skill_frames[index].configure(active)
+		if index < skill_icons.size():
+			skill_icons[index].modulate = Color.WHITE if active else Color(0.48, 0.56, 0.54, 0.62)
 
 func _on_realm_changed(realm_name: String, _subtitle: String) -> void:
 	realm_label.text = realm_name.to_upper()
@@ -1028,6 +1024,14 @@ func _on_pulse_state_changed(remaining: float, cooldown: float) -> void:
 		pulse_label.add_theme_color_override("font_color", PAPER_DIM)
 	if compact_phone and pulse_plaque != null:
 		pulse_plaque.size = Vector2(116.0, 40.0)
+
+func _on_companion_state_changed(remaining: float, cooldown: float, active: bool) -> void:
+	if skill_icons.size() <= 4:
+		return
+	var ready := active and remaining <= 0.01
+	skill_icons[4].modulate = Color(1.0, 1.0, 1.0, 1.0) if ready else Color(0.55, 0.78, 0.70, 0.64)
+	if skill_name_labels.size() > 4:
+		skill_name_labels[4].add_theme_color_override("font_color", GOLD if ready else PAPER_DIM)
 
 func _on_upgrade_options_presented(options: Array[Dictionary]) -> void:
 	visible_upgrade_ids.clear()

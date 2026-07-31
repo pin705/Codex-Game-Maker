@@ -78,7 +78,7 @@
     },
     {
       "id": "stages",
-      "role": "Select one unlocked cultivation arena and inspect its risk/reward",
+      "role": "Inspect the sequential cultivation route and continue the current stage; completed victories auto-advance to the next unlocked stage",
       "required": true,
       "status": "verified",
       "ui_surface": true,
@@ -90,7 +90,7 @@
       "transitions": [
         {
           "to": "loadout",
-          "trigger": "Confirm CHUẨN BỊ CÔNG PHÁP"
+          "trigger": "Confirm TIẾP TỤC ẢI"
         },
         {
           "to": "hub",
@@ -365,7 +365,7 @@
     },
     {
       "id": "results-victory",
-      "role": "Summarize a successful tribulation, rewards and unlocks",
+      "role": "Summarize a successful tribulation, Ngọc/Mảnh rewards, unlocks and the auto-advanced route",
       "required": true,
       "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
@@ -383,7 +383,7 @@
         },
         {
           "to": "combat",
-          "trigger": "Retry the selected configuration"
+          "trigger": "Enter the auto-advanced next stage with the retained configuration"
         }
       ]
     },

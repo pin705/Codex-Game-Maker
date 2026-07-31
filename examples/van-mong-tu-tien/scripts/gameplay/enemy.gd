@@ -11,6 +11,10 @@ const UI_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
 signal died(enemy: CultivationEnemy, death_position: Vector2, xp_value: float, was_boss: bool)
 signal player_contact(damage: float)
 signal boss_slam(origin: Vector2, radius: float, damage: float)
+signal boss_rift(origin: Vector2, direction: Vector2, length: float, width: float, damage: float)
+signal boss_summon(origin: Vector2, count: int, radius: float, damage: float)
+signal boss_phase_changed(phase: int)
+signal boss_punish_window(duration: float)
 
 enum EnemyKind { WISP, BEAST, DEMON, ELITE, BOSS }
 
@@ -39,6 +43,12 @@ var spawn_fade := 0.0
 var visual_seed := 0.0
 var boss_cast_clock := 4.0
 var boss_telegraph := 0.0
+var boss_telegraph_total := 0.92
+var boss_cast_kind := 0
+var boss_skill_index := 0
+var boss_phase := 1
+var boss_punish_remaining := 0.0
+var boss_target_direction := Vector2.DOWN
 var elite := false
 var boss := false
 var body_shape: CircleShape2D
@@ -112,6 +122,7 @@ func _physics_process(delta: float) -> void:
 	age += delta
 	spawn_fade = minf(1.0, spawn_fade + delta * 3.8)
 	contact_clock = maxf(0.0, contact_clock - delta)
+	boss_punish_remaining = maxf(0.0, boss_punish_remaining - delta)
 	_update_runtime_sprite_feedback()
 
 	if boss:
@@ -137,16 +148,31 @@ func _update_boss_cast(delta: float) -> void:
 	if boss_telegraph > 0.0:
 		boss_telegraph -= delta
 		if boss_telegraph <= 0.0:
-			boss_slam.emit(global_position, 230.0, contact_damage * 1.15)
-			boss_cast_clock = 4.6
+			var cast_damage := contact_damage * (1.15 + float(boss_phase - 1) * 0.20)
+			match boss_cast_kind:
+				0:
+					boss_slam.emit(global_position, 230.0 + float(boss_phase - 1) * 24.0, cast_damage)
+				1:
+					boss_rift.emit(global_position, boss_target_direction, 500.0 + float(boss_phase - 1) * 70.0, 56.0 + float(boss_phase - 1) * 10.0, cast_damage * 1.22)
+				_:
+					boss_summon.emit(global_position, 3 + boss_phase, 118.0 + float(boss_phase - 1) * 20.0, cast_damage * 0.78)
+			boss_punish_remaining = 1.55 if boss_phase == 1 else 1.25
+			boss_punish_window.emit(boss_punish_remaining)
+			boss_cast_clock = maxf(2.25, 4.6 - float(boss_phase - 1) * 0.72)
 		return
 	boss_cast_clock -= delta
 	if boss_cast_clock <= 0.0:
-		boss_telegraph = 0.92
+		boss_skill_index = (boss_skill_index + 1) % 3
+		boss_cast_kind = (boss_skill_index + boss_phase - 1) % 3
+		boss_target_direction = global_position.direction_to(target.global_position)
+		boss_telegraph_total = 0.92 if boss_cast_kind == 0 else (1.05 if boss_cast_kind == 1 else 1.20)
+		boss_telegraph = boss_telegraph_total
 
 func take_damage(amount: float, push_origin: Vector2, push_force: float = 110.0) -> bool:
 	if dying:
 		return false
+	if boss and boss_punish_remaining > 0.0:
+		amount *= 1.65
 	health -= amount
 	if not boss:
 		knockback_velocity += push_origin.direction_to(global_position) * push_force
@@ -155,6 +181,16 @@ func take_damage(amount: float, push_origin: Vector2, push_force: float = 110.0)
 		died.emit(self, global_position, xp_value, boss)
 		queue_free()
 		return true
+	if boss:
+		var next_phase := 1
+		if health <= max_health * 0.33:
+			next_phase = 3
+		elif health <= max_health * 0.66:
+			next_phase = 2
+		if next_phase != boss_phase:
+			boss_phase = next_phase
+			boss_cast_clock = minf(boss_cast_clock, 1.4)
+			boss_phase_changed.emit(boss_phase)
 	queue_redraw()
 	return false
 
@@ -252,7 +288,13 @@ func _update_runtime_sprite_feedback() -> void:
 func _draw_boss_telegraph(alpha: float) -> void:
 	if boss_telegraph <= 0.0:
 		return
-	var warning_progress := 1.0 - boss_telegraph / 0.92
+	var warning_progress := 1.0 - boss_telegraph / maxf(boss_telegraph_total, 0.01)
+	if boss_cast_kind == 1:
+		_draw_rift_telegraph(alpha, warning_progress, boss_target_direction)
+		return
+	if boss_cast_kind == 2:
+		_draw_summon_telegraph(alpha, warning_progress)
+		return
 	var pulse := 0.72 + sin(age * 18.0) * 0.18
 	# The complete danger radius is visible from the first telegraph frame. The
 	# advancing inner ring communicates timing without making players guess the
@@ -283,6 +325,40 @@ func _draw_boss_telegraph(alpha: float) -> void:
 		var normal := Vector2.from_angle(angle)
 		draw_line(rune_center - tangent * 8.0, rune_center + tangent * 6.0, Color(GOLD, 0.64 * alpha), 2.4, true)
 		draw_line(rune_center - tangent * 4.0 - normal * 4.0, rune_center + tangent * 3.0 + normal * 4.0, Color(CRIMSON, 0.54 * alpha), 1.4, true)
+
+func _draw_rift_telegraph(alpha: float, progress: float, direction: Vector2) -> void:
+	var tangent := Vector2(-direction.y, direction.x)
+	var length := 500.0 + float(boss_phase - 1) * 70.0
+	var width := 56.0 + float(boss_phase - 1) * 10.0
+	var pulse := 0.72 + sin(age * 15.0) * 0.16
+	var tip := direction * (length * (0.48 + progress * 0.52))
+	var left := direction * 22.0 + tangent * width
+	var right := direction * 22.0 - tangent * width
+	draw_colored_polygon(PackedVector2Array([left, right, tip - tangent * 12.0, tip + tangent * 12.0]), Color(CRIMSON, 0.07 * alpha))
+	for side: float in [-1.0, 1.0]:
+		var edge := direction * 22.0 + tangent * width * side
+		for segment in 8:
+			var a := float(segment) / 8.0
+			var b := minf(1.0, a + 0.055 + progress * 0.025)
+			draw_line(edge.lerp(tip + tangent * 12.0 * side, a), edge.lerp(tip + tangent * 12.0 * side, b), Color(CRIMSON, (0.72 + 0.18 * float(segment % 2)) * pulse * alpha), 3.0 + float(segment % 2), true)
+	for mark in 5:
+		var mark_pos := direction * (60.0 + float(mark) * length / 6.0)
+		draw_line(mark_pos - tangent * 8.0, mark_pos + tangent * 8.0, Color(GOLD, 0.62 * alpha), 2.0, true)
+
+func _draw_summon_telegraph(alpha: float, progress: float) -> void:
+	var seal_count := 3 + boss_phase
+	var radius := 118.0 + float(boss_phase - 1) * 20.0
+	for index in seal_count:
+		var angle := TAU * float(index) / float(seal_count) - age * 0.15
+		var center := Vector2.from_angle(angle) * radius
+		var size := 22.0 + progress * 18.0
+		var diamond := PackedVector2Array([center + Vector2.UP * size, center + Vector2.RIGHT * size * 0.72, center + Vector2.DOWN * size, center + Vector2.LEFT * size * 0.72])
+		draw_colored_polygon(diamond, Color(VIOLET, 0.08 * alpha))
+		for edge in 4:
+			var a := diamond[edge]
+			var b := diamond[(edge + 1) % 4]
+			draw_line(a.lerp(b, 0.08), a.lerp(b, 0.64 + progress * 0.24), Color(VIOLET, 0.72 * alpha), 2.8, true)
+		draw_line(center + Vector2(-7.0, 0.0), center + Vector2(7.0, 0.0), Color(GOLD, 0.62 * alpha), 2.0, true)
 
 func _draw_wisp(bob: float, alpha: float) -> void:
 	draw_circle(Vector2(0.0, bob), 21.0, Color(VIOLET, 0.10 * alpha))
@@ -418,5 +494,6 @@ func _draw_ink_ellipse(center: Vector2, radii: Vector2, color: Color) -> void:
 	var points := PackedVector2Array()
 	for index in 24:
 		var angle := TAU * float(index) / 24.0
-		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y))
+		var irregular := 1.0 + sin(float(index) * 2.21 + visual_seed) * 0.10
+		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y) * irregular)
 	draw_colored_polygon(points, color)

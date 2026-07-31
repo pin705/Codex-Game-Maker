@@ -14,8 +14,9 @@ release_note: >-
   complete-control, ritual, folio, hub/ledger and compact-HUD corrective
   families in the desktop and 844x390 native UI paths. Alpha QA and automated
   Godot parse/smoke coverage pass, and current native captures exist for the
-  affected frontend and combat surfaces. Independent visual review, refreshed
-  Web evidence, physical mobile, cross-browser, audio listening and human
+  affected frontend and combat surfaces. The refreshed Godot 4.6.2 Web export
+  and served Chromium smoke also pass. Independent visual review, physical
+  mobile, Firefox/Safari, audio listening and human
   feel/balance gates remain open, so the game is not declared player-ready,
   release-ready or commercial-ready.
 

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "gate": "PASS",
   "manifest": "design/audio/audio-manifest.json",
-  "manifest_sha256": "589bf22b078dadd247eba130661e5f88c105d4b18a9368c4da28f50228f8388d",
+  "manifest_sha256": "ee1e7d5c142de6ce900f4947d1b557cba4555b91d21e48edd7fa52e163ebee3b",
   "results": [
     {
       "id": "music-title",

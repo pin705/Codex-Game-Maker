@@ -34,27 +34,81 @@ Loading resource: res://scripts/audio/audio_director.gd
 [   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
 [   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
 [  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[  33% ] [90m[1mloading_editor_layout[22m | Reopening scenes...[39m[0m
+[  50% ] [90m[1mloading_editor_layout[22m | Loading central editor layout...[39m[0m
+[  66% ] [90m[1mloading_editor_layout[22m | Loading plugin window layout...[39m[0m
+[  83% ] [90m[1mloading_editor_layout[22m | Editor layout ready.[39m[0m
 [92m[ DONE ][39m [1mloading_editor_layout[22m
 [0m
 Loading resource: res://scenes/main.tscn
 Loading resource: res://scripts/gameplay/main.gd
+Loading resource: res://assets/generated/ui/UIKIT-011-v4-hud/runtime/boss_crest.png
+Loading resource: res://.godot/imported/boss_crest.png-2f75d94e7446a67b442d492288eb112a.ctex
+Loading resource: res://assets/generated/ui/UIKIT-011-v4-hud/runtime/boss_bar_channel.png
+Loading resource: res://.godot/imported/boss_bar_channel.png-b2dfa628bcd9e0f7b27c00327ecd95d4.ctex
+Loading resource: res://assets/fonts/BeVietnamPro-SemiBold.ttf
+Loading resource: res://.godot/imported/BeVietnamPro-SemiBold.ttf-b33b0691bc355ff142c79ad6b932c0ea.fontdata
 Loading resource: res://scripts/ui/hud.gd
-Loading resource: res://assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png
-Loading resource: res://.godot/imported/ui_scroll_panel.png-b294031cfc4ec2ed147803dadea7f560.ctex
-Loading resource: res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png
-Loading resource: res://.godot/imported/folio_sword.png-cb1f8c6e3d20402e111147a629859f4e.ctex
-Loading resource: res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png
-Loading resource: res://.godot/imported/folio_jade.png-e7a0f238b9e7dee98340238be1be6852.ctex
-Loading resource: res://assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png
-Loading resource: res://.godot/imported/folio_spirit.png-4c7066b9d231236078113c4053914ea2.ctex
+Loading resource: res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/player-status-island.png
+Loading resource: res://.godot/imported/player-status-island.png-c2267aed68442b1595453111db8cab90.ctex
+Loading resource: res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/timer-plaque.png
+Loading resource: res://.godot/imported/timer-plaque.png-aecee6408f4f115f0ed1907e4daddaa2.ctex
+Loading resource: res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/five-skill-rail.png
+Loading resource: res://.godot/imported/five-skill-rail.png-29b4bb0c6f5e3f8444834a00c86a2f95.ctex
+Loading resource: res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/breakthrough-veil.png
+Loading resource: res://.godot/imported/breakthrough-veil.png-4a33be047f4f9b94568690df216db766.ctex
+Loading resource: res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/pause-meditation-wide.png
+Loading resource: res://.godot/imported/pause-meditation-wide.png-5745546ac964928835d49f5b51d8902a.ctex
+Loading resource: res://assets/fonts/BeVietnamPro-Regular.ttf
+Loading resource: res://.godot/imported/BeVietnamPro-Regular.ttf-fa34f1fa74690458f4e1c1145ecc5f4f.fontdata
+Loading resource: res://assets/fonts/Literata-Variable.ttf
+Loading resource: res://.godot/imported/Literata-Variable.ttf-4f37faa15341f1125b6bdeee4d9d1f4f.fontdata
+Loading resource: res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/sword-formation-folio-a.png
+Loading resource: res://.godot/imported/sword-formation-folio-a.png-b64d0dd46ddf1ee382419cf959457852.ctex
+Loading resource: res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/spirit-vortex-folio-a.png
+Loading resource: res://.godot/imported/spirit-vortex-folio-a.png-19ade745df94ea099ff5d04e61d40347.ctex
+Loading resource: res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/jade-body-folio-a.png
+Loading resource: res://.godot/imported/jade-body-folio-a.png-867eac3b2ed54fc1ea46de1956685881.ctex
+Loading resource: res://assets/generated/ui/UIKIT-010-v4-controls/runtime/meter-frame-slim-nineslice.png
+Loading resource: res://.godot/imported/meter-frame-slim-nineslice.png-1e80703f72333682f93e71186b59423d.ctex
+Loading resource: res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/button-primary-ink.png
+Loading resource: res://.godot/imported/button-primary-ink.png-bc7f058cc57cd8f245b2c010e2d98cc1.ctex
+Loading resource: res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/button-secondary-paper.png
+Loading resource: res://.godot/imported/button-secondary-paper.png-0037471933a69b9d1418691df756b744.ctex
+Loading resource: res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/button-confirm-jade.png
+Loading resource: res://.godot/imported/button-confirm-jade.png-d8c9a6308875c371c80a7ac9b3c13680.ctex
+Loading resource: res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/button-destructive-cinnabar.png
+Loading resource: res://.godot/imported/button-destructive-cinnabar.png-13e03fb532999e6617dab30cccd7879d.ctex
+Loading resource: res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/seal-action.png
+Loading resource: res://.godot/imported/seal-action.png-36752a7969ac241efc537dde56d8b0e0.ctex
+Loading resource: res://assets/generated/ui/UIKIT-010-v4-controls/runtime/inventory-slot-square.png
+Loading resource: res://.godot/imported/inventory-slot-square.png-7a5f1e49028e41988e3285c00ff8e78f.ctex
+Loading resource: res://assets/generated/ui/UIKIT-010-v4-controls/runtime/tooltip-comparison-paper.png
+Loading resource: res://.godot/imported/tooltip-comparison-paper.png-334809fd65bf576a1f21c24188081e59.ctex
 Loading resource: res://scripts/ui/frontend.gd
 Loading resource: res://resources/ui/cultivation_theme.tres
+Loading resource: res://assets/generated/ui/UIKIT-009-v4-structural/runtime/major_lacquer_panel.png
+Loading resource: res://.godot/imported/major_lacquer_panel.png-1d87fdfa8c66b0dba7ee3d1f5ca10cd9.ctex
+Loading resource: res://assets/generated/ui/UIKIT-009-v4-structural/runtime/paper_folio.png
+Loading resource: res://.godot/imported/paper_folio.png-4a6c15874bc0753caf071581c69c2a20.ctex
+Loading resource: res://assets/generated/ui/UIKIT-009-v4-structural/runtime/header_plaque.png
+Loading resource: res://.godot/imported/header_plaque.png-9d0ec834aad079eda54a0142c2e0450e.ctex
+Loading resource: res://assets/generated/ui/UIKIT-009-v4-structural/runtime/result_modal_frame.png
+Loading resource: res://.godot/imported/result_modal_frame.png-0ea364914c0d99886a95e01f676883d5.ctex
+Loading resource: res://assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png
+Loading resource: res://.godot/imported/atlas-transparent.png-510210d96a05dcc32e0bfa5226a04f4e.ctex
+Loading resource: res://assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png
+Loading resource: res://.godot/imported/atlas-transparent.png-ba6e0282b3eca5051970925e080dd52e.ctex
 Loading resource: res://scenes/ui/mobile_support_layer.tscn
 Loading resource: res://scripts/ui/mobile_support_layer.gd
 Loading resource: res://scenes/ui/mobile_touch_controls.tscn
 Loading resource: res://scripts/ui/mobile_touch_controls.gd
 Loading resource: res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png
 Loading resource: res://.godot/imported/sigil_tu_linh.png-dabb69e6d36ab729aef581312d45efe1.ctex
+Loading resource: res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/joystick-medallion.png
+Loading resource: res://.godot/imported/joystick-medallion.png-48deceb78c36d2ba7545c0917ad98b1b.ctex
+Loading resource: res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/attack-medallion.png
+Loading resource: res://.godot/imported/attack-medallion.png-a5eb0c895c7abfb869985565001a95d3.ctex
 Loading resource: res://scenes/ui/rotate_device_overlay.tscn
 Loading resource: res://scripts/ui/rotate_device_overlay.gd
 Script docs haven't been properly loaded or regenerated, so don't save them to disk.

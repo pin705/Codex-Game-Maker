@@ -21,6 +21,8 @@ var stones: Array[Dictionary] = []
 var wisps: Array[Dictionary] = []
 var time := 0.0
 var redraw_clock := 0.0
+var decoration_seed := 884211
+var encounter_variant := 0
 
 func _ready() -> void:
 	z_index = -100
@@ -45,6 +47,12 @@ func refresh_selected_stage() -> void:
 	_load_arena_art()
 	queue_redraw()
 
+func set_run_variant(seed_value: int, variant: int) -> void:
+	decoration_seed = seed_value
+	encounter_variant = clampi(variant, 0, 2)
+	_build_decorations()
+	queue_redraw()
+
 func configure(size: Vector2) -> void:
 	arena_size = size
 	_build_decorations()
@@ -54,7 +62,7 @@ func _build_decorations() -> void:
 	stones.clear()
 	wisps.clear()
 	var rng := RandomNumberGenerator.new()
-	rng.seed = 884211
+	rng.seed = decoration_seed
 	for index in 28:
 		var edge := index % 4
 		var point := Vector2.ZERO
@@ -78,6 +86,19 @@ func _build_decorations() -> void:
 			"position": Vector2(rng.randf_range(120.0, arena_size.x - 120.0), rng.randf_range(120.0, arena_size.y - 120.0)),
 			"phase": rng.randf_range(0.0, TAU),
 			"size": rng.randf_range(1.4, 3.8)
+		})
+	# Variant-specific ink paths reinforce the encounter identity without
+	# introducing another stretched background plate.
+	for index in 3:
+		var lane := 0.28 + float(index) * 0.22
+		if encounter_variant == 1:
+			lane = 0.18 + float(index) * 0.31
+		elif encounter_variant == 2:
+			lane = 0.42 + sin(float(index) * 1.7) * 0.18
+		wisps.append({
+			"position": Vector2(arena_size.x * lane, arena_size.y * (0.34 + float(index % 2) * 0.28)),
+			"phase": rng.randf_range(0.0, TAU),
+			"size": rng.randf_range(2.0, 4.6)
 		})
 
 func _process(delta: float) -> void:

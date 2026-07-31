@@ -12,12 +12,13 @@ signal profile_changed(snapshot: Dictionary)
 signal currency_changed(current: int, delta: int)
 signal selection_changed(stage_id: StringName, discipline_id: StringName)
 signal upgrade_purchased(upgrade_id: StringName, rank: int, cost: int)
+signal fragments_changed(skill_id: StringName, current: int, delta: int)
 signal achievements_unlocked(achievement_ids: Array[String])
 signal bestiary_discovered(entry_ids: Array[String])
 signal settings_changed(current_settings: Dictionary)
 signal save_failed(reason: String)
 
-const SAVE_VERSION := 2
+const SAVE_VERSION := 3
 const SAVE_PATH := "user://van_mong_profile.json"
 
 const STAGE_ORDER := ["van_mong", "huyet_van", "thien_mon"]
@@ -176,6 +177,8 @@ const UPGRADES: Dictionary = {
 		"max_rank": 5,
 		"base_cost": 120,
 		"cost_growth": 1.65,
+		"fragment_base_cost": 4,
+		"fragment_cost_growth": 1.55,
 		"effect_per_rank": 0.08,
 		"effect_key": "damage_mult",
 	},
@@ -186,6 +189,8 @@ const UPGRADES: Dictionary = {
 		"max_rank": 5,
 		"base_cost": 100,
 		"cost_growth": 1.60,
+		"fragment_base_cost": 4,
+		"fragment_cost_growth": 1.58,
 		"effect_per_rank": 0.10,
 		"effect_key": "max_health_mult",
 	},
@@ -196,6 +201,8 @@ const UPGRADES: Dictionary = {
 		"max_rank": 5,
 		"base_cost": 90,
 		"cost_growth": 1.55,
+		"fragment_base_cost": 3,
+		"fragment_cost_growth": 1.52,
 		"effect_per_rank": 0.12,
 		"secondary_effect_per_rank": 0.03,
 		"effect_key": "pickup_range_mult",
@@ -346,6 +353,10 @@ var technique_ranks: Dictionary:
 	get:
 		return _dictionary_copy(_state.get("technique_ranks", {}))
 
+var skill_fragments: Dictionary:
+	get:
+		return _dictionary_copy(_state.get("skill_fragments", {}))
+
 var discovered_bestiary: Array[String]:
 	get:
 		return _string_array(_state.get("discovered_bestiary", []))
@@ -489,6 +500,23 @@ func get_upgrade_cost(upgrade_id: StringName, rank_override: int = -1) -> int:
 	return maxi(0, int(round(base_cost * pow(growth, rank))))
 
 
+## Skill fragments are the persistent evolution material earned in runs. The
+## cost grows per rank so a first unlock is generous while rank 4/5 remains a
+## meaningful long-term chase.
+func get_fragment_cost(upgrade_id: StringName, rank_override: int = -1) -> int:
+	var id := String(upgrade_id)
+	if not UPGRADES.has(id):
+		return -1
+	var definition: Dictionary = UPGRADES[id]
+	var current_rank := int(_dictionary_ref(_state.get("technique_ranks", {})).get(id, 0))
+	var rank := current_rank if rank_override < 0 else rank_override
+	if rank < 0 or rank >= int(definition.get("max_rank", 0)):
+		return -1
+	var base_cost := float(definition.get("fragment_base_cost", 4))
+	var growth := float(definition.get("fragment_cost_growth", 1.55))
+	return maxi(1, int(round(base_cost * pow(growth, rank))))
+
+
 ## Purchase result is structured for UI messaging: success, error, cost, rank,
 ## max_rank and currency are always present.
 func purchase_upgrade(upgrade_id: StringName) -> Dictionary:
@@ -497,7 +525,8 @@ func purchase_upgrade(upgrade_id: StringName) -> Dictionary:
 		"success": false,
 		"error": "unknown_upgrade",
 		"upgrade_id": id,
-		"cost": -1,
+	"cost": -1,
+	"fragment_cost": -1,
 		"rank": 0,
 		"max_rank": 0,
 		"currency": currency,
@@ -513,21 +542,27 @@ func purchase_upgrade(upgrade_id: StringName) -> Dictionary:
 	if rank >= max_rank:
 		result["error"] = "max_rank"
 		return result
-	var cost := get_upgrade_cost(upgrade_id)
+	var cost := get_fragment_cost(upgrade_id)
 	result["cost"] = cost
-	if currency < cost:
-		result["error"] = "insufficient_currency"
+	result["fragment_cost"] = cost
+	var fragments := _dictionary_ref(_state.get("skill_fragments", {}))
+	var owned := int(fragments.get(id, 0))
+	result["fragments"] = owned
+	if owned < cost:
+		result["error"] = "insufficient_fragments"
 		return result
 
 	ranks[id] = rank + 1
 	_state["technique_ranks"] = ranks
-	_state["currency"] = currency - cost
+	fragments[id] = owned - cost
+	_state["skill_fragments"] = fragments
 	result["success"] = true
 	result["error"] = ""
 	result["rank"] = rank + 1
 	result["currency"] = currency
+	result["fragments"] = fragments[id]
 	_persist_after_change()
-	currency_changed.emit(currency, -cost)
+	fragments_changed.emit(StringName(id), int(fragments[id]), -cost)
 	upgrade_purchased.emit(StringName(id), rank + 1, cost)
 	_emit_profile_changed()
 	return result
@@ -573,6 +608,15 @@ func record_run(victory: bool, run_kills: int, elapsed: float, stage_id: StringN
 	var unlocks_before := unlocked_stages
 	_reconcile_stage_unlocks()
 	var new_unlocks := _array_difference(unlocked_stages, unlocks_before)
+	var next_stage_id := id
+	if victory:
+		var stage_index := STAGE_ORDER.find(id)
+		if stage_index >= 0:
+			for candidate_index in range(stage_index + 1, STAGE_ORDER.size()):
+				if unlocked_stages.has(STAGE_ORDER[candidate_index]):
+					next_stage_id = STAGE_ORDER[candidate_index]
+					break
+		_state["selected_stage"] = next_stage_id
 	var new_bestiary: Array[String] = []
 	for entry_id: Variant in stage.get("bestiary", []):
 		_discover_bestiary_internal(str(entry_id), new_bestiary)
@@ -600,6 +644,16 @@ func record_run(victory: bool, run_kills: int, elapsed: float, stage_id: StringN
 	for achievement_id: String in new_achievements:
 		achievement_bonus += int(_dictionary_ref(ACHIEVEMENTS[achievement_id]).get("reward_currency", 0))
 	var total_reward := base_reward + victory_bonus + kill_bonus + speed_bonus + first_clear_bonus + achievement_bonus
+	var fragment_drops: Dictionary = {}
+	var fragment_drop_count := maxi(1, int(safe_kills / 18) + (3 if victory else 1))
+	var primary_fragment: String = UPGRADE_ORDER[(maxi(0, STAGE_ORDER.find(id)) + (1 if victory else 0)) % UPGRADE_ORDER.size()]
+	fragment_drops[primary_fragment] = fragment_drop_count
+	var fragments := _dictionary_ref(_state.get("skill_fragments", {}))
+	for fragment_id: String in fragment_drops.keys():
+		var delta := int(fragment_drops[fragment_id])
+		fragments[fragment_id] = int(fragments.get(fragment_id, 0)) + delta
+		fragments_changed.emit(StringName(fragment_id), int(fragments[fragment_id]), delta)
+	_state["skill_fragments"] = fragments
 	_state["currency"] = currency + total_reward
 	_persist_after_change()
 
@@ -626,6 +680,8 @@ func record_run(victory: bool, run_kills: int, elapsed: float, stage_id: StringN
 		"total": total_reward,
 		"currency_after": currency,
 		"new_unlocks": new_unlocks,
+		"next_stage_id": next_stage_id,
+		"fragment_drops": fragment_drops,
 		"new_achievements": new_achievements,
 		"new_bestiary": new_bestiary,
 	}
@@ -744,6 +800,8 @@ func get_upgrade_data(upgrade_id: StringName) -> Dictionary:
 		return data
 	data["rank"] = int(technique_ranks.get(String(upgrade_id), 0))
 	data["next_cost"] = get_upgrade_cost(upgrade_id)
+	data["fragment_cost"] = get_fragment_cost(upgrade_id)
+	data["fragments_owned"] = int(skill_fragments.get(String(upgrade_id), 0))
 	return data
 
 
@@ -869,8 +927,10 @@ func get_permanent_modifiers() -> Dictionary:
 
 func _make_default_state() -> Dictionary:
 	var ranks: Dictionary = {}
+	var fragments: Dictionary = {}
 	for id: String in UPGRADE_ORDER:
 		ranks[id] = 0
+		fragments[id] = 10
 	var unlocked_achievements: Dictionary = {}
 	for id: String in ACHIEVEMENT_ORDER:
 		unlocked_achievements[id] = false
@@ -887,6 +947,7 @@ func _make_default_state() -> Dictionary:
 		"selected_stage": "van_mong",
 		"selected_discipline": "van_kiem",
 		"technique_ranks": ranks,
+		"skill_fragments": fragments,
 		"stage_records": records,
 		"discovered_bestiary": [],
 		"achievements": unlocked_achievements,
@@ -972,6 +1033,11 @@ func _sanitize_profile(source: Dictionary) -> Dictionary:
 		var max_rank := int(_dictionary_ref(UPGRADES[id]).get("max_rank", 0))
 		ranks[id] = clampi(_nonnegative_int(source_ranks.get(id), 0), 0, max_rank)
 	result["technique_ranks"] = ranks
+	var fragments := _dictionary_ref(result.get("skill_fragments", {}))
+	var source_fragments := _dictionary_ref(source.get("skill_fragments", {}))
+	for id: String in UPGRADE_ORDER:
+		fragments[id] = _nonnegative_int(source_fragments.get(id), int(fragments.get(id, 10)))
+	result["skill_fragments"] = fragments
 	result["discovered_bestiary"] = _ordered_subset(
 		_filter_known_ids(source.get("discovered_bestiary", []), BESTIARY),
 		BESTIARY_ORDER

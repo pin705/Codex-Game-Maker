@@ -72,12 +72,19 @@ func _capture() -> void:
 		"jade":
 			game.cultivation_vfx.configure(&"ngoc_the", {"sword_damage": 0, "vitality": requested_rank, "magnet": 0})
 			game.cultivation_vfx.trigger_hit(Vector2.LEFT)
+			game.cultivation_vfx.trigger_skill_cast(&"jade_body", requested_rank, Vector2.LEFT)
+			game.cultivation_vfx.trigger_skill_impact(&"life_stream", requested_rank, center + Vector2(-88.0, -24.0))
 		"qi":
 			game.cultivation_vfx.configure(&"tu_linh", {"sword_damage": 0, "vitality": 0, "magnet": requested_rank})
 			game.cultivation_vfx.trigger_pickup(center + Vector2(250.0, -145.0))
+			game.cultivation_vfx.trigger_skill_cast(&"qi_pulse", requested_rank, Vector2.UP)
+			game.cultivation_vfx.trigger_skill_impact(&"qi_pulse", requested_rank, center + Vector2(116.0, -52.0))
 		_:
 			game.cultivation_vfx.configure(&"van_kiem", {"sword_damage": requested_rank, "vitality": 0, "magnet": 0})
 			game.cultivation_vfx.trigger_attack(Vector2.RIGHT)
+			game.cultivation_vfx.trigger_skill_cast(&"sword_damage", requested_rank, Vector2.RIGHT)
+			game.cultivation_vfx.trigger_skill_travel(&"phoenix_blade" if requested_rank >= 5 else &"piercing_sword", requested_rank, center + Vector2(24.0, 0.0), Vector2.RIGHT)
+			game.cultivation_vfx.trigger_skill_impact(&"sword_damage", requested_rank, center + Vector2(172.0, 0.0))
 
 	# Capture close to the transient peak while retaining the persistent rank
 	# silhouette and the real HUD/world scale around it.

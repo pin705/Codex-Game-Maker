@@ -4,7 +4,7 @@
   "reviewer": "Pending clean-context independent visual reviewer",
   "reviewer_mode": "independent-agent-clean-context-pending",
   "reviewer_independence": "The refreshed V4.1 matrix must be reviewed by an agent that did not author the current UI/art integration.",
-  "build": "V5 corrective local candidate; current native captures bound, final project fingerprint and Web refresh pending",
+  "build": "V5 corrective local candidate; current native captures and refreshed Godot 4.6.2 Web/Chromium evidence bound; independent visual review pending",
   "review_method": "Pending native-resolution inspection of the complete V5 corrective desktop/844x390 matrix against the locked user reference and V4.1 master board; authored surfaces may not self-certify PASS.",
   "style_lock": {
     "path": "design/art/style-lock.json",
@@ -153,13 +153,13 @@
         "id": "lookdev-v4-runtime-desktop",
         "outcome": "pending-runtime-convergence",
         "path": "production/playtests/frontend/contact-sheet-current-desktop.png",
-        "sha256": "18d6edb3b21426523c75e45bbeb924453b5a381c544c24d045b7a991c73c887e"
+        "sha256": "6b126104b88153cb96e507d4653a2a077b57d46e2a3bbf96aa607a1ce9e8ce41"
       },
       {
         "id": "lookdev-v4-runtime-phone",
         "outcome": "pending-runtime-convergence",
         "path": "production/playtests/frontend/contact-sheet-current-phone.png",
-        "sha256": "01d9572e519445bb461803f725af99b7d1f088d106731cb650ae0e1dbe6ac575"
+        "sha256": "0b5f260a403dc6766b3c3193413aae3668bec61dea832e55ae6b723056f3ea0c"
       },
       {
         "id": "lookdev-v2-glossy-dashboard",
@@ -171,25 +171,25 @@
         "id": "lookdev-v5-runtime-frontend-desktop",
         "outcome": "pending-independent-review",
         "path": "design/art/lookdev/v5/runtime-review-frontend-desktop.png",
-        "sha256": "692018efac956326bffdf646244fdcd9a21dca11edd8f1f99125298f52e6d050"
+        "sha256": "5299e3f63c191a17a3dbaafbd63efc37e055cfd81c2ce7fda56f26922b3be362"
       },
       {
         "id": "lookdev-v5-runtime-frontend-phone",
         "outcome": "pending-independent-review",
         "path": "design/art/lookdev/v5/runtime-review-frontend-phone.png",
-        "sha256": "5319aaaa87ca7ac7ce3fb779e5dd5e91d4452f43b12674f181f1a0417d0aef04"
+        "sha256": "77ea16396b2a44e39f1b612194107f26c5a26090800713cc0d9ebb9578687ad5"
       },
       {
         "id": "lookdev-v5-runtime-combat-desktop",
         "outcome": "pending-independent-review",
         "path": "design/art/lookdev/v5/runtime-review-combat-desktop.png",
-        "sha256": "ee3194dc3ed407d75e9787032f8552b645ee2b34cd927d5a18ccbce47f8bb5d2"
+        "sha256": "a680c4b102f94e31c3743204a8785806d7f062ee7eefaeb0296b4e0fbed57976"
       },
       {
         "id": "lookdev-v5-runtime-combat-phone",
         "outcome": "pending-independent-review",
         "path": "design/art/lookdev/v5/runtime-review-combat-phone.png",
-        "sha256": "e8b8086aa9fd4d37e622ee22924cb847c63b375272eb5dbfbe7d2206a91a78c3"
+        "sha256": "e7e111e75df37553d10fd8757762b090ed4926d63138ad4170c13e9a0ad09227"
       }
     ],
     "locked_reference_paths": [
@@ -247,12 +247,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/title.png",
-          "sha256": "5678ba690c31b2fdbe9339586b6edeb45ab4ec2ee50728b42b064e90e3c6f836"
+          "sha256": "f3bfe79515dd6c7d9fd50d22dfa5c91dff8af13a0f59bdc2318bc1525e9ddd46"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/title-phone.png",
-          "sha256": "0c7ec64e0ecb7f047758d16c4b533b7dec745f00cc5eab4bd0316d4c13d9f013"
+          "sha256": "3656abda69a57ba7b316bc9e4c70e9be983214b02eb30924f935c726113c477d"
         }
       ],
       "checks": {
@@ -278,12 +278,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/hub.png",
-          "sha256": "fc5bdbebe6e50703167203693846d0d829bcc15e0e914b8d39e7d3974534c596"
+          "sha256": "c11567e0c756468efa6b0c440f9e0c30e4284a182c5100fd7b2cd956ef081244"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/hub-phone.png",
-          "sha256": "f4b0d5645811af252f999a71496ef8b214e01b87971547c47212a14f09810836"
+          "sha256": "226558c9484727c65ecc2965f3ab20385784d6b38ab9dbfd128df45b05a4c929"
         }
       ],
       "checks": {
@@ -309,12 +309,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/stages.png",
-          "sha256": "cfac38fbb8d4baa58268bb4e5d4827ec826e6ebdf9211882ce5e800912da258a"
+          "sha256": "ba81f37c557138aa7ed90e4b87ea7686ba1cab77a5ea3045cb9be3e065779ef9"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/stages-phone.png",
-          "sha256": "b86f9afa8c3c7df5890ba64e8fc20ddd85267888f929ec98969c49e19d7a7d39"
+          "sha256": "b69e7804de5e3cd83cb2173063fa244f47e95cc7d8401eb5b4b0178821432713"
         }
       ],
       "checks": {
@@ -340,12 +340,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/loadout.png",
-          "sha256": "b740ba06d7b70fb79b3e64130da5d97ecd9661b564a12e90de55a1e4f001753e"
+          "sha256": "79f4ad890b0f8ae98f50d32edb1502a7dfed1f838007d1c51f906935013933f7"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/loadout-phone.png",
-          "sha256": "a6533ab23fa9fb7c5d98b6d54f25808a26ee8a00d3c42be4bdebf2b3caab0d70"
+          "sha256": "84cf0054536ab1f9fbb71f49eca9c116a4ab3beb34b8cab89fae873d12f91342"
         }
       ],
       "checks": {
@@ -371,12 +371,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/inventory.png",
-          "sha256": "fd5705604e8d7d3bd9d08873484f02d81c44ae35f80fa9d499b632adebaced75"
+          "sha256": "1dfd5a8428c06b20536789d37a4ff769535f5cab91c27b45b019febfabd35888"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/inventory-phone.png",
-          "sha256": "12f82bb3e5743a8fe8b22ac36ce6ed4e7f7d35db6c65a88ddf612e65b2b30a82"
+          "sha256": "ceb4f9e241f0d6d9d3ac3a087024021e4880db559b7e537e7839c4e0929d5d84"
         }
       ],
       "checks": {
@@ -402,12 +402,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/spirit-beast.png",
-          "sha256": "f631cc04cd5fdc88a200779db4bd468b8e372cc27e6a3e2cd89bda20810faee6"
+          "sha256": "ef604fa5ac56875d85d30fdf046651e3e556d5b8d39598a25f88c4033965a080"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/spirit-beast-phone.png",
-          "sha256": "52cc1b01f5842cd2449ec50f964fd43bbf8c336716e34c0dd05e7471f6c44355"
+          "sha256": "98ca5a52d6dc893fb89a7d722431e284ff7bdeeb4a2c4c5887c6ba1381b205a3"
         }
       ],
       "checks": {
@@ -433,12 +433,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/techniques.png",
-          "sha256": "1a8d83fe11658d1f3bf41da4559dd967d1b1bc93c11e1ba91543735e10400c8e"
+          "sha256": "53010838233efda566069140e18b9f8ceca3c7273ba0de08feb28fb792155cd2"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/techniques-phone.png",
-          "sha256": "4f45bc3d4b074b9af440db0de71a51afb224b7a895b8a7fae7ad7675abc6a411"
+          "sha256": "0c20939b6c999a14b2ed64da344164b4d4bab088a6110ec7dc62bc71e006d7f4"
         }
       ],
       "checks": {
@@ -464,12 +464,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/technique-upgrade.png",
-          "sha256": "5470d09278a0de9aff3bfb3c48f24742e9014f09cd6748cbd0ad350470d413b7"
+          "sha256": "68d45f333c11b741f3c264a0b2cf03c5de57c4f919a97879d5eeb8e4eebde509"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/technique-upgrade-phone.png",
-          "sha256": "41c1b9768063323be23491f3da0d9f6bae50d30646447ca638012adf5f062c49"
+          "sha256": "b5147d6ab0c03c4e4f45519f211d8c49219d25dea54d0ca11110ece966d46fc3"
         }
       ],
       "checks": {
@@ -495,12 +495,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/codex.png",
-          "sha256": "fd07aca0ebbe5beef42f7c6cb0808ca36d0fa174ed32e94e7cd5ce4ac0e2921a"
+          "sha256": "8a73e975568cdf10b0c6f014b5310f2f8c36308a4b802b1a433353fe67685a7e"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/codex-phone.png",
-          "sha256": "d2921b4877eeec0c444fa11ca3f8c392a52ae1d92dcdd2b5e048414fabee13a3"
+          "sha256": "6658e4270dfc80954fdb12884bede0dd7680ba62b5fa88404d660c9011da7e52"
         }
       ],
       "checks": {
@@ -526,12 +526,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/achievements.png",
-          "sha256": "63394d31010fd780435c9c05f7d8c915f60524c5ef99b46ceac9e198641d5e30"
+          "sha256": "f4e83de0c686e83f40c871dfb2cf58e20600f8a06410df14c716c93807f0b793"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/achievements-phone.png",
-          "sha256": "11fc0bb25fdbd335ac4413f4f69f8a319dffdfd74afdb96bb72b23fefec4c558"
+          "sha256": "11d1c795b63b23cfe9cb3d219d31baab560b0cfe002e3ad7ea029117b3ae45e2"
         }
       ],
       "checks": {
@@ -557,12 +557,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/settings.png",
-          "sha256": "f0c9695b87555d7cc5249b64ff6c99c48d8ee27e0d35e433f64c85ebb02d52ef"
+          "sha256": "3411ee21c9606ee3044d01f1b099209adb3b15abc2a8fe5b14f5317b28fec133"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/settings-phone.png",
-          "sha256": "0f4204519837d8d8980ea5b9cfd4da7acc0130789cdc742818b32020b968e8bb"
+          "sha256": "e27e7e5d4fa630785f6df39c9c17fb4f71428868c7fe08f2963f07c07f76777f"
         }
       ],
       "checks": {
@@ -588,12 +588,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/reset.png",
-          "sha256": "318829082aad52de17076fbebe7f2d610c350a6828d96b64e15d102c3235a9b7"
+          "sha256": "1cace6dc59bbc85e2fca80ee6eeeaac21ff586a225fbdc7a1e42b72bc1809db7"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/reset-phone.png",
-          "sha256": "dec9527c5a3a9d762e93342021907758344029bab604e96acd4b6d49bc89229f"
+          "sha256": "6a9e35d5af76642f265396490b075851d7aac6a08d6a70709cbf388a3200ab57"
         }
       ],
       "checks": {
@@ -619,12 +619,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/gameplay-final.png",
-          "sha256": "cc21bcc8a9ac62a68c73134443c73c502682efaecde9ccb0be9d3b1fb6c24049"
+          "sha256": "14a47c8e017203b3ea99ef9e88053aaf6a3b0172955e09de43f2252c3bfb8a06"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/combat-phone.png",
-          "sha256": "9748346c2a2c90f9f1da88a23621b83f51fdfb456cd42849185335a9b4f35cb5"
+          "sha256": "68df675557e14600e461ff0b97b1a1f98d728a2e4d23eb4549ab933a7e5e7a60"
         }
       ],
       "condition_captures": [
@@ -632,13 +632,13 @@
           "condition": "boss-and-full-danger-radius",
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/boss-final.png",
-          "sha256": "70d56799b28d6cfc937e6c46d0eab72f5f40711a61a08391ff9c937a23757648"
+          "sha256": "074e23cf2d446152e756e9e04eb9d5ee7b08f7921e65feb731ec548fa8a3ae27"
         },
         {
           "condition": "boss-and-full-danger-radius",
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/boss-phone.png",
-          "sha256": "e4f1def1c07aa86f4a3ec98025e64f070e045a690e84bed1b012ffe9ffd5db27"
+          "sha256": "c66d130d0e65333ee16a0eab4c06695f1569fd95f91ef3afa00ac7498ee22eb7"
         }
       ],
       "checks": {
@@ -664,12 +664,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/upgrade-final.png",
-          "sha256": "5f8f57a2702434ceb780c8b01fe3ee65fcd35867aa4db622382d2dcb0d9bde3e"
+          "sha256": "a970b4c791370de33bf2abcb41f51312237957dd0b279f30ab7d5c380280dd72"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/breakthrough-phone.png",
-          "sha256": "025725c1c417314ebe334e6b53c55d6068a30c74d6b0de8c554fce4d5061d188"
+          "sha256": "6f2661002eb5b86d9c79a1f70ecac2bc0ebb80930c4125652b33158ef7e59145"
         }
       ],
       "checks": {
@@ -695,12 +695,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/overhaul/pause-final.png",
-          "sha256": "0fcaa6c7bcbac11d1abb39f0b4785000e6e2edb5209133d00c103a514ca6bc3d"
+          "sha256": "cb72efaccd905d3dcf3a1c3f02d19d13f09b0fd2a6c135a185d89ba20e8be830"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/mobile-support/pause-phone.png",
-          "sha256": "0aecc956128adfdbed80f676c6020dcab53fbd94bacbbda04a6b0006794f537a"
+          "sha256": "3e4cdb9881051ebf8fdf0f8cfc20f6107a852741e4fc38377dafb60bba464435"
         }
       ],
       "checks": {
@@ -726,12 +726,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/results.png",
-          "sha256": "82f7e4144b0d7517e94f0b7fefd6ddb92d238873e0290030218ee3d6be5d5429"
+          "sha256": "4d4fc38291296a138f96fc6e85b908fa9573193e07c60eb0f7aa95cc858430e9"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/results-phone.png",
-          "sha256": "fa69e1955ce59ca1626b762e7f45510d6a01c654eb7fb1b5adcc70e572aafa7a"
+          "sha256": "424157ef8fb83b70a1b49f633f310efad766dc136523a894ec020a11ef3b3add"
         }
       ],
       "checks": {
@@ -757,12 +757,12 @@
         {
           "viewport_id": "desktop-1600x900",
           "path": "production/playtests/frontend/results-defeat.png",
-          "sha256": "05246eefaf73dcff5c2d9a0c79b486879d26d7dffd2712ede99875e6c995592d"
+          "sha256": "c2f101f2f472a221b0396ca622003afee15ff6281fee8a94da2b9b5222eca2bb"
         },
         {
           "viewport_id": "phone-844x390-simulated",
           "path": "production/playtests/frontend/results-defeat-phone.png",
-          "sha256": "066e32eb1c0640ad3645e2c863c1d9bb74e67a4a02718b3775bbd0543173ebc0"
+          "sha256": "95e4c8043b97dcecd2358d47f8722d267a1b45bec018869fefd30b5e3c2817b5"
         }
       ],
       "checks": {
@@ -786,49 +786,49 @@
       "id": "overhaul-victory-final",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/overhaul/victory-final.png",
-      "sha256": "cde90a57300770107e9e1a0e421e6faffb28044785ce567b2496c04851fed3f0"
+      "sha256": "bcd128ba5834d6f85cf92351a009529e1eb2fb2177c8e553228434426897ec74"
     },
     {
       "id": "overhaul-defeat-final",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/overhaul/defeat-final.png",
-      "sha256": "fb59844453f94774c4d1382599ad4ac0aae9e50c0583fea75e12e9cdc53efea5"
+      "sha256": "564f9276bde4561d1d4ed2e719f260460003772f55921616b70857343bed0096"
     },
     {
       "id": "vfx-sword-rank1",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/vfx/sword-rank1.png",
-      "sha256": "b27b529fe25c44a39c36dc256bbd87628f3e62dfd4f50535df046b47283750a5"
+      "sha256": "5ce8a10afe93095d7e5eeb7763b723c4cbbafbee720b6307a9081d5e18ee6b31"
     },
     {
       "id": "vfx-sword-rank5",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/vfx/sword-rank5.png",
-      "sha256": "bf30ae16c1acec9306de25da6066558944ae30e3a4a05ccc0354797fc3259c29"
+      "sha256": "f8643788c9ab4792e5bce6543e690cc9e54704149c118c3a1e05d0227aef3943"
     },
     {
       "id": "vfx-jade-rank1",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/vfx/jade-rank1.png",
-      "sha256": "db41fc1f1b53d1e6cd36de79e94906d27faf69f7628d8ae3bcf0a0192de03f73"
+      "sha256": "99623bea83d70f170e858e25762f4fded968fb8d931729700f0a4b25e0bb3f6c"
     },
     {
       "id": "vfx-jade-rank5",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/vfx/jade-rank5.png",
-      "sha256": "734f8a5340a030d9c0c821e32ed9a56cf94018476ca4964d9425eb8d3927afea"
+      "sha256": "8464b298f54dc9d1f802c540322a9aeaf15e317cff918fbf8be71ec46908a228"
     },
     {
       "id": "vfx-qi-rank1",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/vfx/qi-rank1.png",
-      "sha256": "589a3f21815d57a03c667a9e6eaac8fa9bc9c1427a3e8f8593b04320364bad99"
+      "sha256": "199969695ed241342f46fae6997a4aeb1f0c27c547bac66ec44551ced9a3c68f"
     },
     {
       "id": "vfx-qi-rank5",
       "viewport_id": "desktop-1600x900",
       "path": "production/playtests/vfx/qi-rank5.png",
-      "sha256": "eb3a8463f620b2e186c150ad69ba0c03b381d84e5aaa2bcd67dc1f857eb88ced"
+      "sha256": "793478f8a36bc15c95264d8bcc2d56dc809a2854300dc6365fcae4e2950e460d"
     },
     {
       "id": "mobile-support-landscape-controls",
