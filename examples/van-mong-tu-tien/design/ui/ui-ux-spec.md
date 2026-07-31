@@ -1,7 +1,7 @@
-# UI/UX Spec: Vân Mộng Tu Tiên V4
+# UI/UX Spec: Vân Mộng Tu Tiên V4.1 / V5 Corrective Art Pass
 
-Status: implemented; bounded independent visual PASS
-Implementation mode: hybrid — scalable Godot-native/custom-drawn controls with authored icons, portraits and environment art
+Status: implemented; current V5 corrective renderer evidence refreshed, independent visual review pending
+Implementation mode: hybrid — native Godot interaction/layout with complete fixed-aspect authored command, ritual, folio, hub/ledger and HUD objects; all copy, values, focus and input remain live
 Style version: `4.1.0`
 Style digest: `f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024`
 Visual contract: `production/reviews/visual-quality-contract.json`
@@ -16,16 +16,22 @@ cinnabar danger. Hierarchy comes from composition, type, negative space and
 component silhouette before ornament.
 
 - Production buttons, panels, tabs, meters, slots and modals are scalable native
-  or custom-drawn controls. Generated chrome atlases are provenance/fallback,
-  not the default layer.
+  or custom-drawn controls. V5 complete buttons replace manually assembled caps
+  and clasps; fixed-shape art is uniformly fitted and never arbitrary nine-sliced.
+  Runtime text, values, focus and input remain native.
 - Meta screens share one subdued sect backing. Stage paintings appear only in
   contained previews or actual combat and preserve aspect ratio.
-- The hub has three unequal priorities: equipped identity, current expedition
-  and a compact command rail.
-- Combat keeps compact edge islands and a five-skill rail; the movement lane and
-  boss telegraph remain visually dominant.
+- The hub has three unequal priorities: a cultivator-led equipped identity,
+  current expedition and a compact command rail. The discipline sigil remains
+  secondary to the accepted player portrait.
+- Lĩnh Ngộ, Tĩnh Tâm, Phi Thăng and Đạo Tâm Tan Vỡ use four state-specific
+  silhouettes. Loadout/techniques/breakthrough share illustrated school manuals,
+  while Thiên Mệnh Lục is one physical open ledger rather than equal cards.
+- Combat keeps compact edge islands and a low five-skill rail; the movement lane
+  and boss telegraph remain visually dominant.
 - Phone landscape is a dedicated 844×390 device-space layout. Optional copy is
-  removed before labels are reduced.
+  removed before labels are reduced; 64 px hit targets retain compact inset art
+  instead of filling their entire interaction rectangle.
 - Runtime Vietnamese text uses bundled Be Vietnam Pro; Literata is reserved for
   ritual headings. No generated image owns readable text.
 
@@ -61,9 +67,20 @@ component silhouette before ornament.
 | `VanMongComponentKit` | Shared scalable panels, tabs, item slots, icons and legacy-compatible helpers |
 | `CultivationPanel` | Major ink/paper modal and HUD surfaces |
 | `CultivationMeter` | Health, qi, cooldown and progress with label/shape cues |
-| `CultivationChoiceButton` | Breakthrough folio with protected text and selected state |
+| `CultivationChoiceButton` | Fixed-aspect illustrated UIKIT-014 manual with protected live text and an art-fitted non-color focus bracket |
 | `CultivationActionButton` | Compact combat/result actions |
 | `MobileTouchControls` | Device-safe joystick, pulse and pause zones |
+
+V4.1 authored raster families:
+
+- `UIKIT-009-v4-structural`: major lacquer panel, paper folio, header plaque and result frame.
+- `UIKIT-010-v4-controls`: fixed-aspect command caps/ornaments, tabs, inventory slot, comparison frame and meter frame.
+- `UIKIT-011-v4-hud`: player plaque, timer plaque, boss crest/channel, five-skill rail and touch medallions.
+- `UIKIT-012-v5-command-tabs`: complete command/tab textures inside native `BaseButton`; no cap/clasp reconstruction.
+- `UIKIT-013-v5-ritual-modals`: distinct breakthrough, wide pause, victory and defeat silhouettes.
+- `UIKIT-014-v5-technique-folios`: six illustrated sword, jade-body and spirit-vortex manuals.
+- `UIKIT-015-v5-ledger-hub`: open achievement ledger plus unequal identity, expedition and command artifacts.
+- `UIKIT-016-v5-combat-hud`: compact player/timer/skill rail and mobile medallions; generated boss channel is intentionally unused until its centered crest matches runtime layout.
 
 Primary runtime resources:
 
@@ -87,7 +104,8 @@ Primary runtime resources:
 - Gameplay actions remain centralized through the InputMap. Touch mirrors the
   same movement, pulse and pause actions.
 - Phone buttons retain a tested minimum 64×64 logical/physical target at the
-  renderer-backed 844×390 viewport.
+  renderer-backed 844×390 viewport. Their authored chrome is inset 3×5 px so
+  accessibility size does not become visual bulk.
 - Critical state uses labels, icons, silhouette and border treatment in addition
   to functional color.
 
@@ -96,8 +114,13 @@ Primary runtime resources:
 - Desktop authoring canvas: 1600×900; validated at 1280×720 and 2100×900.
 - Phone landscape: native 844×390 device-space composition with 44 px horizontal
   and 18 px vertical meta inset.
+- The phone hub aspect-fits the identity dossier inside 120×164 and the
+  expedition window inside 278×164, leaving a separate command rail instead of
+  shrinking a desktop dashboard.
 - Platform safe area is authoritative for touch combat. Joystick, attack and
-  pause remain disjoint and outside the central lane.
+  pause remain disjoint and outside the central lane. At 844×390 the joystick
+  and attack ornaments render at approximately 73 px and 55 px inside larger
+  138 px and 92 px hit zones; the five-skill rail is 260×58.
 - Background art is aspect-preserved. Phone layouts may extend ink fields but
   cannot crop away the focal subject or stretch UI chrome.
 - Portrait orientation blocks combat input and requests landscape rotation.
@@ -105,8 +128,9 @@ Primary runtime resources:
 ## Typography And Content
 
 - Desktop body copy targets 17–19 px; major headings 30–46 px.
-- Phone body copy targets 15–16 px where retained; actions keep protected live
-  captions and optional prose is removed first.
+- Phone body copy targets 13–16 px where retained. Compact artifact captions may
+  use 10–12 px only inside secondary title/action cartouches; optional prose is
+  removed first and all action targets remain at least 64 px.
 - Text never collides with a frame, seal, icon or button. Result copy owns a
   dedicated field above the action row.
 - Unsupported decorative diamonds/chevrons are not used as runtime font glyphs;
@@ -132,13 +156,14 @@ players with relevant lived experience remain open; see
 
 ## Final Evidence
 
-- Desktop gallery: `production/playtests/ui-review/v4-all-desktop.png`
-- Phone gallery: `production/playtests/ui-review/v4-all-phone.png`
-- Independent verdict: PASS, no blocker/high finding
+- Desktop affected-surface review: `design/art/lookdev/v5/runtime-review-frontend-desktop.png` and `design/art/lookdev/v5/runtime-review-combat-desktop.png`
+- Phone affected-surface review: `design/art/lookdev/v5/runtime-review-frontend-phone.png` and `design/art/lookdev/v5/runtime-review-combat-phone.png`
+- Current renderer matrix: refreshed and bound; independent clean-context verdict pending
 - Godot import/parse, runtime, frontend flow, mobile support, responsive layout
   and visual evidence smokes: PASS
 - Style-lock verification: PASS
-- Web export and Playwright Chromium smoke: PASS, 1/1
+- Prior Web export/Chromium evidence predates the V5 corrective pass and must be
+  refreshed before any player-ready claim.
 
 Physical iOS/Android, Safari/Firefox, human audio listening and manual
 feel/balance remain release gates. This spec does not claim commercial release

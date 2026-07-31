@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
   "profile": "all",
-  "started_at": "2026-07-30T17:15:43.316124+00:00",
-  "finished_at": "2026-07-30T17:16:08.051230+00:00",
+  "started_at": "2026-07-31T05:45:20.310526+00:00",
+  "finished_at": "2026-07-31T05:45:23.564177+00:00",
   "manifest": "production/quality-command-manifest.json",
   "manifest_sha256": "fe1f31445334ebf0d0dd4f1e97f6c547a8b6df9b7cd546a0a18863f4943639d4",
-  "project_fingerprint": "2e63b61ec45d2d5a590147cff6bb0068ac3230ecf3283b8fe360d4462a8dcf59",
-  "git_commit": "b071bfb78f0e3f2771737f77dc758ae8183a8eca",
+  "project_fingerprint": "1e04628c7538cfc7403053abc66e5141129b13c4e5576c26a9687dfbc4eb3c30",
+  "git_commit": "f3caf7a769c130131fba34e964ecd473c0e40d2c",
   "git_dirty": true,
   "godot": {
     "path": "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
@@ -16,53 +16,25 @@
   },
   "results": [
     {
-      "id": "web_browser_smoke",
+      "id": "godot_import",
       "status": "PASS",
       "returncode": 0,
-      "duration_seconds": 24.443,
-      "stdout": "production/evidence/commands/web_browser_smoke.stdout.log",
-      "stderr": "production/evidence/commands/web_browser_smoke.stderr.log",
-      "stdout_sha256": "aa43725bed03798140aedaf6084eb16f2d8e8a59d23f69e34f0c54f6051bbf1a",
-      "stderr_sha256": "35233b67625be25c1410758e429e0aa4b249605280c9f0c3bddcbddea0d8fd22",
-      "artifacts": [
-        {
-          "path": "production/evidence/platforms/web-smoke.json",
-          "sha256": "8c8b5786a7860e2a496b282a85faa71d8380b00db8c0635bf56f783afec4e3fd",
-          "size": 1530
-        },
-        {
-          "path": "production/evidence/platforms/web-title.png",
-          "sha256": "ae7eab3cc430b88d57a753c0955041451259e86ed49d08face71112eddd9e8b6",
-          "size": 1820068
-        },
-        {
-          "path": "production/evidence/platforms/web-hub.png",
-          "sha256": "73fa09c307bc7872ebfa9905cef4a8b95ca159fcf2a01cb20a93d2291a68d551",
-          "size": 1665961
-        },
-        {
-          "path": "production/evidence/platforms/web-stages.png",
-          "sha256": "84e72428e63ebd3fd92857c2d24473026e577fa14eb3026960712765dec7c763",
-          "size": 1345948
-        },
-        {
-          "path": "production/evidence/platforms/web-title-phone.png",
-          "sha256": "e45ea15e5a11cc08d0513174186f3c4faaa961e8a5fee377389eff60d670a794",
-          "size": 352023
-        },
-        {
-          "path": "production/evidence/platforms/web-hub-phone.png",
-          "sha256": "583873853fe0ab603a95091efd1fe4448c002bfb24455459c923c2a8ee9bac3b",
-          "size": 289042
-        }
-      ],
+      "duration_seconds": 3.16,
+      "stdout": "production/evidence/commands/godot_import.stdout.log",
+      "stderr": "production/evidence/commands/godot_import.stderr.log",
+      "stdout_sha256": "ea5eb733689c1bfa25101cc5e3e0f44d4de4bbad3aadd29d8b5a3c3d71faeaf2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts": [],
       "argv": [
-        "npm",
-        "run",
-        "test:web"
+        "/Users/bon/Library/Caches/CodexGameMaker/godot/bin/godot",
+        "--headless",
+        "--editor",
+        "--path",
+        "/Users/bon/Documents/Codex-Game-Maker/examples/van-mong-tu-tien",
+        "--quit"
       ],
-      "command_sha256": "0930ac8f44745a8e0f81087f29167241977b2eed10fbdbec46eb58083b2ecada",
-      "output_bytes": 1455
+      "command_sha256": "f8f95afe1185f51ffc899ece514c3e7c14d675a0adc05e854d7e98f5daf7cfe9",
+      "output_bytes": 1017
     }
   ]
 }

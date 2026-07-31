@@ -1,12 +1,15 @@
 {
   "style_lock": {
     "path": "design/art/style-lock.json",
-    "style_version": "3.0.0",
-    "sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
+    "status": "locked",
+    "style_version": "4.1.0",
+    "digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+    "file_sha256": "f3e0e7d832138f1a9543021bc0ee922b74f00ed86c26418fb2a13293a96d2837",
+    "art_bible_sha256": "8d3718447ee5292a68528d8310791ea68e7dcb40c3dce4e385c078f8484763ea"
   },
   "coverage_policy": {
-    "minimum_distinct_assets": 34,
-    "rationale": "The current visible inventory requires five full-frame journey environments, six actor/threat silhouettes, three combat pickup/projectile/impact families, fifteen active authored UI material/folio/icon/portrait families including UIKIT-007/008, PORTRAIT-001/002 and ACHIEVEICON-001, three cultivation sigils, and two bundled typography families. Superseded UIKIT-002 lacquer/compact/icon files and UIKIT-003 commands are not inflated into the floor; native compact controls and byte-identical combat derivatives are usages rather than false distinct assets.",
+    "minimum_distinct_assets": 42,
+    "rationale": "The current visible inventory requires five full-frame journey environments, six actor/threat silhouettes, three combat pickup/projectile/impact families, twenty-three active authored UI material/folio/icon/portrait families including the locked V4.1/V5 UIKIT-009 through UIKIT-016 structural, complete-control, ritual, folio, hub/ledger and HUD families, three cultivation sigils, and two bundled typography families. Superseded crops and unused generated regions are not inflated into the floor; native hit targets and byte-identical runtime derivatives are usages rather than false distinct assets.",
     "inventory_sources": [
       "design/gdd/game-concept.md",
       "design/gdd/system-session-flow-ui.md",
@@ -23,7 +26,13 @@
       "required": true,
       "status": "verified",
       "coverage_basis": "Title, hub/meta navigation, three selectable stage identities and combat backgrounds declared by the state/UI inventory need distinct authored full-frame art.",
-      "required_asset_ids": ["KEYART-001", "HUB-001-van-mong-sect", "ARENA-001-cloud-ring", "STAGE-002-huyet-van-dai", "STAGE-003-thien-mon-tan-canh"],
+      "required_asset_ids": [
+        "KEYART-001",
+        "HUB-001-van-mong-sect",
+        "ARENA-001-cloud-ring",
+        "STAGE-002-huyet-van-dai",
+        "STAGE-003-thien-mon-tan-canh"
+      ],
       "assets": [
         {
           "id": "KEYART-001",
@@ -32,10 +41,36 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/key-art/KEYART-001-title-1280x720-v001.webp",
           "provenance": "assets/source-prompts/KEYART-001.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/hud.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd"
+          ],
           "presentation": {
             "source_kind": "full-frame",
-            "usages": [{"id": "title-cover", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["title"], "render_mode": "cover", "rendered_size": [1600, 900], "crop_safe_area": [0, 0, 1280, 720], "rationale": "The 16:9 title art fills the centered reference canvas without non-uniform scaling; runtime text remains separate.", "evidence": ["production/playtests/frontend/title.png"]}]
+            "usages": [
+              {
+                "id": "title-cover",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "title"
+                ],
+                "render_mode": "cover",
+                "rendered_size": [
+                  1600,
+                  900
+                ],
+                "crop_safe_area": [
+                  0,
+                  0,
+                  1280,
+                  720
+                ],
+                "rationale": "The 16:9 title art fills the centered reference canvas without non-uniform scaling; runtime text remains separate.",
+                "evidence": [
+                  "production/playtests/frontend/title.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -45,10 +80,45 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/environments/HUB-001-van-mong-sect/hub-background-1600x900-v001.webp",
           "provenance": "design/assets/asset-manifest.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "full-frame",
-            "usages": [{"id": "sect-meta-cover", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["hub", "techniques", "rank-ascension", "codex", "achievements", "settings", "reset-confirmation", "results-victory", "results-defeat"], "render_mode": "cover", "rendered_size": [1600, 900], "crop_safe_area": [0, 0, 1600, 900], "rationale": "One authored sect location anchors the connected meta loop while foreground ritual objects distinguish each surface.", "evidence": ["production/playtests/frontend/hub.png", "production/playtests/frontend/techniques.png", "production/playtests/frontend/settings.png"]}]
+            "usages": [
+              {
+                "id": "sect-meta-cover",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "hub",
+                  "techniques",
+                  "rank-ascension",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "cover",
+                "rendered_size": [
+                  1600,
+                  900
+                ],
+                "crop_safe_area": [
+                  0,
+                  0,
+                  1600,
+                  900
+                ],
+                "rationale": "One authored sect location anchors the connected meta loop while foreground ritual objects distinguish each surface.",
+                "evidence": [
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/frontend/settings.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -58,10 +128,39 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/environments/ARENA-001-cloud-ring/arena-ground-1600x900-v001.webp",
           "provenance": "assets/source-prompts/ARENA-001-cloud-ring.yaml",
-          "runtime_refs": ["scripts/gameplay/ink_background.gd", "scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/gameplay/ink_background.gd",
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "full-frame",
-            "usages": [{"id": "van-mong-arena-cover", "runtime_ref": "scripts/gameplay/ink_background.gd", "surface_ids": ["combat", "combat-upgrade", "combat-paused"], "render_mode": "cover", "rendered_size": [1600, 900], "crop_safe_area": [0, 0, 1600, 900], "rationale": "The arena plate remains aspect-preserved behind gameplay and modal overlays, with the center kept readable for actors.", "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/overhaul/upgrade-final.png"]}]
+            "usages": [
+              {
+                "id": "van-mong-arena-cover",
+                "runtime_ref": "scripts/gameplay/ink_background.gd",
+                "surface_ids": [
+                  "combat",
+                  "combat-upgrade",
+                  "combat-paused"
+                ],
+                "render_mode": "cover",
+                "rendered_size": [
+                  1600,
+                  900
+                ],
+                "crop_safe_area": [
+                  0,
+                  0,
+                  1600,
+                  900
+                ],
+                "rationale": "The arena plate remains aspect-preserved behind gameplay and modal overlays, with the center kept readable for actors.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/overhaul/upgrade-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -71,10 +170,39 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/environments/STAGE-002-huyet-van-dai/stage-huyet-van-dai-1600x900-v001.webp",
           "provenance": "design/assets/asset-manifest.yaml",
-          "runtime_refs": ["scripts/gameplay/ink_background.gd", "scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/gameplay/ink_background.gd",
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "full-frame",
-            "usages": [{"id": "huyet-van-stage-preview-and-cover", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["stages", "loadout", "combat"], "render_mode": "cover", "rendered_size": [1600, 900], "crop_safe_area": [0, 0, 1600, 900], "rationale": "A separate cinnabar-threat environment makes the second stage visibly distinct in selection and runtime presentation.", "evidence": ["production/playtests/frontend/stages.png", "production/playtests/frontend/loadout.png"]}]
+            "usages": [
+              {
+                "id": "huyet-van-stage-preview-and-cover",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "stages",
+                  "loadout",
+                  "combat"
+                ],
+                "render_mode": "cover",
+                "rendered_size": [
+                  1600,
+                  900
+                ],
+                "crop_safe_area": [
+                  0,
+                  0,
+                  1600,
+                  900
+                ],
+                "rationale": "A separate cinnabar-threat environment makes the second stage visibly distinct in selection and runtime presentation.",
+                "evidence": [
+                  "production/playtests/frontend/stages.png",
+                  "production/playtests/frontend/loadout.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -84,21 +212,62 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/environments/STAGE-003-thien-mon-tan-canh/stage-thien-mon-tan-canh-1600x900-v001.webp",
           "provenance": "design/assets/asset-manifest.yaml",
-          "runtime_refs": ["scripts/gameplay/ink_background.gd", "scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/gameplay/ink_background.gd",
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "full-frame",
-            "usages": [{"id": "thien-mon-stage-preview-and-cover", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["stages", "loadout", "combat"], "render_mode": "cover", "rendered_size": [1600, 900], "crop_safe_area": [0, 0, 1600, 900], "rationale": "A separate ruined-heaven-gate plate supplies the final stage identity and maintains the same safe center composition.", "evidence": ["production/playtests/frontend/stages.png", "production/playtests/frontend/loadout.png"]}]
+            "usages": [
+              {
+                "id": "thien-mon-stage-preview-and-cover",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "stages",
+                  "loadout",
+                  "combat"
+                ],
+                "render_mode": "cover",
+                "rendered_size": [
+                  1600,
+                  900
+                ],
+                "crop_safe_area": [
+                  0,
+                  0,
+                  1600,
+                  900
+                ],
+                "rationale": "A separate ruined-heaven-gate plate supplies the final stage identity and maintains the same safe center composition.",
+                "evidence": [
+                  "production/playtests/frontend/stages.png",
+                  "production/playtests/frontend/loadout.png"
+                ]
+              }
+            ]
           }
         }
       ],
-      "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/hub.png", "production/playtests/frontend/stages.png", "production/playtests/overhaul/gameplay-final.png"]
+      "evidence": [
+        "production/playtests/frontend/title.png",
+        "production/playtests/frontend/hub.png",
+        "production/playtests/frontend/stages.png",
+        "production/playtests/overhaul/gameplay-final.png"
+      ]
     },
     {
       "id": "combat-actors-and-threat-silhouettes",
       "required": true,
       "status": "verified",
       "coverage_basis": "The art bible and enemy director require a readable player idle/move pair, three ordinary threat silhouettes, an elite use and one unmistakable boss at runtime scale.",
-      "required_asset_ids": ["HERO-001-idle-side", "HERO-001-move-side", "ENEMY-001-wisp-idle", "ENEMY-001-mac-lang-move-side", "ENEMY-002-ta-tu-idle", "BOSS-001-thien-giac-move-side"],
+      "required_asset_ids": [
+        "HERO-001-idle-side",
+        "HERO-001-move-side",
+        "ENEMY-001-wisp-idle",
+        "ENEMY-001-mac-lang-move-side",
+        "ENEMY-002-ta-tu-idle",
+        "BOSS-001-thien-giac-move-side"
+      ],
       "assets": [
         {
           "id": "HERO-001-idle-side",
@@ -107,10 +276,33 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/player_idle.png",
           "provenance": "assets/source-prompts/HERO-001-idle-side.yaml",
-          "runtime_refs": ["scripts/gameplay/player.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/player_idle_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/player.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/player_idle_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
-            "usages": [{"id": "player-idle-76px", "runtime_ref": "scripts/gameplay/player.gd", "surface_ids": ["combat", "combat-upgrade", "combat-paused"], "render_mode": "uniform", "rendered_size": [41, 76], "rationale": "Bottom-anchored uniform scaling preserves the accepted silhouette and 76 px body-height contract.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}]
+            "usages": [
+              {
+                "id": "player-idle-76px",
+                "runtime_ref": "scripts/gameplay/player.gd",
+                "surface_ids": [
+                  "combat",
+                  "combat-upgrade",
+                  "combat-paused"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  41,
+                  76
+                ],
+                "rationale": "Bottom-anchored uniform scaling preserves the accepted silhouette and 76 px body-height contract.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -120,10 +312,31 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/player_move.png",
           "provenance": "assets/source-prompts/HERO-001-move-side.yaml",
-          "runtime_refs": ["scripts/gameplay/player.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/player_move_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/player.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/player_move_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
-            "usages": [{"id": "player-move-76px", "runtime_ref": "scripts/gameplay/player.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [42, 76], "rationale": "The movement family swaps at the same bottom pivot and target height as idle, avoiding scale or foot drift.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}]
+            "usages": [
+              {
+                "id": "player-move-76px",
+                "runtime_ref": "scripts/gameplay/player.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  42,
+                  76
+                ],
+                "rationale": "The movement family swaps at the same bottom pivot and target height as idle, avoiding scale or foot drift.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -133,10 +346,31 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/enemy_wisp.png",
           "provenance": "assets/source-prompts/ENEMY-001-wisp-idle.yaml",
-          "runtime_refs": ["scripts/gameplay/enemy.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/enemy_wisp_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/enemy.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/enemy_wisp_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
-            "usages": [{"id": "wisp-48px", "runtime_ref": "scripts/gameplay/enemy.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [30, 48], "rationale": "The compact floating silhouette remains visibly smaller than player and beast roles.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}]
+            "usages": [
+              {
+                "id": "wisp-48px",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  30,
+                  48
+                ],
+                "rationale": "The compact floating silhouette remains visibly smaller than player and beast roles.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -146,10 +380,31 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/enemy_beast.png",
           "provenance": "assets/source-prompts/ENEMY-001-mac-lang-move-side.yaml",
-          "runtime_refs": ["scripts/gameplay/enemy.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/enemy_beast_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/enemy.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/enemy_beast_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
-            "usages": [{"id": "beast-64px", "runtime_ref": "scripts/gameplay/enemy.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [84, 64], "rationale": "The broad quadruped mass is uniformly scaled and remains distinct from upright enemies.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}]
+            "usages": [
+              {
+                "id": "beast-64px",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  84,
+                  64
+                ],
+                "rationale": "The broad quadruped mass is uniformly scaled and remains distinct from upright enemies.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -159,12 +414,47 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/enemy_demon.png",
           "provenance": "assets/source-prompts/ENEMY-002-ta-tu-idle.yaml",
-          "runtime_refs": ["scripts/gameplay/enemy.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/enemy_demon_frames", "assets/generated/runtime/enemy_elite_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/enemy.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/enemy_demon_frames",
+            "assets/generated/runtime/enemy_elite_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
             "usages": [
-              {"id": "demon-82px", "runtime_ref": "scripts/gameplay/enemy.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [54, 82], "rationale": "The upright corrupted cultivator uses the standard late-run target height.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]},
-              {"id": "elite-106px", "runtime_ref": "scripts/gameplay/enemy.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [70, 106], "rationale": "The elite reuses the accepted identity at a larger uniform scale with separate runtime tint and health presentation, so it is not counted as a false distinct source asset.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}
+              {
+                "id": "demon-82px",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  54,
+                  82
+                ],
+                "rationale": "The upright corrupted cultivator uses the standard late-run target height.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              },
+              {
+                "id": "elite-106px",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  70,
+                  106
+                ],
+                "rationale": "The elite reuses the accepted identity at a larger uniform scale with separate runtime tint and health presentation, so it is not counted as a false distinct source asset.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
             ]
           }
         },
@@ -175,21 +465,49 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/enemy_boss.png",
           "provenance": "assets/source-prompts/BOSS-001-thien-giac-move-side.yaml",
-          "runtime_refs": ["scripts/gameplay/enemy.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/enemy_boss_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/enemy.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/enemy_boss_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
-            "usages": [{"id": "boss-150px", "runtime_ref": "scripts/gameplay/enemy.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [149, 150], "rationale": "The broad horned boss preserves its near-square silhouette at 150 px while telegraph geometry remains a separate layer.", "evidence": ["production/playtests/overhaul/boss-final.png"]}]
+            "usages": [
+              {
+                "id": "boss-150px",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  149,
+                  150
+                ],
+                "rationale": "The broad horned boss preserves its near-square silhouette at 150 px while telegraph geometry remains a separate layer.",
+                "evidence": [
+                  "production/playtests/overhaul/boss-final.png"
+                ]
+              }
+            ]
           }
         }
       ],
-      "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/overhaul/boss-final.png"]
+      "evidence": [
+        "production/playtests/overhaul/gameplay-final.png",
+        "production/playtests/overhaul/boss-final.png"
+      ]
     },
     {
       "id": "combat-pickup-projectile-impact",
       "required": true,
       "status": "verified",
       "coverage_basis": "The combat/progression loop needs a reward pickup, a readable flying-sword family and an authored hit/burst family; byte-identical empowered derivatives are usages, not extra distinct assets.",
-      "required_asset_ids": ["PICKUP-001-linh-khi-idle", "PROJECTILE-001-ngoc-phi-kiem-flight", "FX-001-kiem-an-impact"],
+      "required_asset_ids": [
+        "PICKUP-001-linh-khi-idle",
+        "PROJECTILE-001-ngoc-phi-kiem-flight",
+        "FX-001-kiem-an-impact"
+      ],
       "assets": [
         {
           "id": "PICKUP-001-linh-khi-idle",
@@ -198,10 +516,31 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/qi_orb.png",
           "provenance": "assets/source-prompts/PICKUP-001-linh-khi-idle.yaml",
-          "runtime_refs": ["scripts/gameplay/qi_orb.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/qi_orb_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/qi_orb.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/qi_orb_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
-            "usages": [{"id": "qi-orb-24px", "runtime_ref": "scripts/gameplay/qi_orb.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [23, 24], "rationale": "The compact seed/pearl remains aspect-preserved and is reinforced by halo, bob and magnet motion.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}]
+            "usages": [
+              {
+                "id": "qi-orb-24px",
+                "runtime_ref": "scripts/gameplay/qi_orb.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  23,
+                  24
+                ],
+                "rationale": "The compact seed/pearl remains aspect-preserved and is reinforced by halo, bob and magnet motion.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -211,12 +550,47 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/projectile_sword.png",
           "provenance": "assets/source-prompts/PROJECTILE-001-ngoc-phi-kiem-flight.yaml",
-          "runtime_refs": ["scripts/gameplay/projectile.gd", "scripts/gameplay/runtime_visuals.gd", "assets/generated/runtime/projectile_sword_frames", "assets/generated/runtime/projectile_phoenix_frames"],
+          "runtime_refs": [
+            "scripts/gameplay/projectile.gd",
+            "scripts/gameplay/runtime_visuals.gd",
+            "assets/generated/runtime/projectile_sword_frames",
+            "assets/generated/runtime/projectile_phoenix_frames"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
             "usages": [
-              {"id": "standard-sword-flight", "runtime_ref": "scripts/gameplay/projectile.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [100, 20], "rationale": "Runtime uniform scaling and parent rotation preserve the thin flying-sword silhouette.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]},
-              {"id": "empowered-phoenix-flight", "runtime_ref": "scripts/gameplay/projectile.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [120, 24], "rationale": "The byte-identical derivative uses a larger target height plus rank-aware tint/trail, so it remains one source family.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]}
+              {
+                "id": "standard-sword-flight",
+                "runtime_ref": "scripts/gameplay/projectile.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  100,
+                  20
+                ],
+                "rationale": "Runtime uniform scaling and parent rotation preserve the thin flying-sword silhouette.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              },
+              {
+                "id": "empowered-phoenix-flight",
+                "runtime_ref": "scripts/gameplay/projectile.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  120,
+                  24
+                ],
+                "rationale": "The byte-identical derivative uses a larger target height plus rank-aware tint/trail, so it remains one source family.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              }
             ]
           }
         },
@@ -227,24 +601,85 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/runtime/effect_hit.png",
           "provenance": "assets/source-prompts/FX-001-kiem-an-impact.yaml",
-          "runtime_refs": ["scripts/gameplay/game_effect.gd", "scripts/gameplay/runtime_visuals.gd"],
+          "runtime_refs": [
+            "scripts/gameplay/game_effect.gd",
+            "scripts/gameplay/runtime_visuals.gd"
+          ],
           "presentation": {
             "source_kind": "sprite-sheet",
             "usages": [
-              {"id": "sword-hit-48px", "runtime_ref": "scripts/gameplay/game_effect.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [52, 48], "rationale": "Small impacts preserve the accepted broken-seal aspect while fading and scaling through the effect lifetime.", "evidence": ["production/playtests/overhaul/gameplay-final.png"]},
-              {"id": "cultivation-burst-144px", "runtime_ref": "scripts/gameplay/game_effect.gd", "surface_ids": ["combat", "combat-upgrade"], "render_mode": "uniform", "rendered_size": [155, 144], "rationale": "The byte-identical burst derivative scales uniformly and combines with procedural radial geometry rather than counting as a second source asset.", "evidence": ["production/playtests/overhaul/upgrade-final.png"]}
+              {
+                "id": "sword-hit-48px",
+                "runtime_ref": "scripts/gameplay/game_effect.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  52,
+                  48
+                ],
+                "rationale": "Small impacts preserve the accepted broken-seal aspect while fading and scaling through the effect lifetime.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png"
+                ]
+              },
+              {
+                "id": "cultivation-burst-144px",
+                "runtime_ref": "scripts/gameplay/game_effect.gd",
+                "surface_ids": [
+                  "combat",
+                  "combat-upgrade"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  155,
+                  144
+                ],
+                "rationale": "The byte-identical burst derivative scales uniformly and combines with procedural radial geometry rather than counting as a second source asset.",
+                "evidence": [
+                  "production/playtests/overhaul/upgrade-final.png"
+                ]
+              }
             ]
           }
         }
       ],
-      "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/overhaul/upgrade-final.png"]
+      "evidence": [
+        "production/playtests/overhaul/gameplay-final.png",
+        "production/playtests/overhaul/upgrade-final.png"
+      ]
     },
     {
       "id": "authored-ui-materials-and-folios",
       "required": true,
       "status": "integrated_pending_independent_visual_review",
-      "coverage_basis": "V3 runtime convergence now has a clean Godot 4.6.2 parse, current desktop/844x390 captures and a fresh served Chromium export. UIKIT-007 owns the title/header/modal/result/skill/touch family and the live boss bar; UIKIT-008 owns distinct controls; PORTRAIT-001/002 and ACHIEVEICON-001 provide dossier, HUD and achievement identities. status_plaque remains the only deliberately unbound UIKIT-007 region. Independent visual review and device/cross-browser gates remain open.",
-      "required_asset_ids": ["UIKIT-005-lacquer-panel", "UIKIT-005-command-ink", "UIKIT-002-scroll-panel", "UIKIT-002-talisman-card", "UIKIT-004-folio-sword", "UIKIT-004-folio-jade", "UIKIT-004-folio-spirit", "UIKIT-006-arsenal-plates", "UIKIT-007-ritual-surface-atlas", "UIKIT-008-control-silhouettes", "PORTRAIT-001-bestiary-companion-atlas", "PORTRAIT-002-hero-boss", "ACHIEVEICON-001-six-seals", "UIICON-001-relics", "SKILLICON-001-five-formation"],
+      "coverage_basis": "The locked V4.1 direction now includes V5 UIKIT-012/013/014/015/016 complete controls, distinct ritual shrines, illustrated folios, physical ledger/hub artifacts and compact combat HUD. Godot parse plus runtime/frontend/mobile/responsive smoke pass, every integrated component has current native desktop/844x390 evidence, and independent visual review plus physical-device/cross-browser gates remain open.",
+      "required_asset_ids": [
+        "UIKIT-005-lacquer-panel",
+        "UIKIT-005-command-ink",
+        "UIKIT-002-scroll-panel",
+        "UIKIT-002-talisman-card",
+        "UIKIT-004-folio-sword",
+        "UIKIT-004-folio-jade",
+        "UIKIT-004-folio-spirit",
+        "UIKIT-006-arsenal-plates",
+        "UIKIT-007-ritual-surface-atlas",
+        "UIKIT-008-control-silhouettes",
+        "UIKIT-009-v4-structural",
+        "UIKIT-010-v4-controls",
+        "UIKIT-011-v4-hud",
+        "PORTRAIT-001-bestiary-companion-atlas",
+        "PORTRAIT-002-hero-boss",
+        "ACHIEVEICON-001-six-seals",
+        "UIICON-001-relics",
+        "SKILLICON-001-five-formation",
+        "UIKIT-012-v5-command-tabs",
+        "UIKIT-013-v5-ritual-modals",
+        "UIKIT-014-v5-technique-folios",
+        "UIKIT-015-v5-ledger-hub",
+        "UIKIT-016-v5-combat-hud"
+      ],
       "assets": [
         {
           "id": "UIKIT-005-lacquer-panel",
@@ -253,13 +688,113 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_lacquer_panel.png",
           "provenance": "assets/source-prompts/UIKIT-005-restrained-controls.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/rotate_device_overlay.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/rotate_device_overlay.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
             "usages": [
-              {"id": "major-matte-lacquer-shells", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["title", "results-victory", "results-defeat"], "render_mode": "nine-slice", "rendered_size": [1004, 744], "nine_slice_margins": [78, 78, 78, 78], "minimum_tested_size": [610, 744], "maximum_tested_size": [1004, 784], "rationale": "The broad blue-black center stretches while the clipped rim and jade corner remain protected on the largest narrative shells.", "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/results.png", "production/playtests/frontend/results-defeat.png"]},
-              {"id": "meta-rail-record-and-expedition-surfaces", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["hub", "codex", "achievements"], "render_mode": "nine-slice", "rendered_size": [438, 286], "nine_slice_margins": [48, 48, 48, 48], "minimum_tested_size": [408, 278], "maximum_tested_size": [1048, 710], "rationale": "A restrained middle margin protects the thin frame across tall rails, index panels, records and the wide expedition slab.", "evidence": ["production/playtests/frontend/hub.png", "production/playtests/frontend/codex.png", "production/playtests/frontend/achievements.png"]},
-              {"id": "guard-and-reset-matte-shells", "runtime_ref": "scripts/ui/rotate_device_overlay.gd", "surface_ids": ["reset-confirmation", "portrait-guard"], "render_mode": "nine-slice", "rendered_size": [760, 424], "nine_slice_margins": [64, 64, 64, 64], "minimum_tested_size": [420, 286], "maximum_tested_size": [760, 424], "rationale": "Modal and portrait-guard layouts retain the same matte material while runtime text, sigil and destructive wording stay separate.", "evidence": ["production/playtests/frontend/reset.png", "production/playtests/mobile-support/portrait-overlay.png"]}
+              {
+                "id": "major-matte-lacquer-shells",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "title",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  1004,
+                  744
+                ],
+                "nine_slice_margins": [
+                  78,
+                  78,
+                  78,
+                  78
+                ],
+                "minimum_tested_size": [
+                  610,
+                  744
+                ],
+                "maximum_tested_size": [
+                  1004,
+                  784
+                ],
+                "rationale": "The broad blue-black center stretches while the clipped rim and jade corner remain protected on the largest narrative shells.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/results.png",
+                  "production/playtests/frontend/results-defeat.png"
+                ]
+              },
+              {
+                "id": "meta-rail-record-and-expedition-surfaces",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "hub",
+                  "codex",
+                  "achievements"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  438,
+                  286
+                ],
+                "nine_slice_margins": [
+                  48,
+                  48,
+                  48,
+                  48
+                ],
+                "minimum_tested_size": [
+                  408,
+                  278
+                ],
+                "maximum_tested_size": [
+                  1048,
+                  710
+                ],
+                "rationale": "A restrained middle margin protects the thin frame across tall rails, index panels, records and the wide expedition slab.",
+                "evidence": [
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/codex.png",
+                  "production/playtests/frontend/achievements.png"
+                ]
+              },
+              {
+                "id": "guard-and-reset-matte-shells",
+                "runtime_ref": "scripts/ui/rotate_device_overlay.gd",
+                "surface_ids": [
+                  "reset-confirmation",
+                  "portrait-guard"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  760,
+                  424
+                ],
+                "nine_slice_margins": [
+                  64,
+                  64,
+                  64,
+                  64
+                ],
+                "minimum_tested_size": [
+                  420,
+                  286
+                ],
+                "maximum_tested_size": [
+                  760,
+                  424
+                ],
+                "rationale": "Modal and portrait-guard layouts retain the same matte material while runtime text, sigil and destructive wording stay separate.",
+                "evidence": [
+                  "production/playtests/frontend/reset.png",
+                  "production/playtests/mobile-support/portrait-overlay.png"
+                ]
+              }
             ]
           }
         },
@@ -270,10 +805,61 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-005-restrained-controls/runtime/ui_command_ink.png",
           "provenance": "assets/source-prompts/UIKIT-005-restrained-controls.yaml",
-          "runtime_refs": ["scripts/ui/raster_button.gd", "scripts/ui/frontend.gd", "scripts/ui/hud.gd"],
+          "runtime_refs": [
+            "scripts/ui/raster_button.gd",
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "restrained-command-nine-slice", "runtime_ref": "scripts/ui/raster_button.gd", "surface_ids": ["title", "hub", "stages", "loadout", "techniques", "codex", "achievements", "settings", "reset-confirmation", "combat-upgrade", "combat-paused", "results-victory", "results-defeat"], "render_mode": "nine-slice", "rendered_size": [390, 66], "nine_slice_margins": [56, 30, 56, 30], "minimum_tested_size": [184, 64], "maximum_tested_size": [390, 66], "rationale": "One matte blue-black plaque supplies material continuity; gold/jade/cinnabar variants are encoded by restrained runtime tint, edge and wording rather than separate glossy assets. Compact controls intentionally skip this texture.", "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/hub.png", "production/playtests/frontend/stages.png", "production/playtests/frontend/settings.png", "production/playtests/frontend/reset.png"]}]
+            "usages": [
+              {
+                "id": "restrained-command-nine-slice",
+                "runtime_ref": "scripts/ui/raster_button.gd",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation",
+                  "combat-upgrade",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  390,
+                  66
+                ],
+                "nine_slice_margins": [
+                  56,
+                  30,
+                  56,
+                  30
+                ],
+                "minimum_tested_size": [
+                  184,
+                  64
+                ],
+                "maximum_tested_size": [
+                  390,
+                  66
+                ],
+                "rationale": "One matte blue-black plaque supplies material continuity; gold/jade/cinnabar variants are encoded by restrained runtime tint, edge and wording rather than separate glossy assets. Compact controls intentionally skip this texture.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/stages.png",
+                  "production/playtests/frontend/settings.png",
+                  "production/playtests/frontend/reset.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -283,10 +869,50 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_scroll_panel.png",
           "provenance": "assets/generated/ui/UIKIT-002-xuan-ink-commercial/pipeline-meta.json",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/cultivation_panel.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/cultivation_panel.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "paper-scroll-nine-slice", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["techniques", "rank-ascension", "settings", "combat-paused", "results-victory", "results-defeat"], "render_mode": "nine-slice", "rendered_size": [1034, 704], "nine_slice_margins": [68, 68, 68, 68], "minimum_tested_size": [540, 172], "maximum_tested_size": [1034, 704], "rationale": "Scroll rollers and flourishes remain protected around variable paper fields and modal text.", "evidence": ["production/playtests/frontend/settings.png", "production/playtests/overhaul/pause-final.png"]}]
+            "usages": [
+              {
+                "id": "paper-scroll-nine-slice",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "techniques",
+                  "rank-ascension",
+                  "settings",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  1034,
+                  704
+                ],
+                "nine_slice_margins": [
+                  68,
+                  68,
+                  68,
+                  68
+                ],
+                "minimum_tested_size": [
+                  540,
+                  172
+                ],
+                "maximum_tested_size": [
+                  1034,
+                  704
+                ],
+                "rationale": "Scroll rollers and flourishes remain protected around variable paper fields and modal text.",
+                "evidence": [
+                  "production/playtests/frontend/settings.png",
+                  "production/playtests/overhaul/pause-final.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -296,10 +922,46 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-002-xuan-ink-commercial/runtime/ui_talisman_card.png",
           "provenance": "assets/generated/ui/UIKIT-002-xuan-ink-commercial/pipeline-meta.json",
-          "runtime_refs": ["scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "stage-and-dossier-nine-slice", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["stages", "loadout", "codex"], "render_mode": "nine-slice", "rendered_size": [456, 640], "nine_slice_margins": [54, 54, 54, 54], "minimum_tested_size": [388, 510], "maximum_tested_size": [456, 640], "rationale": "Seal notches and paper edges stay intact around stage/loadout/dossier content.", "evidence": ["production/playtests/frontend/stages.png", "production/playtests/frontend/loadout.png"]}]
+            "usages": [
+              {
+                "id": "stage-and-dossier-nine-slice",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "stages",
+                  "loadout",
+                  "codex"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  456,
+                  640
+                ],
+                "nine_slice_margins": [
+                  54,
+                  54,
+                  54,
+                  54
+                ],
+                "minimum_tested_size": [
+                  388,
+                  510
+                ],
+                "maximum_tested_size": [
+                  456,
+                  640
+                ],
+                "rationale": "Seal notches and paper edges stay intact around stage/loadout/dossier content.",
+                "evidence": [
+                  "production/playtests/frontend/stages.png",
+                  "production/playtests/frontend/loadout.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -309,10 +971,40 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_sword.png",
           "provenance": "assets/source-prompts/UIKIT-004-talisman-folios.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/cultivation_choice_button.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/cultivation_choice_button.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "sword-folio-fitted", "runtime_ref": "scripts/ui/cultivation_choice_button.gd", "surface_ids": ["techniques", "rank-ascension", "combat-upgrade"], "render_mode": "uniform", "rendered_size": [255, 450], "rationale": "The complete irregular folio is aspect-fitted inside its 330×450 control bounds; text is constrained to the detected inner silhouette.", "evidence": ["production/playtests/frontend/techniques.png", "production/playtests/overhaul/upgrade-final.png"]}]
+            "usages": [
+              {
+                "id": "sword-folio-fitted",
+                "runtime_ref": "scripts/ui/cultivation_choice_button.gd",
+                "surface_ids": [
+                  "techniques",
+                  "rank-ascension",
+                  "combat-upgrade"
+                ],
+                "render_mode": "uniform",
+                "tested_size_range": [
+                  [
+                    214,
+                    236
+                  ],
+                  [
+                    270,
+                    340
+                  ]
+                ],
+                "rationale": "The complete irregular folio is aspect-fitted inside the compact in-run choice control; live text remains constrained to the protected center field.",
+                "evidence": [
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/overhaul/upgrade-final.png",
+                  "production/playtests/mobile-support/breakthrough-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -322,10 +1014,40 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_jade.png",
           "provenance": "assets/source-prompts/UIKIT-004-talisman-folios.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/cultivation_choice_button.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/cultivation_choice_button.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "jade-folio-fitted", "runtime_ref": "scripts/ui/cultivation_choice_button.gd", "surface_ids": ["techniques", "rank-ascension", "combat-upgrade"], "render_mode": "uniform", "rendered_size": [226, 450], "rationale": "The narrow jade folio preserves its own silhouette instead of being stretched to match the sword folio.", "evidence": ["production/playtests/frontend/techniques.png", "production/playtests/overhaul/upgrade-final.png"]}]
+            "usages": [
+              {
+                "id": "jade-folio-fitted",
+                "runtime_ref": "scripts/ui/cultivation_choice_button.gd",
+                "surface_ids": [
+                  "techniques",
+                  "rank-ascension",
+                  "combat-upgrade"
+                ],
+                "render_mode": "uniform",
+                "tested_size_range": [
+                  [
+                    214,
+                    236
+                  ],
+                  [
+                    270,
+                    340
+                  ]
+                ],
+                "rationale": "The narrow jade folio preserves its own silhouette instead of being stretched to match the sword folio.",
+                "evidence": [
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/overhaul/upgrade-final.png",
+                  "production/playtests/mobile-support/breakthrough-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -335,10 +1057,40 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-004-talisman-folios/runtime/folio_spirit.png",
           "provenance": "assets/source-prompts/UIKIT-004-talisman-folios.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/cultivation_choice_button.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/cultivation_choice_button.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "spirit-folio-v2-fitted", "runtime_ref": "scripts/ui/cultivation_choice_button.gd", "surface_ids": ["techniques", "rank-ascension", "combat-upgrade"], "render_mode": "uniform", "rendered_size": [283, 450], "rationale": "Accepted v2 runtime art is uniformly fitted; the superseded v1 source is excluded from runtime coverage.", "evidence": ["production/playtests/frontend/techniques.png", "production/playtests/overhaul/upgrade-final.png"]}]
+            "usages": [
+              {
+                "id": "spirit-folio-v2-fitted",
+                "runtime_ref": "scripts/ui/cultivation_choice_button.gd",
+                "surface_ids": [
+                  "techniques",
+                  "rank-ascension",
+                  "combat-upgrade"
+                ],
+                "render_mode": "uniform",
+                "tested_size_range": [
+                  [
+                    214,
+                    236
+                  ],
+                  [
+                    270,
+                    340
+                  ]
+                ],
+                "rationale": "Accepted v2 runtime art is uniformly fitted; the superseded v1 source is excluded from runtime coverage.",
+                "evidence": [
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/overhaul/upgrade-final.png",
+                  "production/playtests/mobile-support/breakthrough-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -348,12 +1100,51 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/ui/UIKIT-006-arsenal-plates/runtime/atlas-transparent.png",
           "provenance": "assets/source-prompts/UIKIT-006-arsenal-plates.yaml",
-          "runtime_refs": ["scripts/ui/van_mong_component_kit.gd", "scripts/ui/frontend.gd", "scripts/ui/hud.gd"],
+          "runtime_refs": [
+            "scripts/ui/van_mong_component_kit.gd",
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
             "usages": [
-              {"id": "arsenal-item-slots", "runtime_ref": "scripts/ui/van_mong_component_kit.gd", "surface_ids": ["inventory", "spirit-beast"], "render_mode": "fixed-ratio", "rendered_size": [132, 146], "rationale": "Rarity frames and compare tooltip are cropped from dedicated atlas regions with runtime text above them.", "evidence": ["production/playtests/frontend/inventory.png", "production/playtests/frontend/inventory-phone.png", "production/playtests/frontend/spirit-beast.png", "production/playtests/frontend/spirit-beast-phone.png"]},
-              {"id": "arsenal-five-skill-rail", "runtime_ref": "scripts/ui/hud.gd", "surface_ids": ["combat"], "render_mode": "material-chrome", "rendered_size": [860, 100], "rationale": "Command plaque and medallion/lock regions establish the five-slot combat rail.", "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/mobile-support/combat-phone.png"]}
+              {
+                "id": "arsenal-item-slots",
+                "runtime_ref": "scripts/ui/van_mong_component_kit.gd",
+                "surface_ids": [
+                  "inventory",
+                  "spirit-beast"
+                ],
+                "render_mode": "fixed-ratio",
+                "rendered_size": [
+                  132,
+                  146
+                ],
+                "rationale": "Rarity frames and compare tooltip are cropped from dedicated atlas regions with runtime text above them.",
+                "evidence": [
+                  "production/playtests/frontend/inventory.png",
+                  "production/playtests/frontend/inventory-phone.png",
+                  "production/playtests/frontend/spirit-beast.png",
+                  "production/playtests/frontend/spirit-beast-phone.png"
+                ]
+              },
+              {
+                "id": "arsenal-five-skill-rail",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "material-chrome",
+                "rendered_size": [
+                  860,
+                  100
+                ],
+                "rationale": "Command plaque and medallion/lock regions establish the five-slot combat rail.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/mobile-support/combat-phone.png"
+                ]
+              }
             ]
           }
         },
@@ -365,7 +1156,13 @@
           "path": "assets/generated/ui/UIKIT-007-ritual-surface-atlas/runtime/atlas-transparent.png",
           "provenance": "assets/source-prompts/UIKIT-007-ritual-surface-atlas.yaml",
           "pipeline_meta": "assets/generated/ui/UIKIT-007-ritual-surface-atlas/pipeline-meta.json",
-          "runtime_refs": ["scripts/ui/van_mong_component_kit.gd", "scripts/ui/frontend.gd", "scripts/ui/hud.gd", "scripts/ui/mobile_touch_controls.gd", "scripts/gameplay/enemy.gd"],
+          "runtime_refs": [
+            "scripts/ui/van_mong_component_kit.gd",
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd",
+            "scripts/ui/mobile_touch_controls.gd",
+            "scripts/gameplay/enemy.gd"
+          ],
           "hashes": {
             "raw_sha256": "302172f890f74428fce745a103839cf52ce867e61b6497b2eecba2a8acd82c2a",
             "processed_sha256": "02f7a634a8857745c0cb2b3aa1195ff06596a05c0dc0bcdeea5922dfb729828c",
@@ -373,15 +1170,161 @@
           },
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "unbound_regions": ["status_plaque"],
+            "unbound_regions": [
+              "status_plaque"
+            ],
             "usages": [
-              {"id": "ritual-title-scroll", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["title"], "render_mode": "uniform", "rendered_size": [456, 820], "rationale": "The 380x684 source region is aspect-preserved inside a 720x820 desktop title control while all title copy remains live.", "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/title-phone.png"]},
-              {"id": "ritual-wide-meta-header", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["hub", "stages", "loadout", "inventory", "spirit-beast", "techniques", "codex", "achievements", "settings", "results-victory", "results-defeat"], "render_mode": "nine-slice", "rendered_size": [900, 92], "nine_slice_margins": [76, 38, 76, 38], "rationale": "The dedicated quiet-center header region protects bronze ends while headings and currency stay separate runtime nodes.", "evidence": ["production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png"]},
-              {"id": "ritual-modal-guards", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["title", "rank-ascension", "reset-confirmation"], "render_mode": "nine-slice", "rendered_size": [760, 424], "nine_slice_margins": [66, 52, 66, 52], "rationale": "The dedicated quiet-center guard preserves its bronze clamps while live warning, title and action nodes remain separate.", "evidence": ["production/playtests/frontend/title-phone.png", "production/playtests/frontend/reset.png", "production/playtests/frontend/technique-upgrade.png"]},
-              {"id": "ritual-result-plate", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["results-victory", "results-defeat"], "render_mode": "nine-slice", "rendered_size": [824, 172], "nine_slice_margins": [86, 52, 86, 52], "rationale": "The result plate protects its outer seal hardware around three live stat columns.", "evidence": ["production/playtests/frontend/results.png", "production/playtests/frontend/results-phone.png"]},
-              {"id": "ritual-five-skill-rail", "runtime_ref": "scripts/ui/hud.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [800, 164], "rationale": "The complete rail silhouette is fitted as one authored chrome layer beneath live icons, bindings, locks and cooldowns.", "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/mobile-support/combat-phone.png"]},
-              {"id": "ritual-boss-bar", "runtime_ref": "scripts/gameplay/enemy.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [520, 122], "rationale": "The authored atlas bar and dedicated boss portrait carry live name and health nodes above the encounter without covering the boss body.", "evidence": ["production/playtests/overhaul/boss-final.png", "production/playtests/mobile-support/boss-phone.png"]},
-              {"id": "ritual-touch-medallions", "runtime_ref": "scripts/ui/mobile_touch_controls.gd", "surface_ids": ["combat"], "render_mode": "custom-draw-square", "rendered_size": [232, 232], "rationale": "Attack and joystick regions are drawn into independently computed square safe-area targets; the current 844x390 native and Web captures show no blocking distortion or overlap.", "evidence": ["production/playtests/mobile-support/combat-phone.png", "production/playtests/mobile-support/boss-phone.png"]}
+              {
+                "id": "ritual-title-scroll",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "title"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  456,
+                  820
+                ],
+                "rationale": "The 380x684 source region is aspect-preserved inside a 720x820 desktop title control while all title copy remains live.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/title-phone.png"
+                ]
+              },
+              {
+                "id": "ritual-wide-meta-header",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  900,
+                  92
+                ],
+                "nine_slice_margins": [
+                  76,
+                  38,
+                  76,
+                  38
+                ],
+                "rationale": "The dedicated quiet-center header region protects bronze ends while headings and currency stay separate runtime nodes.",
+                "evidence": [
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png"
+                ]
+              },
+              {
+                "id": "ritual-modal-guards",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "title",
+                  "rank-ascension",
+                  "reset-confirmation"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  760,
+                  424
+                ],
+                "nine_slice_margins": [
+                  66,
+                  52,
+                  66,
+                  52
+                ],
+                "rationale": "The dedicated quiet-center guard preserves its bronze clamps while live warning, title and action nodes remain separate.",
+                "evidence": [
+                  "production/playtests/frontend/title-phone.png",
+                  "production/playtests/frontend/reset.png",
+                  "production/playtests/frontend/technique-upgrade.png"
+                ]
+              },
+              {
+                "id": "ritual-result-plate",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "nine-slice",
+                "rendered_size": [
+                  824,
+                  172
+                ],
+                "nine_slice_margins": [
+                  86,
+                  52,
+                  86,
+                  52
+                ],
+                "rationale": "The result plate protects its outer seal hardware around three live stat columns.",
+                "evidence": [
+                  "production/playtests/frontend/results.png",
+                  "production/playtests/frontend/results-phone.png"
+                ]
+              },
+              {
+                "id": "ritual-five-skill-rail",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  800,
+                  164
+                ],
+                "rationale": "The complete rail silhouette is fitted as one authored chrome layer beneath live icons, bindings, locks and cooldowns.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/mobile-support/combat-phone.png"
+                ]
+              },
+              {
+                "id": "ritual-boss-bar",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  520,
+                  122
+                ],
+                "rationale": "The authored atlas bar and dedicated boss portrait carry live name and health nodes above the encounter without covering the boss body.",
+                "evidence": [
+                  "production/playtests/overhaul/boss-final.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              },
+              {
+                "id": "ritual-touch-medallions",
+                "runtime_ref": "scripts/ui/mobile_touch_controls.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "custom-draw-square",
+                "rendered_size": [
+                  232,
+                  232
+                ],
+                "rationale": "Attack and joystick regions are drawn into independently computed square safe-area targets; the current 844x390 native and Web captures show no blocking distortion or overlap.",
+                "evidence": [
+                  "production/playtests/mobile-support/combat-phone.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              }
             ]
           }
         },
@@ -393,10 +1336,333 @@
           "path": "assets/generated/ui/UIKIT-008-control-silhouettes/runtime/atlas-transparent.png",
           "family_path": "assets/generated/ui/UIKIT-008-control-silhouettes/runtime",
           "provenance": "assets/source-prompts/UIKIT-008-control-silhouettes.yaml",
-          "runtime_refs": ["scripts/ui/raster_button.gd", "scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/ui/raster_button.gd",
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "usages": [{"id": "distinct-runtime-control-silhouettes", "runtime_ref": "scripts/ui/raster_button.gd", "surface_ids": ["title", "hub", "stages", "loadout", "inventory", "spirit-beast", "techniques", "codex", "achievements", "settings", "reset-confirmation", "combat-upgrade", "combat-paused", "results-victory", "results-defeat"], "render_mode": "mixed-nine-slice-and-uniform", "rendered_size": [184, 64], "rationale": "Primary, secondary, back, destructive, stepper and confirm roles use separate silhouettes while captions and state remain live.", "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/title-phone.png", "production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png", "production/playtests/frontend/settings.png", "production/playtests/frontend/reset.png"]}]
+            "usages": [
+              {
+                "id": "distinct-runtime-control-silhouettes",
+                "runtime_ref": "scripts/ui/raster_button.gd",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation",
+                  "combat-upgrade",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "mixed-nine-slice-and-uniform",
+                "rendered_size": [
+                  184,
+                  64
+                ],
+                "rationale": "Primary, secondary, back, destructive, stepper and confirm roles use separate silhouettes while captions and state remain live.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/title-phone.png",
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png",
+                  "production/playtests/frontend/settings.png",
+                  "production/playtests/frontend/reset.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-009-v4-structural",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-009-v4-structural/source/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-009-v4-structural/runtime",
+          "provenance": "assets/source-prompts/UIKIT-009-v4-structural.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-009-v4-structural/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/frontend.gd"
+          ],
+          "hashes": {
+            "raw_sha256": "63bb136191e434b700f1a8e8e6ad82d4e4e25df5d662ba369e614a41862161f2",
+            "transparent_atlas_sha256": "103d8bafa0be6b3fe56c6a965a816116efdbd1f1c6a6e7e117e8c87eeeb3ee6e"
+          },
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v4-major-lacquer-panel",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation"
+                ],
+                "render_mode": "bounded-nine-slice",
+                "nine_slice_margins": [
+                  86,
+                  78,
+                  86,
+                  78
+                ],
+                "tested_size_range": [
+                  [
+                    360,
+                    220
+                  ],
+                  [
+                    1180,
+                    720
+                  ]
+                ],
+                "rationale": "The accepted quiet-center lacquer crop is used only at sizes that preserve its authored bronze rim; smaller surfaces retain native fallback geometry.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/title-phone.png",
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png"
+                ]
+              },
+              {
+                "id": "v4-paper-and-header-surfaces",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings"
+                ],
+                "render_mode": "uniform",
+                "rationale": "The paper folio and header plaque preserve source aspect while headings and content remain live nodes.",
+                "evidence": [
+                  "production/playtests/frontend/inventory.png",
+                  "production/playtests/frontend/inventory-phone.png",
+                  "production/playtests/frontend/techniques.png"
+                ]
+              },
+              {
+                "id": "v4-result-modal-frame",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "bounded-nine-slice",
+                "nine_slice_margins": [
+                  68,
+                  58,
+                  68,
+                  58
+                ],
+                "tested_size_range": [
+                  [
+                    400,
+                    240
+                  ],
+                  [
+                    920,
+                    620
+                  ]
+                ],
+                "rationale": "The result frame protects its rim around runtime-rendered outcome copy and actions.",
+                "evidence": [
+                  "production/playtests/frontend/results.png",
+                  "production/playtests/frontend/results-phone.png",
+                  "production/playtests/frontend/results-defeat.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-010-v4-controls",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-010-v4-controls/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-010-v4-controls/runtime",
+          "provenance": "assets/source-prompts/UIKIT-010-v4-controls.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-010-v4-controls/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/raster_button.gd",
+            "scripts/ui/van_mong_component_kit.gd",
+            "scripts/ui/cultivation_meter.gd",
+            "scripts/ui/cultivation_panel.gd",
+            "scripts/ui/frontend.gd"
+          ],
+          "hashes": {
+            "raw_sha256": "f40ae2825df8690e32d12055d95e28629c44f24e5a2889e1b42d091fe810c677",
+            "transparent_atlas_sha256": "814923daf7df99e5f1970c6e87b00b3c7a281ac101cb640cc38d0e8ec748cd51"
+          },
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "qa_outcome": "PASS_WITH_WARNING",
+            "usages": [
+              {
+                "id": "v4-command-controls",
+                "runtime_ref": "scripts/ui/raster_button.gd",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation",
+                  "combat-upgrade",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "assembled-fixed-caps-clasps-and-stretchable-center",
+                "minimum_size": [
+                  150,
+                  64
+                ],
+                "rationale": "The current runtime separates fixed-aspect caps and clasps so the pipeline warning about widening the centered ornament under naive stretch is not ignored.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/title-phone.png",
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png",
+                  "production/playtests/frontend/settings.png",
+                  "production/playtests/frontend/reset.png"
+                ]
+              },
+              {
+                "id": "v4-tab-inventory-tooltip-controls",
+                "runtime_ref": "scripts/ui/van_mong_component_kit.gd",
+                "surface_ids": [
+                  "inventory",
+                  "spirit-beast",
+                  "settings"
+                ],
+                "render_mode": "mixed-bounded-nine-slice-and-uniform",
+                "rationale": "Tab derivatives stretch only their quiet center; inventory and comparison artwork preserve layout-bearing ornament and live content remains separate.",
+                "evidence": [
+                  "production/playtests/frontend/inventory.png",
+                  "production/playtests/frontend/inventory-phone.png",
+                  "production/playtests/frontend/spirit-beast.png"
+                ]
+              },
+              {
+                "id": "v4-slim-meter-frame",
+                "runtime_ref": "scripts/ui/cultivation_meter.gd",
+                "surface_ids": [
+                  "combat",
+                  "combat-upgrade",
+                  "combat-paused"
+                ],
+                "render_mode": "bounded-nine-slice-horizontal",
+                "tested_size_range": [
+                  [
+                    240,
+                    64
+                  ],
+                  [
+                    684,
+                    96
+                  ]
+                ],
+                "rationale": "The recorded meter end caps frame a live Godot progress channel and value.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/overhaul/upgrade-final.png",
+                  "production/playtests/overhaul/pause-final.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-011-v4-hud",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-011-v4-hud/source/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-011-v4-hud/runtime",
+          "provenance": "assets/source-prompts/UIKIT-011-v4-hud.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-011-v4-hud/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/hud.gd",
+            "scripts/ui/mobile_touch_controls.gd",
+            "scripts/gameplay/enemy.gd"
+          ],
+          "hashes": {
+            "raw_sha256": "c0e971d6577595323bc814a8dc219638cd46b5bbb1344fbe6161e173af3b6925",
+            "transparent_atlas_sha256": "38a23eece343589aa018328d08c56e5bdc3dee52a7b8ab10b7f8b9e9e0d69162"
+          },
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v4-player-timer-and-skill-hud",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat",
+                  "combat-upgrade",
+                  "combat-paused"
+                ],
+                "render_mode": "uniform",
+                "rationale": "The player plaque, timer plaque and five-skill rail preserve authored aspect while names, meters, values, bindings, locks and cooldowns remain live.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/mobile-support/combat-phone.png"
+                ]
+              },
+              {
+                "id": "v4-boss-crest-and-channel",
+                "runtime_ref": "scripts/gameplay/enemy.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "separated-fixed-aspect-crest-and-channel",
+                "rationale": "Runtime derivatives preserve the accepted boss-frame identity while the title and health fill remain dynamic.",
+                "evidence": [
+                  "production/playtests/overhaul/boss-final.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              },
+              {
+                "id": "v4-touch-medallions",
+                "runtime_ref": "scripts/ui/mobile_touch_controls.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rationale": "Joystick and attack medallions preserve source aspect inside dedicated phone safe-area controls.",
+                "evidence": [
+                  "production/playtests/mobile-support/combat-phone.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -407,10 +1673,33 @@
           "path": "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime/atlas-transparent.png",
           "family_path": "assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime",
           "provenance": "assets/source-prompts/PORTRAIT-001-bestiary-companion-atlas.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "usages": [{"id": "bestiary-and-companion-portraits", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["codex", "spirit-beast"], "render_mode": "uniform", "rendered_size": [220, 220], "rationale": "Six dossier portraits give each threat and the Thanh Vân Hồ companion a dedicated authored identity without replacing combat animation.", "evidence": ["production/playtests/frontend/codex.png", "production/playtests/frontend/codex-phone.png", "production/playtests/frontend/spirit-beast.png", "production/playtests/frontend/spirit-beast-phone.png"]}]
+            "usages": [
+              {
+                "id": "bestiary-and-companion-portraits",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "codex",
+                  "spirit-beast"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  220,
+                  220
+                ],
+                "rationale": "Six dossier portraits give each threat and the Thanh Vân Hồ companion a dedicated authored identity without replacing combat animation.",
+                "evidence": [
+                  "production/playtests/frontend/codex.png",
+                  "production/playtests/frontend/codex-phone.png",
+                  "production/playtests/frontend/spirit-beast.png",
+                  "production/playtests/frontend/spirit-beast-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -421,10 +1710,57 @@
           "path": "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/atlas-transparent.png",
           "family_path": "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime",
           "provenance": "assets/source-prompts/PORTRAIT-002-hero-boss.yaml",
-          "runtime_refs": ["scripts/ui/hud.gd", "scripts/gameplay/enemy.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd",
+            "scripts/gameplay/enemy.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "usages": [{"id": "player-and-boss-identity-portraits", "runtime_ref": "scripts/ui/hud.gd", "surface_ids": ["combat"], "render_mode": "uniform", "rendered_size": [92, 92], "rationale": "The player HUD and boss bar use dedicated portraits while animated actors retain separate sprite sheets.", "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/overhaul/boss-final.png", "production/playtests/mobile-support/combat-phone.png", "production/playtests/mobile-support/boss-phone.png"]}]
+            "usages": [
+              {
+                "id": "player-and-boss-identity-portraits",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  92,
+                  92
+                ],
+                "rationale": "The player HUD and boss bar use dedicated portraits while animated actors retain separate sprite sheets.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/overhaul/boss-final.png",
+                  "production/playtests/mobile-support/combat-phone.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              },
+              {
+                "id": "hub-cultivator-identity",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "hub"
+                ],
+                "render_mode": "uniform",
+                "tested_size_range": [
+                  [
+                    112,
+                    104
+                  ],
+                  [
+                    274,
+                    246
+                  ]
+                ],
+                "rationale": "The hub identity folio now leads with the cultivator portrait and keeps the discipline sigil secondary, matching the locked editorial hierarchy.",
+                "evidence": [
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -435,10 +1771,30 @@
           "path": "assets/generated/ui/ACHIEVEICON-001-six-seals/runtime/atlas-transparent.png",
           "family_path": "assets/generated/ui/ACHIEVEICON-001-six-seals/runtime",
           "provenance": "assets/source-prompts/ACHIEVEICON-001-six-seals.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "usages": [{"id": "six-semantic-achievement-seals", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["achievements"], "render_mode": "uniform", "rendered_size": [72, 72], "rationale": "Each milestone receives a distinct engraved seal; progress, title and state remain runtime text.", "evidence": ["production/playtests/frontend/achievements.png", "production/playtests/frontend/achievements-phone.png"]}]
+            "usages": [
+              {
+                "id": "six-semantic-achievement-seals",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "achievements"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  72,
+                  72
+                ],
+                "rationale": "Each milestone receives a distinct engraved seal; progress, title and state remain runtime text.",
+                "evidence": [
+                  "production/playtests/frontend/achievements.png",
+                  "production/playtests/frontend/achievements-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -449,10 +1805,31 @@
           "path": "assets/generated/ui/UIICON-001-relics/runtime/relic_jade_sword.png",
           "family_path": "assets/generated/ui/UIICON-001-relics/runtime",
           "provenance": "assets/source-prompts/UIICON-001-relics.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/van_mong_component_kit.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/van_mong_component_kit.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "usages": [{"id": "relic-icons-runtime", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["inventory"], "render_mode": "uniform", "rendered_size": [84, 84], "rationale": "Each item receives a dedicated material silhouette inside a protected transparent cell; rarity/title remain dynamic nodes.", "evidence": ["production/playtests/frontend/inventory.png", "production/playtests/frontend/inventory-phone.png"]}]
+            "usages": [
+              {
+                "id": "relic-icons-runtime",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "inventory"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  84,
+                  84
+                ],
+                "rationale": "Each item receives a dedicated material silhouette inside a protected transparent cell; rarity/title remain dynamic nodes.",
+                "evidence": [
+                  "production/playtests/frontend/inventory.png",
+                  "production/playtests/frontend/inventory-phone.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -463,21 +1840,257 @@
           "path": "assets/generated/ui/SKILLICON-001-five-formation/runtime/skill_phi_kiem.png",
           "family_path": "assets/generated/ui/SKILLICON-001-five-formation/runtime",
           "provenance": "assets/source-prompts/SKILLICON-001-five-formation.yaml",
-          "runtime_refs": ["scripts/ui/hud.gd", "scripts/ui/frontend.gd"],
+          "runtime_refs": [
+            "scripts/ui/hud.gd",
+            "scripts/ui/frontend.gd"
+          ],
           "presentation": {
             "source_kind": "generated-raster-atlas",
-            "usages": [{"id": "five-skill-glyphs-runtime", "runtime_ref": "scripts/ui/hud.gd", "surface_ids": ["combat", "techniques", "spirit-beast"], "render_mode": "uniform", "rendered_size": [70, 70], "rationale": "Bold skill silhouettes stay separate from medallion/lock/cooldown chrome and remain readable at phone scale; the companion assist uses the same authored family.", "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/mobile-support/combat-phone.png", "production/playtests/frontend/techniques.png", "production/playtests/frontend/spirit-beast.png", "production/playtests/frontend/spirit-beast-phone.png"]}]
+            "usages": [
+              {
+                "id": "five-skill-glyphs-runtime",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat",
+                  "techniques",
+                  "spirit-beast"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  70,
+                  70
+                ],
+                "rationale": "Bold skill silhouettes stay separate from medallion/lock/cooldown chrome and remain readable at phone scale; the companion assist uses the same authored family.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/mobile-support/combat-phone.png",
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/frontend/spirit-beast.png",
+                  "production/playtests/frontend/spirit-beast-phone.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-012-v5-command-tabs",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-012-v5-command-tabs/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-012-v5-command-tabs/runtime",
+          "provenance": "assets/source-prompts/UIKIT-012-v5-command-tabs.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-012-v5-command-tabs/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/raster_button.gd",
+            "scripts/ui/van_mong_component_kit.gd"
+          ],
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v5-complete-command-and-tab-components",
+                "runtime_ref": "scripts/ui/raster_button.gd",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation"
+                ],
+                "render_mode": "uniform-fixed-aspect-inside-native-basebutton",
+                "rationale": "Each command is one finished object; manual cap/clasp assembly and arbitrary nine-slice stretching were removed.",
+                "evidence": [
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png",
+                  "production/playtests/frontend/loadout-phone.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-013-v5-ritual-modals",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-013-v5-ritual-modals/source/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime",
+          "provenance": "assets/source-prompts/UIKIT-013-v5-ritual-modals.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-013-v5-ritual-modals/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd"
+          ],
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v5-state-specific-ritual-shrines",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat-upgrade",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "uniform-fixed-aspect",
+                "rationale": "Breakthrough, pause, victory and defeat use distinct complete silhouettes with live protected text and native targets.",
+                "evidence": [
+                  "production/playtests/overhaul/upgrade-final.png",
+                  "production/playtests/overhaul/pause-final.png",
+                  "production/playtests/mobile-support/pause-phone.png",
+                  "production/playtests/frontend/results.png",
+                  "production/playtests/frontend/results-defeat-phone.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-014-v5-technique-folios",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-014-v5-technique-folios/source/atlas-primary-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-014-v5-technique-folios/runtime",
+          "provenance": "assets/source-prompts/UIKIT-014-v5-technique-folios.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-014-v5-technique-folios/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/cultivation_choice_button.gd"
+          ],
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v5-illustrated-manuals",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "loadout",
+                  "techniques",
+                  "combat-upgrade"
+                ],
+                "render_mode": "uniform-fixed-aspect",
+                "rationale": "Each school has original central illustration and protected live title/rank/action fields; rejected pseudo-writing cells are excluded.",
+                "evidence": [
+                  "production/playtests/frontend/loadout.png",
+                  "production/playtests/frontend/loadout-phone.png",
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/frontend/techniques-phone.png",
+                  "production/playtests/overhaul/upgrade-final.png",
+                  "production/playtests/mobile-support/breakthrough-phone.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-015-v5-ledger-hub",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-015-v5-ledger-hub/source/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime",
+          "provenance": "assets/source-prompts/UIKIT-015-v5-ledger-hub.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-015-v5-ledger-hub/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/frontend.gd"
+          ],
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v5-unequal-hub-and-ledger-artifacts",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "hub",
+                  "achievements"
+                ],
+                "render_mode": "uniform-fixed-aspect",
+                "rationale": "Hub identity, expedition and command artifacts remain unequal; achievements use one physical open ledger instead of six dashboard cards.",
+                "evidence": [
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png",
+                  "production/playtests/frontend/achievements.png",
+                  "production/playtests/frontend/achievements-phone.png"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "UIKIT-016-v5-combat-hud",
+          "status": "integrated_pending_independent_visual_review",
+          "style_version": "4.1.0",
+          "style_digest": "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024",
+          "path": "assets/generated/ui/UIKIT-016-v5-combat-hud/source/atlas-transparent.png",
+          "family_path": "assets/generated/ui/UIKIT-016-v5-combat-hud/runtime",
+          "provenance": "assets/source-prompts/UIKIT-016-v5-combat-hud.yaml",
+          "pipeline_meta": "assets/generated/ui/UIKIT-016-v5-combat-hud/pipeline-meta.json",
+          "runtime_refs": [
+            "scripts/ui/hud.gd",
+            "scripts/ui/mobile_touch_controls.gd"
+          ],
+          "presentation": {
+            "source_kind": "generated-raster-atlas",
+            "usages": [
+              {
+                "id": "v5-compact-hud-and-touch-medallions",
+                "runtime_ref": "scripts/ui/hud.gd",
+                "surface_ids": [
+                  "combat",
+                  "combat-upgrade",
+                  "combat-paused"
+                ],
+                "render_mode": "uniform-fixed-aspect",
+                "rationale": "Player/timer/skill rail art is compact and mobile ornaments shrink to 73.296/54.864 px while native hit geometry remains at least 64 px.",
+                "evidence": [
+                  "production/playtests/overhaul/gameplay-final.png",
+                  "production/playtests/mobile-support/combat-phone.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              }
+            ]
           }
         }
       ],
-      "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/hub.png", "production/playtests/frontend/stages.png", "production/playtests/frontend/codex.png", "production/playtests/frontend/achievements.png", "production/playtests/frontend/settings.png", "production/playtests/frontend/reset.png", "production/playtests/frontend/results.png", "production/playtests/frontend/results-defeat.png", "production/playtests/frontend/techniques.png", "production/playtests/overhaul/upgrade-final.png", "production/playtests/overhaul/pause-final.png", "production/playtests/mobile-support/portrait-overlay.png"]
+      "evidence": [
+        "production/playtests/frontend/title.png",
+        "production/playtests/frontend/hub.png",
+        "production/playtests/frontend/stages.png",
+        "production/playtests/frontend/codex.png",
+        "production/playtests/frontend/achievements.png",
+        "production/playtests/frontend/settings.png",
+        "production/playtests/frontend/reset.png",
+        "production/playtests/frontend/results.png",
+        "production/playtests/frontend/results-defeat.png",
+        "production/playtests/frontend/techniques.png",
+        "production/playtests/overhaul/upgrade-final.png",
+        "production/playtests/overhaul/pause-final.png",
+        "production/playtests/mobile-support/portrait-overlay.png",
+        "production/playtests/frontend/loadout-phone.png",
+        "production/playtests/frontend/techniques-phone.png",
+        "production/playtests/frontend/achievements-phone.png",
+        "production/playtests/mobile-support/breakthrough-phone.png",
+        "production/playtests/mobile-support/pause-phone.png"
+      ]
     },
     {
       "id": "runtime-typography",
       "required": true,
       "status": "integrated_current_native_and_web_evidence",
       "coverage_basis": "Every Vietnamese UI surface points at bundled local font files: Be Vietnam Pro Regular owns body/HUD text, Be Vietnam Pro SemiBold owns actions and compact emphasis, and Literata owns large ritual titles. Official-source hashes, OFL files and FontFile imports are recorded; the clean project parse plus current 1600x900/844x390 native and served Chromium captures show live Vietnamese glyphs. Cross-browser and physical low-DPI review remain open.",
-      "required_asset_ids": ["FONT-001-be-vietnam-pro", "FONT-002-literata"],
+      "required_asset_ids": [
+        "FONT-001-be-vietnam-pro",
+        "FONT-002-literata"
+      ],
       "assets": [
         {
           "id": "FONT-001-be-vietnam-pro",
@@ -485,12 +2098,20 @@
           "style_version": "3.0.0",
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/fonts/BeVietnamPro-Regular.ttf",
-          "family_files": ["assets/fonts/BeVietnamPro-Regular.ttf", "assets/fonts/BeVietnamPro-SemiBold.ttf"],
+          "family_files": [
+            "assets/fonts/BeVietnamPro-Regular.ttf",
+            "assets/fonts/BeVietnamPro-SemiBold.ttf"
+          ],
           "provenance": "design/assets/asset-manifest.yaml",
           "license_file": "assets/fonts/OFL-BeVietnamPro.txt",
           "source_directory": "https://github.com/google/fonts/tree/main/ofl/bevietnampro",
           "license": "SIL Open Font License 1.1",
-          "runtime_refs": ["resources/ui/cultivation_theme.tres", "scripts/ui/frontend.gd", "scripts/ui/hud.gd", "scripts/ui/raster_button.gd"],
+          "runtime_refs": [
+            "resources/ui/cultivation_theme.tres",
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd",
+            "scripts/ui/raster_button.gd"
+          ],
           "hashes": {
             "regular_sha256": "cd1ef6e9d7db28ad5cdb88a65ccbe693870e60d340b791f349d248342b4fe4c3",
             "semibold_sha256": "bd8e27eb02720b9d91e59e4f10a90878643219f25ce6a8d9a4f06a8a88d3bb71",
@@ -499,7 +2120,44 @@
           "presentation": {
             "source_kind": "licensed-font-family",
             "usages": [
-              {"id": "vietnamese-body-and-hud", "runtime_ref": "resources/ui/cultivation_theme.tres", "surface_ids": ["title", "hub", "stages", "loadout", "inventory", "spirit-beast", "techniques", "rank-ascension", "codex", "achievements", "settings", "reset-confirmation", "combat", "combat-upgrade", "combat-paused", "results-victory", "results-defeat", "portrait-guard"], "render_mode": "runtime-font", "rendered_size": [16, 50], "rationale": "Regular carries Vietnamese body/HUD text and SemiBold carries buttons, tabs and eyebrows without baking copy into raster assets.", "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/title-phone.png", "production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png", "production/playtests/overhaul/boss-final.png", "production/playtests/mobile-support/boss-phone.png"]}
+              {
+                "id": "vietnamese-body-and-hud",
+                "runtime_ref": "resources/ui/cultivation_theme.tres",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "rank-ascension",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation",
+                  "combat",
+                  "combat-upgrade",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat",
+                  "portrait-guard"
+                ],
+                "render_mode": "runtime-font",
+                "rendered_size": [
+                  16,
+                  50
+                ],
+                "rationale": "Regular carries Vietnamese body/HUD text and SemiBold carries buttons, tabs and eyebrows without baking copy into raster assets.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/title-phone.png",
+                  "production/playtests/frontend/hub.png",
+                  "production/playtests/frontend/hub-phone.png",
+                  "production/playtests/overhaul/boss-final.png",
+                  "production/playtests/mobile-support/boss-phone.png"
+                ]
+              }
             ]
           }
         },
@@ -514,7 +2172,10 @@
           "license_file": "assets/fonts/OFL-Literata.txt",
           "source_directory": "https://github.com/google/fonts/tree/main/ofl/literata",
           "license": "SIL Open Font License 1.1",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/hud.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd"
+          ],
           "hashes": {
             "variable_sha256": "b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440",
             "license_sha256": "8742963604cd89dc81437811a850018fc03b2bfad686d7422c8235967c87614e"
@@ -522,19 +2183,61 @@
           "presentation": {
             "source_kind": "licensed-font-family",
             "usages": [
-              {"id": "ritual-display-headings", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["title", "hub", "stages", "loadout", "inventory", "spirit-beast", "techniques", "rank-ascension", "codex", "achievements", "settings", "reset-confirmation", "combat-upgrade", "combat-paused", "results-victory", "results-defeat"], "render_mode": "runtime-font", "rendered_size": [25, 50], "rationale": "The variable roman face is reserved for large ritual headings; Vietnamese copy remains a live node and falls back to the body family by role if needed.", "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/title-phone.png", "production/playtests/frontend/technique-upgrade.png", "production/playtests/frontend/results.png"]}
+              {
+                "id": "ritual-display-headings",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "title",
+                  "hub",
+                  "stages",
+                  "loadout",
+                  "inventory",
+                  "spirit-beast",
+                  "techniques",
+                  "rank-ascension",
+                  "codex",
+                  "achievements",
+                  "settings",
+                  "reset-confirmation",
+                  "combat-upgrade",
+                  "combat-paused",
+                  "results-victory",
+                  "results-defeat"
+                ],
+                "render_mode": "runtime-font",
+                "rendered_size": [
+                  25,
+                  50
+                ],
+                "rationale": "The variable roman face is reserved for large ritual headings; Vietnamese copy remains a live node and falls back to the body family by role if needed.",
+                "evidence": [
+                  "production/playtests/frontend/title.png",
+                  "production/playtests/frontend/title-phone.png",
+                  "production/playtests/frontend/technique-upgrade.png",
+                  "production/playtests/frontend/results.png"
+                ]
+              }
             ]
           }
         }
       ],
-      "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/title-phone.png", "production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png"]
+      "evidence": [
+        "production/playtests/frontend/title.png",
+        "production/playtests/frontend/title-phone.png",
+        "production/playtests/frontend/hub.png",
+        "production/playtests/frontend/hub-phone.png"
+      ]
     },
     {
       "id": "cultivation-technique-sigils",
       "required": true,
       "status": "verified",
       "coverage_basis": "The three doctrine/permanent-technique paths require independent sword, jade-body and spirit-well silhouettes across loadout, technique previews, combat HUD/VFX, touch controls and portrait guard.",
-      "required_asset_ids": ["PREMIUM-001-sigil-phi-kiem", "PREMIUM-001-sigil-ho-the-ngoc", "PREMIUM-001-sigil-tu-linh"],
+      "required_asset_ids": [
+        "PREMIUM-001-sigil-phi-kiem",
+        "PREMIUM-001-sigil-ho-the-ngoc",
+        "PREMIUM-001-sigil-tu-linh"
+      ],
       "assets": [
         {
           "id": "PREMIUM-001-sigil-phi-kiem",
@@ -543,10 +2246,36 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_phi_kiem.png",
           "provenance": "assets/source-prompts/PREMIUM-001-cultivation-sigils.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/hud.gd", "scripts/gameplay/cultivation_vfx.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd",
+            "scripts/gameplay/cultivation_vfx.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "sword-doctrine-sigil", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["loadout", "techniques", "rank-ascension", "combat"], "render_mode": "uniform", "rendered_size": [96, 96], "rationale": "The transparent square sigil is uniformly scaled across doctrine and rank-evolution previews.", "evidence": ["production/playtests/frontend/loadout.png", "production/playtests/frontend/technique-upgrade.png", "production/playtests/vfx/sword-rank5.png"]}]
+            "usages": [
+              {
+                "id": "sword-doctrine-sigil",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "loadout",
+                  "techniques",
+                  "rank-ascension",
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  96,
+                  96
+                ],
+                "rationale": "The transparent square sigil is uniformly scaled across doctrine and rank-evolution previews.",
+                "evidence": [
+                  "production/playtests/frontend/loadout.png",
+                  "production/playtests/frontend/technique-upgrade.png",
+                  "production/playtests/vfx/sword-rank5.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -556,10 +2285,36 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_ho_the_ngoc.png",
           "provenance": "assets/source-prompts/PREMIUM-001-cultivation-sigils.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/hud.gd", "scripts/gameplay/cultivation_vfx.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd",
+            "scripts/gameplay/cultivation_vfx.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
-            "usages": [{"id": "jade-body-doctrine-sigil", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["loadout", "techniques", "rank-ascension", "combat"], "render_mode": "uniform", "rendered_size": [96, 96], "rationale": "The jade-shell silhouette remains square and readable without number-only upgrade communication.", "evidence": ["production/playtests/frontend/loadout.png", "production/playtests/frontend/techniques.png", "production/playtests/vfx/jade-rank5.png"]}]
+            "usages": [
+              {
+                "id": "jade-body-doctrine-sigil",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "loadout",
+                  "techniques",
+                  "rank-ascension",
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  96,
+                  96
+                ],
+                "rationale": "The jade-shell silhouette remains square and readable without number-only upgrade communication.",
+                "evidence": [
+                  "production/playtests/frontend/loadout.png",
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/vfx/jade-rank5.png"
+                ]
+              }
+            ]
           }
         },
         {
@@ -569,17 +2324,67 @@
           "style_lock_sha256": "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da",
           "path": "assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png",
           "provenance": "assets/source-prompts/PREMIUM-001-cultivation-sigils.yaml",
-          "runtime_refs": ["scripts/ui/frontend.gd", "scripts/ui/hud.gd", "scripts/ui/mobile_touch_controls.gd", "scripts/ui/rotate_device_overlay.gd", "scripts/gameplay/cultivation_vfx.gd"],
+          "runtime_refs": [
+            "scripts/ui/frontend.gd",
+            "scripts/ui/hud.gd",
+            "scripts/ui/mobile_touch_controls.gd",
+            "scripts/ui/rotate_device_overlay.gd",
+            "scripts/gameplay/cultivation_vfx.gd"
+          ],
           "presentation": {
             "source_kind": "dedicated-component",
             "usages": [
-              {"id": "spirit-well-doctrine-sigil", "runtime_ref": "scripts/ui/frontend.gd", "surface_ids": ["loadout", "techniques", "rank-ascension", "combat"], "render_mode": "uniform", "rendered_size": [96, 96], "rationale": "The spirit-vortex silhouette is reused coherently across doctrine, VFX and HUD contexts.", "evidence": ["production/playtests/frontend/loadout.png", "production/playtests/frontend/techniques.png", "production/playtests/vfx/qi-rank5.png"]},
-              {"id": "mobile-pulse-and-rotation-sigil", "runtime_ref": "scripts/ui/rotate_device_overlay.gd", "surface_ids": ["combat", "portrait-guard"], "render_mode": "uniform", "rendered_size": [200, 200], "rationale": "The same authored qi-vortex language supports the touch skill and rotation plaque while input behavior remains separately encoded.", "evidence": ["production/playtests/responsive/combat-wide-touch.png", "production/playtests/mobile-support/portrait-overlay.png"]}
+              {
+                "id": "spirit-well-doctrine-sigil",
+                "runtime_ref": "scripts/ui/frontend.gd",
+                "surface_ids": [
+                  "loadout",
+                  "techniques",
+                  "rank-ascension",
+                  "combat"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  96,
+                  96
+                ],
+                "rationale": "The spirit-vortex silhouette is reused coherently across doctrine, VFX and HUD contexts.",
+                "evidence": [
+                  "production/playtests/frontend/loadout.png",
+                  "production/playtests/frontend/techniques.png",
+                  "production/playtests/vfx/qi-rank5.png"
+                ]
+              },
+              {
+                "id": "mobile-pulse-and-rotation-sigil",
+                "runtime_ref": "scripts/ui/rotate_device_overlay.gd",
+                "surface_ids": [
+                  "combat",
+                  "portrait-guard"
+                ],
+                "render_mode": "uniform",
+                "rendered_size": [
+                  200,
+                  200
+                ],
+                "rationale": "The same authored qi-vortex language supports the touch skill and rotation plaque while input behavior remains separately encoded.",
+                "evidence": [
+                  "production/playtests/responsive/combat-wide-touch.png",
+                  "production/playtests/mobile-support/portrait-overlay.png"
+                ]
+              }
             ]
           }
         }
       ],
-      "evidence": ["production/playtests/frontend/loadout.png", "production/playtests/frontend/techniques.png", "production/playtests/vfx/sword-rank5.png", "production/playtests/vfx/jade-rank5.png", "production/playtests/vfx/qi-rank5.png", "production/playtests/mobile-support/portrait-overlay.png"]
+      "evidence": [
+        "production/playtests/frontend/loadout.png",
+        "production/playtests/frontend/techniques.png",
+        "production/playtests/vfx/sword-rank5.png",
+        "production/playtests/vfx/jade-rank5.png",
+        "production/playtests/vfx/qi-rank5.png",
+        "production/playtests/mobile-support/portrait-overlay.png"
+      ]
     }
   ]
 }

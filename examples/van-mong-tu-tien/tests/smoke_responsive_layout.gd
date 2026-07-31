@@ -150,6 +150,11 @@ func _run() -> void:
 		await get_tree().process_frame
 		_expect(phone_frontend.phone_layout_active and phone_frontend.screen_name == state_id, "phone meta screen builds: %s" % state_label)
 		_assert_minimum_phone_button_height(phone_frontend.screen_root, state_label)
+		if state_id == phone_frontend.SCREEN_HUB:
+			var identity_plate := phone_frontend.screen_root.get_node_or_null("HubIdentityPlate") as Control
+			var expedition_plate := phone_frontend.screen_root.get_node_or_null("HubExpeditionPlate") as Control
+			_expect(identity_plate != null and identity_plate.size.x <= 184.01 and identity_plate.size.y <= 164.01, "phone hub identity art uses the compact editorial footprint")
+			_expect(expedition_plate != null and expedition_plate.size.x <= 278.01 and expedition_plate.size.y <= 164.01, "phone hub expedition art leaves room for the command rail")
 
 	# Rebuild the exact surface where the served-Web review found the leading
 	# balance digit clipped, then compare the field against the rendered text.
@@ -199,6 +204,9 @@ func _assert_minimum_phone_button_height(node: Node, state_label: String) -> voi
 	for button in buttons:
 		var button_path := str(node.get_path_to(button))
 		_expect(button.size.y + 0.01 >= 64.0, "phone %s target %s is at least 64 local px high" % [state_label, button_path])
+		var visual_surface := button.get_node_or_null("V4CommandSurface") as Control
+		if visual_surface != null:
+			_expect(visual_surface.position.y >= 4.99 and visual_surface.size.y <= button.size.y - 9.99, "phone %s target %s keeps compact art inside the full hitbox" % [state_label, button_path])
 
 
 func _collect_base_buttons(node: Node, output: Array[BaseButton]) -> void:

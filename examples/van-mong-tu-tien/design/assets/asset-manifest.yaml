@@ -1,23 +1,23 @@
 schema_version: 1
 project: van-mong-tu-tien
-updated: "2026-07-30"
+updated: "2026-07-31"
 style_lock:
   path: "design/art/style-lock.json"
-  style_version: "3.0.0"
-  style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
-  art_bible_sha256: "2ae2550201bd145ffa4972d96738fd8b90ef21e582f014e66623bf277ff7f2b1"
-  current_unsealed_art_bible_sha256: "adb4c66b770941446061c202091f97cca1f78212457782baf9107b1fd99f81d2"
-  reseal_status: deferred_until_full_v3_capture_acceptance
-  binding_note: "The version/digest and sealed art-bible hash are preserved; this additive metadata batch intentionally does not reseal the lock."
+  status: locked
+  style_version: "4.1.0"
+  style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+  style_lock_file_sha256: "f3e0e7d832138f1a9543021bc0ee922b74f00ed86c26418fb2a13293a96d2837"
+  art_bible_sha256: "8d3718447ee5292a68528d8310791ea68e7dcb40c3dce4e385c078f8484763ea"
+  binding_note: "Locked V4.1 master-board identity; generated UI keeps all text, values, icons, focus and input live in Godot."
 release_note: >-
-  Combat, three environments, hub and the V3 authored UI families now have a
-  clean Godot 4.6.2 parse, current desktop/844x390 native captures and a fresh
-  served Chromium export. UIKIT-007 includes the live boss-bar binding;
-  UIKIT-008 supplies distinct control silhouettes; PORTRAIT-001/002 and
-  ACHIEVEICON-001 supply dedicated dossier, HUD and achievement identity art.
-  Independent visual review, physical mobile, cross-browser, audio listening
-  and human feel/balance gates remain open, so the complete game is not
-  declared player-ready, release-ready or commercial-ready.
+  The locked V4.1 direction now includes the V5 UIKIT-012/013/014/015/016
+  complete-control, ritual, folio, hub/ledger and compact-HUD corrective
+  families in the desktop and 844x390 native UI paths. Alpha QA and automated
+  Godot parse/smoke coverage pass, and current native captures exist for the
+  affected frontend and combat surfaces. Independent visual review, refreshed
+  Web evidence, physical mobile, cross-browser, audio listening and human
+  feel/balance gates remain open, so the game is not declared player-ready,
+  release-ready or commercial-ready.
 
 assets:
   - asset_id: KEYART-001
@@ -712,6 +712,7 @@ assets:
     runtime_evidence:
       - "production/playtests/frontend/techniques.png"
       - "production/playtests/overhaul/upgrade-final.png"
+      - "production/playtests/mobile-support/breakthrough-phone.png"
     hashes:
       folio_sword: "b3b6d411f6f7c17997e040037ec9f920da8b0f75aa0a6f645edd29310f2cdb49"
       folio_jade: "b79ab0e647a3ef734c43f0d9a26d58e0535e8927cb5c4874ea7444dd5128d18c"
@@ -926,6 +927,268 @@ assets:
       captions, focus, disabled state and destructive wording remain live Godot
       nodes. Independent visual review remains open.
 
+  - asset_id: UIKIT-009-v4-structural
+    name: "V4 lacquer, paper, header and result structural surfaces"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_pipeline_and_runtime_smoke_pass_current_capture_present
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: gpt_image
+    generation_mode: built_in_imagegen
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-009-v4-structural-atlas-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-009-v4-structural/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-009-v4-structural/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-009-v4-structural/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-009-v4-structural/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-009-v4-structural.yaml"
+    reference_file: "design/art/lookdev/v4/master-board-candidate-01.png"
+    frame_size: "1536x1024 source atlas; four isolated RGBA runtime crops"
+    expected_components: 4
+    actual_components: 4
+    key_color: "#fb02fb measured source key; #FF00FF generation contract"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    collision_role: none
+    runtime_files:
+      - "assets/generated/ui/UIKIT-009-v4-structural/runtime/major_lacquer_panel.png"
+      - "assets/generated/ui/UIKIT-009-v4-structural/runtime/paper_folio.png"
+      - "assets/generated/ui/UIKIT-009-v4-structural/runtime/header_plaque.png"
+      - "assets/generated/ui/UIKIT-009-v4-structural/runtime/result_modal_frame.png"
+    presentation:
+      source_kind: generated-raster-atlas
+      aspect_ratio_policy: >-
+        Major lacquer and result frames use their recorded nine-slice margins
+        only above safe minimum sizes. Paper folio and header plaque preserve
+        authored aspect; smaller surfaces retain native scalable fallbacks.
+      components:
+        - id: major_lacquer_panel
+          render_mode: nine-slice
+          native_size: [752, 434]
+          nine_slice_margins: [86, 78, 86, 78]
+          tested_size_range: [[360, 220], [1180, 720]]
+        - id: paper_folio
+          render_mode: uniform
+          native_size: [423, 541]
+          tested_size_range: [[172, 220], [380, 486]]
+        - id: header_plaque
+          render_mode: uniform
+          native_size: [699, 150]
+          tested_size_range: [[280, 60], [700, 150]]
+        - id: result_modal_frame
+          render_mode: nine-slice
+          native_size: [627, 340]
+          nine_slice_margins: [68, 58, 68, 58]
+          tested_size_range: [[400, 240], [920, 620]]
+    runtime_refs:
+      - "scripts/ui/frontend.gd"
+    runtime_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
+      - "production/playtests/frontend/results.png"
+      - "production/playtests/frontend/results-phone.png"
+    hashes:
+      raw_sha256: "63bb136191e434b700f1a8e8e6ad82d4e4e25df5d662ba369e614a41862161f2"
+      transparent_atlas_sha256: "103d8bafa0be6b3fe56c6a965a816116efdbd1f1c6a6e7e117e8c87eeeb3ee6e"
+      major_lacquer_panel_sha256: "90ebf27b0c22466a5a6d602ae923cdddc25a1016cc9960e7c51c67f078177711"
+      paper_folio_sha256: "c60a84eede7e205fd3581bfebe043ebffc904b93c604f795a1ab86b68298e93b"
+      header_plaque_sha256: "60c71e39ef0e279fe7d2273ba49cf4bf0ce7bf067645fdad519391901ea07749"
+      result_modal_frame_sha256: "a1d218b87d8cf97f8fa26715d254b94a4ec73f3a0f0c95a2888e1d6ea7fa2c53"
+    notes: >-
+      RGBA alpha QA passes with transparent crop corners and zero visible
+      magenta residue. Live text and interactive state remain Godot nodes. The
+      family is integrated but is not release-ready while independent visual,
+      physical-device and cross-browser review remain open.
+
+  - asset_id: UIKIT-010-v4-controls
+    name: "V4 authored command, tab, inventory, tooltip and meter controls"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_pipeline_and_runtime_smoke_pass_with_authored_clasp_constraint
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: gpt_image
+    generation_mode: built_in_imagegen
+    generation_model: gpt-image-2
+    generated_on: "2026-07-30"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-010-v4-controls-atlas-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-010-v4-controls/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-010-v4-controls/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-010-v4-controls/runtime"
+    preview_file: "assets/generated/ui/UIKIT-010-v4-controls/contact-sheet-runtime.png"
+    pipeline_meta: "assets/generated/ui/UIKIT-010-v4-controls/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-010-v4-controls.yaml"
+    reference_file: "design/art/lookdev/v4/master-board-candidate-01.png"
+    frame_size: "1536x1024 source atlas; eight source crops plus runtime-safe derivatives"
+    expected_components: 8
+    actual_components: 8
+    key_color: "#fb03fa measured source key; #FF00FF generation contract"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    collision_role: none
+    active_runtime_files:
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/button-primary-gold-nineslice.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/button-secondary-paper-nineslice.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/button-confirm-jade-nineslice.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/button-destructive-cinnabar-nineslice.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/tab-segment-nineslice.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/inventory-slot-square.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/tooltip-comparison-paper.png"
+      - "assets/generated/ui/UIKIT-010-v4-controls/runtime/meter-frame-slim-nineslice.png"
+    presentation:
+      source_kind: generated-raster-atlas
+      aspect_ratio_policy: >-
+        Runtime buttons assemble fixed-aspect end caps and clasps around a
+        quiet stretchable center, avoiding the documented wide-clasp stretch.
+        Inventory and tooltip silhouettes preserve authored layout; meter and
+        tab derivatives use bounded horizontal nine-slice presentation.
+      components:
+        - id: four_command_variants
+          render_mode: assembled-parts
+          minimum_size: [150, 64]
+          runtime_usage: "scripts/ui/raster_button.gd"
+        - id: tab_segment
+          render_mode: bounded-nine-slice
+          native_size: [58, 52]
+          runtime_usage: "scripts/ui/van_mong_component_kit.gd"
+        - id: inventory_slot_square
+          render_mode: uniform
+          native_size: [256, 251]
+          runtime_usage: "scripts/ui/van_mong_component_kit.gd"
+        - id: tooltip_comparison_paper
+          render_mode: protected-frame
+          native_size: [391, 252]
+          runtime_usage: "scripts/ui/van_mong_component_kit.gd"
+        - id: meter_frame_slim
+          render_mode: bounded-nine-slice-horizontal
+          source_size: [342, 81]
+          source_patch_margins: [64, 28, 64, 28]
+          tested_size_range: [[240, 64], [684, 96]]
+          runtime_usage: "scripts/ui/cultivation_meter.gd"
+    runtime_refs:
+      - "scripts/ui/raster_button.gd"
+      - "scripts/ui/van_mong_component_kit.gd"
+      - "scripts/ui/cultivation_meter.gd"
+      - "scripts/ui/cultivation_panel.gd"
+      - "scripts/ui/frontend.gd"
+    runtime_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
+      - "production/playtests/frontend/inventory.png"
+      - "production/playtests/frontend/inventory-phone.png"
+      - "production/playtests/frontend/settings.png"
+      - "production/playtests/frontend/reset.png"
+      - "production/playtests/overhaul/upgrade-final.png"
+      - "production/playtests/overhaul/pause-final.png"
+    hashes:
+      raw_sha256: "f40ae2825df8690e32d12055d95e28629c44f24e5a2889e1b42d091fe810c677"
+      transparent_atlas_sha256: "814923daf7df99e5f1970c6e87b00b3c7a281ac101cb640cc38d0e8ec748cd51"
+      contact_sheet_sha256: "69e1b016374270c10297d31f90f1ec168171704966450ae5c48bcbcf8d6337f8"
+    notes: >-
+      Pipeline QA passes the style-lock and alpha gates with zero visible
+      magenta residue. The source pipeline records PASS_WITH_WARNING because a
+      centered clasp would widen under naive stretching; the current runtime
+      separates its ornaments and caps. Current captures exist, but clean-
+      context independent visual review and device/browser gates remain open.
+
+  - asset_id: UIKIT-011-v4-hud
+    name: "V4 player, boss, timer, skill and touch HUD family"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_pipeline_and_runtime_smoke_pass_current_capture_present
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: gpt_image
+    generation_mode: built_in_imagegen
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-011-v4-hud-atlas-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-011-v4-hud/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-011-v4-hud/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-011-v4-hud/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-011-v4-hud/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-011-v4-hud.yaml"
+    reference_file: "design/art/lookdev/v4/master-board-candidate-01.png"
+    frame_size: "1536x1024 source atlas; six isolated RGBA HUD crops"
+    expected_components: 6
+    actual_components: 6
+    key_color: "#fb03fa measured source key; #FF00FF generation contract"
+    godot_import: "design/assets/godot-import-manifest.yaml"
+    collision_role: none
+    active_runtime_files:
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/player_identity_plaque.png"
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/timer_plaque.png"
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/five_skill_rail.png"
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/joystick_medallion.png"
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/attack_medallion.png"
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/boss_crest.png"
+      - "assets/generated/ui/UIKIT-011-v4-hud/runtime/boss_bar_channel.png"
+    presentation:
+      source_kind: generated-raster-atlas
+      aspect_ratio_policy: >-
+        Player, timer, skill rail and touch medallions preserve source aspect.
+        The accepted boss frame supplies separate fixed-aspect crest and
+        channel derivatives while all names, values and fills stay live.
+      components:
+        - id: player_identity_plaque
+          render_mode: uniform
+          native_size: [525, 245]
+          runtime_target_sizes: [[420, 104], [318, 79]]
+        - id: boss_health_frame
+          render_mode: separated-crest-and-channel
+          native_size: [902, 218]
+          runtime_target_sizes: [[520, 126], [360, 87]]
+        - id: timer_plaque
+          render_mode: uniform
+          native_size: [368, 115]
+          runtime_target_sizes: [[184, 58], [140, 44]]
+        - id: five_skill_rail
+          render_mode: uniform
+          native_size: [827, 188]
+          runtime_target_sizes: [[500, 114], [332, 76]]
+        - id: joystick_medallion
+          render_mode: uniform
+          native_size: [381, 365]
+          runtime_target_sizes: [[134, 128], [96, 92]]
+        - id: attack_medallion
+          render_mode: uniform
+          native_size: [386, 375]
+          runtime_target_sizes: [[96, 93], [78, 76]]
+    runtime_refs:
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/mobile_touch_controls.gd"
+      - "scripts/gameplay/enemy.gd"
+    runtime_evidence:
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/combat-phone.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+    hashes:
+      raw_sha256: "c0e971d6577595323bc814a8dc219638cd46b5bbb1344fbe6161e173af3b6925"
+      transparent_atlas_sha256: "38a23eece343589aa018328d08c56e5bdc3dee52a7b8ab10b7f8b9e9e0d69162"
+      player_identity_plaque_sha256: "d7eb486279c63a126823668c69b26524700989aa86cf19ed8795a75487c43a90"
+      boss_health_frame_sha256: "5904b057763a7ca3293d92bbac32b4b45b8d96a1e41f783320a54e613d22b3b6"
+      timer_plaque_sha256: "3b6f16156609443aa5842cb6cef3407c6b9d4a7997ac3bd7e8670460b55a2c8e"
+      five_skill_rail_sha256: "9b61e1ec3e64c3c82d3cb86cc85a211f52b8bdd5e5df335394dbe09a09471225"
+      joystick_medallion_sha256: "4d20fe1175527a61956692ca22219cd8a9cb03e9abab6e92508c3aeee611aafe"
+      attack_medallion_sha256: "0c1f01c7129fe4452d7bcd4c90873d243f2727e5b9bf7d9c76b83673d101c007"
+    notes: >-
+      Alpha QA passes with transparent crop corners and zero magenta residue.
+      Current desktop/phone combat captures exercise the live HUD bindings, but
+      independent visual and physical-device review remain open; the family
+      and complete game are not declared release-ready.
+
   - asset_id: PORTRAIT-001-bestiary-companion-atlas
     name: "Six original bestiary and Thanh Vân Hồ dossier portraits"
     category: ui
@@ -979,9 +1242,12 @@ assets:
     frame_size: "1774x887 RGBA atlas; two 887x887 cells"
     collision_role: none
     runtime_refs:
+      - "scripts/ui/frontend.gd"
       - "scripts/ui/hud.gd"
       - "scripts/gameplay/enemy.gd"
     runtime_evidence:
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
       - "production/playtests/overhaul/gameplay-final.png"
       - "production/playtests/overhaul/boss-final.png"
       - "production/playtests/mobile-support/combat-phone.png"
@@ -989,7 +1255,7 @@ assets:
     hashes:
       raw_sha256: "f16ef4092abb0a93ca87a7d9929cd15e4da111fedfff1bd21a014d7b09f2f012"
       processed_sha256: "379387eee907c97ce44ef6ff8581eaeb323a6fe384860c0a9ede9e8d4cb4fc38"
-    notes: "HUD/boss identity only; animated gameplay sprites retain their own authored sheets."
+    notes: "Hub/HUD/boss identity only; animated gameplay sprites retain their own authored sheets."
 
   - asset_id: ACHIEVEICON-001-six-seals
     name: "Six distinct engraved achievement seals"
@@ -1195,3 +1461,143 @@ assets:
     frame_size: "32 seconds each; PCM16 mono 22050 Hz"
     collision_role: none
     notes: "Title, hub, combat and result loops plus cached runtime one-shots; smoke_audio verifies non-silent PCM and loop metadata."
+
+  - asset_id: UIKIT-012-v5-command-tabs
+    name: "Complete authored command and tab controls"
+    category: ui
+    asset_kind: ui_component_atlas
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_parse_smoke_and_current_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_lock_sha256: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-012-v5-command-tabs-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-012-v5-command-tabs/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-012-v5-command-tabs/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-012-v5-command-tabs/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-012-v5-command-tabs/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-012-v5-command-tabs.yaml"
+    runtime_refs: ["scripts/ui/raster_button.gd", "scripts/ui/van_mong_component_kit.gd"]
+    runtime_evidence: ["production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png", "production/playtests/frontend/loadout-phone.png"]
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform-fixed-aspect-inside-native-basebutton
+      aspect_ratio_policy: "complete component only; no manual cap/clasp assembly and no nine-slice"
+    hashes:
+      raw_sha256: "4d96d813909479590346d1d9b88ec80c0130c9c17197b554d1e610e75dfedc96"
+      processed_sha256: "23219bb0037b76b02a4a07d17ebf2401f98fa45c6b884b8d9d6579fc5942eae8"
+
+  - asset_id: UIKIT-013-v5-ritual-modals
+    name: "Distinct breakthrough, pause, ascension and broken-dao shrines"
+    category: ui
+    asset_kind: ui_ritual_modal_family
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_parse_smoke_and_current_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_lock_sha256: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-013-v5-ritual-modals-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-013-v5-ritual-modals/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-013-v5-ritual-modals/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-013-v5-ritual-modals/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-013-v5-ritual-modals.yaml"
+    runtime_refs: ["scripts/ui/frontend.gd", "scripts/ui/hud.gd"]
+    runtime_evidence: ["production/playtests/overhaul/upgrade-final.png", "production/playtests/overhaul/pause-final.png", "production/playtests/mobile-support/pause-phone.png", "production/playtests/frontend/results.png", "production/playtests/frontend/results-defeat-phone.png"]
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform-fixed-aspect
+      aspect_ratio_policy: "one complete silhouette per ritual state; authored plaque targets keep live BaseButtons"
+    hashes:
+      raw_sha256: "7f8803b4d25eb8cdb93ebee997a6ac941a6364f1fad739b8e9570c05329146ee"
+      processed_sha256: "f0ad08224af34d0e1967f8e0bded2b2a71a204a37a9e2c8892073660cee97d23"
+
+  - asset_id: UIKIT-014-v5-technique-folios
+    name: "Six illustrated doctrine and technique manuals"
+    category: ui
+    asset_kind: ui_folio_family
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_parse_smoke_and_current_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_lock_sha256: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-014-v5-technique-folios-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-014-v5-technique-folios/source/atlas-primary-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-014-v5-technique-folios/source/atlas-primary-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-014-v5-technique-folios/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-014-v5-technique-folios/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-014-v5-technique-folios.yaml"
+    runtime_refs: ["scripts/ui/frontend.gd", "scripts/ui/cultivation_choice_button.gd"]
+    runtime_evidence: ["production/playtests/frontend/loadout.png", "production/playtests/frontend/loadout-phone.png", "production/playtests/frontend/techniques.png", "production/playtests/frontend/techniques-phone.png", "production/playtests/overhaul/upgrade-final.png", "production/playtests/mobile-support/breakthrough-phone.png"]
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform-fixed-aspect
+      aspect_ratio_policy: "manual silhouette preserved; live title, rank, description and action remain within protected fields"
+    hashes:
+      raw_sha256: "00c9269bcb8228a9e18f81633fbcc969e9d44c67376b0a6132273f0b04571fc5"
+      processed_sha256: "b2cd909d7503ac2e6cee094f3422a28c493bacaf56624d7ada9680f878215621"
+
+  - asset_id: UIKIT-015-v5-ledger-hub
+    name: "Open achievement ledger and unequal sect-hub artifacts"
+    category: ui
+    asset_kind: ui_structural_family
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_parse_smoke_and_current_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_lock_sha256: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-015-v5-ledger-hub-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-015-v5-ledger-hub/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-015-v5-ledger-hub/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-015-v5-ledger-hub/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-015-v5-ledger-hub.yaml"
+    runtime_refs: ["scripts/ui/frontend.gd"]
+    runtime_evidence: ["production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png", "production/playtests/frontend/achievements.png", "production/playtests/frontend/achievements-phone.png"]
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform-fixed-aspect
+      aspect_ratio_policy: "identity, expedition, command rail and ledger retain separate silhouettes"
+    hashes:
+      raw_sha256: "bf180bac8d5d1c30a377335bd68e282a73a76cb557f20e0401d159ea07aa03a0"
+      processed_sha256: "b3f96fd6b9aaae773104db75b8c2c4c60ccd3d048c92b3d72f02a6d2cb968365"
+
+  - asset_id: UIKIT-016-v5-combat-hud
+    name: "Compact authored combat HUD and mobile medallions"
+    category: ui
+    asset_kind: ui_hud_family
+    status: integrated_pending_independent_visual_review
+    acceptance: alpha_parse_smoke_and_current_native_capture_pass
+    review_status: independent_visual_review_pending
+    style_version: "4.1.0"
+    style_lock_sha256: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    generation_provider: built_in_image_generation
+    generated_on: "2026-07-31"
+    release_ready: false
+    raw_file: "assets/raw/ui/UIKIT-016-v5-combat-hud-v001.png"
+    selected_file: "assets/generated/ui/UIKIT-016-v5-combat-hud/source/atlas-transparent.png"
+    processed_file: "assets/generated/ui/UIKIT-016-v5-combat-hud/source/atlas-transparent.png"
+    frames_dir: "assets/generated/ui/UIKIT-016-v5-combat-hud/runtime"
+    pipeline_meta: "assets/generated/ui/UIKIT-016-v5-combat-hud/pipeline-meta.json"
+    source_prompt: "assets/source-prompts/UIKIT-016-v5-combat-hud.yaml"
+    runtime_refs: ["scripts/ui/hud.gd", "scripts/ui/mobile_touch_controls.gd"]
+    runtime_evidence: ["production/playtests/overhaul/gameplay-final.png", "production/playtests/mobile-support/combat-phone.png", "production/playtests/mobile-support/boss-phone.png"]
+    presentation:
+      source_kind: generated-raster-atlas
+      render_mode: uniform-fixed-aspect
+      aspect_ratio_policy: "visible ornaments are compact inside unchanged >=64 px native hit targets"
+    hashes:
+      raw_sha256: "bab869eee40d60485449a47c7a3d77a1224ffab84bc6ea337d89afd1623ab2d1"
+      processed_sha256: "cb7e0cc61dc587c6c293853e272cc4210902a195ddfc4e164e5d357f6d290a3f"

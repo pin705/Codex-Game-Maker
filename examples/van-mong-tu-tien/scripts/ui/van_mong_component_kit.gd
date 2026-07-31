@@ -23,6 +23,10 @@ const JADE := Color("#55c9a6")
 const VIOLET := Color("#675078")
 const CRIMSON := Color("#b43d35")
 const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
+const AUTHORED_TAB_IDLE: Texture2D = preload("res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/button-primary-ink.png")
+const AUTHORED_TAB_SELECTED: Texture2D = preload("res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime/button-confirm-jade.png")
+const AUTHORED_SLOT_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-010-v4-controls/runtime/inventory-slot-square.png")
+const AUTHORED_TOOLTIP_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-010-v4-controls/runtime/tooltip-comparison-paper.png")
 
 # Compatibility-only atlas coordinates. They are intentionally not used by the
 # default component factories below.
@@ -138,7 +142,21 @@ static func ritual_nine_patch(parent: Control, region_name: String, rect: Rect2,
 
 
 static func panel(parent: Control, rect: Rect2, region_name := "command", tint := Color.WHITE) -> Control:
-	return _native_surface(parent, region_name, rect, tint)
+	var surface := _native_surface(parent, region_name, rect, tint)
+	if region_name == "tooltip" and AUTHORED_TOOLTIP_FRAME != null:
+		var authored := NinePatchRect.new()
+		authored.name = "AuthoredTooltipComparisonFrame"
+		authored.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		authored.texture = AUTHORED_TOOLTIP_FRAME
+		authored.set_patch_margin(SIDE_LEFT, 52)
+		authored.set_patch_margin(SIDE_TOP, 48)
+		authored.set_patch_margin(SIDE_RIGHT, 52)
+		authored.set_patch_margin(SIDE_BOTTOM, 48)
+		authored.draw_center = true
+		authored.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		authored.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		surface.add_child(authored)
+	return surface
 
 
 static func tab(parent: Control, caption: String, rect: Rect2, selected: bool, callback: Callable) -> Button:
@@ -148,6 +166,17 @@ static func tab(parent: Control, caption: String, rect: Rect2, selected: bool, c
 	var frame := _native_surface(button, "tabs", Rect2(Vector2.ZERO, rect.size), Color.WHITE, selected)
 	frame.name = "TabSurface"
 	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var tab_texture := AUTHORED_TAB_SELECTED if selected else AUTHORED_TAB_IDLE
+	if tab_texture != null:
+		var authored := TextureRect.new()
+		authored.name = "CompleteAuthoredTab"
+		authored.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		authored.texture = tab_texture
+		authored.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		authored.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		authored.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		authored.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		frame.add_child(authored)
 
 	var label := Label.new()
 	label.name = "TabCaption"
@@ -200,6 +229,28 @@ static func item_slot(
 		selected
 	)
 	button.add_child(frame)
+	# The authored slot is a fixed-aspect object, not stretchable chrome. Reserve
+	# a separate caption band on editorial/desktop cards so live item names never
+	# cross its lower bronze clamp. Compact phone slots keep the full target for
+	# the square art and expose rarity only.
+	var caption_height := 40.0 if show_title else 0.0
+	var art_area_height := maxf(64.0, rect.size.y - caption_height)
+	var frame_width := minf(rect.size.x - 6.0, art_area_height - 4.0)
+	var authored_rect := Rect2(
+		Vector2((rect.size.x - frame_width) * 0.5, 2.0),
+		Vector2(frame_width, art_area_height - 4.0)
+	)
+	if AUTHORED_SLOT_FRAME != null:
+		var authored := TextureRect.new()
+		authored.name = "AuthoredInventorySlot"
+		authored.position = authored_rect.position
+		authored.size = authored_rect.size
+		authored.texture = AUTHORED_SLOT_FRAME
+		authored.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		authored.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		authored.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		authored.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		frame.add_child(authored)
 
 	if icon != null:
 		var icon_rect := TextureRect.new()
@@ -211,15 +262,15 @@ static func item_slot(
 		icon_rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon_rect)
-		icon_rect.position = Vector2(rect.size.x * 0.10, rect.size.y * 0.07)
-		icon_rect.size = Vector2(rect.size.x * 0.80, rect.size.y * (0.57 if show_title else 0.68))
+		icon_rect.position = authored_rect.position + Vector2(authored_rect.size.x * 0.15, authored_rect.size.y * 0.09)
+		icon_rect.size = Vector2(authored_rect.size.x * 0.70, authored_rect.size.y * 0.56)
 
 	var rarity_label := Label.new()
 	rarity_label.name = "Rarity"
 	rarity_label.z_index = 3
 	rarity_label.text = rarity.to_upper()
-	rarity_label.position = Vector2(12.0, rect.size.y * (0.77 if not show_title else 0.61))
-	rarity_label.size = Vector2(rect.size.x - 24.0, 22.0)
+	rarity_label.position = Vector2(12.0, authored_rect.position.y + authored_rect.size.y * 0.64)
+	rarity_label.size = Vector2(rect.size.x - 24.0, 20.0)
 	rarity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rarity_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	rarity_label.add_theme_font_override(&"font", ACTION_FONT)
@@ -233,13 +284,14 @@ static func item_slot(
 		title_label.name = "ItemTitle"
 		title_label.z_index = 3
 		title_label.text = title
-		title_label.position = Vector2(12.0, rect.size.y * 0.73)
-		title_label.size = Vector2(rect.size.x - 24.0, rect.size.y * 0.20)
+		title_label.position = Vector2(10.0, art_area_height + 1.0)
+		title_label.size = Vector2(rect.size.x - 20.0, rect.size.y - art_area_height - 3.0)
 		title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		title_label.clip_text = true
 		title_label.add_theme_font_override(&"font", ACTION_FONT)
-		title_label.add_theme_font_size_override(&"font_size", maxi(14, int(round(14.0 * text_scale))))
+		var preferred_size := maxi(14, int(round(14.0 * text_scale)))
+		title_label.add_theme_font_size_override(&"font_size", _fitted_font_size(title, rect.size.x - 24.0, preferred_size, 12))
 		title_label.add_theme_color_override(&"font_color", PAPER)
 		title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(title_label)

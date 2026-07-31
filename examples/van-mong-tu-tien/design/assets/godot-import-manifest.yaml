@@ -1,24 +1,23 @@
 schema: "codex-game-maker.godot-import-manifest.v1"
 project: van-mong-tu-tien
-engine: "Godot 4.4"
-updated: "2026-07-30"
+engine: "Godot 4.6.2"
+updated: "2026-07-31"
 style_lock:
   path: "design/art/style-lock.json"
-  style_version: "3.0.0"
-  style_lock_sha256: "0d1b060efbb561c8625b13cd07912a49808ec704ce1d0db8ebf616d231d109da"
-  art_bible_sha256: "2ae2550201bd145ffa4972d96738fd8b90ef21e582f014e66623bf277ff7f2b1"
-  current_unsealed_art_bible_sha256: "adb4c66b770941446061c202091f97cca1f78212457782baf9107b1fd99f81d2"
-  reseal_status: deferred_until_full_v3_capture_acceptance
-  binding_note: "The version/digest and sealed art-bible hash are preserved; this additive metadata batch intentionally does not reseal the lock."
+  status: locked
+  style_version: "4.1.0"
+  style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+  style_lock_file_sha256: "f3e0e7d832138f1a9543021bc0ee922b74f00ed86c26418fb2a13293a96d2837"
+  art_bible_sha256: "8d3718447ee5292a68528d8310791ea68e7dcb40c3dce4e385c078f8484763ea"
+  binding_note: "Locked V4.1 master-board identity; generated UI keeps all text, values, icons, focus and input live in Godot."
 runtime_bridge: "scripts/gameplay/runtime_visuals.gd"
 export_filter_reference: "https://docs.godotengine.org/en/4.4/tutorials/export/exporting_projects.html#resource-options"
 verification_note: >-
-  The current V3 family has a clean Godot 4.6.2 import/parse, native 1600x900
-  and 844x390 captures, and a fresh served Chromium export. UIKIT-007 now binds
-  the boss bar; UIKIT-008, PORTRAIT-001/002 and ACHIEVEICON-001 are imported and
-  source-wired; bundled Be Vietnam Pro/Literata render current Vietnamese copy.
-  Independent visual review, cross-browser, manual balance, audio listening and
-  physical-device QA remain required.
+  The V4.1/V5 UIKIT-009 through UIKIT-016 families import through Godot 4.6.2
+  and are bound to current desktop and 844x390 renderer captures. Runtime text,
+  values, focus and input stay native. Independent visual review, refreshed Web
+  evidence, cross-browser, manual balance, audio listening and physical-device
+  QA remain required.
 
 imports:
   - asset_id: KEYART-001
@@ -513,6 +512,113 @@ imports:
       - "production/playtests/frontend/settings.png"
     verification: "All six controls import and render in current native/Web surfaces; independent review remains pending"
 
+  - asset_id: UIKIT-009-v4-structural
+    status: integrated_pending_independent_visual_review
+    style_version: "4.1.0"
+    style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    source_prompt: "assets/source-prompts/UIKIT-009-v4-structural.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-009-v4-structural/pipeline-meta.json"
+    raw_source: "assets/raw/ui/UIKIT-009-v4-structural-atlas-v001.png"
+    accepted_source: "assets/generated/ui/UIKIT-009-v4-structural/source/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/UIKIT-009-v4-structural/runtime"
+    runtime_components:
+      - "major_lacquer_panel.png"
+      - "paper_folio.png"
+      - "header_plaque.png"
+      - "result_modal_frame.png"
+    target_scene: "scenes/main.tscn"
+    target_scripts:
+      - "scripts/ui/frontend.gd"
+    target_nodes: "V4 frontend structural TextureRect and bounded NinePatchRect layers"
+    load_policy: "Hard preload from committed runtime crops; small panels keep native fallback geometry"
+    texture_filter: linear
+    stretch_mode: "bounded nine-slice for major/result frames; KEEP_ASPECT_CENTERED for folio/header"
+    collision_role: none
+    import_verified: true
+    alpha_verification: "RGBA; all crop corners transparent; visible magenta residue zero"
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/title-phone.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
+      - "production/playtests/frontend/results.png"
+    verification: "Godot 4.6.2 import/parse and current native frontend captures pass; independent review remains pending"
+
+  - asset_id: UIKIT-010-v4-controls
+    status: integrated_pending_independent_visual_review
+    style_version: "4.1.0"
+    style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    source_prompt: "assets/source-prompts/UIKIT-010-v4-controls.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-010-v4-controls/pipeline-meta.json"
+    raw_source: "assets/raw/ui/UIKIT-010-v4-controls-atlas-v001.png"
+    accepted_source: "assets/generated/ui/UIKIT-010-v4-controls/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/UIKIT-010-v4-controls/runtime"
+    runtime_components:
+      - "button-primary-gold-nineslice.png"
+      - "button-secondary-paper-nineslice.png"
+      - "button-confirm-jade-nineslice.png"
+      - "button-destructive-cinnabar-nineslice.png"
+      - "tab-segment-nineslice.png"
+      - "inventory-slot-square.png"
+      - "tooltip-comparison-paper.png"
+      - "meter-frame-slim-nineslice.png"
+    target_scripts:
+      - "scripts/ui/raster_button.gd"
+      - "scripts/ui/van_mong_component_kit.gd"
+      - "scripts/ui/cultivation_meter.gd"
+      - "scripts/ui/cultivation_panel.gd"
+      - "scripts/ui/frontend.gd"
+    target_nodes: "RasterButton assembled chrome, tabs, inventory slots, tooltip and live progress meters"
+    load_policy: "Hard preload from runtime crops; compact controls keep scalable native fallback"
+    texture_filter: linear
+    stretch_mode: "fixed-aspect caps/clasps plus quiet center strip; uniform slots; bounded horizontal meter/tab stretch"
+    collision_role: none
+    import_verified: true
+    alpha_verification: "RGBA; transparent corners and outer edges; visible magenta residue zero"
+    known_warning: "Naive full-width button stretching is forbidden; runtime separates fixed ornaments from the stretchable strip"
+    verification_evidence:
+      - "production/playtests/frontend/title.png"
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/inventory.png"
+      - "production/playtests/frontend/inventory-phone.png"
+      - "production/playtests/overhaul/upgrade-final.png"
+    verification: "Godot 4.6.2 import/parse and current native control captures pass; independent review remains pending"
+
+  - asset_id: UIKIT-011-v4-hud
+    status: integrated_pending_independent_visual_review
+    style_version: "4.1.0"
+    style_digest: "f3860c3b2de68a5241f5705b66e1c0c327c94a14ad13a99e50898f76914b6024"
+    source_prompt: "assets/source-prompts/UIKIT-011-v4-hud.yaml"
+    pipeline_meta: "assets/generated/ui/UIKIT-011-v4-hud/pipeline-meta.json"
+    raw_source: "assets/raw/ui/UIKIT-011-v4-hud-atlas-v001.png"
+    accepted_source: "assets/generated/ui/UIKIT-011-v4-hud/source/atlas-transparent.png"
+    runtime_path: "res://assets/generated/ui/UIKIT-011-v4-hud/runtime"
+    runtime_components:
+      - "player_identity_plaque.png"
+      - "timer_plaque.png"
+      - "five_skill_rail.png"
+      - "joystick_medallion.png"
+      - "attack_medallion.png"
+      - "boss_crest.png"
+      - "boss_bar_channel.png"
+    target_scripts:
+      - "scripts/ui/hud.gd"
+      - "scripts/ui/mobile_touch_controls.gd"
+      - "scripts/gameplay/enemy.gd"
+    target_nodes: "Player/timer/skill HUD islands, touch controls and separated boss crest/channel"
+    load_policy: "Hard preload from runtime crops; all copy, values, fills, cooldowns and input remain live"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED or fixed-aspect custom draw only"
+    collision_role: none
+    import_verified: true
+    alpha_verification: "RGBA; source atlas corners transparent; fixed boss channel keeps intentional opaque rim pixels at its long-crop corners; visible magenta residue zero"
+    verification_evidence:
+      - "production/playtests/overhaul/gameplay-final.png"
+      - "production/playtests/overhaul/boss-final.png"
+      - "production/playtests/mobile-support/combat-phone.png"
+      - "production/playtests/mobile-support/boss-phone.png"
+    verification: "Godot 4.6.2 import/parse and current native desktop/phone HUD captures pass; independent review remains pending"
+
   - asset_id: PORTRAIT-001-bestiary-companion-atlas
     status: integrated_current_runtime_evidence
     style_version: "3.0.0"
@@ -545,19 +651,22 @@ imports:
     runtime_file: "assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/atlas-transparent.png"
     runtime_path: "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime"
     target_scripts:
+      - "scripts/ui/frontend.gd"
       - "scripts/ui/hud.gd"
       - "scripts/gameplay/enemy.gd"
-    target_nodes: "Player status medallion and Thiên Giác boss bar portrait"
+    target_nodes: "Hub cultivator identity, player status medallion and Thiên Giác boss bar portrait"
     load_policy: "Uniform identity portrait only; gameplay actors retain separate sprite sheets"
     texture_filter: linear
     collision_role: none
     import_verified: true
     verification_evidence:
+      - "production/playtests/frontend/hub.png"
+      - "production/playtests/frontend/hub-phone.png"
       - "production/playtests/overhaul/gameplay-final.png"
       - "production/playtests/overhaul/boss-final.png"
       - "production/playtests/mobile-support/combat-phone.png"
       - "production/playtests/mobile-support/boss-phone.png"
-    verification: "Both runtime crops import and remain inside desktop/phone HUD compositions"
+    verification: "Both runtime crops import and remain inside hub plus desktop/phone HUD compositions"
 
   - asset_id: ACHIEVEICON-001-six-seals
     status: integrated_current_runtime_evidence
@@ -814,7 +923,7 @@ imports:
       separate child nodes.
     texture_filter: linear
     stretch_mode: "KEEP_ASPECT_CENTERED; uniform only; nine-slice forbidden"
-    target_display_size: "330x450 breakthrough bounds and 366x704 permanent-technique bounds"
+    target_display_size: "214x236 phone and 270x340 desktop breakthrough bounds; 366x704 permanent-technique bounds"
     collision_role: none
     import_verified: true
     import_settings: "CompressedTexture2D; lossless compress mode 0; mipmaps off; fix_alpha_border on; premult_alpha off"
@@ -826,6 +935,7 @@ imports:
     verification_evidence:
       - "production/playtests/frontend/techniques.png"
       - "production/playtests/overhaul/upgrade-final.png"
+      - "production/playtests/mobile-support/breakthrough-phone.png"
     verification: "Godot imports resolve and current native captures show all three selected folio silhouettes without aspect distortion"
 
   - asset_id: UI-RUNTIME-001
@@ -918,3 +1028,78 @@ imports:
     collision_role: none
     import_verified: true
     verification: "Current V3 UI and typography complete import/parse plus native/Web capture; audio listening and independent visual review remain separate open gates"
+
+  - asset_id: UIKIT-012-v5-command-tabs
+    status: integrated_pending_independent_visual_review
+    source_prompt: "assets/source-prompts/UIKIT-012-v5-command-tabs.yaml"
+    accepted_source: "assets/generated/ui/UIKIT-012-v5-command-tabs/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-012-v5-command-tabs/runtime"
+    runtime_path: "res://assets/generated/ui/UIKIT-012-v5-command-tabs/runtime"
+    target_script: "scripts/ui/raster_button.gd; scripts/ui/van_mong_component_kit.gd"
+    target_node: "TextureRect inside native BaseButton"
+    load_policy: "preload complete fixed-aspect components"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED"
+    collision_role: none
+    import_verified: true
+    verification: "Godot 4.6.2 parse and current native desktop/844x390 captures; independent visual review pending"
+
+  - asset_id: UIKIT-013-v5-ritual-modals
+    status: integrated_pending_independent_visual_review
+    source_prompt: "assets/source-prompts/UIKIT-013-v5-ritual-modals.yaml"
+    accepted_source: "assets/generated/ui/UIKIT-013-v5-ritual-modals/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime"
+    runtime_path: "res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime"
+    target_script: "scripts/ui/frontend.gd; scripts/ui/hud.gd"
+    target_node: "TextureRect/CultivationPanel fixed art with live labels and BaseButtons"
+    load_policy: "preload complete state-specific shrine or veil"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED"
+    collision_role: none
+    import_verified: true
+    verification: "Godot 4.6.2 parse, runtime/flow/mobile/responsive smoke and current modal/result captures; independent visual review pending"
+
+  - asset_id: UIKIT-014-v5-technique-folios
+    status: integrated_pending_independent_visual_review
+    source_prompt: "assets/source-prompts/UIKIT-014-v5-technique-folios.yaml"
+    accepted_source: "assets/generated/ui/UIKIT-014-v5-technique-folios/source/atlas-primary-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-014-v5-technique-folios/runtime"
+    runtime_path: "res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime"
+    target_script: "scripts/ui/frontend.gd; scripts/ui/cultivation_choice_button.gd"
+    target_node: "fixed-aspect TextureRect inside native Button/composition"
+    load_policy: "preload school-specific illustrated manual"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED"
+    collision_role: none
+    import_verified: true
+    verification: "Godot 4.6.2 parse and current loadout/technique/breakthrough captures; independent visual review pending"
+
+  - asset_id: UIKIT-015-v5-ledger-hub
+    status: integrated_pending_independent_visual_review
+    source_prompt: "assets/source-prompts/UIKIT-015-v5-ledger-hub.yaml"
+    accepted_source: "assets/generated/ui/UIKIT-015-v5-ledger-hub/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime"
+    runtime_path: "res://assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime"
+    target_script: "scripts/ui/frontend.gd"
+    target_node: "aspect-fitted TextureRect plus live content nodes"
+    load_policy: "load authored identity, expedition, command and ledger artifacts"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED"
+    collision_role: none
+    import_verified: true
+    verification: "Godot 4.6.2 parse, responsive 64 px target checks and current hub/achievement captures; independent visual review pending"
+
+  - asset_id: UIKIT-016-v5-combat-hud
+    status: integrated_pending_independent_visual_review
+    source_prompt: "assets/source-prompts/UIKIT-016-v5-combat-hud.yaml"
+    accepted_source: "assets/generated/ui/UIKIT-016-v5-combat-hud/source/atlas-transparent.png"
+    runtime_file: "assets/generated/ui/UIKIT-016-v5-combat-hud/runtime"
+    runtime_path: "res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime"
+    target_script: "scripts/ui/hud.gd; scripts/ui/mobile_touch_controls.gd"
+    target_node: "fixed-aspect HUD TextureRect and custom-drawn touch control"
+    load_policy: "preload compact player/timer/rail/medallions; boss channel remains unused"
+    texture_filter: linear
+    stretch_mode: "KEEP_ASPECT_CENTERED"
+    collision_role: none
+    import_verified: true
+    verification: "Godot 4.6.2 parse and mobile smoke prove >=64 px targets with smaller 73.296/54.864 px ornaments; independent visual review pending"

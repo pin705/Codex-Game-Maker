@@ -42,9 +42,11 @@ const RASTER_BUTTON := preload("res://scripts/ui/raster_button.gd")
 const COMPONENT_KIT := preload("res://scripts/ui/van_mong_component_kit.gd")
 const SKILL_ICON_ROOT := "res://assets/generated/ui/SKILLICON-001-five-formation/runtime/"
 const PLAYER_PORTRAIT_PATH := "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/player.png"
-const HUD_PLAYER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/player_identity_plaque.png")
-const HUD_TIMER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/timer_plaque.png")
-const HUD_SKILL_RAIL: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/five_skill_rail.png")
+const HUD_PLAYER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/player-status-island.png")
+const HUD_TIMER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/timer-plaque.png")
+const HUD_SKILL_RAIL: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/five-skill-rail.png")
+const UPGRADE_VEIL: Texture2D = preload("res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/breakthrough-veil.png")
+const PAUSE_SHRINE: Texture2D = preload("res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/pause-meditation-wide.png")
 const BODY_FONT := preload("res://assets/fonts/BeVietnamPro-Regular.ttf")
 const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
 const DISPLAY_FONT := preload("res://assets/fonts/Literata-Variable.ttf")
@@ -52,11 +54,14 @@ const DISPLAY_FONT := preload("res://assets/fonts/Literata-Variable.ttf")
 var root_control: Control
 var health_bar: ProgressBar
 var health_label: Label
+var health_name_label: Label
 var xp_bar: ProgressBar
+var xp_name_label: Label
 var level_label: Label
 var realm_label: Label
 var timer_label: Label
 var kills_label: Label
+var clock_caption_label: Label
 var pulse_bar: ProgressBar
 var pulse_label: Label
 var objective_label: Label
@@ -66,9 +71,10 @@ var time_plaque: Control
 var objective_strip: Control
 var pulse_plaque: Control
 var skill_strip: Control
-var life_margin: MarginContainer
+var life_content: Control
 var player_portrait_frame: TextureRect
 var player_portrait: TextureRect
+var time_content: Control
 var skill_rail_chrome: Control
 var skill_slots: Array[Control] = []
 var skill_frames: Array[Control] = []
@@ -84,6 +90,8 @@ var upgrade_overlay: Control
 var upgrade_cards: HBoxContainer
 var upgrade_column: VBoxContainer
 var upgrade_halo: Control
+var upgrade_eyebrow: Label
+var upgrade_title: Label
 var upgrade_hint: Label
 var pause_overlay: Control
 var pause_card: Control
@@ -222,64 +230,45 @@ func _build_top_hud() -> void:
 	# The generated plaque already owns the jade/bronze portrait socket. Runtime
 	# portrait, labels and meters remain separate so localization and values stay
 	# live while the authored material is never stretched out of proportion.
+	# UIKIT-016 owns the compact portrait/status illustration as one optical
+	# island. A second portrait layer would duplicate the face and cheapen the
+	# composition, so identity remains inside the authored fixed asset here.
 	player_portrait_frame = null
-	if ResourceLoader.exists(PLAYER_PORTRAIT_PATH):
-		var portrait_loaded: Variant = load(PLAYER_PORTRAIT_PATH)
-		if portrait_loaded is Texture2D:
-			player_portrait = TextureRect.new()
-			player_portrait.name = "PlayerPortrait"
-			player_portrait.position = Vector2(27.0, 27.0)
-			player_portrait.size = Vector2(76.0, 94.0)
-			player_portrait.texture = portrait_loaded as Texture2D
-			player_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			player_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			player_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-			player_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			life_panel.material_root.add_child(player_portrait)
+	player_portrait = null
 
-	life_margin = MarginContainer.new()
-	life_margin.add_theme_constant_override("margin_left", 112)
-	life_margin.add_theme_constant_override("margin_right", 16)
-	life_margin.add_theme_constant_override("margin_top", 28)
-	life_margin.add_theme_constant_override("margin_bottom", 30)
-	life_plaque.add_child(life_margin)
-	var life_column := VBoxContainer.new()
-	life_column.add_theme_constant_override("separation", 2)
-	life_margin.add_child(life_column)
-	var identity_row := HBoxContainer.new()
-	identity_row.add_theme_constant_override("separation", 8)
-	life_column.add_child(identity_row)
+	# The authored plaque has two deliberately narrow lacquer troughs. Keep every
+	# live field in explicit protected rectangles instead of asking a VBox to
+	# redistribute them across the crest, portrait ring and ornamental end caps.
+	life_content = Control.new()
+	life_content.name = "LifePlaqueLiveContent"
+	life_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	life_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	life_panel.material_root.add_child(life_content)
 	realm_label = _label("PHÀM NHÂN", 17, PAPER, true)
-	realm_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	identity_row.add_child(realm_label)
+	realm_label.clip_text = true
+	life_content.add_child(realm_label)
 	level_label = _label("TU VI 01", 12, Color(GOLD, 0.82), true)
+	level_label.clip_text = true
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	identity_row.add_child(level_label)
+	life_content.add_child(level_label)
 
-	var health_row := HBoxContainer.new()
-	health_row.add_theme_constant_override("separation", 6)
-	life_column.add_child(health_row)
-	var health_name := _label("MỆNH", 11, Color(CRIMSON, 0.92), true)
-	health_name.custom_minimum_size = Vector2(38.0, 16.0)
-	health_row.add_child(health_name)
+	health_name_label = _label("MỆNH", 11, Color(CRIMSON, 0.92), true)
+	health_name_label.clip_text = true
+	life_content.add_child(health_name_label)
 	health_bar = _progress_bar(CRIMSON, 120.0)
-	health_bar.custom_minimum_size = Vector2(130.0, 12.0)
-	health_row.add_child(health_bar)
+	life_content.add_child(health_bar)
 	health_label = _label("120/120", 11, PAPER)
-	health_label.custom_minimum_size = Vector2(58.0, 16.0)
+	health_label.clip_text = true
 	health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	health_row.add_child(health_label)
+	life_content.add_child(health_label)
 
-	var xp_row := HBoxContainer.new()
-	xp_row.add_theme_constant_override("separation", 6)
-	life_column.add_child(xp_row)
-	var xp_name := _label("KHÍ", 11, Color(JADE, 0.92), true)
-	xp_name.custom_minimum_size = Vector2(38.0, 16.0)
-	xp_row.add_child(xp_name)
+	xp_name_label = _label("KHÍ", 11, Color(JADE, 0.92), true)
+	xp_name_label.clip_text = true
+	life_content.add_child(xp_name_label)
 	xp_bar = _progress_bar(JADE, 18.0)
-	xp_bar.custom_minimum_size = Vector2(190.0, 9.0)
-	xp_row.add_child(xp_bar)
+	life_content.add_child(xp_bar)
+	_layout_life_plaque_content(false)
 
 	var time_panel: CultivationPanel = CULTIVATION_PANEL.new()
 	time_plaque = time_panel
@@ -287,30 +276,30 @@ func _build_top_hud() -> void:
 	time_panel.configure(CultivationPanel.FrameKind.HUD, Color("#081719", 0.89), Color(GOLD, 0.48), 5)
 	time_panel.use_authored_fixed(HUD_TIMER_FRAME)
 	time_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	time_plaque.offset_left = -208.0
+	time_plaque.offset_left = -272.0
 	time_plaque.offset_top = 24.0
 	time_plaque.offset_right = -32.0
-	time_plaque.offset_bottom = 96.0
+	time_plaque.offset_bottom = 99.0
 	top_hud.add_child(time_plaque)
-	var time_margin := MarginContainer.new()
-	time_margin.add_theme_constant_override("margin_left", 13)
-	time_margin.add_theme_constant_override("margin_right", 13)
-	time_margin.add_theme_constant_override("margin_top", 8)
-	time_margin.add_theme_constant_override("margin_bottom", 7)
-	time_plaque.add_child(time_margin)
-	var stats := VBoxContainer.new()
-	stats.alignment = BoxContainer.ALIGNMENT_CENTER
-	stats.add_theme_constant_override("separation", -1)
-	time_margin.add_child(stats)
-	var clock_caption := _label("THIÊN KIẾP", 10, Color(GOLD, 0.80), true)
-	clock_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stats.add_child(clock_caption)
+	time_content = Control.new()
+	time_content.name = "TimePlaqueLiveContent"
+	time_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	time_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	time_panel.material_root.add_child(time_content)
+	clock_caption_label = _label("THIÊN KIẾP", 10, Color(GOLD, 0.80), true)
+	clock_caption_label.clip_text = true
+	clock_caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	time_content.add_child(clock_caption_label)
 	timer_label = _label("04:00", 21, PAPER, true)
+	timer_label.clip_text = true
 	timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stats.add_child(timer_label)
+	timer_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	time_content.add_child(timer_label)
 	kills_label = _label("0 YÊU VẬT", 10, PAPER_DIM)
+	kills_label.clip_text = true
 	kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stats.add_child(kills_label)
+	time_content.add_child(kills_label)
+	_layout_time_plaque_content(false)
 
 	var pulse_panel: CultivationPanel = CULTIVATION_PANEL.new()
 	pulse_plaque = pulse_panel
@@ -369,14 +358,16 @@ func _apply_safe_layout() -> void:
 	if life_plaque != null:
 		life_plaque.offset_left = safe.position.x
 		life_plaque.offset_top = top
-		life_plaque.offset_right = safe.position.x + 390.0
-		life_plaque.offset_bottom = top + 182.0
+		life_plaque.offset_right = safe.position.x + 360.0
+		life_plaque.offset_bottom = top + 124.0
+		_layout_life_plaque_content(false)
 	var pause_reserve := 96.0 if _touch_layout_enabled else 0.0
 	if time_plaque != null:
 		time_plaque.offset_right = -(right_outset + pause_reserve)
-		time_plaque.offset_left = time_plaque.offset_right - 176.0
+		time_plaque.offset_left = time_plaque.offset_right - 180.0
 		time_plaque.offset_top = top
-		time_plaque.offset_bottom = top + 72.0
+		time_plaque.offset_bottom = top + 84.0
+		_layout_time_plaque_content(false)
 	if pulse_plaque != null:
 		pulse_plaque.offset_right = -(right_outset + pause_reserve)
 		pulse_plaque.offset_left = pulse_plaque.offset_right - 180.0
@@ -424,30 +415,27 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 	if life_plaque != null:
 		life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		life_plaque.position = Vector2(safe.position.x, safe.position.y)
-		life_plaque.size = Vector2(260.0, 121.0)
-	if life_margin != null:
-		life_margin.add_theme_constant_override("margin_left", 76)
-		life_margin.add_theme_constant_override("margin_right", 10)
-		life_margin.add_theme_constant_override("margin_top", 16)
-		life_margin.add_theme_constant_override("margin_bottom", 18)
-	if health_label != null:
-		health_label.hide()
+		life_plaque.size = Vector2(210.0, 82.0)
+		_layout_life_plaque_content(true)
 	if player_portrait_frame != null:
 		player_portrait_frame.show()
-		player_portrait_frame.position = Vector2(5.0, 6.0)
-		player_portrait_frame.size = Vector2(56.0, 56.0)
+		player_portrait_frame.position = Vector2(4.0, 5.0)
+		player_portrait_frame.size = Vector2(48.0, 48.0)
 	if player_portrait != null:
 		player_portrait.show()
-		player_portrait.position = Vector2(18.0, 18.0)
-		player_portrait.size = Vector2(50.0, 62.0)
+		player_portrait.position = Vector2(15.0, 15.0)
+		player_portrait.size = Vector2(43.0, 53.0)
 	if time_plaque != null:
 		time_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		time_plaque.position = Vector2(safe.end.x - 176.0, safe.position.y)
-		time_plaque.size = Vector2(96.0, 64.0)
+		# Keep the fixed 368:115 timer art at source aspect and leave a clean lane
+		# for the 64 px pause medallion to its right.
+		time_plaque.position = Vector2(safe.end.x - 182.0, safe.position.y)
+		time_plaque.size = Vector2(112.0, 52.0)
+		_layout_time_plaque_content(true)
 	if pulse_plaque != null:
 		pulse_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		pulse_plaque.position = Vector2(safe.get_center().x - 65.0, safe.position.y)
-		pulse_plaque.size = Vector2(130.0, 44.0)
+		pulse_plaque.position = Vector2(safe.get_center().x - 50.0, safe.position.y)
+		pulse_plaque.size = Vector2(100.0, 34.0)
 	if objective_strip != null:
 		# The touch layout already explains movement and active skill state through
 		# the controls/rail.  A second sentence under the rail only muddies combat.
@@ -455,7 +443,7 @@ func _apply_phone_hud_layout(logical_safe: Rect2) -> void:
 	if skill_strip != null:
 		skill_strip.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		skill_strip.scale = Vector2.ONE * device_scale
-		skill_strip.position = Vector2(safe.get_center().x - 166.0, safe.end.y - 80.0) * device_scale
+		skill_strip.position = Vector2(safe.get_center().x - 130.0, safe.end.y - 62.0) * device_scale
 		_layout_phone_skill_strip()
 	_apply_upgrade_layout_for_viewport(device_scale, physical)
 	_apply_pause_layout_for_viewport(device_scale, physical)
@@ -471,13 +459,7 @@ func _restore_desktop_hud_layout() -> void:
 	pulse_bar.custom_minimum_size = Vector2(148.0, 8.0)
 	if life_plaque != null:
 		life_plaque.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	if life_margin != null:
-		life_margin.add_theme_constant_override("margin_left", 112)
-		life_margin.add_theme_constant_override("margin_right", 16)
-		life_margin.add_theme_constant_override("margin_top", 28)
-		life_margin.add_theme_constant_override("margin_bottom", 30)
-	if health_label != null:
-		health_label.show()
+		_layout_life_plaque_content(false)
 	if player_portrait_frame != null:
 		player_portrait_frame.show()
 		player_portrait_frame.position = Vector2(8.0, 11.0)
@@ -488,6 +470,7 @@ func _restore_desktop_hud_layout() -> void:
 		player_portrait.size = Vector2(76.0, 94.0)
 	if time_plaque != null:
 		time_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		_layout_time_plaque_content(false)
 	if pulse_plaque != null:
 		pulse_plaque.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	if objective_strip != null:
@@ -502,6 +485,53 @@ func _restore_desktop_hud_layout() -> void:
 	_apply_pause_layout_for_viewport(1.0, root_control.size)
 
 
+func _layout_life_plaque_content(phone: bool) -> void:
+	if life_content == null or life_plaque == null:
+		return
+	if phone:
+		_set_hud_rect(realm_label, Vector2(70.0, 15.0), Vector2(78.0, 17.0), 11)
+		_set_hud_rect(level_label, Vector2(150.0, 16.0), Vector2(42.0, 16.0), 8)
+		_set_hud_rect(health_name_label, Vector2(70.0, 34.0), Vector2(30.0, 14.0), 9)
+		_set_hud_rect(health_bar, Vector2(100.0, 37.0), Vector2(90.0, 8.0))
+		_set_hud_rect(xp_name_label, Vector2(70.0, 51.0), Vector2(26.0, 14.0), 9)
+		_set_hud_rect(xp_bar, Vector2(96.0, 54.0), Vector2(94.0, 7.0))
+		health_label.hide()
+	else:
+		_set_hud_rect(realm_label, Vector2(134.0, 24.0), Vector2(116.0, 22.0), 15)
+		_set_hud_rect(level_label, Vector2(252.0, 25.0), Vector2(70.0, 20.0), 11)
+		_set_hud_rect(health_name_label, Vector2(134.0, 51.0), Vector2(42.0, 18.0), 12)
+		_set_hud_rect(health_bar, Vector2(176.0, 54.0), Vector2(88.0, 11.0))
+		_set_hud_rect(health_label, Vector2(268.0, 51.0), Vector2(58.0, 18.0), 11)
+		_set_hud_rect(xp_name_label, Vector2(134.0, 79.0), Vector2(36.0, 18.0), 12)
+		_set_hud_rect(xp_bar, Vector2(170.0, 82.0), Vector2(156.0, 9.0))
+		health_label.show()
+
+
+func _layout_time_plaque_content(phone: bool) -> void:
+	if time_content == null or time_plaque == null:
+		return
+	if phone:
+		_set_hud_rect(clock_caption_label, Vector2(42.0, 8.0), Vector2(62.0, 10.0), 7)
+		_set_hud_rect(timer_label, Vector2(40.0, 18.0), Vector2(66.0, 26.0), 16)
+		kills_label.hide()
+	else:
+		_set_hud_rect(clock_caption_label, Vector2(66.0, 14.0), Vector2(102.0, 10.0), 8)
+		_set_hud_rect(timer_label, Vector2(64.0, 25.0), Vector2(106.0, 28.0), 19)
+		_set_hud_rect(kills_label, Vector2(64.0, 54.0), Vector2(106.0, 11.0), 8)
+		kills_label.show()
+
+
+func _set_hud_rect(control: Control, position_value: Vector2, size_value: Vector2, font_size: int = 0) -> void:
+	if control == null:
+		return
+	control.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	control.custom_minimum_size = size_value
+	control.position = position_value
+	control.size = size_value
+	if font_size > 0:
+		control.add_theme_font_size_override("font_size", font_size)
+
+
 func _apply_upgrade_layout_for_viewport(device_scale: float, viewport_size: Vector2) -> void:
 	if upgrade_column == null or upgrade_cards == null or upgrade_halo == null:
 		return
@@ -510,21 +540,33 @@ func _apply_upgrade_layout_for_viewport(device_scale: float, viewport_size: Vect
 		upgrade_halo.hide()
 		upgrade_column.scale = Vector2.ONE * device_scale
 		upgrade_column.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		upgrade_column.position = Vector2(20.0, 3.0) * device_scale
-		upgrade_column.size = Vector2(viewport_size.x - 40.0, viewport_size.y - 6.0)
-		upgrade_column.add_theme_constant_override("separation", 3)
-		upgrade_cards.custom_minimum_size = Vector2(viewport_size.x - 40.0, 266.0)
+		upgrade_column.position = Vector2(22.0, 6.0) * device_scale
+		upgrade_column.size = Vector2(viewport_size.x - 44.0, viewport_size.y - 12.0)
+		upgrade_column.add_theme_constant_override("separation", 2)
+		upgrade_cards.custom_minimum_size = Vector2(viewport_size.x - 44.0, 226.0)
 		upgrade_cards.add_theme_constant_override("separation", 8)
+		if upgrade_eyebrow != null:
+			upgrade_eyebrow.add_theme_font_size_override("font_size", 12)
+		if upgrade_title != null:
+			upgrade_title.add_theme_font_size_override("font_size", 25)
 		if upgrade_hint != null:
+			upgrade_hint.add_theme_font_size_override("font_size", 11)
 			upgrade_hint.text = "THỜI GIAN NGƯNG ĐỌNG  ·  CHẠM MỘT PHÙ LỤC ĐỂ LĨNH NGỘ"
 		for child in upgrade_cards.get_children():
 			if child is Control:
-				(child as Control).custom_minimum_size = Vector2(220.0, 266.0)
-				(child as Control).pivot_offset = Vector2(110.0, 133.0)
+				(child as Control).custom_minimum_size = Vector2(206.0, 226.0)
+				(child as Control).pivot_offset = Vector2(103.0, 113.0)
 			if child.has_method("set_touch_mode"):
 				child.call("set_touch_mode", true)
 		return
 	upgrade_halo.show()
+	upgrade_halo.set_anchors_preset(Control.PRESET_CENTER)
+	# UIKIT-013 is a complete fixed-aspect ritual veil, not a scalable panel.
+	# Keep its 726:482 silhouette intact behind the three illustrated folios.
+	upgrade_halo.offset_left = -540.0
+	upgrade_halo.offset_top = -359.0
+	upgrade_halo.offset_right = 540.0
+	upgrade_halo.offset_bottom = 359.0
 	upgrade_column.scale = Vector2.ONE
 	upgrade_column.set_anchors_preset(Control.PRESET_CENTER)
 	upgrade_column.offset_left = -480.0
@@ -534,7 +576,12 @@ func _apply_upgrade_layout_for_viewport(device_scale: float, viewport_size: Vect
 	upgrade_column.add_theme_constant_override("separation", 10)
 	upgrade_cards.custom_minimum_size = Vector2(860.0, 350.0)
 	upgrade_cards.add_theme_constant_override("separation", 18)
+	if upgrade_eyebrow != null:
+		upgrade_eyebrow.add_theme_font_size_override("font_size", 15)
+	if upgrade_title != null:
+		upgrade_title.add_theme_font_size_override("font_size", 30)
 	if upgrade_hint != null:
+		upgrade_hint.add_theme_font_size_override("font_size", 12)
 		upgrade_hint.text = "THỜI GIAN NGƯNG ĐỌNG   ·   CHỌN BẰNG CHUỘT HOẶC PHÍM 1 / 2 / 3"
 	for child in upgrade_cards.get_children():
 		if child is Control:
@@ -547,28 +594,36 @@ func _apply_upgrade_layout_for_viewport(device_scale: float, viewport_size: Vect
 func _apply_pause_layout_for_viewport(device_scale: float, viewport_size: Vector2) -> void:
 	if pause_card == null:
 		return
-	var card_size := Vector2(460.0, 276.0)
+	# The shrine is authored at 1324:964. Keep one logical composition and scale
+	# the whole object uniformly on phones so text, artwork and action plaques do
+	# not drift independently.
+	var card_size := Vector2(460.0, 335.0)
 	if _touch_layout_enabled and _is_phone_landscape_window():
-		card_size = Vector2(430.0, 258.0)
+		var visible_size := Vector2(356.0, 259.0)
+		var authored_scale := minf(visible_size.x / card_size.x, visible_size.y / card_size.y)
 		pause_card.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		pause_card.scale = Vector2.ONE * device_scale
-		pause_card.position = (viewport_size - card_size) * 0.5 * device_scale
+		pause_card.scale = Vector2.ONE * device_scale * authored_scale
+		pause_card.position = (viewport_size - card_size * authored_scale) * 0.5 * device_scale
 		pause_card.size = card_size
 		if pause_text != null:
-			pause_text.text = "Hành trình đã tạm dừng\nChạm TIẾP TỤC để trở lại chiến trận"
+			pause_text.text = "Hành trình đã tạm dừng"
 		for node in pause_card.find_children("*", "Button", true, false):
-			(node as Button).custom_minimum_size.y = 64.0
+			# 84 logical px becomes ~65 physical px after the authored phone scale.
+			(node as Button).custom_minimum_size.y = 84.0
+			if node.has_method("set_visual_inset"):
+				node.call("set_visual_inset", 3.0, 5.0)
 		return
-	pause_card.scale = Vector2.ONE
+	var desktop_scale := 1.24
+	pause_card.scale = Vector2.ONE * desktop_scale
 	pause_card.set_anchors_preset(Control.PRESET_CENTER)
-	pause_card.offset_left = -card_size.x * 0.5
-	pause_card.offset_top = -card_size.y * 0.5
-	pause_card.offset_right = card_size.x * 0.5
-	pause_card.offset_bottom = card_size.y * 0.5
+	pause_card.offset_left = -card_size.x * desktop_scale * 0.5
+	pause_card.offset_top = -card_size.y * desktop_scale * 0.5
+	pause_card.offset_right = pause_card.offset_left + card_size.x
+	pause_card.offset_bottom = pause_card.offset_top + card_size.y
 	if pause_text != null:
-		pause_text.text = "Dòng thời gian đã dừng lại\nP  tiếp tục   ·   R  nhập thế lại"
+		pause_text.text = "Dòng thời gian đã dừng lại"
 	for node in pause_card.find_children("*", "Button", true, false):
-		(node as Button).custom_minimum_size.y = 56.0
+		(node as Button).custom_minimum_size.y = 84.0
 
 func _build_objective_strip() -> void:
 	var strip: CultivationPanel = CULTIVATION_PANEL.new()
@@ -686,22 +741,22 @@ func _build_skill_strip() -> void:
 func _layout_phone_skill_strip() -> void:
 	if skill_strip == null:
 		return
-	skill_strip.size = Vector2(332.0, 76.0)
+	skill_strip.size = Vector2(260.0, 58.0)
 	if skill_rail_chrome != null:
 		skill_rail_chrome.position = Vector2.ZERO
-		skill_rail_chrome.size = Vector2(332.0, 76.0)
-	var centres := [38.0, 106.0, 173.0, 240.0, 308.0]
+		skill_rail_chrome.size = Vector2(260.0, 58.0)
+	var centres := [29.0, 79.5, 130.0, 180.5, 231.0]
 	for index in mini(skill_slots.size(), centres.size()):
 		var slot := skill_slots[index]
-		slot.position = Vector2(centres[index] - 31.0, 2.0)
-		slot.size = Vector2(62.0, 68.0)
+		slot.position = Vector2(centres[index] - 23.0, 1.0)
+		slot.size = Vector2(46.0, 52.0)
 		if index < skill_frames.size():
 			skill_frames[index].position = Vector2(3.0, 0.0)
-			skill_frames[index].size = Vector2(56.0, 56.0)
+			skill_frames[index].size = Vector2(40.0, 40.0)
 		if index < skill_icons.size():
 			var icon := skill_icons[index]
-			icon.position = Vector2(7.0, 3.0)
-			icon.size = Vector2(48.0, 48.0)
+			icon.position = Vector2(5.0, 2.0)
+			icon.size = Vector2(36.0, 36.0)
 		if index < skill_key_labels.size():
 			skill_key_labels[index].hide()
 		if index < skill_name_labels.size():
@@ -808,11 +863,12 @@ func _build_upgrade_overlay() -> void:
 	var ritual_halo: CultivationPanel = CULTIVATION_PANEL.new()
 	upgrade_halo = ritual_halo
 	ritual_halo.configure(CultivationPanel.FrameKind.SEAL, Color(0.0, 0.0, 0.0, 0.0), Color(GOLD, 0.60), 12)
+	ritual_halo.use_authored_fixed(UPGRADE_VEIL)
 	ritual_halo.set_anchors_preset(Control.PRESET_CENTER)
-	ritual_halo.offset_left = -240.0
-	ritual_halo.offset_top = -240.0
-	ritual_halo.offset_right = 240.0
-	ritual_halo.offset_bottom = 240.0
+	ritual_halo.offset_left = -540.0
+	ritual_halo.offset_top = -359.0
+	ritual_halo.offset_right = 540.0
+	ritual_halo.offset_bottom = 359.0
 	ritual_halo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	upgrade_overlay.add_child(ritual_halo)
 	var column := VBoxContainer.new()
@@ -826,9 +882,11 @@ func _build_upgrade_overlay() -> void:
 	column.add_theme_constant_override("separation", 10)
 	upgrade_overlay.add_child(column)
 	var eyebrow := _label("—  ĐẠO TÂM KHAI NGỘ  —", 15, GOLD, true)
+	upgrade_eyebrow = eyebrow
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(eyebrow)
 	var title := _label("LĨNH NGỘ CÔNG PHÁP", 30, PAPER, true)
+	upgrade_title = title
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(title)
 	var hint := _label("THỜI GIAN NGƯNG ĐỌNG   ·   CHỌN BẰNG CHUỘT HOẶC PHÍM 1 / 2 / 3", 12, PAPER_DIM)
@@ -845,31 +903,51 @@ func _build_pause_overlay() -> void:
 	pause_overlay = _full_overlay(Color(0.01, 0.03, 0.035, 0.76))
 	pause_overlay.hide()
 	root_control.add_child(pause_overlay)
-	var card := _center_card(Vector2(460.0, 276.0), Color("#0b191b", 0.97), Color("#8a6730", 0.82))
-	pause_card = card
-	pause_overlay.add_child(card)
-	var content := _card_content(card, 28)
-	content.alignment = BoxContainer.ALIGNMENT_CENTER
-	var eyebrow := _label("—  NHẤT NIỆM VÔ TRẦN  —", 13, GOLD, true)
+	var shrine: CultivationPanel = CULTIVATION_PANEL.new()
+	shrine.name = "AuthoredPauseMeditationShrine"
+	shrine.configure(CultivationPanel.FrameKind.SCROLL, Color.TRANSPARENT, Color(GOLD, 0.78), 27)
+	shrine.use_authored_fixed(PAUSE_SHRINE)
+	shrine.set_anchors_preset(Control.PRESET_CENTER)
+	shrine.offset_left = -230.0
+	shrine.offset_top = -167.5
+	shrine.offset_right = 230.0
+	shrine.offset_bottom = 167.5
+	pause_card = shrine
+	pause_overlay.add_child(shrine)
+
+	var content := Control.new()
+	content.name = "PauseLiveContent"
+	content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shrine.material_root.add_child(content)
+
+	var eyebrow := _label("—  NHẤT NIỆM VÔ TRẦN  —", 14, BRONZE_INK, true)
+	eyebrow.position = Vector2(80.0, 180.0)
+	eyebrow.size = Vector2(300.0, 19.0)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(eyebrow)
-	var title := _label("TĨNH TÂM", 32, PAPER, true)
+	var title := _label("TĨNH TÂM", 28, PAPER_INK, true)
+	title.position = Vector2(80.0, 197.0)
+	title.size = Vector2(300.0, 38.0)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(title)
-	var text := _label("Dòng thời gian đã dừng lại\nP  tiếp tục   ·   R  nhập thế lại", 15, PAPER_DIM)
+	var text := _label("Dòng thời gian đã dừng lại\nP  tiếp tục   ·   R  nhập thế lại", 16, PAPER_COPY)
 	pause_text = text
+	text.position = Vector2(67.0, 231.0)
+	text.size = Vector2(326.0, 26.0)
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	content.add_child(text)
-	var actions := HBoxContainer.new()
-	actions.alignment = BoxContainer.ALIGNMENT_CENTER
-	actions.add_theme_constant_override("separation", 18)
-	content.add_child(actions)
-	var resume_button := _button("TIẾP TỤC", 16, Vector2(164.0, 56.0), RasterButton.ArtVariant.JADE)
+
+	# The lower plaques are part of the authored shrine. Native buttons cover a
+	# much larger invisible target while their live captions stay optically
+	# centered inside those plaques.
+	var resume_button := _art_target_button("TIẾP TỤC", 16, Rect2(54.0, 251.0, 151.0, 84.0))
 	resume_button.pressed.connect(func() -> void: Events.resume_requested.emit())
-	actions.add_child(resume_button)
-	var restart_button := _button("NHẬP THẾ LẠI", 15, Vector2(164.0, 56.0), RasterButton.ArtVariant.CRIMSON)
+	content.add_child(resume_button)
+	var restart_button := _art_target_button("NHẬP THẾ LẠI", 15, Rect2(255.0, 251.0, 151.0, 84.0))
 	restart_button.pressed.connect(func() -> void: Events.restart_requested.emit())
-	actions.add_child(restart_button)
+	content.add_child(restart_button)
 
 func _build_end_overlay() -> void:
 	end_overlay = _full_overlay(Color(0.01, 0.025, 0.03, 0.82))
@@ -949,7 +1027,7 @@ func _on_pulse_state_changed(remaining: float, cooldown: float) -> void:
 		pulse_label.text = ("KIẾM · %.1fs" if compact_phone else "[2] KIẾM TRẬN · %.1fs") % remaining
 		pulse_label.add_theme_color_override("font_color", PAPER_DIM)
 	if compact_phone and pulse_plaque != null:
-		pulse_plaque.size = Vector2(130.0, 44.0)
+		pulse_plaque.size = Vector2(116.0, 40.0)
 
 func _on_upgrade_options_presented(options: Array[Dictionary]) -> void:
 	visible_upgrade_ids.clear()
@@ -982,10 +1060,22 @@ func _upgrade_button(option: Dictionary, card_index: int = 0) -> Button:
 		str(option.get("title", "Công pháp")),
 		str(option.get("description", "")),
 		accent,
-		icon_texture
+		icon_texture,
+		_upgrade_folio_family(option_id)
 	)
 	card.pressed.connect(_on_upgrade_pressed.bind(option_id))
 	return card
+
+
+func _upgrade_folio_family(upgrade_id: StringName) -> int:
+	match upgrade_id:
+		&"sword_damage", &"attack_speed", &"extra_sword", &"piercing_sword", &"phoenix_blade", &"fallback_damage":
+			return 0
+		&"spirit_well", &"qi_pulse", &"cloud_step":
+			return 1
+		&"jade_body", &"life_stream", &"emergency_heal", &"fallback_vitality", &"fallback_regen":
+			return 2
+	return 1
 
 func _upgrade_icon(upgrade_id: StringName) -> Texture2D:
 	var path := ""
@@ -1142,6 +1232,40 @@ func _button(text_value: String, font_size: int, minimum: Vector2, variant: Rast
 	var button: RasterButton = RASTER_BUTTON.new()
 	button.configure(text_value, variant, minimum, font_size)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	return button
+
+
+func _art_target_button(text_value: String, font_size: int, rect: Rect2) -> Button:
+	var button := Button.new()
+	button.text = text_value
+	button.position = rect.position
+	button.size = rect.size
+	button.custom_minimum_size = rect.size
+	button.focus_mode = Control.FOCUS_ALL
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_override(&"font", ACTION_FONT)
+	button.add_theme_font_size_override(&"font_size", font_size)
+	button.add_theme_color_override(&"font_color", PAPER_INK)
+	button.add_theme_color_override(&"font_hover_color", Color("#0b4a40"))
+	button.add_theme_color_override(&"font_focus_color", Color("#0b4a40"))
+	button.add_theme_color_override(&"font_pressed_color", Color("#163b35"))
+	button.add_theme_constant_override(&"outline_size", 1)
+	button.add_theme_color_override(&"font_outline_color", Color(0.93, 0.87, 0.68, 0.18))
+	var empty := StyleBoxEmpty.new()
+	button.add_theme_stylebox_override(&"normal", empty)
+	button.add_theme_stylebox_override(&"pressed", empty)
+	button.add_theme_stylebox_override(&"disabled", empty)
+	var hover := StyleBoxFlat.new()
+	hover.bg_color = Color(JADE, 0.06)
+	hover.border_color = Color(GOLD, 0.48)
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		hover.set_border_width(side, 1)
+	hover.corner_radius_top_left = 8
+	hover.corner_radius_top_right = 8
+	hover.corner_radius_bottom_left = 8
+	hover.corner_radius_bottom_right = 8
+	button.add_theme_stylebox_override(&"hover", hover)
+	button.add_theme_stylebox_override(&"focus", hover)
 	return button
 
 func _spacer(height: float) -> Control:

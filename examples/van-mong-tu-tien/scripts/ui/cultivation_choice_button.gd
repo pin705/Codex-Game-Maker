@@ -1,9 +1,9 @@
 class_name CultivationChoiceButton
 extends Button
 
-## V4 breakthrough folio. The paper silhouette, seal and selection state are
-## native and scalable; artwork is restricted to the discipline icon so live
-## Vietnamese copy always owns a protected content rectangle.
+## V5 breakthrough folio inside the locked V4.1 direction. The complete
+## illustrated manual stays fixed-aspect; all Vietnamese copy and focus remain
+## live native nodes in the authored protected fields.
 
 class FocusOverlay:
 	extends Control
@@ -32,6 +32,11 @@ const TEXT_INK := Color("#17282a")
 const TEXT_DIM := Color("#46514b")
 const BODY_FONT := preload("res://assets/fonts/BeVietnamPro-Regular.ttf")
 const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
+const FOLIO_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/sword-formation-folio-a.png"),
+	preload("res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/spirit-vortex-folio-a.png"),
+	preload("res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/jade-body-folio-a.png"),
+]
 
 var card_index := 0
 var glyph_text := "+"
@@ -40,6 +45,7 @@ var rank_text := ""
 var description_text := ""
 var accent_color := JADE
 var icon_texture: Texture2D
+var folio_index := 0
 
 var number_label: Label
 var glyph_label: Label
@@ -47,6 +53,7 @@ var title_label: Label
 var description_label: Label
 var choice_label: Label
 var icon_rect: TextureRect
+var folio_art: TextureRect
 var focus_overlay: FocusOverlay
 var touch_mode := false
 
@@ -69,8 +76,9 @@ func _init() -> void:
 	focus_exited.connect(_queue_visual_state)
 
 
-func configure(index: int, glyph: String, title_value: String, description: String, accent: Color, texture: Texture2D = null) -> void:
+func configure(index: int, glyph: String, title_value: String, description: String, accent: Color, texture: Texture2D = null, folio_family: int = -1) -> void:
 	card_index = index
+	folio_index = index if folio_family < 0 else clampi(folio_family, 0, FOLIO_TEXTURES.size() - 1)
 	glyph_text = glyph
 	var rank_marker := title_value.find("Tầng")
 	var divider := title_value.rfind("·", rank_marker) if rank_marker >= 0 else -1
@@ -91,7 +99,10 @@ func configure(index: int, glyph: String, title_value: String, description: Stri
 func set_touch_mode(value: bool) -> void:
 	touch_mode = value
 	if number_label != null:
-		number_label.visible = not value or not rank_text.is_empty()
+		# One protected title cartouche cannot carry both a title and an eyebrow.
+		# The key prompt already communicates ordering, so keep this hidden at all
+		# sizes instead of printing through the authored ornament.
+		number_label.hide()
 	if description_label != null:
 		description_label.text = _touch_description(description_text) if value else description_text
 	if choice_label != null:
@@ -109,6 +120,11 @@ func _notification(what: int) -> void:
 func _draw() -> void:
 	if size.x < 24.0 or size.y < 24.0:
 		return
+	# The V5 manual is a complete silhouette. Drawing the legacy native paper
+	# card behind it creates the pale rectangular box visible in the rejected
+	# desktop/phone captures.
+	if folio_art != null:
+		return
 	var active := is_hovered() or has_focus()
 	var down := is_pressed()
 	var lift := -2.0 if active and not down else 1.0 if down else 0.0
@@ -122,12 +138,12 @@ func _draw() -> void:
 
 	var inner := visual_rect.grow(-7.0)
 	draw_polyline(_closed(_card_shape(inner, maxf(4.0, cut - 4.0))), Color(GOLD, 0.26), 1.0, true)
-	var seal_center := Vector2(visual_rect.get_center().x, visual_rect.position.y + (63.0 if touch_mode else 78.0))
-	var seal_radius := 31.0 if touch_mode else 39.0
+	var seal_center := Vector2(visual_rect.get_center().x, visual_rect.position.y + (52.0 if touch_mode else 78.0))
+	var seal_radius := 26.0 if touch_mode else 39.0
 	draw_circle(seal_center, seal_radius + 4.0, Color(INK, 0.91))
 	draw_arc(seal_center, seal_radius, -2.7, 1.05, 44, Color(accent_color, 0.72 if active else 0.46), 2.0, true)
 	draw_arc(seal_center, seal_radius - 7.0, 0.15, 4.35, 40, Color(PAPER, 0.19), 1.0, true)
-	var divider_y := visual_rect.position.y + (116.0 if touch_mode else 142.0)
+	var divider_y := visual_rect.position.y + (98.0 if touch_mode else 142.0)
 	draw_line(Vector2(visual_rect.position.x + 28.0, divider_y), Vector2(visual_rect.end.x - 28.0, divider_y), Color(GOLD, 0.40), 1.0, true)
 	_draw_bottom_seal(visual_rect, active)
 
@@ -135,7 +151,7 @@ func _draw() -> void:
 func draw_focus_overlay(canvas: Control) -> void:
 	if canvas == null or not (is_hovered() or has_focus()):
 		return
-	var rect := _visual_rect(-2.0).grow(-3.0)
+	var rect := _fitted_folio_rect(-2.0).grow(-3.0)
 	var arm := 20.0 if touch_mode else 28.0
 	var paths: Array[PackedVector2Array] = [
 		PackedVector2Array([Vector2(rect.position.x, rect.position.y + arm), rect.position, Vector2(rect.position.x + arm, rect.position.y)]),
@@ -154,27 +170,29 @@ func _build_content() -> void:
 			remove_child(child)
 			child.queue_free()
 
+	folio_art = TextureRect.new()
+	folio_art.name = "AuthoredFolioTexture"
+	folio_art.texture = FOLIO_TEXTURES[folio_index % FOLIO_TEXTURES.size()]
+	folio_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	folio_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	folio_art.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	folio_art.modulate = Color.WHITE
+	folio_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(folio_art)
+
 	var eyebrow := "ĐẠO DUYÊN %02d" % (card_index + 1)
 	if not rank_text.is_empty():
 		eyebrow += "  ·  " + rank_text
 	number_label = _label(eyebrow, 12, Color("#765326"), true)
 	number_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	number_label.hide()
 	add_child(number_label)
 
-	if icon_texture != null:
-		icon_rect = TextureRect.new()
-		icon_rect.texture = icon_texture
-		icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon_rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-		icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(icon_rect)
-	else:
-		icon_rect = null
-		glyph_label = _label(glyph_text, 26, PAPER, true)
-		glyph_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		glyph_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		add_child(glyph_label)
+	# The manual illustration itself carries school identity. Avoid pasting a
+	# second medallion over the painting; this was one of the cheap/boxy signals
+	# in the rejected runtime capture.
+	icon_rect = null
+	glyph_label = null
 
 	title_label = _label(title_text, 17, TEXT_INK, true)
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -183,10 +201,10 @@ func _build_content() -> void:
 	add_child(title_label)
 	description_label = _label(description_text, 15, TEXT_DIM)
 	description_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	description_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	description_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(description_label)
-	choice_label = _label("LĨNH NGỘ  ·  PHÍM %d" % (card_index + 1), 12, Color("#765326"), true)
+	choice_label = _label("LĨNH NGỘ  ·  PHÍM %d" % (card_index + 1), 12, PAPER, true)
 	choice_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	choice_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	add_child(choice_label)
@@ -197,36 +215,44 @@ func _build_content() -> void:
 func _layout_content() -> void:
 	if size.x < 24.0 or size.y < 24.0 or number_label == null:
 		return
-	var rect := _visual_rect(0.0)
+	var rect := _fitted_folio_rect(0.0)
 	var margin := clampf(rect.size.x * 0.14, 25.0, 42.0)
 	var left := rect.position.x + margin
 	var right := rect.end.x - margin
-	_set_rect(number_label, Rect2(left, rect.position.y + 14.0, right - left, 22.0))
+	if folio_art != null:
+		_set_rect(folio_art, rect)
+	_set_rect(number_label, Rect2(left, rect.position.y + (5.0 if touch_mode else 10.0), right - left, 18.0 if touch_mode else 22.0))
 	if touch_mode:
-		if icon_rect != null:
-			_set_rect(icon_rect, Rect2(rect.get_center().x - 35.0, rect.position.y + 28.0, 70.0, 70.0))
-		elif glyph_label != null:
-			_set_rect(glyph_label, Rect2(rect.get_center().x - 35.0, rect.position.y + 30.0, 70.0, 64.0))
-		_set_rect(title_label, Rect2(left, rect.position.y + 122.0, right - left, 42.0))
-		_set_rect(description_label, Rect2(left, rect.position.y + 166.0, right - left, maxf(34.0, rect.size.y - 214.0)))
-		_set_rect(choice_label, Rect2(left, rect.end.y - 39.0, right - left, 24.0))
-		title_label.add_theme_font_size_override(&"font_size", 15)
-		description_label.add_theme_font_size_override(&"font_size", 14)
+		_set_rect(title_label, Rect2(left, rect.position.y + rect.size.y * 0.055, right - left, rect.size.y * 0.105))
+		_set_rect(description_label, Rect2(left, rect.position.y + rect.size.y * 0.70, right - left, rect.size.y * 0.145))
+		_set_rect(choice_label, Rect2(left, rect.end.y - 22.0, right - left, 15.0))
+		title_label.add_theme_font_size_override(&"font_size", 12)
+		description_label.add_theme_font_size_override(&"font_size", 10)
+		choice_label.add_theme_font_size_override(&"font_size", 10)
 	else:
-		if icon_rect != null:
-			_set_rect(icon_rect, Rect2(rect.get_center().x - 47.0, rect.position.y + 31.0, 94.0, 94.0))
-		elif glyph_label != null:
-			_set_rect(glyph_label, Rect2(rect.get_center().x - 45.0, rect.position.y + 36.0, 90.0, 82.0))
-		_set_rect(title_label, Rect2(left, rect.position.y + 151.0, right - left, 54.0))
-		_set_rect(description_label, Rect2(left, rect.position.y + 211.0, right - left, maxf(50.0, rect.size.y - 282.0)))
-		_set_rect(choice_label, Rect2(left, rect.end.y - 48.0, right - left, 28.0))
-		title_label.add_theme_font_size_override(&"font_size", 17)
-		description_label.add_theme_font_size_override(&"font_size", 15)
+		_set_rect(title_label, Rect2(left, rect.position.y + rect.size.y * 0.055, right - left, rect.size.y * 0.105))
+		_set_rect(description_label, Rect2(left, rect.position.y + rect.size.y * 0.70, right - left, rect.size.y * 0.145))
+		_set_rect(choice_label, Rect2(left, rect.end.y - 29.0, right - left, 18.0))
+		title_label.add_theme_font_size_override(&"font_size", 14)
+		description_label.add_theme_font_size_override(&"font_size", 12)
+		choice_label.add_theme_font_size_override(&"font_size", 11)
 
 
 func _visual_rect(y_offset: float) -> Rect2:
 	var horizontal := clampf(size.x * 0.035, 5.0, 11.0)
 	return Rect2(Vector2(horizontal, 3.0 + y_offset), Vector2(size.x - horizontal * 2.0, size.y - 10.0))
+
+
+func _fitted_folio_rect(y_offset: float) -> Rect2:
+	var bounds := _visual_rect(y_offset).grow(-4.0)
+	if folio_art == null or folio_art.texture == null:
+		return bounds
+	var source := Vector2(folio_art.texture.get_size())
+	if source.x <= 1.0 or source.y <= 1.0:
+		return bounds
+	var scale_value := minf(bounds.size.x / source.x, bounds.size.y / source.y)
+	var fitted := source * scale_value
+	return Rect2(bounds.position + (bounds.size - fitted) * 0.5, fitted)
 
 
 func _paper_tone() -> Color:
@@ -269,7 +295,7 @@ func _label(value: String, font_size: int, color: Color, bold: bool = false) -> 
 	label.text = value
 	label.clip_text = true
 	label.add_theme_font_override(&"font", ACTION_FONT if bold else BODY_FONT)
-	label.add_theme_font_size_override(&"font_size", maxi(font_size, 14))
+	label.add_theme_font_size_override(&"font_size", maxi(font_size, 10))
 	label.add_theme_color_override(&"font_color", color)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return label

@@ -32,6 +32,7 @@ const ICON_VITALITY_PATH := PREMIUM_SIGIL_ROOT + "sigil_ho_the_ngoc.png"
 const ITEM_ICON_ROOT := "res://assets/generated/ui/UIICON-001-relics/runtime/"
 const SKILL_ICON_ROOT := "res://assets/generated/ui/SKILLICON-001-five-formation/runtime/"
 const PORTRAIT_ROOT := "res://assets/generated/portraits/PORTRAIT-001-bestiary-companion-atlas/runtime/"
+const PLAYER_PORTRAIT_PATH := "res://assets/generated/portraits/PORTRAIT-002-hero-boss/runtime/player.png"
 const ACHIEVEMENT_SEAL_ROOT := "res://assets/generated/ui/ACHIEVEICON-001-six-seals/runtime/"
 const ITEM_ICON_PATHS := {
 	"jade_sword": ITEM_ICON_ROOT + "relic_jade_sword.png",
@@ -113,6 +114,22 @@ const V4_MAJOR_PANEL: Texture2D = preload("res://assets/generated/ui/UIKIT-009-v
 const V4_PAPER_FOLIO: Texture2D = preload("res://assets/generated/ui/UIKIT-009-v4-structural/runtime/paper_folio.png")
 const V4_HEADER_PLAQUE: Texture2D = preload("res://assets/generated/ui/UIKIT-009-v4-structural/runtime/header_plaque.png")
 const V4_RESULT_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-009-v4-structural/runtime/result_modal_frame.png")
+const V5_FOLIO_PRIMARY_PATHS := [
+	"res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/sword-formation-folio-a.png",
+	"res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/jade-body-folio-a.png",
+	"res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/spirit-vortex-folio-a.png",
+]
+const V5_FOLIO_SECONDARY_PATHS := [
+	"res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/sword-formation-folio-b.png",
+	"res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/jade-body-folio-b.png",
+	"res://assets/generated/ui/UIKIT-014-v5-technique-folios/runtime/spirit-vortex-folio-b.png",
+]
+const V5_HUB_DOSSIER_PATH := "res://assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime/identity-dossier.png"
+const V5_HUB_EXPEDITION_PATH := "res://assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime/expedition-window.png"
+const V5_HUB_COMMAND_RAIL_PATH := "res://assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime/command-rail.png"
+const V5_ACHIEVEMENT_LEDGER_PATH := "res://assets/generated/ui/UIKIT-015-v5-ledger-hub/runtime/achievement-ledger.png"
+const V5_VICTORY_SHRINE_PATH := "res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/victory-ascension-shrine.png"
+const V5_DEFEAT_SHRINE_PATH := "res://assets/generated/ui/UIKIT-013-v5-ritual-modals/runtime/defeat-broken-dao-shrine.png"
 const V4_ART_GRADE_SHADER := """
 shader_type canvas_item;
 uniform float saturation : hint_range(0.0, 1.0) = 0.5;
@@ -2219,6 +2236,16 @@ func _phone_discipline_copy(discipline_id: StringName) -> String:
 			return "KIẾM · XUẤT CHIÊU"
 
 
+func _phone_discipline_title(discipline_id: StringName) -> String:
+	match discipline_id:
+		&"tu_linh":
+			return "TỤ LINH"
+		&"ngoc_the":
+			return "NGỌC THỂ"
+		_:
+			return "VẠN KIẾM"
+
+
 func _technique_accent(technique_id: StringName) -> Color:
 	match technique_id:
 		&"vitality":
@@ -2237,6 +2264,16 @@ func _technique_school(technique_id: StringName) -> String:
 			return "TỤ LINH · DẪN KHÍ"
 		_:
 			return "KIẾM ĐẠO · SÁT PHẠT"
+
+
+func _phone_technique_title(technique_id: StringName) -> String:
+	match technique_id:
+		&"vitality":
+			return "NGỌC CỐT"
+		&"magnet":
+			return "TỤ LINH"
+		_:
+			return "KIẾM TÂM"
 
 
 func _technique_evolution_copy(technique_id: StringName, rank: int, max_rank: int) -> String:
@@ -2387,6 +2424,10 @@ func _margin(parent: Control, left: int, right: int, top: int, bottom: int) -> M
 func _button(caption: String, variant: RasterButton.ArtVariant, minimum: Vector2, font_size: int, callback: Callable) -> RasterButton:
 	var button := RasterButtonScript.new() as RasterButton
 	button.configure(caption, variant, minimum, font_size)
+	if phone_layout_active:
+		# Preserve the 64 px action target while letting the authored ornament read
+		# as a compact command plaque on 390 px-tall landscape phones.
+		button.set_visual_inset(6.0, 9.0)
 	button.pressed.connect(callback)
 	button.tooltip_text = caption.capitalize()
 	focus_queue.append(button)
@@ -3011,31 +3052,31 @@ func _format_time(seconds: float) -> String:
 func _v4_build_desktop_screen(next_screen: StringName) -> void:
 	match next_screen:
 		SCREEN_TITLE: _v4_build_title(false)
-		SCREEN_HUB: _v4_build_hub(false)
+		SCREEN_HUB: _v5_build_hub(false)
 		SCREEN_STAGES: _v4_build_stages(false)
-		SCREEN_LOADOUT: _v4_build_loadout(false)
+		SCREEN_LOADOUT: _v5_build_loadout(false)
 		SCREEN_INVENTORY: _v4_build_inventory(false)
 		SCREEN_SPIRIT_BEAST: _v4_build_spirit_beast(false)
-		SCREEN_TECHNIQUES: _v4_build_techniques(false)
+		SCREEN_TECHNIQUES: _v5_build_techniques(false)
 		SCREEN_CODEX: _v4_build_codex(false)
-		SCREEN_ACHIEVEMENTS: _v4_build_achievements(false)
+		SCREEN_ACHIEVEMENTS: _v5_build_achievements(false)
 		SCREEN_SETTINGS: _v4_build_settings(false)
-		SCREEN_RESULTS: _v4_build_results(false)
+		SCREEN_RESULTS: _v5_build_results(false)
 
 
 func _v4_build_phone_screen(next_screen: StringName) -> void:
 	match next_screen:
 		SCREEN_TITLE: _v4_build_title(true)
-		SCREEN_HUB: _v4_build_hub(true)
+		SCREEN_HUB: _v5_build_hub(true)
 		SCREEN_STAGES: _v4_build_stages(true)
-		SCREEN_LOADOUT: _v4_build_loadout(true)
+		SCREEN_LOADOUT: _v5_build_loadout(true)
 		SCREEN_INVENTORY: _v4_build_inventory(true)
 		SCREEN_SPIRIT_BEAST: _v4_build_spirit_beast(true)
-		SCREEN_TECHNIQUES: _v4_build_techniques(true)
+		SCREEN_TECHNIQUES: _v5_build_techniques(true)
 		SCREEN_CODEX: _v4_build_codex(true)
-		SCREEN_ACHIEVEMENTS: _v4_build_achievements(true)
+		SCREEN_ACHIEVEMENTS: _v5_build_achievements(true)
 		SCREEN_SETTINGS: _v4_build_settings(true)
-		SCREEN_RESULTS: _v4_build_results(true)
+		SCREEN_RESULTS: _v5_build_results(true)
 
 
 func _v4_plate(rect: Rect2, paper := false, accent: Color = V4_BRONZE, strong := false) -> Control:
@@ -3094,6 +3135,10 @@ func _v4_add_text(text_value: String, rect: Rect2, size_px: int, color: Color, b
 
 func _v4_text_to(parent: Control, text_value: String, rect: Rect2, size_px: int, color: Color, bold := false, align := HORIZONTAL_ALIGNMENT_LEFT) -> Label:
 	var text_node := _label(text_value, size_px, color, bold)
+	if phone_layout_active:
+		# Small captions were previously clamped back to 14 px, which made compact
+		# mobile folios print through their title and action cartouches.
+		text_node.add_theme_font_size_override(&"font_size", maxi(10, size_px))
 	text_node.position = rect.position
 	text_node.size = rect.size
 	text_node.horizontal_alignment = align
@@ -3116,9 +3161,9 @@ func _v4_header(title_text: String, subtitle_text: String, phone: bool, show_bac
 			screen_root.add_child(back)
 			left += 130.0
 		var title_width := maxf(176.0, safe.end.x - left - PHONE_CURRENCY_WIDTH - 12.0)
-		_v4_add_text(title_text, Rect2(left, safe.position.y + 4.0, title_width, 28.0), 22, V4_PAPER, true)
-		_v4_add_text(subtitle_text, Rect2(left, safe.position.y + 34.0, title_width, 22.0), 14, V4_PAPER_MUTED)
-		var currency := _v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(safe.end.x - PHONE_CURRENCY_WIDTH, safe.position.y + 14.0, PHONE_CURRENCY_WIDTH, 30.0), 17, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
+		_v4_add_text(title_text, Rect2(left, safe.position.y + 5.0, title_width, 27.0), 20, V4_PAPER, true)
+		_v4_add_text(subtitle_text, Rect2(left, safe.position.y + 33.0, title_width, 21.0), 13, V4_PAPER_MUTED)
+		var currency := _v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(safe.end.x - PHONE_CURRENCY_WIDTH, safe.position.y + 15.0, PHONE_CURRENCY_WIDTH, 28.0), 15, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
 		currency.name = "PhoneCurrency"
 		_v4_add_rule(Rect2(safe.position.x, safe.position.y + 67.0, safe.size.x, 1.0), Color(V4_BRONZE, 0.66))
 		return Rect2(safe.position.x, safe.position.y + 76.0, safe.size.x, safe.size.y - 76.0)
@@ -3196,20 +3241,26 @@ func _v4_build_hub(phone: bool) -> void:
 		_v4_add_text("THẮNG %d · CÔNG LỰC %d" % [_profile_value("victories", 0), _account_power()], Rect2(safe.position.x, safe.position.y + 30.0, 290.0, 22.0), 14, V4_PAPER_MUTED)
 		_v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(safe.end.x - 170.0, safe.position.y + 10.0, 170.0, 26.0), 16, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
 		var top_y := safe.position.y + 54.0
-		var identity := Rect2(safe.position.x, top_y, 210.0, 188.0)
-		_v4_add_plate(identity, true, V4_BRONZE, true)
-		_v4_add_art(str(DISCIPLINE_ICONS.get(String(_selected_discipline()), ICON_SWORD_PATH)), Rect2(identity.position.x + 54.0, identity.position.y + 16.0, 102.0, 102.0), Color(0.86, 0.94, 0.90, 0.92))
-		_v4_add_text(str(doctrine.get("name", "Vạn Kiếm Quy Tông")), Rect2(identity.position.x + 14.0, identity.position.y + 116.0, identity.size.x - 28.0, 28.0), 17, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-		_v4_add_text("TÂM PHÁP · TẦNG %d" % rank, Rect2(identity.position.x + 14.0, identity.position.y + 148.0, identity.size.x - 28.0, 20.0), 13, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		var identity := Rect2(safe.position.x, top_y, 184.0, 164.0)
+		var identity_plate := _v4_add_plate(identity, true, V4_BRONZE, true)
+		identity_plate.name = "HubIdentityPlate"
+		# The approved hub hierarchy starts with the cultivator, not a floating
+		# ability icon. The smaller discipline seal overlaps the portrait as a
+		# secondary identity cue and reuses the already accepted portrait family.
+		_v4_add_art(PLAYER_PORTRAIT_PATH, Rect2(identity.position.x + 8.0, identity.position.y + 8.0, 112.0, 104.0), Color(0.92, 0.95, 0.91, 0.96))
+		_v4_add_art(str(DISCIPLINE_ICONS.get(String(_selected_discipline()), ICON_SWORD_PATH)), Rect2(identity.position.x + 112.0, identity.position.y + 28.0, 58.0, 58.0), Color(0.88, 0.96, 0.92, 0.94))
+		_v4_add_text(str(doctrine.get("name", "Vạn Kiếm Quy Tông")), Rect2(identity.position.x + 10.0, identity.position.y + 108.0, identity.size.x - 20.0, 26.0), 16, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text("TÂM PHÁP · TẦNG %d" % rank, Rect2(identity.position.x + 10.0, identity.position.y + 136.0, identity.size.x - 20.0, 18.0), 13, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
 		var change := _button("ĐỔI TÂM PHÁP", RasterButton.ArtVariant.INK, Vector2(identity.size.x, 64.0), 13, func() -> void: _show_screen(SCREEN_LOADOUT))
 		change.position = Vector2(identity.position.x, identity.end.y + 4.0)
 		change.size = Vector2(identity.size.x, 64.0)
 		screen_root.add_child(change)
-		var expedition := Rect2(identity.end.x + 10.0, top_y, 300.0, 188.0)
-		_v4_add_plate(expedition, false, V4_GOLD, true)
-		_v4_add_art(str(STAGE_ART.get(String(_selected_stage()), STAGE_ART["van_mong"])), Rect2(expedition.position.x + 10.0, expedition.position.y + 10.0, expedition.size.x - 20.0, 105.0))
-		_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(expedition.position.x + 14.0, expedition.position.y + 120.0, expedition.size.x - 28.0, 20.0), 13, V4_GOLD, true)
-		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(expedition.position.x + 14.0, expedition.position.y + 143.0, expedition.size.x - 28.0, 28.0), 19, V4_PAPER, true)
+		var expedition := Rect2(identity.end.x + 10.0, top_y, 278.0, 164.0)
+		var expedition_plate := _v4_add_plate(expedition, false, V4_GOLD, true)
+		expedition_plate.name = "HubExpeditionPlate"
+		_v4_add_art(str(STAGE_ART.get(String(_selected_stage()), STAGE_ART["van_mong"])), Rect2(expedition.position.x + 10.0, expedition.position.y + 10.0, expedition.size.x - 20.0, 88.0))
+		_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(expedition.position.x + 14.0, expedition.position.y + 102.0, expedition.size.x - 28.0, 18.0), 12, V4_GOLD, true)
+		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(expedition.position.x + 14.0, expedition.position.y + 124.0, expedition.size.x - 28.0, 26.0), 18, V4_PAPER, true)
 		var depart := _button("KHỞI HÀNH", RasterButton.ArtVariant.GOLD, Vector2(expedition.size.x, 64.0), 16, func() -> void: _show_screen(SCREEN_LOADOUT))
 		depart.position = Vector2(expedition.position.x, expedition.end.y + 4.0)
 		depart.size = Vector2(expedition.size.x, 64.0)
@@ -3246,19 +3297,22 @@ func _v4_build_hub(phone: bool) -> void:
 	_v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(1262.0, 44.0, 274.0, 32.0), 20, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
 	_v4_add_rule(Rect2(62.0, 108.0, 1476.0, 1.0), Color(V4_BRONZE, 0.62))
 	var identity := Rect2(64.0, 132.0, 338.0, 692.0)
-	_v4_add_plate(identity, true, V4_BRONZE, true)
-	_v4_add_art(str(DISCIPLINE_ICONS.get(String(_selected_discipline()), ICON_SWORD_PATH)), Rect2(118.0, 168.0, 230.0, 230.0), Color(0.82, 0.92, 0.88, 0.90))
-	_v4_add_text("TÂM PHÁP HỘ THÂN", Rect2(98.0, 430.0, 270.0, 24.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-	_v4_add_text(str(doctrine.get("name", "Vạn Kiếm Quy Tông")), Rect2(88.0, 468.0, 290.0, 64.0), 25, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-	var doctrine_copy := _v4_add_text(str(doctrine.get("description", "")), Rect2(100.0, 546.0, 266.0, 90.0), 17, PAPER_COPY, false, HORIZONTAL_ALIGNMENT_CENTER)
+	var identity_plate := _v4_add_plate(identity, true, V4_BRONZE, true)
+	identity_plate.name = "HubIdentityPlate"
+	_v4_add_art(PLAYER_PORTRAIT_PATH, Rect2(94.0, 154.0, 274.0, 246.0), Color(0.92, 0.95, 0.91, 0.97))
+	_v4_add_art(str(DISCIPLINE_ICONS.get(String(_selected_discipline()), ICON_SWORD_PATH)), Rect2(276.0, 308.0, 92.0, 92.0), Color(0.88, 0.96, 0.92, 0.96))
+	_v4_add_text("KIẾM TU VÂN MỘNG", Rect2(98.0, 414.0, 270.0, 24.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v4_add_text(str(doctrine.get("name", "Vạn Kiếm Quy Tông")), Rect2(88.0, 450.0, 290.0, 58.0), 24, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var doctrine_copy := _v4_add_text(str(doctrine.get("description", "")), Rect2(100.0, 522.0, 266.0, 90.0), 17, PAPER_COPY, false, HORIZONTAL_ALIGNMENT_CENTER)
 	doctrine_copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_v4_add_text("TẦNG %d / 5  ·  CÔNG LỰC %d" % [rank, _account_power()], Rect2(98.0, 650.0, 270.0, 26.0), 15, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v4_add_text("TẦNG %d / 5  ·  CÔNG LỰC %d" % [rank, _account_power()], Rect2(98.0, 632.0, 270.0, 26.0), 15, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
 	var change := _button("ĐỔI TÂM PHÁP", RasterButton.ArtVariant.INK, Vector2(270.0, 64.0), 16, func() -> void: _show_screen(SCREEN_LOADOUT))
 	change.position = Vector2(98.0, 724.0)
 	change.size = Vector2(270.0, 64.0)
 	screen_root.add_child(change)
 	var expedition := Rect2(426.0, 132.0, 760.0, 590.0)
-	_v4_add_plate(expedition, false, V4_GOLD, true)
+	var expedition_plate := _v4_add_plate(expedition, false, V4_GOLD, true)
+	expedition_plate.name = "HubExpeditionPlate"
 	_v4_add_art(str(STAGE_ART.get(String(_selected_stage()), STAGE_ART["van_mong"])), Rect2(448.0, 154.0, 716.0, 402.0))
 	_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(468.0, 574.0, 330.0, 24.0), 14, V4_GOLD, true)
 	_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(468.0, 604.0, 430.0, 42.0), 29, V4_PAPER, true)
@@ -3314,16 +3368,16 @@ func _v4_build_stages(phone: bool) -> void:
 			var rect := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, card_height)
 			_v4_add_plate(rect, true, V4_JADE if selected else (V4_BRONZE if unlocked else V4_CINNABAR), selected)
 			_v4_add_art(str(STAGE_ART.get(String(stage_id), STAGE_ART["van_mong"])), Rect2(rect.position.x + 9.0, rect.position.y + 9.0, rect.size.x - 18.0, 72.0), Color.WHITE if unlocked else Color(0.34, 0.34, 0.33, 0.92))
-			_v4_add_text("ĐÃ CHỌN" if selected else ("ĐÃ KHAI MỞ" if unlocked else "PHONG ẤN"), Rect2(rect.position.x + 10.0, rect.position.y + 84.0, rect.size.x - 20.0, 20.0), 13, Color("#2f7469") if unlocked else V4_CINNABAR, true, HORIZONTAL_ALIGNMENT_CENTER)
-			_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(rect.position.x + 10.0, rect.position.y + 106.0, rect.size.x - 20.0, 28.0), 17, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
-			_v4_add_text("HIỂM HỌA %d/3 · %d NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(rect.position.x + 8.0, rect.position.y + 136.0, rect.size.x - 16.0, 22.0), 13, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
-			var choose := _button("ĐANG CHỌN" if selected else ("CHỌN CẢNH" if unlocked else "CHƯA MỞ"), RasterButton.ArtVariant.JADE if selected else RasterButton.ArtVariant.INK, Vector2(rect.size.x - 16.0, 64.0), 13, func() -> void: _select_stage(stage_id))
+			_v4_add_text("ĐÃ CHỌN" if selected else ("ĐÃ KHAI MỞ" if unlocked else "PHONG ẤN"), Rect2(rect.position.x + 10.0, rect.position.y + 84.0, rect.size.x - 20.0, 19.0), 11, Color("#2f7469") if unlocked else V4_CINNABAR, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(rect.position.x + 10.0, rect.position.y + 106.0, rect.size.x - 20.0, 26.0), 15, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text("HIỂM HỌA %d/3 · %d NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(rect.position.x + 8.0, rect.position.y + 136.0, rect.size.x - 16.0, 20.0), 12, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			var choose := _button("ĐANG CHỌN" if selected else ("CHỌN CẢNH" if unlocked else "CHƯA MỞ"), RasterButton.ArtVariant.JADE if selected else RasterButton.ArtVariant.INK, Vector2(rect.size.x - 16.0, 64.0), 12, func() -> void: _select_stage(stage_id))
 			choose.position = Vector2(rect.position.x + 8.0, rect.end.y - 66.0)
 			choose.size = Vector2(rect.size.x - 16.0, 64.0)
 			choose.disabled = not unlocked
 			choose.call_deferred("_refresh_visual_state")
 			screen_root.add_child(choose)
-		var description := _v4_add_text(str(_stage_data(current_id).get("description", "")), Rect2(body.position.x, body.end.y - 64.0, body.size.x - 306.0, 58.0), 15, V4_PAPER_MUTED)
+		var description := _v4_add_text(str(_stage_data(current_id).get("description", "")), Rect2(body.position.x, body.end.y - 64.0, body.size.x - 306.0, 58.0), 13, V4_PAPER_MUTED)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		var proceed := _button("CHUẨN BỊ", RasterButton.ArtVariant.GOLD, Vector2(296.0, 64.0), 17, func() -> void: _show_screen(SCREEN_LOADOUT))
 		proceed.position = Vector2(body.end.x - 296.0, body.end.y - 64.0)
@@ -3444,18 +3498,19 @@ func _v4_build_inventory(phone: bool) -> void:
 	_v4_add_text("KIẾM TU VÂN MỘNG", Rect2(identity.position.x + 30.0, identity.position.y + 350.0, identity.size.x - 60.0, 40.0), 24, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
 	_v4_add_text("CÔNG LỰC %d · %s" % [_account_power(), str(_discipline_data(_selected_discipline()).get("name", "Vạn Kiếm"))], Rect2(identity.position.x + 28.0, identity.position.y + 398.0, identity.size.x - 56.0, 30.0), 15, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
 	_v4_add_rule(Rect2(identity.position.x + 46.0, identity.position.y + 454.0, identity.size.x - 92.0, 1.0), Color(V4_BRONZE, 0.44))
-	_v4_add_text("ĐANG TRẤN PHÁP\nKIẾM · HỘ TÂM · ĐẠO BÀO · LINH GIỚI", Rect2(identity.position.x + 38.0, identity.position.y + 482.0, identity.size.x - 76.0, 70.0), 15, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
-	_v4_add_text("Sinh mệnh +12%\nKiếm ý +18%\nTụ linh +12%", Rect2(identity.position.x + 62.0, identity.position.y + 584.0, identity.size.x - 124.0, 90.0), 17, PAPER_COPY)
+	_v4_add_text("ĐANG TRẤN PHÁP", Rect2(identity.position.x + 42.0, identity.position.y + 486.0, identity.size.x - 84.0, 24.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var equipped_copy := _v4_add_text("KIẾM · HỘ TÂM\nĐẠO BÀO · LINH GIỚI", Rect2(identity.position.x + 52.0, identity.position.y + 520.0, identity.size.x - 104.0, 54.0), 15, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+	equipped_copy.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_v4_add_plate(grid, true, V4_BRONZE, false)
-	_v4_add_text("TÚI CÀN KHÔN", Rect2(grid.position.x + 24.0, grid.position.y + 22.0, grid.size.x - 48.0, 30.0), 19, PAPER_INK, true)
+	# Keep one paper folio, not a dark header panel stacked on top of it.
 	var slot_width := (grid.size.x - 68.0) / 4.0
-	var slot_height := (grid.size.y - 94.0) / 3.0
+	var slot_height := (grid.size.y - 126.0) / 3.0
 	for index in mini(12, items.size()):
 		var item: Dictionary = items[index]
 		var col := index % 4
 		var row := index / 4
 		var item_id := str(item.get("id", "item_%d" % index))
-		ComponentKitScript.item_slot(screen_root, item_id, str(item.get("name", "Pháp bảo")), str(item.get("rarity", "Linh")), Rect2(grid.position.x + 16.0 + col * (slot_width + 12.0), grid.position.y + 60.0 + row * (slot_height + 10.0), slot_width, slot_height), _load_texture(str(item.get("icon_path", ICON_SWORD_PATH))), item_id == selected_item_id, func() -> void: _select_inventory_item(item_id), 1.0, true)
+		ComponentKitScript.item_slot(screen_root, item_id, str(item.get("name", "Pháp bảo")), str(item.get("rarity", "Linh")), Rect2(grid.position.x + 16.0 + col * (slot_width + 12.0), grid.position.y + 92.0 + row * (slot_height + 10.0), slot_width, slot_height), _load_texture(str(item.get("icon_path", ICON_SWORD_PATH))), item_id == selected_item_id, func() -> void: _select_inventory_item(item_id), 1.0, true)
 	_v4_add_plate(detail, false, _rarity_color(str(chosen.get("rarity", "Huyền"))), true)
 	_v4_add_text("SO SÁNH PHÁP BẢO", Rect2(detail.position.x + 28.0, detail.position.y + 26.0, detail.size.x - 56.0, 28.0), 16, V4_GOLD, true, HORIZONTAL_ALIGNMENT_CENTER)
 	_v4_add_art(str(chosen.get("icon_path", ICON_SWORD_PATH)), Rect2(detail.position.x + 68.0, detail.position.y + 70.0, detail.size.x - 136.0, 220.0))
@@ -3493,13 +3548,13 @@ func _v4_build_spirit_beast(phone: bool) -> void:
 			tab.size = Vector2(tab_width, 64.0)
 			screen_root.add_child(tab)
 		_v4_add_art(str(SKILL_ICON_PATHS["thanh_van_ho"]), Rect2(detail.position.x + 30.0, detail.position.y + 86.0, 142.0, 142.0))
-		_v4_add_text("SẴN SÀNG", Rect2(detail.position.x + 24.0, detail.position.y + 226.0, 154.0, 24.0), 15, V4_JADE, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text("SẴN SÀNG", Rect2(detail.position.x + 24.0, detail.position.y + 58.0, 154.0, 24.0), 15, V4_JADE, true, HORIZONTAL_ALIGNMENT_CENTER)
 		var copy := _v4_add_text("Đánh dấu mục tiêu nguy hiểm nhất. Ba lần di chuyển: kỹ năng kế tiếp xuyên mục tiêu và hoàn 12% năng lượng.", Rect2(detail.position.x + 198.0, detail.position.y + 94.0, detail.size.x - 224.0, 106.0), 16, V4_PAPER, false)
 		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		var milestone_width := (detail.size.x - 44.0) / 3.0
-		var milestones := ["I · THỨC", "II · DẤU", "III · 120"]
+		var milestone_width := (detail.size.x - 52.0) / 3.0
+		var milestones := ["I · THỨC TỈNH", "II · DẤU ẤN", "III · 120 PHÁCH"]
 		for index in milestones.size():
-			_v4_add_text(milestones[index], Rect2(detail.position.x + 16.0 + index * (milestone_width + 6.0), detail.end.y - 48.0, milestone_width, 28.0), 13, V4_GOLD, true, HORIZONTAL_ALIGNMENT_CENTER)
+			_v4_add_text(milestones[index], Rect2(detail.position.x + 18.0 + index * (milestone_width + 8.0), detail.end.y - 62.0, milestone_width, 22.0), 11, V4_GOLD, true, HORIZONTAL_ALIGNMENT_CENTER)
 		return
 	var portrait := Rect2(body.position.x, body.position.y, 500.0, body.size.y)
 	var detail := Rect2(portrait.end.x + 26.0, body.position.y, body.end.x - portrait.end.x - 26.0, body.size.y)
@@ -3584,16 +3639,18 @@ func _v4_build_codex(phone: bool) -> void:
 			tab.position = Vector2(body.position.x + index * (tab_width + tab_gap), body.position.y)
 			tab.size = Vector2(tab_width, 64.0)
 			screen_root.add_child(tab)
-		var detail := Rect2(body.position.x, body.position.y + 70.0, body.size.x, body.size.y - 70.0)
+		var detail := Rect2(body.position.x, body.position.y + 68.0, body.size.x, body.size.y - 68.0)
 		_v4_add_plate(detail, true, V4_BRONZE, true)
-		_v4_add_art(str(BESTIARY_VISUALS.get(String(selected_codex), "")), Rect2(detail.position.x + 24.0, detail.position.y + 12.0, 190.0, detail.size.y - 24.0), Color.WHITE if discovered else Color(0.08, 0.09, 0.09, 0.88))
-		var text_x := detail.position.x + 232.0
-		_v4_add_text(str(chosen.get("name", "Chưa ghi nhận")) if discovered else "BÓNG HÌNH CHƯA BIẾT", Rect2(text_x, detail.position.y + 20.0, detail.end.x - text_x - 24.0, 34.0), 23, PAPER_INK, true)
-		_v4_add_text(("%s · %s" % [str(chosen.get("kind", "")), str(chosen.get("habitat", ""))]) if discovered else "Chưa khai mở", Rect2(text_x, detail.position.y + 58.0, detail.end.x - text_x - 24.0, 24.0), 14, BRONZE_INK, true)
-		var description := _v4_add_text(str(chosen.get("description", "Dữ liệu còn bị ma vụ che phủ.")) if discovered else "Vượt thí luyện tương ứng để ghi nhận hình ảnh và tập tính.", Rect2(text_x, detail.position.y + 90.0, detail.end.x - text_x - 30.0, 64.0), 16, PAPER_COPY)
+		# The frame's bronze crest and foot occupy the outer 28 px. Keep portrait and
+		# copy in independent columns inside that protected rectangle.
+		_v4_add_art(str(BESTIARY_VISUALS.get(String(selected_codex), "")), Rect2(detail.position.x + 30.0, detail.position.y + 30.0, 176.0, detail.size.y - 58.0), Color.WHITE if discovered else Color(0.08, 0.09, 0.09, 0.88))
+		var text_x := detail.position.x + 226.0
+		var text_width := detail.end.x - text_x - 34.0
+		_v4_add_text(str(chosen.get("name", "Chưa ghi nhận")) if discovered else "BÓNG HÌNH CHƯA BIẾT", Rect2(text_x, detail.position.y + 50.0, text_width, 28.0), 19, PAPER_INK, true)
+		_v4_add_text(("%s · %s" % [str(chosen.get("kind", "")), str(chosen.get("habitat", ""))]) if discovered else "Chưa khai mở", Rect2(text_x, detail.position.y + 80.0, text_width, 19.0), 12, BRONZE_INK, true)
+		var description := _v4_add_text(str(chosen.get("description", "Dữ liệu còn bị ma vụ che phủ.")) if discovered else "Vượt thí luyện tương ứng để ghi nhận hình ảnh và tập tính.", Rect2(text_x, detail.position.y + 106.0, text_width, 40.0), 13, PAPER_COPY)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_v4_add_text("HIỂM HỌA %d/3 · YẾU QUYẾT" % int(chosen.get("threat", 0)) if discovered else "HIỂM HỌA ?/3", Rect2(text_x, detail.end.y - 76.0, detail.end.x - text_x - 24.0, 24.0), 14, V4_CINNABAR, true)
-		_v4_add_text(str(chosen.get("combat_tip", "???")) if discovered else "Tiếp cận thí luyện để khai mở.", Rect2(text_x, detail.end.y - 48.0, detail.end.x - text_x - 24.0, 38.0), 14, PAPER_COPY)
+		_v4_add_text("HIỂM HỌA %d/3 · YẾU QUYẾT" % int(chosen.get("threat", 0)) if discovered else "HIỂM HỌA ?/3", Rect2(text_x, detail.end.y - 50.0, text_width, 18.0), 11, V4_CINNABAR, true)
 		return
 	var index_rect := Rect2(body.position.x, body.position.y, 306.0, body.size.y)
 	var dossier := Rect2(index_rect.end.x + 24.0, body.position.y, body.end.x - index_rect.end.x - 24.0, body.size.y)
@@ -3686,8 +3743,11 @@ func _v4_build_settings(phone: bool) -> void:
 		for index in rows.size():
 			var row: Dictionary = rows[index]
 			var setting_id := StringName(str(row.get("id", "master")))
-			var y := body.position.y + index * 70.0
-			_v4_add_text(str(row.get("name", "Âm lượng")), Rect2(body.position.x + 18.0, y + 18.0, 152.0, 28.0), 14, PAPER_INK, true)
+			# The authored folio has a top clamp that occupies the first 30 px. Keep
+			# the 64 px touch controls below that hardware and leave a clean gap above
+			# the footer command rail.
+			var y := body.position.y + 30.0 + index * 62.0
+			_v4_add_text(str(row.get("name", "Âm lượng")), Rect2(body.position.x + 38.0, y + 18.0, 132.0, 28.0), 14, PAPER_INK, true)
 			var minus := _button("−", RasterButton.ArtVariant.INK, Vector2(64.0, 64.0), 24, func() -> void: _nudge_volume(setting_id, -0.10))
 			minus.position = Vector2(body.position.x + 176.0, y)
 			minus.size = Vector2(64.0, 64.0)
@@ -3708,14 +3768,14 @@ func _v4_build_settings(phone: bool) -> void:
 			var row: Dictionary = toggle_rows[index]
 			var setting_id := StringName(str(row.get("id", "reduced_motion")))
 			var enabled := bool(row.get("enabled", false))
-			var y := body.position.y + index * 70.0
+			var y := body.position.y + 30.0 + index * 62.0
 			_v4_add_text(str(row.get("name", "Tùy chọn")), Rect2(right_x, y + 18.0, 138.0, 26.0), 13, PAPER_INK, true)
 			var toggle := _button("ĐANG BẬT" if enabled else "ĐANG TẮT", RasterButton.ArtVariant.JADE if enabled else RasterButton.ArtVariant.INK, Vector2(right_width - 142.0, 64.0), 13, func() -> void: _toggle_setting(setting_id, not enabled))
 			toggle.position = Vector2(right_x + 142.0, y)
 			toggle.size = Vector2(right_width - 142.0, 64.0)
 			screen_root.add_child(toggle)
-		_v4_add_text("HỒ SƠ ĐẠO ĐỒ", Rect2(right_x, body.position.y + 146.0, right_width, 22.0), 13, BRONZE_INK, true)
-		_v4_add_text("%d lần nhập thế · %d chiến thắng\nCông lực %d · %d Linh Ngọc" % [_profile_value("runs", 0), _profile_value("victories", 0), _account_power(), _profile_value("currency", 0)], Rect2(right_x, body.position.y + 174.0, right_width, 48.0), 13, PAPER_COPY)
+		_v4_add_text("HỒ SƠ ĐẠO ĐỒ", Rect2(right_x, body.position.y + 160.0, right_width, 20.0), 13, BRONZE_INK, true)
+		_v4_add_text("%d lần nhập thế · %d chiến thắng\nCông lực %d · %d Linh Ngọc" % [_profile_value("runs", 0), _profile_value("victories", 0), _account_power(), _profile_value("currency", 0)], Rect2(right_x, body.position.y + 184.0, right_width, 30.0), 12, PAPER_COPY)
 		var footer_width := (body.size.x - 24.0) / 3.0
 		var footer := [
 			["MÀN HÌNH CHÍNH", RasterButton.ArtVariant.INK, func() -> void: _show_screen(SCREEN_TITLE)],
@@ -3820,6 +3880,293 @@ func _v4_build_results(phone: bool) -> void:
 	retry.position = Vector2(panel_rect.end.x - retry_width - (52.0 if phone else 104.0), button_y)
 	retry.size = Vector2(retry_width, 64.0)
 	screen_root.add_child(retry)
+
+
+# -----------------------------------------------------------------------------
+# V5 authored component integration inside the locked V4.1 direction
+# -----------------------------------------------------------------------------
+
+func _v5_fit_art(path: String, bounds: Rect2) -> Rect2:
+	var texture := _load_texture(path)
+	if texture == null:
+		return bounds
+	var source := Vector2(texture.get_size())
+	if source.x <= 1.0 or source.y <= 1.0:
+		return bounds
+	var scale := minf(bounds.size.x / source.x, bounds.size.y / source.y)
+	var fitted := source * scale
+	return Rect2(bounds.position + (bounds.size - fitted) * 0.5, fitted)
+
+
+func _v5_add_fitted_art(path: String, bounds: Rect2, tint := Color.WHITE) -> Rect2:
+	var fitted := _v5_fit_art(path, bounds)
+	_v4_add_art(path, fitted, tint)
+	return fitted
+
+
+func _v5_art_slot_button(caption: String, rect: Rect2, font_size: int, font_color: Color, callback: Callable) -> Button:
+	var button := Button.new()
+	button.name = "V5ArtSlot_%s" % caption.replace(" ", "_")
+	button.position = rect.position
+	button.size = rect.size
+	button.custom_minimum_size = Vector2(maxf(64.0, rect.size.x), maxf(64.0, rect.size.y))
+	button.text = caption
+	button.flat = true
+	button.focus_mode = Control.FOCUS_ALL
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_override(&"font", ACTION_FONT)
+	button.add_theme_font_size_override(&"font_size", font_size)
+	button.add_theme_color_override(&"font_color", font_color)
+	button.add_theme_color_override(&"font_hover_color", font_color.lightened(0.16))
+	button.add_theme_color_override(&"font_pressed_color", font_color.darkened(0.12))
+	button.add_theme_color_override(&"font_focus_color", font_color.lightened(0.12))
+	button.add_theme_color_override(&"font_outline_color", Color(0.0, 0.0, 0.0, 0.56))
+	button.add_theme_constant_override(&"outline_size", 1)
+	for state_name in [&"normal", &"hover", &"pressed", &"disabled"]:
+		button.add_theme_stylebox_override(state_name, StyleBoxEmpty.new())
+	var focus_style := StyleBoxFlat.new()
+	focus_style.bg_color = Color(V4_JADE, 0.08)
+	focus_style.border_color = Color(V4_JADE, 0.90)
+	focus_style.set_border_width_all(2)
+	focus_style.corner_radius_top_left = 5
+	focus_style.corner_radius_top_right = 5
+	focus_style.corner_radius_bottom_left = 5
+	focus_style.corner_radius_bottom_right = 5
+	button.add_theme_stylebox_override(&"focus", focus_style)
+	button.pressed.connect(callback)
+	button.tooltip_text = caption.capitalize()
+	focus_queue.append(button)
+	screen_root.add_child(button)
+	return button
+
+
+func _v5_result_art_button(caption: String, rect: Rect2, font_size: int, callback: Callable) -> Button:
+	var button := _v5_art_slot_button(caption, rect, font_size, V4_PAPER, callback)
+	# Result art already contains its own shaped plaque. A full rectangular focus
+	# border reads as a misaligned extra button, so focus is expressed by a live
+	# diamond marker inside the authored caption field.
+	button.add_theme_stylebox_override(&"focus", StyleBoxEmpty.new())
+	button.focus_entered.connect(func() -> void: button.text = "◆  %s" % caption)
+	button.focus_exited.connect(func() -> void: button.text = caption)
+	return button
+
+
+func _v5_build_hub(phone: bool) -> void:
+	_v4_meta_background(0.26 if not phone else 0.22)
+	var doctrine := _discipline_data(_selected_discipline())
+	var stage := _stage_data(_selected_stage())
+	var discipline_key := _discipline_technique_key(_selected_discipline())
+	var ranks: Dictionary = _profile_snapshot().get("technique_ranks", {}) as Dictionary
+	var rank := int(ranks.get(String(discipline_key), 0))
+	var commands := [
+		["HÀNH TRÌNH", func() -> void: _show_screen(SCREEN_STAGES)],
+		["CÔNG PHÁP", func() -> void: _show_screen(SCREEN_TECHNIQUES)],
+		["PHÁP BẢO", func() -> void: _show_screen(SCREEN_INVENTORY)],
+		["LINH THÚ", func() -> void: _show_screen(SCREEN_SPIRIT_BEAST)],
+		["VẠN TƯỢNG", func() -> void: _show_screen(SCREEN_CODEX)],
+		["THÀNH TỰU", func() -> void: _show_screen(SCREEN_ACHIEVEMENTS)],
+		["THIẾT LẬP", func() -> void: _show_screen(SCREEN_SETTINGS)],
+	]
+	if phone:
+		var safe := _phone_safe_rect()
+		_v4_add_text("SƠN MÔN VÂN MỘNG", Rect2(safe.position.x, safe.position.y + 1.0, 360.0, 28.0), 21, V4_PAPER, true)
+		_v4_add_text("THẮNG %d · CÔNG LỰC %d" % [_profile_value("victories", 0), _account_power()], Rect2(safe.position.x, safe.position.y + 28.0, 300.0, 19.0), 12, V4_PAPER_MUTED)
+		_v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(safe.end.x - 168.0, safe.position.y + 10.0, 168.0, 26.0), 15, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
+		var top_y := safe.position.y + 54.0
+		# Phone hub uses compact editorial artifacts. Their art is visually small,
+		# while the separate actions below retain the full 64 px touch height.
+		var dossier := _v5_fit_art(V5_HUB_DOSSIER_PATH, Rect2(safe.position.x, top_y, 120.0, 164.0))
+		var dossier_art := _v4_add_art(V5_HUB_DOSSIER_PATH, dossier)
+		dossier_art.name = "HubIdentityPlate"
+		_v4_add_art(PLAYER_PORTRAIT_PATH, Rect2(dossier.position.x + 32.0, dossier.position.y + 23.0, 56.0, 56.0), Color(0.92, 0.94, 0.90, 0.96))
+		# The small dossier sockets are ornament, not text fields. Identity is carried
+		# by the portrait and the explicit Tâm Pháp action below at this scale.
+		var change := _button("TÂM PHÁP", RasterButton.ArtVariant.INK, Vector2(dossier.size.x, 64.0), 12, func() -> void: _show_screen(SCREEN_LOADOUT))
+		change.position = Vector2(dossier.position.x, safe.end.y - 64.0)
+		change.size = Vector2(dossier.size.x, 64.0)
+		screen_root.add_child(change)
+		var expedition := _v5_fit_art(V5_HUB_EXPEDITION_PATH, Rect2(dossier.end.x + 10.0, top_y, 278.0, 164.0))
+		var expedition_art := _v4_add_art(V5_HUB_EXPEDITION_PATH, expedition)
+		expedition_art.name = "HubExpeditionPlate"
+		# The authored expedition object already contains its own landscape. A second
+		# stage bitmap created the conspicuous rectangle-within-a-rectangle layer.
+		_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(expedition.position.x + 28.0, expedition.position.y + 34.0, expedition.size.x - 56.0, 18.0), 10, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(expedition.position.x + 30.0, expedition.position.y + 55.0, expedition.size.x - 60.0, 28.0), 18, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text("HIỂM HỌA %d/3 · %d+ NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(expedition.position.x + 36.0, expedition.end.y - 38.0, expedition.size.x - 72.0, 20.0), 11, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+		var depart := _button("KHỞI HÀNH", RasterButton.ArtVariant.GOLD, Vector2(expedition.size.x, 64.0), 15, func() -> void: _show_screen(SCREEN_LOADOUT))
+		depart.position = Vector2(expedition.position.x, safe.end.y - 64.0)
+		depart.size = Vector2(expedition.size.x, 64.0)
+		screen_root.add_child(depart)
+		var rail_x := expedition.end.x + 10.0
+		var rail_width := safe.end.x - rail_x
+		var gap := 4.0
+		var command_width := (rail_width - gap) * 0.5
+		for index in commands.size():
+			var command: Array = commands[index]
+			var col := index % 2
+			var row := index / 2
+			var button := _button(str(command[0]), RasterButton.ArtVariant.JADE if index == 1 else RasterButton.ArtVariant.INK, Vector2(command_width, 64.0), 12, command[1] as Callable)
+			button.position = Vector2(rail_x + col * (command_width + gap), top_y + row * 67.0)
+			button.size = Vector2(command_width, 64.0)
+			screen_root.add_child(button)
+		return
+
+	_v4_add_text("SƠN MÔN", Rect2(64.0, 28.0, 360.0, 48.0), 36, V4_PAPER, true)
+	_v4_add_text("VÂN MỘNG ĐẠO TÔNG · NGOẠI VIỆN", Rect2(66.0, 74.0, 460.0, 24.0), 14, V4_PAPER_MUTED, true)
+	_v4_add_text("%d LINH NGỌC" % _profile_value("currency", 0), Rect2(1262.0, 44.0, 274.0, 32.0), 20, V4_GOLD, true, HORIZONTAL_ALIGNMENT_RIGHT)
+	_v4_add_rule(Rect2(62.0, 108.0, 1476.0, 1.0), Color(V4_BRONZE, 0.62))
+	var dossier := _v5_add_fitted_art(V5_HUB_DOSSIER_PATH, Rect2(54.0, 126.0, 380.0, 620.0))
+	_v4_add_art(PLAYER_PORTRAIT_PATH, Rect2(dossier.position.x + 92.0, dossier.position.y + 38.0, 196.0, 196.0), Color(0.92, 0.95, 0.91, 0.98))
+	_v4_add_text("KIẾM TU VÂN MỘNG", Rect2(dossier.position.x + 52.0, dossier.position.y + dossier.size.y * 0.45, dossier.size.x - 104.0, 24.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	# Keep the decorative socket row unobstructed. Runtime data belongs in the two
+	# long authored status channels near the foot of the dossier.
+	_v4_add_text("TÂM PHÁP · TẦNG %d / 5" % rank, Rect2(dossier.position.x + 92.0, dossier.end.y - 110.0, dossier.size.x - 154.0, 25.0), 14, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v4_add_text("CÔNG LỰC %d" % _account_power(), Rect2(dossier.position.x + 92.0, dossier.end.y - 72.0, dossier.size.x - 154.0, 25.0), 14, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var change := _button("ĐỔI TÂM PHÁP", RasterButton.ArtVariant.INK, Vector2(280.0, 64.0), 16, func() -> void: _show_screen(SCREEN_LOADOUT))
+	change.position = Vector2(dossier.position.x + 50.0, 748.0)
+	change.size = Vector2(280.0, 64.0)
+	screen_root.add_child(change)
+	var expedition := _v5_add_fitted_art(V5_HUB_EXPEDITION_PATH, Rect2(448.0, 126.0, 750.0, 520.0))
+	_v4_add_text("THÍ LUYỆN ĐANG CHỌN", Rect2(expedition.position.x + 112.0, expedition.position.y + 128.0, expedition.size.x - 224.0, 25.0), 14, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(expedition.position.x + 96.0, expedition.position.y + 164.0, expedition.size.x - 192.0, 48.0), 31, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+	_v4_add_text("HIỂM HỌA %d / 3   ·   THƯỞNG %d+ LINH NGỌC" % [int(stage.get("difficulty", 1)), int((stage.get("rewards", {}) as Dictionary).get("base", 30))], Rect2(expedition.position.x + 128.0, expedition.end.y - 82.0, expedition.size.x - 256.0, 28.0), 15, V4_PAPER, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var depart := _button("KHỞI HÀNH", RasterButton.ArtVariant.GOLD, Vector2(292.0, 66.0), 18, func() -> void: _show_screen(SCREEN_LOADOUT))
+	depart.position = Vector2(expedition.end.x - 316.0, 658.0)
+	depart.size = Vector2(292.0, 66.0)
+	screen_root.add_child(depart)
+	var rail := _v5_add_fitted_art(V5_HUB_COMMAND_RAIL_PATH, Rect2(1244.0, 130.0, 244.0, 650.0))
+	for index in commands.size():
+		var command: Array = commands[index]
+		_v5_art_slot_button(str(command[0]), Rect2(rail.position.x + 24.0, rail.position.y + 44.0 + index * 78.0, rail.size.x - 48.0, 64.0), 13, V4_PAPER, command[1] as Callable)
+
+
+func _v5_build_loadout(phone: bool) -> void:
+	_v4_meta_background(0.58 if not phone else 0.52)
+	var stage := _stage_data(_selected_stage())
+	var body := _v4_header("CHỌN TÂM PHÁP", str(stage.get("name", "Vân Mộng Cốc")), phone)
+	var disciplines := _disciplines()
+	var selected := _selected_discipline()
+	var gap := 8.0 if phone else 22.0
+	var card_width := (body.size.x - gap * 2.0) / 3.0
+	var card_height := body.size.y - (70.0 if phone else 96.0)
+	for index in mini(3, disciplines.size()):
+		var discipline: Dictionary = disciplines[index]
+		var discipline_id := StringName(str(discipline.get("id", "van_kiem")))
+		var is_selected := discipline_id == selected
+		var slot := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, card_height)
+		var folio := _v5_add_fitted_art(str(V5_FOLIO_PRIMARY_PATHS[index]), slot, Color(1.04, 1.06, 0.98, 1.0) if is_selected else Color.WHITE)
+		var title_size := 13 if phone else 25
+		var discipline_title := _phone_discipline_title(discipline_id) if phone else str(discipline.get("name", "Vạn Kiếm Quy Tông"))
+		_v4_add_text(discipline_title, Rect2(folio.position.x + 20.0, folio.position.y + (7.0 if phone else 18.0), folio.size.x - 40.0, 26.0 if phone else 56.0), title_size, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text(str(discipline.get("role", "Công kích")).to_upper(), Rect2(folio.position.x + 22.0, folio.position.y + (31.0 if phone else 72.0), folio.size.x - 44.0, 18.0), 10 if phone else 13, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		if not phone:
+			var copy_y := folio.position.y + folio.size.y * 0.70
+			var copy := _v4_add_text(str(discipline.get("description", "")), Rect2(folio.position.x + 30.0, copy_y, folio.size.x - 60.0, folio.size.y * 0.17), 16, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var equip_y := folio.end.y - (48.0 if phone else 64.0)
+		_v5_art_slot_button("ĐÃ TRANG BỊ" if is_selected else "TRANG BỊ", Rect2(folio.position.x + 28.0, equip_y, folio.size.x - 56.0, 64.0), 12 if phone else 15, V4_PAPER, func() -> void: _select_discipline(discipline_id))
+	if phone:
+		_v4_add_text("%s · HIỂM HỌA %d/3" % [str(_discipline_data(selected).get("name", "Vạn Kiếm Quy Tông")), int(stage.get("difficulty", 1))], Rect2(body.position.x, body.end.y - 54.0, body.size.x - 294.0, 46.0), 14, V4_PAPER_MUTED, true)
+		var start_phone := _button("NHẬP CẢNH", RasterButton.ArtVariant.GOLD, Vector2(286.0, 64.0), 17, _start_selected_run)
+		start_phone.position = Vector2(body.end.x - 286.0, body.end.y - 64.0)
+		start_phone.size = Vector2(286.0, 64.0)
+		screen_root.add_child(start_phone)
+		return
+	_v4_add_text("%s · %s · HIỂM HỌA %d/3" % [str(stage.get("name", "Vân Mộng Cốc")), str(_discipline_data(selected).get("name", "Vạn Kiếm Quy Tông")), int(stage.get("difficulty", 1))], Rect2(390.0, 780.0, 560.0, 36.0), 16, V4_PAPER, true)
+	var start := _button("NHẬP CẢNH", RasterButton.ArtVariant.GOLD, Vector2(292.0, 64.0), 18, _start_selected_run)
+	start.position = Vector2(970.0, 764.0)
+	start.size = Vector2(292.0, 64.0)
+	screen_root.add_child(start)
+
+
+func _v5_build_techniques(phone: bool) -> void:
+	_v4_meta_background(0.62 if not phone else 0.56)
+	var body := _v4_header("CÔNG PHÁP CÁC", "Mỗi tầng đổi silhouette và hiệu ứng chiến đấu", phone)
+	var techniques := _techniques()
+	var gap := 8.0 if phone else 22.0
+	var card_width := (body.size.x - gap * 2.0) / 3.0
+	for index in mini(3, techniques.size()):
+		var technique: Dictionary = techniques[index]
+		var technique_id := StringName(str(technique.get("id", "sword_damage")))
+		var rank := int(technique.get("rank", 0))
+		var max_rank := int(technique.get("max_rank", 5))
+		var cost := int(technique.get("next_cost", -1))
+		var slot := Rect2(body.position.x + index * (card_width + gap), body.position.y, card_width, body.size.y)
+		var folio := _v5_add_fitted_art(str(V5_FOLIO_SECONDARY_PATHS[index]), slot)
+		var technique_title := _phone_technique_title(technique_id) if phone else str(technique.get("name", "Kiếm Tâm"))
+		_v4_add_text(technique_title, Rect2(folio.position.x + 22.0, folio.position.y + (7.0 if phone else 18.0), folio.size.x - 44.0, 27.0 if phone else 54.0), 12 if phone else 26, PAPER_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text(_technique_school(technique_id), Rect2(folio.position.x + 22.0, folio.position.y + (40.0 if phone else 70.0), folio.size.x - 44.0, 20.0), 11 if phone else 13, _technique_accent(technique_id).darkened(0.34), true, HORIZONTAL_ALIGNMENT_CENTER)
+		var info_y := folio.position.y + folio.size.y * (0.69 if phone else 0.70)
+		_v4_add_text("TẦNG %d / %d" % [rank, max_rank], Rect2(folio.position.x + 28.0, info_y, folio.size.x - 56.0, 24.0), 12 if phone else 15, BRONZE_INK, true, HORIZONTAL_ALIGNMENT_CENTER)
+		if not phone:
+			var evolution := _v4_add_text(_technique_evolution_copy(technique_id, rank, max_rank), Rect2(folio.position.x + 30.0, info_y + 26.0, folio.size.x - 60.0, folio.size.y * 0.12), 15, PAPER_COPY, true, HORIZONTAL_ALIGNMENT_CENTER)
+			evolution.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var price := "ĐÃ VIÊN MÃN" if rank >= max_rank else ("NÂNG · %d" % cost if phone else "NÂNG TẦNG · %d LINH NGỌC" % cost)
+		var purchase_y := folio.end.y - (48.0 if phone else 64.0)
+		var purchase := _v5_art_slot_button(price, Rect2(folio.position.x + 28.0, purchase_y, folio.size.x - 56.0, 64.0), 11 if phone else 14, V4_PAPER, func() -> void: _purchase_technique(technique_id))
+		purchase.disabled = rank >= max_rank
+
+
+func _v5_build_achievements(phone: bool) -> void:
+	_v4_meta_background(0.50 if not phone else 0.44)
+	var body := _v4_header("THIÊN MỆNH LỤC", "Dấu mốc được khắc vào hồ sơ", phone)
+	var achievements := _achievement_entries()
+	var ledger := _v5_add_fitted_art(V5_ACHIEVEMENT_LEDGER_PATH, body.grow(-6.0 if phone else -28.0))
+	var icon_size := 40.0 if phone else 66.0
+	for index in mini(6, achievements.size()):
+		var achievement: Dictionary = achievements[index]
+		var col := index % 2
+		var row := index / 2
+		var unlocked := bool(achievement.get("unlocked", false))
+		var center_x := ledger.position.x + ledger.size.x * (0.18 if col == 0 else 0.60)
+		var center_y := ledger.position.y + ledger.size.y * (0.245 + row * 0.275)
+		_v4_add_art(str(ACHIEVEMENT_SEALS.get(str(achievement.get("id", "nhap_dao")), ICON_SWORD_PATH)), Rect2(center_x - icon_size * 0.5, center_y - icon_size * 0.5, icon_size, icon_size), Color.WHITE if unlocked else Color(0.26, 0.27, 0.24, 0.66))
+		var text_x := center_x + icon_size * 0.70
+		var text_width := ledger.size.x * 0.27
+		_v4_add_text(str(achievement.get("name", "Thiên mệnh")), Rect2(text_x, center_y - (24.0 if phone else 34.0), text_width, 30.0 if phone else 42.0), 12 if phone else 17, PAPER_INK, true)
+		var progress_data: Dictionary = achievement.get("progress", {}) as Dictionary
+		var progress := "HOÀN TẤT" if unlocked else "%d / %d" % [int(progress_data.get("current", 0)), int(progress_data.get("target", 1))]
+		_v4_add_text(progress, Rect2(text_x, center_y + (8.0 if phone else 14.0), text_width, 22.0), 11 if phone else 14, Color("#6f5a31"), true)
+
+
+func _v5_build_results(phone: bool) -> void:
+	var stage_path := str(STAGE_ART.get(String(_selected_stage()), STAGE_ART["van_mong"]))
+	_set_background(stage_path, Color(V4_INK, 0.56 if not phone else 0.50))
+	var shrine_path := V5_VICTORY_SHRINE_PATH if last_victory else V5_DEFEAT_SHRINE_PATH
+	var bounds := _phone_safe_rect() if phone else Rect2(274.0, 94.0, 1052.0, 712.0)
+	var shrine := _v5_add_fitted_art(shrine_path, bounds)
+	var result_color := V4_GOLD if last_victory else V4_CINNABAR
+	# Victory art keeps its ascent illustration completely clean; its lower paper
+	# field carries the live result copy. Defeat copy sits below the broken crest,
+	# inside the broad central field instead of crossing the top silhouette.
+	var title_y := shrine.position.y + shrine.size.y * (0.60 if last_victory and phone else 0.54 if last_victory else 0.25)
+	if not (phone and last_victory):
+		_v4_add_text("THÍ LUYỆN KẾT THÚC", Rect2(shrine.position.x + 56.0, title_y - (14.0 if phone and last_victory else 0.0), shrine.size.x - 112.0, 18.0), 9 if phone else 13, result_color, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var main_title_y := title_y if phone and last_victory else title_y + 20.0
+	_v4_add_text(last_result_title, Rect2(shrine.position.x + 44.0, main_title_y, shrine.size.x - 88.0, 34.0), 20 if phone else 32, result_color, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var stage := _stage_data(_selected_stage())
+	if not (phone and last_victory):
+		_v4_add_text(str(stage.get("name", "Vân Mộng Cốc")), Rect2(shrine.position.x + 60.0, main_title_y + 42.0, shrine.size.x - 120.0, 22.0), 12 if phone else 15, PAPER_INK if last_victory else V4_PAPER_MUTED, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var button_y := shrine.end.y - 68.0
+	var stat_y := title_y + (40.0 if phone else 96.0) if last_victory else shrine.position.y + shrine.size.y * (0.56 if phone else 0.58)
+	if phone:
+		stat_y = minf(stat_y, button_y - 60.0)
+	var stat_left := shrine.position.x + shrine.size.x * 0.13
+	var stat_total := shrine.size.x * 0.74
+	var stat_width := stat_total / 3.0
+	var stat_labels := ["THỜI GIAN", "TRẢM YÊU", "LINH NGỌC"]
+	var stat_values := [_format_time(run_elapsed), str(run_kills), "+%d" % int(last_result.get("total", 0))]
+	for index in 3:
+		var x := stat_left + index * stat_width
+		_v4_add_text(stat_labels[index], Rect2(x, stat_y, stat_width, 20.0), 11 if phone else 13, PAPER_COPY if last_victory else V4_PAPER_MUTED, true, HORIZONTAL_ALIGNMENT_CENTER)
+		_v4_add_text(stat_values[index], Rect2(x, stat_y + 22.0, stat_width, 32.0), 19 if phone else 25, result_color, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var reward := "PHÁ CẢNH LẦN ĐẦU · CẢNH GIỚI MỚI ĐÃ KHAI MỞ" if bool(last_result.get("first_clear", false)) else "CĂN CƠ ĐÃ ĐƯỢC GHI VÀO HỒ SƠ"
+	if not phone:
+		_v4_add_text(reward, Rect2(shrine.position.x + 68.0, stat_y + 62.0, shrine.size.x - 136.0, 24.0), 14, result_color, true, HORIZONTAL_ALIGNMENT_CENTER)
+	var hub_width := 224.0 if phone else 300.0
+	var retry_width := 170.0 if phone else 250.0
+	_v5_result_art_button("TRỞ VỀ SƠN MÔN", Rect2(shrine.position.x + shrine.size.x * 0.16, button_y, hub_width, 64.0), 13 if phone else 16, _return_to_hub)
+	_v5_result_art_button("THỬ LẠI", Rect2(shrine.end.x - shrine.size.x * 0.16 - retry_width, button_y, retry_width, 64.0), 13 if phone else 16, _retry_run)
 
 
 func _v4_modal_canvas(overlay_name: String) -> Array:

@@ -8,11 +8,13 @@ extends ProgressBar
 const BRONZE := Color("#8a6730")
 const PAPER := Color("#e7ddc4")
 const TRACK := Color("#071316")
+const AUTHORED_METER_FRAME: Texture2D = preload("res://assets/generated/ui/UIKIT-010-v4-controls/runtime/meter-frame-slim-nineslice.png")
 
 var meter_color := Color("#57d2a7")
 var track_color := TRACK
 var edge_color := PAPER
 var meter_seed := 1
+var authored_frame: NinePatchRect
 
 
 func _init() -> void:
@@ -21,6 +23,18 @@ func _init() -> void:
 	for state in [&"background", &"fill"]:
 		add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	value_changed.connect(func(_new_value: float) -> void: queue_redraw())
+	authored_frame = NinePatchRect.new()
+	authored_frame.name = "V4AuthoredMeterFrame"
+	authored_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	authored_frame.texture = AUTHORED_METER_FRAME
+	authored_frame.set_patch_margin(SIDE_LEFT, 20)
+	authored_frame.set_patch_margin(SIDE_TOP, 6)
+	authored_frame.set_patch_margin(SIDE_RIGHT, 20)
+	authored_frame.set_patch_margin(SIDE_BOTTOM, 6)
+	authored_frame.draw_center = false
+	authored_frame.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	authored_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(authored_frame)
 
 
 func configure(fill: Color, maximum_value: float, seed: int = 1) -> CultivationMeter:

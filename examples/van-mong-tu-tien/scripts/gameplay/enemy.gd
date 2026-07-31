@@ -391,11 +391,13 @@ func _draw_boss_health_bar(alpha: float, ratio: float) -> void:
 	var crest_center := Vector2(channel_rect.position.x + crest_size * 0.42, center.y)
 	var crest_rect := Rect2(crest_center - Vector2.ONE * crest_size * 0.5, Vector2.ONE * crest_size)
 	draw_texture_rect(BOSS_HUD_CREST, crest_rect, false, Color(1.0, 1.0, 1.0, alpha))
-	var content_left := channel_rect.position.x + crest_size * 0.76
+	# The crest's right-hand flare overlaps the channel well beyond its circular
+	# core. Start live content after that flare so title and fill never cross it.
+	var content_left := channel_rect.position.x + crest_size * 1.14
 	var content_width := channel_rect.end.x - content_left - 18.0 * screen_to_world
-	var title_size := maxi(12, roundi((13.0 if phone else 15.0) * screen_to_world))
+	var title_size := maxi(12, roundi((12.0 if phone else 14.0) * screen_to_world))
 	var title := "THIÊN GIÁC" if phone else "THIÊN GIÁC  ·  MA CHỦ"
-	draw_string(UI_FONT, Vector2(content_left, channel_rect.position.y + (21.0 if phone else 25.0) * screen_to_world), title, HORIZONTAL_ALIGNMENT_LEFT, content_width, title_size, Color("#e7ddc4", alpha))
+	draw_string(UI_FONT, Vector2(content_left, channel_rect.position.y + (18.0 if phone else 22.0) * screen_to_world), title, HORIZONTAL_ALIGNMENT_LEFT, content_width, title_size, Color("#e7ddc4", alpha))
 	var bar_rect := Rect2(content_left, channel_rect.end.y - (18.0 if phone else 20.0) * screen_to_world, content_width, (7.0 if phone else 8.0) * screen_to_world)
 	draw_rect(bar_rect, Color("#061012", 0.96 * alpha), true)
 	draw_rect(Rect2(bar_rect.position, Vector2(bar_rect.size.x * ratio, bar_rect.size.y)), Color("#b43d35", alpha), true)

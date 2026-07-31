@@ -9,30 +9,71 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/title.png", "production/playtests/frontend/title-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/title.png",
+        "production/playtests/frontend/title-phone.png"
+      ],
       "transitions": [
-        {"to": "hub", "trigger": "Confirm NHẬP MÔN or continue profile"},
-        {"to": "settings", "trigger": "Choose THIẾT LẬP"},
-        {"to": "portrait-guard", "trigger": "Rotate a mobile device to portrait"}
+        {
+          "to": "hub",
+          "trigger": "Confirm NHẬP MÔN or continue profile"
+        },
+        {
+          "to": "settings",
+          "trigger": "Choose THIẾT LẬP"
+        },
+        {
+          "to": "portrait-guard",
+          "trigger": "Rotate a mobile device to portrait"
+        }
       ]
     },
     {
       "id": "hub",
       "role": "Sect command hub for the complete meta loop",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/hub.png", "production/playtests/frontend/hub-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/hub.png",
+        "production/playtests/frontend/hub-phone.png",
+        "design/art/lookdev/v5/runtime-review-frontend-desktop.png",
+        "design/art/lookdev/v5/runtime-review-frontend-phone.png"
+      ],
       "transitions": [
-        {"to": "stages", "trigger": "Choose HÀNH TRÌNH"},
-        {"to": "loadout", "trigger": "Choose ĐỔI TÂM PHÁP"},
-        {"to": "techniques", "trigger": "Choose CÔNG PHÁP"},
-        {"to": "inventory", "trigger": "Choose PHÁP BẢO"},
-        {"to": "spirit-beast", "trigger": "Choose LINH THÚ"},
-        {"to": "codex", "trigger": "Choose VẠN TƯỢNG PHỔ"},
-        {"to": "achievements", "trigger": "Choose THÀNH TỰU"},
-        {"to": "settings", "trigger": "Choose THIẾT LẬP"}
+        {
+          "to": "stages",
+          "trigger": "Choose HÀNH TRÌNH"
+        },
+        {
+          "to": "loadout",
+          "trigger": "Choose ĐỔI TÂM PHÁP"
+        },
+        {
+          "to": "techniques",
+          "trigger": "Choose CÔNG PHÁP"
+        },
+        {
+          "to": "inventory",
+          "trigger": "Choose PHÁP BẢO"
+        },
+        {
+          "to": "spirit-beast",
+          "trigger": "Choose LINH THÚ"
+        },
+        {
+          "to": "codex",
+          "trigger": "Choose VẠN TƯỢNG PHỔ"
+        },
+        {
+          "to": "achievements",
+          "trigger": "Choose THÀNH TỰU"
+        },
+        {
+          "to": "settings",
+          "trigger": "Choose THIẾT LẬP"
+        }
       ]
     },
     {
@@ -42,23 +83,42 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/stages.png", "production/playtests/frontend/stages-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/stages.png",
+        "production/playtests/frontend/stages-phone.png"
+      ],
       "transitions": [
-        {"to": "loadout", "trigger": "Confirm CHUẨN BỊ CÔNG PHÁP"},
-        {"to": "hub", "trigger": "Back"}
+        {
+          "to": "loadout",
+          "trigger": "Confirm CHUẨN BỊ CÔNG PHÁP"
+        },
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
       ]
     },
     {
       "id": "loadout",
       "role": "Choose a distinct combat doctrine before entering the arena",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/loadout.png", "production/playtests/frontend/loadout-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/loadout.png",
+        "production/playtests/frontend/loadout-phone.png",
+        "design/art/lookdev/v5/runtime-review-frontend-phone.png"
+      ],
       "transitions": [
-        {"to": "combat", "trigger": "Confirm NHẬP CẢNH"},
-        {"to": "hub", "trigger": "Back"}
+        {
+          "to": "combat",
+          "trigger": "Confirm NHẬP CẢNH"
+        },
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
       ]
     },
     {
@@ -68,10 +128,19 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/inventory.png", "production/playtests/frontend/inventory-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/inventory.png",
+        "production/playtests/frontend/inventory-phone.png"
+      ],
       "transitions": [
-        {"to": "inventory", "trigger": "Select or equip one item"},
-        {"to": "hub", "trigger": "Back"}
+        {
+          "to": "inventory",
+          "trigger": "Select or equip one item"
+        },
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
       ]
     },
     {
@@ -81,23 +150,42 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/spirit-beast.png", "production/playtests/frontend/spirit-beast-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/spirit-beast.png",
+        "production/playtests/frontend/spirit-beast-phone.png"
+      ],
       "transitions": [
-        {"to": "spirit-beast", "trigger": "Summon or dismiss the active bond"},
-        {"to": "hub", "trigger": "Back"}
+        {
+          "to": "spirit-beast",
+          "trigger": "Summon or dismiss the active bond"
+        },
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
       ]
     },
     {
       "id": "techniques",
       "role": "Spend persistent Linh Ngọc on visible technique evolution",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/techniques.png", "production/playtests/frontend/techniques-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/techniques.png",
+        "production/playtests/frontend/techniques-phone.png",
+        "design/art/lookdev/v5/runtime-review-frontend-phone.png"
+      ],
       "transitions": [
-        {"to": "rank-ascension", "trigger": "Purchase a valid technique rank"},
-        {"to": "hub", "trigger": "Back"}
+        {
+          "to": "rank-ascension",
+          "trigger": "Purchase a valid technique rank"
+        },
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
       ]
     },
     {
@@ -107,9 +195,15 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/technique-upgrade.png", "production/playtests/frontend/technique-upgrade-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/technique-upgrade.png",
+        "production/playtests/frontend/technique-upgrade-phone.png"
+      ],
       "transitions": [
-        {"to": "techniques", "trigger": "Ritual reveal completes"}
+        {
+          "to": "techniques",
+          "trigger": "Ritual reveal completes"
+        }
       ]
     },
     {
@@ -119,18 +213,35 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/codex.png", "production/playtests/frontend/codex-phone.png"],
-      "transitions": [{"to": "hub", "trigger": "Back"}]
+      "evidence": [
+        "production/playtests/frontend/codex.png",
+        "production/playtests/frontend/codex-phone.png"
+      ],
+      "transitions": [
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
+      ]
     },
     {
       "id": "achievements",
       "role": "Review permanent milestones and progress",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/achievements.png", "production/playtests/frontend/achievements-phone.png"],
-      "transitions": [{"to": "hub", "trigger": "Back"}]
+      "evidence": [
+        "production/playtests/frontend/achievements.png",
+        "production/playtests/frontend/achievements-phone.png",
+        "design/art/lookdev/v5/runtime-review-frontend-phone.png"
+      ],
+      "transitions": [
+        {
+          "to": "hub",
+          "trigger": "Back"
+        }
+      ]
     },
     {
       "id": "settings",
@@ -139,11 +250,23 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/settings.png", "production/playtests/frontend/settings-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/settings.png",
+        "production/playtests/frontend/settings-phone.png"
+      ],
       "transitions": [
-        {"to": "reset-confirmation", "trigger": "Choose XÓA HỒ SƠ"},
-        {"to": "title", "trigger": "Choose VỀ MÀN HÌNH CHÍNH"},
-        {"to": "hub", "trigger": "Choose TRỞ LẠI SƠN MÔN or Back"}
+        {
+          "to": "reset-confirmation",
+          "trigger": "Choose XÓA HỒ SƠ"
+        },
+        {
+          "to": "title",
+          "trigger": "Choose VỀ MÀN HÌNH CHÍNH"
+        },
+        {
+          "to": "hub",
+          "trigger": "Choose TRỞ LẠI SƠN MÔN or Back"
+        }
       ]
     },
     {
@@ -153,71 +276,139 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/reset.png", "production/playtests/frontend/reset-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/reset.png",
+        "production/playtests/frontend/reset-phone.png"
+      ],
       "transitions": [
-        {"to": "settings", "trigger": "Cancel or press Back"},
-        {"to": "title", "trigger": "Confirm profile deletion"}
+        {
+          "to": "settings",
+          "trigger": "Cancel or press Back"
+        },
+        {
+          "to": "title",
+          "trigger": "Confirm profile deletion"
+        }
       ]
     },
     {
       "id": "combat",
       "role": "Four-minute cultivation survival arena with doctrine-specific attacks",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/mobile-support/combat-phone.png"],
+      "evidence": [
+        "production/playtests/overhaul/gameplay-final.png",
+        "production/playtests/mobile-support/combat-phone.png",
+        "design/art/lookdev/v5/runtime-review-combat-desktop.png",
+        "design/art/lookdev/v5/runtime-review-combat-phone.png"
+      ],
       "transitions": [
-        {"to": "combat-upgrade", "trigger": "Fill the cultivation experience meter"},
-        {"to": "combat-paused", "trigger": "Press pause"},
-        {"to": "results-victory", "trigger": "Survive the tribulation or defeat the boss"},
-        {"to": "results-defeat", "trigger": "Health reaches zero"}
+        {
+          "to": "combat-upgrade",
+          "trigger": "Fill the cultivation experience meter"
+        },
+        {
+          "to": "combat-paused",
+          "trigger": "Press pause"
+        },
+        {
+          "to": "results-victory",
+          "trigger": "Survive the tribulation or defeat the boss"
+        },
+        {
+          "to": "results-defeat",
+          "trigger": "Health reaches zero"
+        }
       ]
     },
     {
       "id": "combat-upgrade",
       "role": "Time-frozen in-run breakthrough choice between three authored talismans",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/overhaul/upgrade-final.png", "production/playtests/mobile-support/breakthrough-phone.png"],
-      "transitions": [{"to": "combat", "trigger": "Choose one insight with pointer, controller or keys 1–3"}]
+      "evidence": [
+        "production/playtests/overhaul/upgrade-final.png",
+        "production/playtests/mobile-support/breakthrough-phone.png",
+        "design/art/lookdev/v5/runtime-review-combat-desktop.png",
+        "design/art/lookdev/v5/runtime-review-combat-phone.png"
+      ],
+      "transitions": [
+        {
+          "to": "combat",
+          "trigger": "Choose one insight with pointer, controller or keys 1–3"
+        }
+      ]
     },
     {
       "id": "combat-paused",
       "role": "Interrupt the run without losing state or blocking the center sightline",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/overhaul/pause-final.png", "production/playtests/mobile-support/pause-phone.png"],
-      "transitions": [{"to": "combat", "trigger": "Resume"}]
+      "evidence": [
+        "production/playtests/overhaul/pause-final.png",
+        "production/playtests/mobile-support/pause-phone.png",
+        "design/art/lookdev/v5/runtime-review-combat-desktop.png",
+        "design/art/lookdev/v5/runtime-review-combat-phone.png"
+      ],
+      "transitions": [
+        {
+          "to": "combat",
+          "trigger": "Resume"
+        }
+      ]
     },
     {
       "id": "results-victory",
       "role": "Summarize a successful tribulation, rewards and unlocks",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/results.png", "production/playtests/frontend/results-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/results.png",
+        "production/playtests/frontend/results-phone.png",
+        "design/art/lookdev/v5/runtime-review-frontend-desktop.png",
+        "design/art/lookdev/v5/runtime-review-frontend-phone.png"
+      ],
       "transitions": [
-        {"to": "hub", "trigger": "Return to the sect"},
-        {"to": "combat", "trigger": "Retry the selected configuration"}
+        {
+          "to": "hub",
+          "trigger": "Return to the sect"
+        },
+        {
+          "to": "combat",
+          "trigger": "Retry the selected configuration"
+        }
       ]
     },
     {
       "id": "results-defeat",
       "role": "Summarize defeat while preserving earned persistent progression",
       "required": true,
-      "status": "verified",
+      "status": "integrated_pending_independent_visual_review",
       "ui_surface": true,
       "scene": "scenes/main.tscn",
-      "evidence": ["production/playtests/frontend/results-defeat.png", "production/playtests/frontend/results-defeat-phone.png"],
+      "evidence": [
+        "production/playtests/frontend/results-defeat.png",
+        "production/playtests/frontend/results-defeat-phone.png",
+        "design/art/lookdev/v5/runtime-review-frontend-desktop.png",
+        "design/art/lookdev/v5/runtime-review-frontend-phone.png"
+      ],
       "transitions": [
-        {"to": "hub", "trigger": "Return to the sect"},
-        {"to": "combat", "trigger": "Retry the selected configuration"}
+        {
+          "to": "hub",
+          "trigger": "Return to the sect"
+        },
+        {
+          "to": "combat",
+          "trigger": "Retry the selected configuration"
+        }
       ]
     },
     {
@@ -227,8 +418,15 @@
       "status": "verified",
       "ui_surface": true,
       "scene": "scenes/ui/rotate_device_overlay.tscn",
-      "evidence": ["production/playtests/mobile-support/portrait-overlay.png"],
-      "transitions": [{"to": "title", "trigger": "Rotate back to landscape"}]
+      "evidence": [
+        "production/playtests/mobile-support/portrait-overlay.png"
+      ],
+      "transitions": [
+        {
+          "to": "title",
+          "trigger": "Rotate back to landscape"
+        }
+      ]
     }
   ],
   "journeys": [
@@ -237,38 +435,92 @@
       "required": true,
       "goal": "Enter from title, configure a doctrine, survive combat, handle interruption and reach a recorded outcome",
       "start_state": "title",
-      "required_states": ["title", "hub", "stages", "loadout", "combat", "combat-upgrade", "combat-paused", "results-victory", "results-defeat"],
-      "completion_states": ["results-victory", "results-defeat"],
+      "required_states": [
+        "title",
+        "hub",
+        "stages",
+        "loadout",
+        "combat",
+        "combat-upgrade",
+        "combat-paused",
+        "results-victory",
+        "results-defeat"
+      ],
+      "completion_states": [
+        "results-victory",
+        "results-defeat"
+      ],
       "test_command_id": "primary_session_test",
       "recovery_paths": [
-        {"from": "combat-paused", "to": "combat", "required": true, "test_command_id": "recovery_flow_test"},
-        {"from": "results-defeat", "to": "combat", "required": true, "test_command_id": "recovery_flow_test"}
+        {
+          "from": "combat-paused",
+          "to": "combat",
+          "required": true,
+          "test_command_id": "recovery_flow_test"
+        },
+        {
+          "from": "results-defeat",
+          "to": "combat",
+          "required": true,
+          "test_command_id": "recovery_flow_test"
+        }
       ],
-      "evidence": ["production/playtests/overhaul/gameplay-final.png", "production/playtests/frontend/results.png"]
+      "evidence": [
+        "production/playtests/overhaul/gameplay-final.png",
+        "production/playtests/frontend/results.png"
+      ]
     },
     {
       "id": "sect-meta-progression",
       "required": true,
       "goal": "Navigate every permanent progression surface and complete a protected technique purchase/profile action loop",
       "start_state": "hub",
-      "required_states": ["hub", "inventory", "spirit-beast", "techniques", "rank-ascension", "codex", "achievements", "settings", "reset-confirmation"],
-      "completion_states": ["hub"],
+      "required_states": [
+        "hub",
+        "inventory",
+        "spirit-beast",
+        "techniques",
+        "rank-ascension",
+        "codex",
+        "achievements",
+        "settings",
+        "reset-confirmation"
+      ],
+      "completion_states": [
+        "hub"
+      ],
       "test_command_id": "meta_navigation_test",
       "recovery_paths": [
-        {"from": "reset-confirmation", "to": "settings", "required": true, "test_command_id": "meta_navigation_test"}
+        {
+          "from": "reset-confirmation",
+          "to": "settings",
+          "required": true,
+          "test_command_id": "meta_navigation_test"
+        }
       ],
-      "evidence": ["production/playtests/frontend/hub.png", "production/playtests/frontend/technique-upgrade.png"]
+      "evidence": [
+        "production/playtests/frontend/hub.png",
+        "production/playtests/frontend/technique-upgrade.png"
+      ]
     },
     {
       "id": "mobile-orientation-safety",
       "required": true,
       "goal": "Keep touch input notch-safe in landscape and block accidental portrait combat input",
       "start_state": "title",
-      "required_states": ["title", "portrait-guard"],
-      "completion_states": ["title"],
+      "required_states": [
+        "title",
+        "portrait-guard"
+      ],
+      "completion_states": [
+        "title"
+      ],
       "test_command_id": "mobile_orientation_test",
       "recovery_paths": [],
-      "evidence": ["production/playtests/mobile-support/landscape-controls.png", "production/playtests/mobile-support/portrait-overlay.png"]
+      "evidence": [
+        "production/playtests/mobile-support/landscape-controls.png",
+        "production/playtests/mobile-support/portrait-overlay.png"
+      ]
     }
   ],
   "experience_requirements": [
@@ -276,30 +528,81 @@
       "id": "premium-ink-silk-bronze-material-language",
       "required": true,
       "rationale": "The product promise depends on authored cultivation artifacts rather than browser-dashboard panels.",
-      "fulfilled_by": ["title", "hub", "stages", "loadout", "inventory", "spirit-beast", "techniques", "combat-upgrade", "results-victory"],
-      "evidence": ["production/playtests/frontend/title.png", "production/playtests/overhaul/upgrade-final.png"]
+      "fulfilled_by": [
+        "title",
+        "hub",
+        "stages",
+        "loadout",
+        "inventory",
+        "spirit-beast",
+        "techniques",
+        "combat-upgrade",
+        "results-victory"
+      ],
+      "evidence": [
+        "production/playtests/frontend/title.png",
+        "production/playtests/overhaul/upgrade-final.png"
+      ]
     },
     {
       "id": "visible-technique-evolution",
       "required": true,
       "rationale": "Permanent and in-run upgrades must change readable combat VFX, not only numbers.",
-      "fulfilled_by": ["techniques", "rank-ascension", "combat"],
-      "evidence": ["production/playtests/frontend/technique-upgrade.png", "production/playtests/overhaul/gameplay-final.png"]
+      "fulfilled_by": [
+        "techniques",
+        "rank-ascension",
+        "combat"
+      ],
+      "evidence": [
+        "production/playtests/frontend/technique-upgrade.png",
+        "production/playtests/overhaul/gameplay-final.png"
+      ]
     },
     {
       "id": "mobile-landscape-safe-controls",
       "required": true,
       "rationale": "The declared mobile candidate must preserve 64 px touch targets, notch-safe placement and orientation input blocking.",
-      "fulfilled_by": ["combat", "portrait-guard"],
-      "evidence": ["production/playtests/responsive/combat-wide-touch.png", "production/playtests/mobile-support/portrait-overlay.png"]
+      "fulfilled_by": [
+        "combat",
+        "portrait-guard"
+      ],
+      "evidence": [
+        "production/playtests/responsive/combat-wide-touch.png",
+        "production/playtests/mobile-support/portrait-overlay.png"
+      ]
     }
   ],
   "quality_requirements": [
-    {"id": "engine-import", "kind": "engine_import", "required": true, "command_id": "godot_import"},
-    {"id": "static-analysis", "kind": "static_analysis", "required": true, "command_id": "godot_lint"},
-    {"id": "reliability", "kind": "reliability", "required": true, "command_id": "long_run"},
-    {"id": "runtime-smoke", "kind": "runtime", "required": true, "command_id": "runtime_smoke"},
-    {"id": "visual-layout", "kind": "visual", "required": true, "command_id": "visual_smoke"}
+    {
+      "id": "engine-import",
+      "kind": "engine_import",
+      "required": true,
+      "command_id": "godot_import"
+    },
+    {
+      "id": "static-analysis",
+      "kind": "static_analysis",
+      "required": true,
+      "command_id": "godot_lint"
+    },
+    {
+      "id": "reliability",
+      "kind": "reliability",
+      "required": true,
+      "command_id": "long_run"
+    },
+    {
+      "id": "runtime-smoke",
+      "kind": "runtime",
+      "required": true,
+      "command_id": "runtime_smoke"
+    },
+    {
+      "id": "visual-layout",
+      "kind": "visual",
+      "required": true,
+      "command_id": "visual_smoke"
+    }
   ],
   "required_evidence_checks": [
     "player-journeys-automated",

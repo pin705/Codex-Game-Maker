@@ -16,8 +16,8 @@ signal layout_changed(safe_area: Rect2)
 
 const SafeArea := preload("res://scripts/ui/mobile_safe_area.gd")
 const PULSE_TEXTURE: Texture2D = preload("res://assets/generated/vfx/PREMIUM-001-cultivation-sigils/runtime/sigil_tu_linh.png")
-const JOYSTICK_FRAME_TEXTURE: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/joystick_medallion.png")
-const ATTACK_FRAME_TEXTURE: Texture2D = preload("res://assets/generated/ui/UIKIT-011-v4-hud/runtime/attack_medallion.png")
+const JOYSTICK_FRAME_TEXTURE: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/joystick-medallion.png")
+const ATTACK_FRAME_TEXTURE: Texture2D = preload("res://assets/generated/ui/UIKIT-016-v5-combat-hud/runtime/attack-medallion.png")
 const ACTION_FONT := preload("res://assets/fonts/BeVietnamPro-SemiBold.ttf")
 
 const MOVE_LEFT := &"move_left"
@@ -32,8 +32,9 @@ const REFERENCE_HEIGHT := 900.0
 const JOYSTICK_TARGET_SIZE := 192.0
 const PULSE_TARGET_SIZE := 128.0
 const PAUSE_TARGET_SIZE := 64.0
-const JOYSTICK_VISUAL_RADIUS_RATIO := 0.30
-const KNOB_RADIUS_RATIO := 0.15
+const JOYSTICK_VISUAL_RADIUS_RATIO := 0.20
+const PULSE_VISUAL_RADIUS_RATIO := 0.20
+const KNOB_RADIUS_RATIO := 0.10
 
 const INK := Color("#0b171b")
 const JADE := Color("#55c9a6")
@@ -176,6 +177,7 @@ func get_joystick_center() -> Vector2:
 
 
 func get_layout_snapshot() -> Dictionary:
+	var pulse_radius := minf(_pulse_hit_rect.size.x, _pulse_hit_rect.size.y) * PULSE_VISUAL_RADIUS_RATIO
 	return {
 		"safe_area": _safe_rect,
 		"joystick": _joystick_hit_rect,
@@ -183,6 +185,8 @@ func get_layout_snapshot() -> Dictionary:
 		"pause": _pause_hit_rect,
 		"movement": movement_vector,
 		"logical_pixels_per_device_pixel": _device_pixel_scale,
+		"joystick_ornament_diameter": (_joystick_radius + 9.0) * 2.0,
+		"pulse_ornament_diameter": (pulse_radius + 9.0) * 2.0,
 	}
 
 
@@ -386,7 +390,9 @@ func _draw_joystick() -> void:
 
 func _draw_pulse_button() -> void:
 	var center := _pulse_hit_rect.get_center()
-	var radius := minf(_pulse_hit_rect.size.x, _pulse_hit_rect.size.y) * 0.30
+	# The invisible 64+ px target remains generous; only the medallion art is
+	# reduced so it no longer competes with enemies at the arena edge.
+	var radius := minf(_pulse_hit_rect.size.x, _pulse_hit_rect.size.y) * PULSE_VISUAL_RADIUS_RATIO
 	var pressed := _pulse_touch >= 0
 	draw_circle(center + Vector2(3.0, 5.0), radius + 5.0, Color(0.0, 0.0, 0.0, 0.34))
 	if _attack_frame != null:
